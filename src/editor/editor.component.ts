@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-editor',
-  standalone: true,
-  imports: [],
+  selector: 'keml-editor',
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.css'
 })
