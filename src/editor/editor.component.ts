@@ -1,15 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
-import {
-  BpmnDiagrams,
-  Diagram,
-  DiagramComponent,
-  FlowShapeModel,
-  FlowShapes,
-  NodeModel, SnapConstraints, SnapSettingsModel, TextModel
-} from "@syncfusion/ej2-angular-diagrams";
-
-
-Diagram.Inject(BpmnDiagrams);
+import {Component, } from '@angular/core';
 
 @Component({
   selector: 'keml-editor',
