@@ -1,17 +1,46 @@
-export class Message {
-  isSend: boolean; // distinguishes KEML's Send and Receive Messages
+import {Information, Preknowledge, NewInformation} from "./knowledge-models";
+
+export interface Conversation {
+  eClass: string;
+  title: string;
+  author: Author;
+  conversationPartners?: (ConversationPartner)[] | null;
+}
+
+interface LifeLine {
+  name: string;
+  xPosition: number; //int todo
+}
+
+export interface ConversationPartner extends LifeLine {
+  color: number; // todo
+}
+
+export interface Author extends LifeLine {
+  messages?: (Message)[] | null;
+  preknowledge?: Preknowledge[] | null;
+}
+export interface Message {
+  eClass: string;
   content: string;
-  originalContent: string;
-  timing: number; //int! todo
+  originalContent?: string;
+  timing?: number;
+  counterPart: ConversationPartner;
+}
 
-  constructor(isSend: boolean, content: string, originalContent: string, timing: number) {
-    this.isSend = isSend;
-    this.content = content;
-    this.originalContent = originalContent;
-    this.timing = timing;
-  }
+export interface SendMessage extends Message {
+  uses?: Information[];
+}
 
+export interface ReceiveMessage extends Message {
+  generates?: (NewInformation)[];
+  repeats?: (Information)[];
+}
 
+// todo should be used to construct a reference
+export interface Reference {
+  eClass: string;
+  $ref: string;
 }
 
 
