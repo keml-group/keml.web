@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CentralWindowComponent } from './central-window.component';
+import {DiagramAllModule} from "@syncfusion/ej2-angular-diagrams";
 
 describe('CentralWindowComponent', () => {
   let component: CentralWindowComponent;
@@ -8,10 +9,11 @@ describe('CentralWindowComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CentralWindowComponent]
+      imports: [DiagramAllModule],
+      declarations: [CentralWindowComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(CentralWindowComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
