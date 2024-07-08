@@ -1,4 +1,4 @@
-import {TestBed, tick, fakeAsync, ComponentFixture} from '@angular/core/testing';
+import {TestBed, ComponentFixture, waitForAsync} from '@angular/core/testing';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
@@ -6,29 +6,25 @@ describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let app: AppComponent;
 
-  beforeEach(() => {
+  beforeEach(waitForAsync (() => {
     TestBed.configureTestingModule({
       imports: [AppComponent],
     }).compileComponents();
     fixture = TestBed.createComponent(AppComponent);
     app = fixture.componentInstance;
+    fixture.detectChanges();
+  }));
+
+  it('should create the app', () => {
+    expect(app).toBeTruthy();
   });
 
-  it('should create the app', fakeAsync(async () => {
+  it(`should have the 'keml.graphical' title`,  () => {
     fixture.detectChanges();
-    tick(1000);
-    expect(app).toBeTruthy();
-  }));
-
-  it(`should have the 'keml.graphical' title`, fakeAsync(async () => {
-    fixture.detectChanges();
-    tick(1000);
     expect(app.title).toEqual('kemlgui');
-  }));
+  });
 
   it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain('KEML Graphical Editor');
   });
