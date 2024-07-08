@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditorComponent } from './editor.component';
+import {DiagramAllModule} from "@syncfusion/ej2-angular-diagrams";
 
 describe('EditorComponent', () => {
   let component: EditorComponent;
@@ -8,10 +9,11 @@ describe('EditorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EditorComponent]
+      imports: [DiagramAllModule],
+      declarations: [EditorComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(EditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
