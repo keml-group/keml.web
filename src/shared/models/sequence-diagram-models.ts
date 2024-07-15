@@ -9,11 +9,11 @@ export interface Conversation {
 
 interface LifeLine {
   name: string;
-  xPosition: number; //int todo
+  xPosition?: number; //int todo
 }
 
 export interface ConversationPartner extends LifeLine {
-  color: number; // todo
+  color?: number; // todo
   $ref?: string; //only for parsing, not clean
 }
 
