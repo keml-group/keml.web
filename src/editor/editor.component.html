@@ -1,6 +1,6 @@
 <div id="diagram-space" class="sb-mobile-diagram">
   <div class="content-wrapper">
-    <input id="openfile1" type="file" class="file-upload" style="display: none" (change)="openFile()">
+    <input id="openfile1" type="file" class="file-upload" style="display: none" (change)="openFile($event)">
     <ejs-toolbar>
       <e-items>
         <e-item prefixIcon='e-icons e-circle-add' text="New" tooltipText='New Diagram'></e-item>

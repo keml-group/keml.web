@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ModelIOServiceService } from './model-ioservice.service';
+import { ModelIOService } from './model-io.service';
 import {Conversation, ConversationPartner} from "../models/sequence-diagram-models";
 
-describe('ModelIOServiceService', () => {
-  let service: ModelIOServiceService;
+describe('ModelIOService', () => {
+  let service: ModelIOService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ModelIOServiceService);
+    service = TestBed.inject(ModelIOService);
   });
 
   it('should be created', () => {

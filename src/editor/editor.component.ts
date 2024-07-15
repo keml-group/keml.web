@@ -1,12 +1,13 @@
-import {Component, ViewChild, } from '@angular/core';
+import {Component, EventEmitter, ViewChild,} from '@angular/core';
 import {BpmnDiagramsService, BpmnShapeModel, DiagramComponent, FlowShapeModel} from "@syncfusion/ej2-angular-diagrams";
 import { ToolbarComponent } from '@syncfusion/ej2-angular-navigations';
+import {ModelIOService} from "../shared/services/model-io.service";
 
 @Component({
   selector: 'keml-editor',
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.css',
-  providers: [BpmnDiagramsService]
+  providers: [BpmnDiagramsService, ModelIOService]
 })
 export class EditorComponent {
 
@@ -22,7 +23,10 @@ export class EditorComponent {
     document.getElementById('openfile1')?.click();
   }
 
-  openFile() {
-    console.log("Reached!");
+  openFile(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const files = target.files as FileList;
+
+    console.log(files[0]);
   }
 }

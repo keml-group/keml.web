@@ -4,7 +4,7 @@ import {Conversation, ConversationPartner, Message} from "../models/sequence-dia
 @Injectable({
   providedIn: 'root'
 })
-export class ModelIOServiceService {
+export class ModelIOService {
 
   constructor() { }
 
