@@ -19,6 +19,9 @@ export class EditorComponent {
   ngOnInit(): void {
   }
 
+  constructor(private modelIOService: ModelIOService) {
+  }
+
   open() {
     document.getElementById('openfile1')?.click();
   }
@@ -26,7 +29,11 @@ export class EditorComponent {
   openFile(event: Event) {
     const target = event.target as HTMLInputElement;
     const files = target.files as FileList;
-
+    const readFile = files[0].text();
+    readFile.then(txt => {
+      const conv = this.modelIOService.loadKEML(txt);
+      console.log(conv.title);
+    });
     console.log(files[0]);
   }
 }
