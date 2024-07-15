@@ -4,7 +4,7 @@ export interface Conversation {
   eClass: string;
   title: string;
   author: Author;
-  conversationPartners?: (ConversationPartner)[] | null;
+  conversationPartners: (ConversationPartner)[];
 }
 
 interface LifeLine {
@@ -14,6 +14,7 @@ interface LifeLine {
 
 export interface ConversationPartner extends LifeLine {
   color: number; // todo
+  $ref?: string; //only for parsing, not clean
 }
 
 export interface Author extends LifeLine {

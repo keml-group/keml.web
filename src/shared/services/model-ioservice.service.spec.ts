@@ -39,6 +39,6 @@ describe('ModelIOServiceService', () => {
     expect(conv.title).toEqual("2-1 modified");
     expect(conv.conversationPartners?.at(0)?.name).toEqual("LLM");
     // todo: neither toBe nor the weaker toEqual because ref is not correctly deserialized
-    //expect(conv.author?.messages?.at(0)?.counterPart).toBe(conv.conversationPartners?.at(0)) // reference not treated correctly -> no understanding so far
+    expect(conv.author?.messages?.at(0)?.counterPart).toBe(conv.conversationPartners?.at(0)) // reference not treated correctly -> no understanding so far
   });
 });
