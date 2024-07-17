@@ -16,17 +16,35 @@ export class DiagramService {
   }
 
   private defineAuthor(): NodeModel {
+    return this.personNodeModel('author','Author', 0, 0);
+  }
+
+  private defineConvPartners(convP: ConversationPartner[]): NodeModel[] {
+    // distance to first partner should be bigger than distance in between:
+    const distanceToFirst: number = 300;
+    const distanceBetween: number = 150;
+    let res: NodeModel[] = [];
+    let x = distanceToFirst;
+    for (let i = 0; i < convP.length; i++) {
+      res[i] = this.personNodeModel('conversationPartner'+i, convP[i].name, x,0);
+      x+=distanceBetween;
+    }
+    console.log(res);
+    return res;
+  }
+
+  private personNodeModel(id: string, label: string, x: number, y: number): NodeModel {
     return {
-      id: 'author',
+      id: id,
       // Position of the node
-      offsetX: 0,
-      offsetY: 0,
+      offsetX: x,
+      offsetY: y,
       // Size of the node
       width: 20,
       height: 50,
       annotations: [
         {
-          content: 'Author',
+          content: label,
           verticalAlignment: "Top",
           horizontalAlignment: "Center",
           offset: {x:0.5, y:1}
@@ -37,13 +55,6 @@ export class DiagramService {
         content: this.personSVG()
       }
     };
-  }
-
-  private defineConvPartners(convP: ConversationPartner[]): NodeModel[] {
-    // distance to first partner should be bigger than distance in between:
-    const distanceToFirst: number = 400;
-    const distanceBetween: number = 100;
-    return [];
   }
 
   private personSVG(): string {
