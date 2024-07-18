@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import {DiagramComponent} from "@syncfusion/ej2-angular-diagrams";
+import {Injectable} from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +7,11 @@ export class DiagramIoService {
 
   constructor() { }
 
-  loadDiagram() {}
+  async loadDiagram(event: Event): Promise<string> {
+    const target = event.target as HTMLInputElement;
+    const files = target.files as FileList;
+    return files[0].text();
+  }
 
   saveDiagram(diagramString: string, fileName: string) {
     const element = document.createElement('a')

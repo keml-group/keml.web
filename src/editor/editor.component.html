@@ -1,14 +1,16 @@
 <div id="diagram-space" class="sb-mobile-diagram">
   <div class="content-wrapper">
     <input id="openfile1" type="file" class="file-upload" style="display: none" (change)="openFile($event)">
+    <input id="openDia" type="file" class="file-upload" style="display: none" (change)="loadDiagramJSON($event)">
     <ejs-toolbar>
       <e-items>
         <e-item prefixIcon='e-icons e-circle-add' text="New" tooltipText='New Diagram'></e-item>
-        <e-item prefixIcon='e-icons e-folder-open' text="Open" tooltipText='Open Diagram' (click)="open()">
+        <e-item prefixIcon='e-icons e-folder-open' text="Open" tooltipText='Open Diagram' (click)="openDiagramJson()">
         </e-item>
         <e-item prefixIcon='e-icons e-save' text="Save" tooltipText='Save Diagram' (click)="saveDiagramJSON()"></e-item>
-        <e-item prefixIcon='e-print e-icons' tooltipText='Print Diagram'></e-item>
         <e-item type='Input' tooltipText='Export Diagram'></e-item>
+        <e-item type='Separator'></e-item>
+        <e-item prefixIcon='e-icons e-folder-open' text="Open KEML" tooltipText='Open KEML' (click)="openKeml()"></e-item>
       </e-items>
     </ejs-toolbar>
     <ejs-diagram #diagram id="diagram" width="100%" height="580px">

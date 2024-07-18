@@ -36,11 +36,14 @@ export class EditorComponent implements OnInit, AfterViewInit {
     private modelIOService: ModelIOService,
     private diagramService: DiagramService,
     private diagramIoService: DiagramIoService,
-  ) {
+  ) {}
+
+  openKeml() {
+    document.getElementById('openfile1')?.click();
   }
 
-  open() {
-    document.getElementById('openfile1')?.click();
+  openDiagramJson() {
+    document.getElementById('openDia')?.click();
   }
 
   openFile(event: Event) {
@@ -62,5 +65,11 @@ export class EditorComponent implements OnInit, AfterViewInit {
   saveDiagramJSON() {
     const jsonString = this.diagram.saveDiagram();
     this.diagramIoService.saveDiagram(jsonString, 'diagram.json');
+  }
+
+  loadDiagramJSON(event: Event) {
+    this.diagramIoService.loadDiagram(event).then(diagramStr => {
+      this.diagram.loadDiagram(diagramStr);
+    })
   }
 }
