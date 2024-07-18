@@ -1,5 +1,11 @@
 import {AfterViewInit, Component, EventEmitter, OnInit, ViewChild,} from '@angular/core';
-import {BpmnDiagramsService, BpmnShapeModel, DiagramComponent, FlowShapeModel} from "@syncfusion/ej2-angular-diagrams";
+import {
+  BpmnDiagramsService,
+  BpmnShapeModel,
+  DiagramComponent,
+  FlowShapeModel,
+  IExportOptions
+} from "@syncfusion/ej2-angular-diagrams";
 import { ToolbarComponent } from '@syncfusion/ej2-angular-navigations';
 import {ModelIOService} from "../shared/services/model-io.service";
 import {DiagramService} from "../shared/services/diagram.service";
@@ -42,9 +48,17 @@ export class EditorComponent implements OnInit, AfterViewInit {
     readFile.then(txt => {
       //todo insert detection code for wrong files (no json, not appropriately structured
       const conv = this.modelIOService.loadKEML(txt);
-      console.log(conv.title);
       this.diagramService.loadModel(conv, this.diagram)
     });
-    console.log(files[0]);
+  }
+
+  saveImg() {
+    let options: IExportOptions = {mode: 'Download', format: 'SVG', fileName: 'keml.svg'};
+    this.diagram.exportDiagram(options);
+  }
+
+  saveDiagramJSON() {
+    const jsonString = this.diagram.saveDiagram();
+
   }
 }
