@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DiagramIoService } from './diagram-io.service';
+import { IoService } from './io.service';
 
-describe('DiagramIoService', () => {
-  let service: DiagramIoService;
+describe('IoService', () => {
+  let service: IoService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(DiagramIoService);
+    service = TestBed.inject(IoService);
   });
 
   it('should be created', () => {

@@ -3,11 +3,11 @@ import {Injectable} from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class DiagramIoService {
+export class IoService {
 
   constructor() { }
 
-  async loadDiagram(event: Event): Promise<string> {
+  async loadStringFromFile(event: Event): Promise<string> {
     const target = event.target as HTMLInputElement;
     const files = target.files as FileList;
     return files[0].text();

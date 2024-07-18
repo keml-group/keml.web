@@ -9,13 +9,13 @@ import {
 import { ToolbarComponent } from '@syncfusion/ej2-angular-navigations';
 import {ModelIOService} from "../shared/services/model-io.service";
 import {DiagramService} from "../shared/services/diagram.service";
-import {DiagramIoService} from "../shared/services/diagram-io.service";
+import {IoService} from "../shared/services/io.service";
 
 @Component({
   selector: 'keml-editor',
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.css',
-  providers: [BpmnDiagramsService, ModelIOService, DiagramService, DiagramIoService]
+  providers: [BpmnDiagramsService, ModelIOService, DiagramService, IoService]
 })
 export class EditorComponent implements OnInit, AfterViewInit {
 
@@ -35,22 +35,19 @@ export class EditorComponent implements OnInit, AfterViewInit {
   constructor(
     private modelIOService: ModelIOService,
     private diagramService: DiagramService,
-    private diagramIoService: DiagramIoService,
+    private ioService: IoService,
   ) {}
 
   openKeml() {
-    document.getElementById('openfile1')?.click();
+    document.getElementById('openKEML')?.click();
   }
 
   openDiagramJson() {
     document.getElementById('openDia')?.click();
   }
 
-  openFile(event: Event) {
-    const target = event.target as HTMLInputElement;
-    const files = target.files as FileList;
-    const readFile = files[0].text();
-    readFile.then(txt => {
+  loadKeml(event: Event) {
+    this.ioService.loadStringFromFile(event).then(txt => {
       //todo insert detection code for wrong files (no json, not appropriately structured
       const conv = this.modelIOService.loadKEML(txt);
       this.diagramService.loadConversationAsDiagram(conv, this.diagram)
@@ -64,11 +61,11 @@ export class EditorComponent implements OnInit, AfterViewInit {
 
   saveDiagramJSON() {
     const jsonString = this.diagram.saveDiagram();
-    this.diagramIoService.saveDiagram(jsonString, 'diagram.json');
+    this.ioService.saveDiagram(jsonString, 'diagram.json');
   }
 
   loadDiagramJSON(event: Event) {
-    this.diagramIoService.loadDiagram(event).then(diagramStr => {
+    this.ioService.loadStringFromFile(event).then(diagramStr => {
       this.diagram.loadDiagram(diagramStr);
     })
   }
