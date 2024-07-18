@@ -13,13 +13,11 @@ export class IoService {
     return files[0].text();
   }
 
-  saveDiagram(diagramString: string, fileName: string) {
-    const content = new Blob([diagramString], {type: 'application/json'});
-
+  saveFile(contentBlob: Blob, fileName: string) {
     const link = document.createElement('a')
     link.style.display = 'none'
     // Attach the content to the anchor
-    link.href = URL.createObjectURL(content);
+    link.href = URL.createObjectURL(contentBlob);
     link.download = fileName;
     // Append to DOM and simulate click (this will trigger the download)
     document.body.appendChild(link);

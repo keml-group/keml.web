@@ -42,10 +42,6 @@ export class EditorComponent implements OnInit, AfterViewInit {
     document.getElementById('openKEML')?.click();
   }
 
-  openDiagramJson() {
-    document.getElementById('openDia')?.click();
-  }
-
   loadKeml(event: Event) {
     this.ioService.loadStringFromFile(event).then(txt => {
       //todo insert detection code for wrong files (no json, not appropriately structured
@@ -54,19 +50,24 @@ export class EditorComponent implements OnInit, AfterViewInit {
     });
   }
 
-  saveImg() {
-    let options: IExportOptions = {mode: 'Download', format: 'SVG', fileName: 'keml.svg'};
-    this.diagram.exportDiagram(options);
-  }
-
-  saveDiagramJSON() {
-    const jsonString = this.diagram.saveDiagram();
-    this.ioService.saveDiagram(jsonString, 'diagram.json');
+  openDiagramJson() {
+    document.getElementById('openDia')?.click();
   }
 
   loadDiagramJSON(event: Event) {
     this.ioService.loadStringFromFile(event).then(diagramStr => {
       this.diagram.loadDiagram(diagramStr);
     })
+  }
+
+  saveDiagramJSON() {
+    const jsonString = this.diagram.saveDiagram();
+    const contentBlob = new Blob([jsonString], {type: 'application/json'});
+    this.ioService.saveFile(contentBlob, 'diagram.json');
+  }
+
+  saveImg() {
+    let options: IExportOptions = {mode: 'Download', format: 'SVG', fileName: 'keml'};
+    this.diagram.exportDiagram(options);
   }
 }
