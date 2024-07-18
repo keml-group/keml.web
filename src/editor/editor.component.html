@@ -4,7 +4,7 @@
     <input id="openDia" type="file" class="file-upload" style="display: none" (change)="loadDiagramJSON($event)">
     <ejs-toolbar>
       <e-items>
-        <e-item prefixIcon='e-icons e-circle-add' text="New" tooltipText='New Diagram'></e-item>
+        <e-item prefixIcon='e-icons e-circle-add' text="New" tooltipText='New Diagram' (click)="newDiagram()"></e-item>
         <e-item prefixIcon='e-icons e-folder-open' text="Open" tooltipText='Open Diagram' (click)="openDiagramJson()">
         </e-item>
         <e-item prefixIcon='e-icons e-save' text="Save" tooltipText='Save Diagram' (click)="saveDiagramJSON()"></e-item>

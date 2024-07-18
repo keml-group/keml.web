@@ -38,6 +38,10 @@ export class EditorComponent implements OnInit, AfterViewInit {
     private ioService: IoService,
   ) {}
 
+  newDiagram() {
+    this.diagram.clear();
+  }
+
   openKeml() {
     document.getElementById('openKEML')?.click();
   }
