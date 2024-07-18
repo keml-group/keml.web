@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {DiagramComponent, NodeModel} from "@syncfusion/ej2-angular-diagrams";
-import {Conversation, ConversationPartner} from "../models/sequence-diagram-models";
+import {ConnectorModel, DiagramComponent, NodeModel, PointModel, PointPort} from "@syncfusion/ej2-angular-diagrams";
+import {Conversation, ConversationPartner, Message} from "../models/sequence-diagram-models";
 
 @Injectable({
   providedIn: 'root'
@@ -12,24 +12,92 @@ export class DiagramService {
   loadModel(conv: Conversation, diagram: DiagramComponent) {
     diagram.clear();
     diagram.add(this.defineAuthor());
-    diagram.addElements(this.defineConvPartners(conv.conversationPartners));
+    const conversationPartners: Map<ConversationPartner, NodeModel> = this.defineConvPartners(conv.conversationPartners);
+    for (const cpNode of conversationPartners.values()) {
+      diagram.add(cpNode);
+    }
+    this.addMessages(conv.author.messages, conversationPartners, diagram);
+  }
+
+  private addMessages(msgs: Message[], conversationPartners: Map<ConversationPartner, NodeModel>, diagram: DiagramComponent): void {
+    let i: number = 0;
+    let y: number = 60;
+    for (const msg of this.verifyMsgOrder(msgs)){
+      diagram.add(this.defineAuthorMessage('msgA'+i, y));
+      let counterPartX = conversationPartners.get(msg.counterPart)?.offsetX;
+      diagram.add(this.defineMessageCounterpart('msgB'+i, counterPartX? counterPartX: 50, y))
+      diagram.add(this.defineMessageArrow('msg'+i, 'msgA'+i, 'msgB'+i, msg));
+      i++;
+      y+=30; // todo no connection to timestamp?
+    }
+  }
+
+  private verifyMsgOrder(msgs: Message[]): Message[] {
+    //todo are they ordered by timestamp? if not do now
+    return msgs;
+  }
+
+  private defineAuthorMessage(id: string, y: number): NodeModel {
+    return {
+      id: id,
+      offsetX: 0,
+      offsetY: y,
+      width: 15,
+      height: 10,
+      backgroundColor: 'C0C0C0'
+    };
+  }
+
+  defineMessageCounterpart(id: string, x: number, y: number): NodeModel {
+    //todo no long message specs right now, just single "decisions"
+    return {
+      id: id,
+      offsetX: x,
+      offsetY: y,
+      width: 5,
+      height: 5,
+      shape: {
+        type: 'Basic', shape: 'Decision'
+      },
+      backgroundColor: 'C0C0C0'
+    };
+  }
+
+  defineMessageArrow(id: string, sourceID: string, targetID: string, msg: Message): ConnectorModel {
+    let isSend: boolean = msg.eClass.endsWith("SendMessage");
+    let source = isSend? sourceID: targetID;
+    let target = isSend? targetID: sourceID;
+    return {
+      id: id,
+      sourceID: source,
+      targetID: target,
+      annotations: [
+        {
+          content: msg.content,
+          verticalAlignment: "Bottom",
+          horizontalAlignment: "Center",
+        }
+      ]
+    };
   }
 
   private defineAuthor(): NodeModel {
     return this.personNodeModel('author','Author', 0, 0);
   }
 
-  private defineConvPartners(convP: ConversationPartner[]): NodeModel[] {
+  private defineConvPartners(convP: ConversationPartner[]): Map<ConversationPartner, NodeModel> {
     // distance to first partner should be bigger than distance in between:
     const distanceToFirst: number = 300;
     const distanceBetween: number = 150;
-    let res: NodeModel[] = [];
+    let res: Map<ConversationPartner, NodeModel> = new Map();
     let x = distanceToFirst;
     for (let i = 0; i < convP.length; i++) {
-      res[i] = this.personNodeModel('conversationPartner'+i, convP[i].name, x,0);
+      res.set(
+        convP[i],
+        this.personNodeModel('conversationPartner'+i, convP[i].name, x,0)
+      );
       x+=distanceBetween;
     }
-    console.log(res);
     return res;
   }
 

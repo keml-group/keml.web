@@ -18,7 +18,7 @@ export interface ConversationPartner extends LifeLine {
 }
 
 export interface Author extends LifeLine {
-  messages?: (Message)[] | null;
+  messages: Message[];
   preknowledge?: Preknowledge[] | null;
 }
 export interface Message {
