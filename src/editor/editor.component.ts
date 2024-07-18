@@ -9,12 +9,13 @@ import {
 import { ToolbarComponent } from '@syncfusion/ej2-angular-navigations';
 import {ModelIOService} from "../shared/services/model-io.service";
 import {DiagramService} from "../shared/services/diagram.service";
+import {DiagramIoService} from "../shared/services/diagram-io.service";
 
 @Component({
   selector: 'keml-editor',
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.css',
-  providers: [BpmnDiagramsService, ModelIOService, DiagramService]
+  providers: [BpmnDiagramsService, ModelIOService, DiagramService, DiagramIoService]
 })
 export class EditorComponent implements OnInit, AfterViewInit {
 
@@ -34,6 +35,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   constructor(
     private modelIOService: ModelIOService,
     private diagramService: DiagramService,
+    private diagramIoService: DiagramIoService,
   ) {
   }
 
@@ -48,7 +50,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
     readFile.then(txt => {
       //todo insert detection code for wrong files (no json, not appropriately structured
       const conv = this.modelIOService.loadKEML(txt);
-      this.diagramService.loadModel(conv, this.diagram)
+      this.diagramService.loadConversationAsDiagram(conv, this.diagram)
     });
   }
 
@@ -59,6 +61,6 @@ export class EditorComponent implements OnInit, AfterViewInit {
 
   saveDiagramJSON() {
     const jsonString = this.diagram.saveDiagram();
-
+    this.diagramIoService.saveDiagram(jsonString, 'diagram.json');
   }
 }

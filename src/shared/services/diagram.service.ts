@@ -9,7 +9,7 @@ export class DiagramService {
 
   constructor() { }
 
-  loadModel(conv: Conversation, diagram: DiagramComponent) {
+  loadConversationAsDiagram(conv: Conversation, diagram: DiagramComponent) {
     diagram.clear();
     diagram.add(this.defineAuthor());
     const conversationPartners: Map<ConversationPartner, NodeModel> = this.defineConvPartners(conv.conversationPartners);
