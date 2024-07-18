@@ -14,16 +14,18 @@ export class IoService {
   }
 
   saveDiagram(diagramString: string, fileName: string) {
-    const element = document.createElement('a')
-    element.style.display = 'none'
+    const content = new Blob([diagramString], {type: 'application/json'});
+
+    const link = document.createElement('a')
+    link.style.display = 'none'
     // Attach the content to the anchor
-    element.setAttribute('href', 'application/json;charset=utf-8' + encodeURIComponent(diagramString))
-    element.setAttribute('download', fileName)
+    link.href = URL.createObjectURL(content);
+    link.download = fileName;
     // Append to DOM and simulate click (this will trigger the download)
-    document.body.appendChild(element)
-    element.click()
+    document.body.appendChild(link);
+    link.click();
     // Cleanup
-    document.body.removeChild(element)
+    document.body.removeChild(link);
   }
 
 }
