@@ -64,6 +64,12 @@ export class EditorComponent implements OnInit, AfterViewInit {
     })
   }
 
+  saveKeml() {
+    const jsonString = 'todo';
+    const contentBlob = new Blob([jsonString], {type: 'application/json'});
+    this.ioService.saveFile(contentBlob, 'keml.json');
+  }
+
   saveDiagramJSON() {
     const jsonString = this.diagram.saveDiagram();
     const contentBlob = new Blob([jsonString], {type: 'application/json'});
@@ -74,4 +80,5 @@ export class EditorComponent implements OnInit, AfterViewInit {
     let options: IExportOptions = {mode: 'Download', format: 'SVG', fileName: 'keml'};
     this.diagram.exportDiagram(options);
   }
+
 }
