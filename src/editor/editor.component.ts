@@ -39,7 +39,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   ) {}
 
   newDiagram() {
-    this.diagram.clear();
+    this.diagramService.initializeConversationDiagram(this.diagram);
   }
 
   openKeml() {
