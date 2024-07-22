@@ -1,12 +1,8 @@
 import { ConversationPartner } from "../sequence-diagram-models";
 import {Message} from "./message";
 
-export class SendMessage implements Message {
-    eClass: string = "http://www.unikoblenz.de/keml#//SendMessage";
-    content: string;
-    originalContent?: string;
-    timing: number;
-    counterPart: ConversationPartner;
+export class SendMessage extends Message {
+    static eClass: string = "http://www.unikoblenz.de/keml#//SendMessage";
 
     constructor(
       counterPart: ConversationPartner,
@@ -14,9 +10,12 @@ export class SendMessage implements Message {
       content?: string,
       originalContent?: string,
     ) {
-      this.counterPart = counterPart;
-      this.timing = timing;
-      this.content = content? content: "NewSend_"+timing;
-      this.originalContent = originalContent;
+      super(
+        counterPart,
+        timing,
+        content? content: "NewSend_"+timing,
+        originalContent
+      );
     }
+
 }
