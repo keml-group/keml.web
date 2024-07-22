@@ -1,9 +1,8 @@
 import {LifeLine} from "./life-line";
 
-export class ConversationPartner implements LifeLine {
-    name: string;
+export class ConversationPartner extends LifeLine {
 
     constructor(name: string = 'NewPartner') {
-      this.name = name;
+      super(name);
     }
 }

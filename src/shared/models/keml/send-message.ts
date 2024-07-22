@@ -1,4 +1,4 @@
-import { ConversationPartner } from "../sequence-diagram-models";
+import {ConversationPartner} from "./conversation-partner";
 import {Message} from "./message";
 
 export class SendMessage extends Message {
