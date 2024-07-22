@@ -1,15 +1,13 @@
 import {AfterViewInit, Component, EventEmitter, OnInit, ViewChild,} from '@angular/core';
 import {
   BpmnDiagramsService,
-  BpmnShapeModel,
   DiagramComponent,
-  FlowShapeModel,
   IExportOptions
 } from "@syncfusion/ej2-angular-diagrams";
-import { ToolbarComponent } from '@syncfusion/ej2-angular-navigations';
 import {ModelIOService} from "../shared/services/model-io.service";
 import {DiagramService} from "../shared/services/diagram.service";
 import {IoService} from "../shared/services/io.service";
+import {Author, Conversation} from "../shared/models/sequence-diagram-models";
 
 @Component({
   selector: 'keml-editor',
@@ -18,10 +16,6 @@ import {IoService} from "../shared/services/io.service";
   providers: [BpmnDiagramsService, ModelIOService, DiagramService, IoService]
 })
 export class EditorComponent implements OnInit, AfterViewInit {
-
-  public terminator:FlowShapeModel =  { type: 'Flow', shape: 'Terminator'};
-  public preKnowledge: BpmnShapeModel = { type: 'Bpmn', shape: 'DataSource'};
-  public style = {fill:'red',strokeColor:'green',strokeWidth:5,strokeDashArray:'2 2'};
 
   @ViewChild("diagram") diagram!: DiagramComponent;
 
