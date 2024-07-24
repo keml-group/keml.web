@@ -7,7 +7,8 @@ import {
 import {ModelIOService} from "../shared/services/model-io.service";
 import {DiagramService} from "../shared/services/diagram.service";
 import {IoService} from "../shared/services/io.service";
-import {Author, Conversation} from "../shared/models/sequence-diagram-models";
+//import {Author, Conversation} from "../shared/models/sequence-diagram-models";
+import{Conversation} from "../shared/models/keml/conversation";
 
 @Component({
   selector: 'keml-editor',
@@ -44,6 +45,12 @@ export class EditorComponent implements OnInit, AfterViewInit {
     this.ioService.loadStringFromFile(event).then(txt => {
       //todo insert detection code for wrong files (no json, not appropriately structured
       const conv = this.modelIOService.loadKEML(txt);
+
+      const c2: Conversation = Conversation.fromJSON(txt);
+      console.log(JSON.stringify(c2));
+      //console.log(c2.toJson());
+      console.log(c2.author.messages.map(m => {m.toJSON()}))
+
       this.diagramService.loadConversationAsDiagram(conv, this.diagram)
     });
   }

@@ -6,4 +6,12 @@ export abstract class LifeLine {
     this.name = name;
   }
 
+  fromJSON(json: string): LifeLine {
+    return JSON.parse(json);
+  }
+
+  toJSON(): string {
+    return JSON.stringify(this);
+  }
+
 }

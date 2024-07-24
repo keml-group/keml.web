@@ -36,14 +36,15 @@ export abstract class Message {
     return res;
   }
 
-  toJSON(conversationPartners: ConversationPartner[]): string {
-    return JSON.stringify(this, (key: string, value) => {
-      if (key === "counterPart") {
-        return {
-          eClass : "http://www.unikoblenz.de/keml#//ConversationPartner",
-          $ref : IOHelper.createConversationPartnerRef(IOHelper.findIndexOnArray(value, conversationPartners))
-        };
-      } else return value;
-    });
+  toJSON(): any {
+    const cpJson = sessionStorage.getItem("conversationPartners");
+    const convP: string[] = JSON.parse(cpJson? cpJson: "[]");
+    const res: any = this;
+    const index = convP.findIndex(v => v == this.counterPart.name);
+    res.counterPart = {
+      eClass : "http://www.unikoblenz.de/keml#//ConversationPartner",
+      $ref : IOHelper.createConversationPartnerRef(index)
+    }
+    return res;
   }
 }
