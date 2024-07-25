@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'conversation-partner',
-  standalone: true,
   templateUrl: './conversation-partner.component.svg',
   styleUrl: './conversation-partner.component.css'
 })
