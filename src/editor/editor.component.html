@@ -24,8 +24,15 @@
       <button (click)="saveKeml()">Save KEML</button>
       <button (click)="saveImgFromCanvas()">Save png</button>
     </mat-toolbar>
-    <canvas #kemlcanvas >
-
-    </canvas>
+    <canvas #kemlcanvas ></canvas>
+    <svg>
+      <g cp></g>
+      <rect x="0" y="0" width="100" height="100" [attr.fill]="fillColor" (click)="changeColor()" />
+      <text x="120" y="50">click the rectangle to change the fill color</text>
+      <g cp></g>
+      <conversation-partner></conversation-partner>
+    </svg>
+    <conversation-partner></conversation-partner>
+    <conversation-partner></conversation-partner>
   </div>
 </div>
