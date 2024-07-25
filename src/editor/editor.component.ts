@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, OnInit, ViewChild,} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, OnInit, ViewChild,} from '@angular/core';
 import {
   BpmnDiagramsService,
   DiagramComponent,
@@ -7,8 +7,9 @@ import {
 import {ModelIOService} from "../shared/services/model-io.service";
 import {DiagramService} from "../shared/services/diagram.service";
 import {IoService} from "../shared/services/io.service";
-//import {Author, Conversation} from "../shared/models/sequence-diagram-models";
 import{Conversation} from "../shared/models/keml/conversation";
+import {MatToolbar} from "@angular/material/toolbar";
+import {MatIcon} from "@angular/material/icon";
 
 @Component({
   selector: 'keml-editor',
@@ -19,22 +20,29 @@ import{Conversation} from "../shared/models/keml/conversation";
 export class EditorComponent implements OnInit, AfterViewInit {
 
   @ViewChild("diagram") diagram!: DiagramComponent;
-
-  ngOnInit(): void {
-  }
-
-  ngAfterViewInit(): void {
-    //console.log(this.diagram);
-  }
+  @ViewChild("kemlcanvas") canvas!: ElementRef<HTMLCanvasElement>;
+  conversation: Conversation;
 
   constructor(
     private modelIOService: ModelIOService,
     private diagramService: DiagramService,
     private ioService: IoService,
-  ) {}
+  ) {
+    this.conversation = new Conversation();
+  }
+
+  ngOnInit(): void {}
+
+  ngAfterViewInit(): void {
+    //console.log(this.diagram);
+  }
 
   newDiagram() {
     this.diagramService.initializeConversationDiagram(this.diagram);
+  }
+
+  newConversation(): void {
+    this.conversation = new Conversation();
   }
 
   openKeml() {
@@ -46,11 +54,11 @@ export class EditorComponent implements OnInit, AfterViewInit {
       //todo insert detection code for wrong files (no json, not appropriately structured
       const conv = this.modelIOService.loadKEML(txt);
 
-      const c2: Conversation = Conversation.fromJSON(txt);
-      console.log(JSON.stringify(c2));
+      this.conversation = Conversation.fromJSON(txt);
+      console.log(JSON.stringify(this.conversation));
       //console.log(c2.toJson());
-      console.log(c2.author.messages.map(m => {m.toJSON()}))
-
+      // throws:
+      //console.log(this.conversation.author.messages.map(m => {m.toJSON()}))
       this.diagramService.loadConversationAsDiagram(conv, this.diagram)
     });
   }
@@ -66,7 +74,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   }
 
   saveKeml() {
-    const jsonString = 'todo';
+    const jsonString = JSON.stringify(this.conversation);
     const contentBlob = new Blob([jsonString], {type: 'application/json'});
     this.ioService.saveFile(contentBlob, 'keml.json');
   }
@@ -75,6 +83,13 @@ export class EditorComponent implements OnInit, AfterViewInit {
     const jsonString = this.diagram.saveDiagram();
     const contentBlob = new Blob([jsonString], {type: 'application/json'});
     this.ioService.saveFile(contentBlob, 'diagram.json');
+  }
+
+  saveImgFromCanvas() {
+    this.canvas.nativeElement.toBlob((blob => {
+      if(blob)
+        this.ioService.saveFile(blob, this.conversation.title+'.png');
+    }), "image/png");
   }
 
   saveImg() {
