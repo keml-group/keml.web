@@ -54,11 +54,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
 
   newConversation(): void {
     this.conversation = new Conversation();
-    const title = document.createElementNS("http://www.w3.org/2000/svg","text");;
-    title.setAttribute('x', "-50");
-    title.setAttribute('y', "-10");
 
-    this.svg.nativeElement.appendChild(title);
   }
 
   openKeml() {
