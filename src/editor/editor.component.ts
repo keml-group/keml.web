@@ -20,7 +20,6 @@ import {MatIcon} from "@angular/material/icon";
 export class EditorComponent implements OnInit, AfterViewInit {
 
   @ViewChild("diagram") diagram!: DiagramComponent;
-  @ViewChild("kemlcanvas") canvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild("svg") svg!: ElementRef<SVGElement>;
   conversation: Conversation;
 
@@ -98,10 +97,10 @@ export class EditorComponent implements OnInit, AfterViewInit {
   }
 
   saveImgFromCanvas() {
-    this.canvas.nativeElement.toBlob((blob => {
+    /*this.canvas.nativeElement.toBlob((blob => {
       if(blob)
         this.ioService.saveFile(blob, this.conversation.title+'.png');
-    }), "image/png");
+    }), "image/png");*/
   }
 
   saveImg() {
