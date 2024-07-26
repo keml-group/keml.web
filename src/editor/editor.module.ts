@@ -9,6 +9,7 @@ import {ConversationPartnerComponent} from "./conversation-partner/conversation-
 import {Cp2Component} from "./cp2/cp2.component";
 import { FormsModule } from '@angular/forms';
 import {PersonSvgComponent} from "./person-svg/person-svg.component";
+import {AuthorComponent} from "./author/author.component";
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import {PersonSvgComponent} from "./person-svg/person-svg.component";
     Cp2Component,
     ConversationPartnerComponent,
     PersonSvgComponent,
+    AuthorComponent,
   ],
   imports: [
     CommonModule,

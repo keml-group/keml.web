@@ -24,28 +24,25 @@
       <button (click)="saveKeml()">Save KEML</button>
       <button (click)="saveImgFromCanvas()">Save png</button>
     </mat-toolbar>
-    <svg #svg style="border: 1px solid black;" width="1000" height="1450" viewBox="[-500 -50 500 1400]">
+    <svg #svg style="border: 1px solid black;" width="1000">
+
       <g transform="translate(500, 50)">
-        <circle r="2.0px" fill="red" x="0" y="0"></circle>
+        <circle r="2.0px" fill="red" cx="0" cy="0"></circle>
         <foreignObject height="50" width="200" x="-100" y="-50">
           <input id="title" type="text" [(ngModel)]="conversation.title" >
         </foreignObject>
       </g>
-      <g person></g>
-
-      <g transform="translate(500, 0)">
-        <g person></g>
+      <g author></g>
+      <g cp *ngFor="let convP of conversation.conversationPartners" [conversationPartner]="convP">
       </g>
+
 
     </svg>
     <svg>
-      <g cp></g>
+      <g cp2></g>
       <rect x="0" y="0" width="100" height="100" [attr.fill]="fillColor" (click)="changeColor()" />
       <text x="120" y="50">click the rectangle to change the fill color</text>
-      <g cp></g>
-      <conversation-partner></conversation-partner>
+      <g cp2></g>
     </svg>
-    <conversation-partner></conversation-partner>
-    <conversation-partner></conversation-partner>
   </div>
 </div>
