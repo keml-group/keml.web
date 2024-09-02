@@ -23,6 +23,8 @@
     "@angular/platform-server": "^17.3.0",
     "@angular/router": "^17.3.0",
     "@angular/ssr": "^17.3.5",
+    "@eclipse-glsp/client": "^2.2.1",
+    "@eclipse-glsp/server-node": "^1.0.0",
     "@syncfusion/ej2-angular-buttons": "^26.1.40",
     "@syncfusion/ej2-angular-diagrams": "^26.1.35",
     "@syncfusion/ej2-angular-inputs": "^26.1.38",
