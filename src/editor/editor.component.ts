@@ -8,6 +8,7 @@ import {ModelIOService} from "../shared/services/model-io.service";
 import {DiagramService} from "../shared/services/diagram.service";
 import {IoService} from "../shared/services/io.service";
 import {Author, Conversation} from "../shared/models/sequence-diagram-models";
+import {GLabel, GNode} from "@eclipse-glsp/client";
 
 @Component({
   selector: 'keml-editor',
@@ -18,6 +19,7 @@ import {Author, Conversation} from "../shared/models/sequence-diagram-models";
 export class EditorComponent implements OnInit, AfterViewInit {
 
   @ViewChild("diagram") diagram!: DiagramComponent;
+  @ViewChild("glsp") svg!:HTMLCanvasElement;
 
   ngOnInit(): void {
   }
@@ -44,8 +46,16 @@ export class EditorComponent implements OnInit, AfterViewInit {
     this.ioService.loadStringFromFile(event).then(txt => {
       //todo insert detection code for wrong files (no json, not appropriately structured
       const conv = this.modelIOService.loadKEML(txt);
-      this.diagramService.loadConversationAsDiagram(conv, this.diagram)
+      this.diagramService.loadConversationAsDiagram(conv, this.diagram);
+      this.openConvOnGlspCanvas(conv);
     });
+  }
+
+  private openConvOnGlspCanvas(conv: Conversation) {
+    const convNode = new GNode();
+    const label = new GLabel();
+    label.text = conv.title;
+    convNode.add(label);
   }
 
   openDiagramJson() {
