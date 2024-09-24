@@ -18,6 +18,10 @@
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
+    "types": [
+      "reflect-metadata"
+    ],
+    "jsx": "react",
     "lib": [
       "ES2022",
       "dom"
@@ -26,7 +30,7 @@
     "paths": {
       "@env/*": ["./environments/*"],
       "@app/*": ["./src/app/*"],
-    }
+    },
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
