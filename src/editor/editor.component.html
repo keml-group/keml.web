@@ -33,6 +33,7 @@
         </foreignObject>
       </g>
       <g author></g>
+      <g author *ngFor="let convP of conversation.conversationPartners" ></g>
       <g cp *ngFor="let convP of conversation.conversationPartners" [conversationPartner]="convP">
       </g>
 

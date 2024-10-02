@@ -1,4 +1,6 @@
 <svg:g transform="translate(500, 0)">
   <g person></g>
-  <text x="-25" y="125">Author</text>
+  <foreignObject height="50" width="200" x="-25" y="125">
+    <input id="title" type="text" [(ngModel)]="author.name" >
+  </foreignObject>
 </svg:g>
