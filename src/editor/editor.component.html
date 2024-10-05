@@ -25,7 +25,6 @@
       <button (click)="saveImgFromCanvas()">Save png</button>
     </mat-toolbar>
     <svg #svg style="border: 1px solid black;" width="1000">
-
       <g transform="translate(500, 50)">
         <circle r="2.0px" fill="red" cx="0" cy="0"></circle>
         <foreignObject height="50" width="200" x="-100" y="-50">
@@ -33,11 +32,7 @@
         </foreignObject>
       </g>
       <g author></g>
-      <g author *ngFor="let convP of conversation.conversationPartners" ></g>
-      <g cp *ngFor="let convP of conversation.conversationPartners" [conversationPartner]="convP">
-      </g>
-
-
+      <g cp *ngFor="let convP of conversation.conversationPartners" [conversationPartner]="convP"></g>
     </svg>
     <svg>
       <g cp2></g>
