@@ -3,4 +3,5 @@
   <foreignObject height="50" width="60" x="-25" y="125">
     <input id="title" type="text" [(ngModel)]="author.name" >
   </foreignObject>
+  <line x1="0" x2="0" y1="150" y2="2000" stroke="black" stroke-width="0.5pt" stroke-dasharray="10,10"></line>
 </svg:g>
