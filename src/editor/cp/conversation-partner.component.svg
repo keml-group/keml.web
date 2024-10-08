@@ -1,6 +1,6 @@
-<svg:g transform="translate(600, 0)">
+<svg:g attr.transform="translate({{conversationPartner.xPosition}})">
   <g person></g>
-  <foreignObject height="50" width="200" x="-25" y="125">
+  <foreignObject height="50" width="60" x="-25" y="125">
     <input id="title" type="text" [(ngModel)]="conversationPartner.name" >
   </foreignObject>
 </svg:g>

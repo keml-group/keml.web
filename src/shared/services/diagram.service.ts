@@ -9,10 +9,6 @@ export class DiagramService {
 
   constructor() { }
 
-  initializeConversationDiagram(diagram: DiagramComponent) {
-    diagram.clear();
-    diagram.add(this.defineAuthor());
-  }
 
   loadConversationAsDiagram(conv: Conversation, diagram: DiagramComponent) {
     diagram.clear();

@@ -1,13 +1,8 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, OnInit, ViewChild,} from '@angular/core';
-import {
-  BpmnDiagramsService,
-  DiagramComponent,
-  IExportOptions
-} from "@syncfusion/ej2-angular-diagrams";
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild,} from '@angular/core';
 import {ModelIOService} from "../shared/services/model-io.service";
 import {DiagramService} from "../shared/services/diagram.service";
 import {IoService} from "../shared/services/io.service";
-import{Conversation} from "../shared/models/keml/conversation";
+import{Conversation} from "../shared/models/sequence-diagram-models";
 import {MatToolbar} from "@angular/material/toolbar";
 import {MatIcon} from "@angular/material/icon";
 
@@ -15,11 +10,10 @@ import {MatIcon} from "@angular/material/icon";
   selector: 'keml-editor',
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.css',
-  providers: [BpmnDiagramsService, ModelIOService, DiagramService, IoService]
+  providers: [ModelIOService, DiagramService, IoService]
 })
 export class EditorComponent implements OnInit, AfterViewInit {
 
-  @ViewChild("diagram") diagram!: DiagramComponent;
   @ViewChild("svg") svg!: ElementRef<SVGElement>;
   conversation: Conversation;
 
@@ -28,13 +22,12 @@ export class EditorComponent implements OnInit, AfterViewInit {
     private diagramService: DiagramService,
     private ioService: IoService,
   ) {
-    this.conversation = new Conversation();
+    this.conversation = this.modelIOService.newKEML();
   }
 
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    //console.log(this.diagram);
   }
 
   fillColor = 'rgb(255, 0, 0)';
@@ -46,14 +39,8 @@ export class EditorComponent implements OnInit, AfterViewInit {
     this.fillColor = `rgb(${r}, ${g}, ${b})`;
   }
 
-
-  newDiagram() {
-    this.diagramService.initializeConversationDiagram(this.diagram);
-  }
-
   newConversation(): void {
-    this.conversation = new Conversation();
-
+    this.conversation = this.modelIOService.newKEML();
   }
 
   openKeml() {
@@ -63,25 +50,12 @@ export class EditorComponent implements OnInit, AfterViewInit {
   loadKeml(event: Event) {
     this.ioService.loadStringFromFile(event).then(txt => {
       //todo insert detection code for wrong files (no json, not appropriately structured
-      const conv = this.modelIOService.loadKEML(txt);
-
-      this.conversation = Conversation.fromJSON(txt);
+      this.conversation = this.modelIOService.loadKEML(txt);
       console.log(JSON.stringify(this.conversation));
       //console.log(c2.toJson());
       // throws:
       //console.log(this.conversation.author.messages.map(m => {m.toJSON()}))
-      this.diagramService.loadConversationAsDiagram(conv, this.diagram)
     });
-  }
-
-  openDiagramJson() {
-    document.getElementById('openDia')?.click();
-  }
-
-  loadDiagramJSON(event: Event) {
-    this.ioService.loadStringFromFile(event).then(diagramStr => {
-      this.diagram.loadDiagram(diagramStr);
-    })
   }
 
   saveKeml() {
@@ -90,22 +64,15 @@ export class EditorComponent implements OnInit, AfterViewInit {
     this.ioService.saveFile(contentBlob, 'keml.json');
   }
 
-  saveDiagramJSON() {
-    const jsonString = this.diagram.saveDiagram();
-    const contentBlob = new Blob([jsonString], {type: 'application/json'});
-    this.ioService.saveFile(contentBlob, 'diagram.json');
-  }
-
-  saveImgFromCanvas() {
-    /*this.canvas.nativeElement.toBlob((blob => {
-      if(blob)
-        this.ioService.saveFile(blob, this.conversation.title+'.png');
-    }), "image/png");*/
-  }
-
-  saveImg() {
-    let options: IExportOptions = {mode: 'Download', format: 'SVG', fileName: 'keml'};
-    this.diagram.exportDiagram(options);
+  //todo: handling of foreign objects leads to errors, will need self-written method
+  saveSVG() {
+    const svgContent = this.svg.nativeElement;
+    console.log(svgContent);
+    console.log(svgContent.outerHTML);
+    if(svgContent) {
+      const contentBlob = new Blob([svgContent.outerHTML], {type: 'image/svg+xml'});
+      this.ioService.saveFile(contentBlob, 'conversation.svg');
+    }
   }
 
 }

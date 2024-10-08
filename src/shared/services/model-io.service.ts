@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Conversation, ConversationPartner, Message} from "../models/sequence-diagram-models";
+import {Author, Conversation, ConversationPartner, Message} from "../models/sequence-diagram-models";
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,26 @@ export class ModelIOService {
       message.counterPart = convPartners[this.resolveConversationPartnerReference(ref? ref : "")];
     })
     // todo resolve others
+
+    // now, the automatic conversion of the convP is included:
+    this.positionConversationPartners(conv.conversationPartners);
+    console.log(conv);
     return conv;
+  }
+
+  newKEML(): Conversation {
+    const author: Author = {
+      name: 'Author',
+      messages: []
+    }
+    const convP = [{name: 'LLM'}];
+    this.positionConversationPartners(convP);
+    return {
+      eClass: 'http://www.unikoblenz.de/keml#//Conversation',
+      title: 'New Conversation',
+      author: author,
+      conversationPartners: convP
+    }
   }
 
   resolveConversationPartnerReference(ref: string): number {
@@ -27,5 +46,18 @@ export class ModelIOService {
     return parseInt(ref.substring(length))
   }
 
+  /*
+   positions the xPositions of the convPartners list.
+   It currently assumes no meaningful xPosition but just fills this field
+   It could later evaluate the current values and adjust them if things are not ok
+   */
+  private positionConversationPartners(convPartners: ConversationPartner[]) {
+    // distance to first partner should be bigger than distance in between:
+    const distanceToFirst: number = 300;
+    const distanceBetween: number = 150;
+    for (let i = 0; i < convPartners.length; i++) {
+      convPartners[i].xPosition = distanceToFirst + i*distanceBetween;
+    }
+  }
 
 }
