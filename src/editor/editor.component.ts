@@ -2,9 +2,7 @@ import {AfterViewInit, Component, ElementRef, OnInit, ViewChild,} from '@angular
 import {ModelIOService} from "../shared/services/model-io.service";
 import {DiagramService} from "../shared/services/diagram.service";
 import {IoService} from "../shared/services/io.service";
-import{Conversation} from "../shared/models/sequence-diagram-models";
-import {MatToolbar} from "@angular/material/toolbar";
-import {MatIcon} from "@angular/material/icon";
+import {Conversation} from "../shared/models/sequence-diagram-models";
 
 @Component({
   selector: 'keml-editor',
@@ -52,9 +50,6 @@ export class EditorComponent implements OnInit, AfterViewInit {
       //todo insert detection code for wrong files (no json, not appropriately structured
       this.conversation = this.modelIOService.loadKEML(txt);
       console.log(JSON.stringify(this.conversation));
-      //console.log(c2.toJson());
-      // throws:
-      //console.log(this.conversation.author.messages.map(m => {m.toJSON()}))
     });
   }
 

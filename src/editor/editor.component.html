@@ -11,8 +11,9 @@
     <div style="width: 1500px; height: 1000px; overflow: auto;">
       <svg #svg id="svg" style="border: 1px solid black;" width="1500" height="2000" overflow="scroll">
         <g transform="translate(750,0)">
-          <g author></g>
+          <g authorG [author]="conversation.author"></g>
           <g cp *ngFor="let convP of conversation.conversationPartners" [conversationPartner]="convP"></g>
+          <g msgG *ngFor="let m of conversation.author.messages" [msg]="m"></g>
         </g>
      </svg>
     </div>

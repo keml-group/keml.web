@@ -25,7 +25,7 @@ export interface Message {
   eClass: string;
   content: string;
   originalContent?: string;
-  timing?: number;
+  timing: number;
   counterPart: ConversationPartner;
 }
 

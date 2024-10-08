@@ -21,6 +21,7 @@ export class ModelIOService {
 
     // now, the automatic conversion of the convP is included:
     this.positionConversationPartners(conv.conversationPartners);
+    this.timeMessages(conv.author.messages);
     console.log(conv);
     return conv;
   }
@@ -59,5 +60,21 @@ export class ModelIOService {
       convPartners[i].xPosition = distanceToFirst + i*distanceBetween;
     }
   }
+
+  private timeMessages(messages: Message[]) {
+    for (let i = 0; i < messages.length; i++) {
+      messages[i].timing = i+1;
+    }
+  }
+
+  /*
+  private positionMessages(messages: Message[]) {
+    const distanceToFirst: number = 180;
+    const distanceBetween: number = 60;
+
+    for (let i = 0; i < messages.length; i++) {
+      messages[i].timing = distanceToFirst + i*distanceBetween;
+    }
+  }*/
 
 }
