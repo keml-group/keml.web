@@ -1,3 +1,8 @@
-<svg:g attr.transform="translate(-5,{{180+60*msg.timing}})">
+<svg:g attr.transform="translate(-5,{{computeY()}})">
   <rect width="10" height="10"  x="0" y="0" fill="grey"></rect>
+  <line x1="10" y1="5" attr.x2="{{msg.counterPart.xPosition}}" y2="5" stroke="black"></line>
+  <foreignObject height="80" attr.width="{{msg.counterPart.xPosition}}" x="15" y="-20">
+    <textarea id="msgT" type="text" [(ngModel)]="msg.content" cols="{{msg.counterPart.xPosition/10}}" style="height: auto;">
+    </textarea>
+  </foreignObject>
 </svg:g>

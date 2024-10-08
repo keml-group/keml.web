@@ -9,5 +9,9 @@ import {Message} from "../../shared/models/sequence-diagram-models";
 export class MsgComponent {
   @Input() msg!: Message;
 
+  computeY(): number {
+    return 180+60*this.msg.timing;
+  }
+
 
 }

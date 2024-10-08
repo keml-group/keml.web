@@ -29,9 +29,10 @@ export class ModelIOService {
   newKEML(): Conversation {
     const author: Author = {
       name: 'Author',
+      xPosition: 0,
       messages: []
     }
-    const convP = [{name: 'LLM'}];
+    const convP = [{name: 'LLM', xPosition: 1, messages: []}];
     this.positionConversationPartners(convP);
     return {
       eClass: 'http://www.unikoblenz.de/keml#//Conversation',
