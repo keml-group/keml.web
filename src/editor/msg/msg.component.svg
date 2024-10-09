@@ -1,7 +1,9 @@
 <svg:g attr.transform="translate(-5,{{computeY()}})">
   <rect width="10" height="10"  x="0" y="0" fill="grey"></rect>
-  <line x1="10" y1="5" attr.x2="{{msg.counterPart.xPosition}}" y2="5" stroke="black"></line>
-  <foreignObject height="80" attr.width="{{msg.counterPart.xPosition}}" x="15" y="-20">
+  <line x1="10" y1="5" attr.x2="{{msg.counterPart.xPosition +5 }}" y2="5" stroke="black"></line>
+  <path d='M 20,0 L 10,5 L 20,10 L 18, 5 Z' fill="black" attr.transform="{{isSend() ? 'rotate(180 ' + (msg.counterPart.xPosition/2+10) + ' 5)' : 'rotate(0 0 0)' }}">
+  </path>
+  <foreignObject height="80" attr.width="{{msg.counterPart.xPosition}}" x="25" y="-20">
     <textarea id="msgT" type="text" [(ngModel)]="msg.content" cols="{{msg.counterPart.xPosition/10}}" style="height: auto;">
     </textarea>
   </foreignObject>

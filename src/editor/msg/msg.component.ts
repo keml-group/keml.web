@@ -13,5 +13,9 @@ export class MsgComponent {
     return 180+60*this.msg.timing;
   }
 
+  isSend(): boolean {
+    return this.msg.eClass.endsWith('SendMessage')
+  }
+
 
 }
