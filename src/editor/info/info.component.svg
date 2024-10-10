@@ -1,8 +1,8 @@
-<svg [attr.height]="h" [attr.width]="w">
-  <rect x="0" y="0" height="100%" width="10%" fill="blue"></rect>
-  <rect [attr.x]="w*0.1" y="0" height="100%" width="90%" fill="yellow"></rect>
-  <foreignObject attr.height="{{h}}" attr.width="{{w*0.9}}" attr.x="{{w*0.1}}" y="0">
-    <textarea id="infoT" type="text" [(ngModel)]="info.message" style="height: auto;" style="background: yellow">
+<svg:g>
+  <rect x="0" y="0" [attr.width]="w*0.1" [attr.height]="h" fill="blue"></rect>
+  <rect [attr.x]="w*0.1" y="0" [attr.width]="w*0.9" [attr.height]="h" fill="yellow"></rect>
+  <foreignObject [attr.x]="w*0.1" y="0" [attr.width]="w*0.9" [attr.height]="h">
+    <textarea id="infoT" type="text" [(ngModel)]="info.message" style="background: yellow">
     </textarea>
   </foreignObject>
-</svg>
+</svg:g>
