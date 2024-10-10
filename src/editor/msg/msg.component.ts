@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
-import {Message} from "../../shared/models/sequence-diagram-models";
+import {Message, ReceiveMessage} from "../../shared/models/sequence-diagram-models";
+import {NewInformation} from "../../shared/models/knowledge-models";
 
 @Component({
   selector: '[msgG]',
@@ -17,5 +18,12 @@ export class MsgComponent {
     return this.msg.eClass.endsWith('SendMessage')
   }
 
+  getInfos(): NewInformation[] {
+    if (this.isSend())
+      return [];
+    else {
+      return (this.msg as ReceiveMessage).generates
+    }
+  }
 
 }

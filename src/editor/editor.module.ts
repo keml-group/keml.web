@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import {PersonSvgComponent} from "./person-svg/person-svg.component";
 import {AuthorComponent} from "./author/author.component";
 import {MsgComponent} from "./msg/msg.component";
+import {InfoComponent} from "./info/info.component";
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import {MsgComponent} from "./msg/msg.component";
     PersonSvgComponent,
     AuthorComponent,
     MsgComponent,
+    InfoComponent,
   ],
   imports: [
     CommonModule,

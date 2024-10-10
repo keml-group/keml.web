@@ -34,7 +34,7 @@ export interface SendMessage extends Message {
 }
 
 export interface ReceiveMessage extends Message {
-  generates?: (NewInformation)[];
+  generates: (NewInformation)[];
   repeats?: (Information)[];
 }
 

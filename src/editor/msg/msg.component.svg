@@ -7,4 +7,5 @@
     <textarea id="msgT" type="text" [(ngModel)]="msg.content" cols="{{msg.counterPart.xPosition/10}}" style="height: auto;">
     </textarea>
   </foreignObject>
+  <g infoG *ngFor="let info of getInfos()" [info]="info"></g>
 </svg:g>
