@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Author, Conversation, ConversationPartner, Message} from "../models/sequence-diagram-models";
+import {Author, Conversation, ConversationPartner, Message, ReceiveMessage} from "../models/sequence-diagram-models";
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +22,7 @@ export class ModelIOService {
     // now, the automatic conversion of the convP is included:
     this.positionConversationPartners(conv.conversationPartners);
     this.timeMessages(conv.author.messages);
+    this.repairSourceOfNewInfo(conv.author.messages);
     console.log(conv);
     return conv;
   }
@@ -78,4 +79,13 @@ export class ModelIOService {
     }
   }*/
 
+  // todo do not use, it causes circles
+  repairSourceOfNewInfo(messages: Message[]) {
+    for (let msg of messages) {
+      //const infos = (msg as ReceiveMessage).generates;
+      (msg as ReceiveMessage)?.generates?.forEach(r => {
+        r.source = <ReceiveMessage>msg;
+      })
+    }
+  }
 }

@@ -1,8 +1,8 @@
-<svg:g>
+<svg:g [attr.transform]="'translate(-400)'">
   <rect x="0" y="0" [attr.width]="w*0.1" [attr.height]="h" fill="blue"></rect>
-  <rect [attr.x]="w*0.1" y="0" [attr.width]="w*0.9" [attr.height]="h" fill="yellow"></rect>
+  <rect [attr.x]="w*0.1" y="0" [attr.width]="w*0.9" [attr.height]="h" [attr.fill]="computeTextColor()"></rect>
   <foreignObject [attr.x]="w*0.1" y="0" [attr.width]="w*0.9" [attr.height]="h">
-    <textarea id="infoT" type="text" [(ngModel)]="info.message" style="background: yellow">
+    <textarea id="infoT" type="text" [(ngModel)]="info.message" [attr.style]="'background: '+ computeTextColor()">
     </textarea>
   </foreignObject>
 </svg:g>
