@@ -1,5 +1,5 @@
 <svg:g>
-  <g person></g>
+  <g person transform="translate(-48.7,0)"></g>
   <foreignObject height="50" width="60" x="-25" y="125">
     <input id="title" type="text" [(ngModel)]="author.name" >
   </foreignObject>

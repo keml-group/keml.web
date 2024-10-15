@@ -32,9 +32,18 @@ export class InfoComponent {
     } else return 'author'; //give colors here already, currently we use the template vehicle
   }
 
+  changeIsInstr():void {
+    console.log('change')
+    this.info.isInstruction = !this.info.isInstruction;
+  }
+
   // todo
   computeTextColor():string {
     const name = this.getConvPartnerName();
     return name == 'LLM'? '#ccffff' : '#ffff99'
+  }
+
+  computeInstructionBGColor(): string {
+    return this.info.isInstruction ? '#ffcc00' : '#99cc00'
   }
 }

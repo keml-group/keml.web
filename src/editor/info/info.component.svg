@@ -1,5 +1,7 @@
 <svg:g [attr.transform]="'translate(-400)'">
-  <rect x="0" y="0" [attr.width]="w*0.1" [attr.height]="h" fill="blue"></rect>
+  <rect x="0" y="0" [attr.width]="w*0.1" [attr.height]="h" [attr.fill]="computeInstructionBGColor()" (click)="changeIsInstr()"></rect>
+  <g person *ngIf="info.isInstruction" [attr.transform]="'scale(0.4, 0.4) translate('+  (-w*0.12) +', '+ -h*0.4 +')'"></g>
+  <text *ngIf="!info.isInstruction" x="10" [attr.y]="h*0.35" font-size="100%" transform="scale(1, 2)">!</text>
   <rect [attr.x]="w*0.1" y="0" [attr.width]="w*0.9" [attr.height]="h" [attr.fill]="computeTextColor()"></rect>
   <foreignObject [attr.x]="w*0.1" y="0" [attr.width]="w*0.9" [attr.height]="h">
     <textarea id="infoT" type="text" [(ngModel)]="info.message" [attr.style]="'background: '+ computeTextColor()">

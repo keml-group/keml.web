@@ -18,11 +18,11 @@ export class ModelIOService {
       message.counterPart = convPartners[this.resolveConversationPartnerReference(ref? ref : "")];
     })
     // todo resolve others
+    // cannot, throws bc of circular ref this.repairSourceOfNewInfo(conv.author.messages);
 
     // now, the automatic conversion of the convP is included:
     this.positionConversationPartners(conv.conversationPartners);
     this.timeMessages(conv.author.messages);
-    this.repairSourceOfNewInfo(conv.author.messages);
     console.log(conv);
     return conv;
   }
