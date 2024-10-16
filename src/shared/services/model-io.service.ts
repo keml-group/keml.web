@@ -59,6 +59,14 @@ export class ModelIOService {
     }
   }
 
+  addConversationPartner(cps: ConversationPartner[]) {
+    const cp: ConversationPartner = {
+      name: 'New Partner',
+      xPosition: LayoutHelper.nextConversationPartnerPosition(cps[cps.length-1].xPosition), //todo
+    }
+    cps.push(cp);
+  }
+
   // todo do not use, it causes circles
   repairSourceOfNewInfo(messages: Message[]) {
     for (let msg of messages) {

@@ -5,6 +5,9 @@ import {ConversationPartner, Message} from "./models/sequence-diagram-models";
 import {Preknowledge} from "./models/knowledge-models";
 
 export class LayoutHelper {
+  // distance to first partner should be bigger than distance in between:
+  static distanceToFirstCP: number = 300;
+  static distanceBetweenCP: number = 150;
 
   /*
  positions the xPositions of the convPartners list.
@@ -12,12 +15,13 @@ export class LayoutHelper {
  It could later evaluate the current values and adjust them if things are not ok
  */
   static positionConversationPartners(convPartners: ConversationPartner[]) {
-    // distance to first partner should be bigger than distance in between:
-    const distanceToFirst: number = 300;
-    const distanceBetween: number = 150;
     for (let i = 0; i < convPartners.length; i++) {
-      convPartners[i].xPosition = distanceToFirst + i * distanceBetween;
+      convPartners[i].xPosition = LayoutHelper.distanceToFirstCP + i * LayoutHelper.distanceBetweenCP;
     }
+  }
+
+  static nextConversationPartnerPosition(positionBefore: number): number {
+    return positionBefore + LayoutHelper.distanceBetweenCP;
   }
 
   // unused since currently message timing is a simple index used on the fly

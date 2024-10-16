@@ -17,3 +17,30 @@
   color: orange;
   background: transparent;
 }
+
+.editor-panel{
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: first;
+  box-sizing: inherit;
+  position: relative;
+}
+
+.edit-tools{
+  width: 5%;
+  flex-direction: column;
+  display: block;
+}
+
+.tool-button{
+  margin: 1rem;
+  text-align: center;
+  color: orange;
+  height: 3rem;
+  width: 3rem;
+}
+.tool-button:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}

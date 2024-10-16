@@ -1,5 +1,5 @@
-<div id="diagram-space" class="sb-mobile-diagram">
-  <div>
+<div class="editor" id="editor">
+  <div class="file-handling">
     <input id="openKEML" type="file" class="file-upload" style="display: none" (change)="loadKeml($event)">
     <mat-toolbar class="file-level-bar">
       <button class="file-level-button" (click)="newConversation()">
@@ -19,18 +19,34 @@
         Save SVG
       </button>
     </mat-toolbar>
-    <input id="title" type="text" [(ngModel)]="conversation.title" >
-    <div style="width: 1500px; height: 1000px; overflow: auto;">
-      <svg #svg id="svg" style="border: 1px solid black;" width="1500" height="2000" overflow="scroll">
-        <g transform="translate(750,0)">
-          <g authorG [author]="conversation.author"></g>
-          <g cp *ngFor="let convP of conversation.conversationPartners" [conversationPartner]="convP"></g>
-          <g msgG *ngFor="let m of conversation.author.messages" [msg]="m"></g>
-        </g>
-     </svg>
-    </div>
-    <svg>
-      <rect x="0" y="0" width="100" height="100" [attr.fill]="fillColor" (click)="changeColor()" />
-    </svg>
+  </div>
+  <div class="editor-panel">
+      <div class="edit-tools">
+        <p style="color: orange">
+          <mat-icon aria-hidden="true" fontIcon="add"></mat-icon>
+          Add
+        </p>
+        <button class="tool-button" title="Add conversation partner" (click)="addConversationPartner()">
+          <svg width="3rem" height="3rem">
+            <g person transform="translate(-12, -15) scale(0.5, 0.5) "></g>
+          </svg>
+        </button>
+        <button class="tool-button">h</button>
+        <button class="tool-button">h</button>
+        <button class="tool-button">h</button>
+        <button class="tool-button">h</button>
+      </div>
+      <div style="width: 1500px; height: 1000px; overflow: auto;">
+        <svg #svg id="svg" style="border: 1px solid black;" width="1500" height="2000" overflow="scroll">
+          <g transform="translate(750,0)">
+            <foreignObject height="20" width="600">
+              <input id="title" type="text" [(ngModel)]="conversation.title" >
+            </foreignObject>
+            <g authorG [author]="conversation.author"></g>
+            <g cp *ngFor="let convP of conversation.conversationPartners" [conversationPartner]="convP"></g>
+            <g msgG *ngFor="let m of conversation.author.messages" [msg]="m"></g>
+          </g>
+        </svg>
+      </div>
   </div>
 </div>
