@@ -10,5 +10,5 @@ import {EditorModule} from "../editor/editor.module";
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'kemlgui';
+  title = 'KEMLeditor';
 }

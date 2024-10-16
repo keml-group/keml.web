@@ -5,6 +5,11 @@
   --vivid-pink: oklch(69.02% 0.277 332.77);
   --hot-red: oklch(61.42% 0.238 15.34);
   --orange-red: oklch(63.32% 0.24 31.68);
+  --bright-orange: oklch(70% 0.1825 58.76);
+  --orange-yellow: oklch(81.33% 0.1554 68.29);
+  --opace-orange: oklch(90% 0.1225 58.76);
+  --bright-yellow: oklch(89.26% 0.1603 89.76);
+
 
   --gray-900: oklch(19.37% 0.006 300.98);
   --gray-700: oklch(36.98% 0.014 302.71);
@@ -15,6 +20,13 @@
     var(--orange-red) 0%,
     var(--vivid-pink) 50%,
     var(--electric-violet) 100%
+  );
+
+  --red-to-orange-vertical-gradient: linear-gradient(
+    180deg,
+    var(--orange-red) 0%,
+    var(--bright-orange) 50%,
+    var(--orange-yellow) 100%
   );
 
   --red-to-pink-to-purple-horizontal-gradient: linear-gradient(
@@ -36,7 +48,7 @@
 
 h1 {
   font-size: 3.125rem;
-  color: var(--gray-900);
+  background: var(--opace-orange);
   font-weight: 500;
   line-height: 100%;
   letter-spacing: -0.125rem;
@@ -81,9 +93,13 @@ main {
   margin-top: 1.5rem;
 }
 
+.right-side{
+  margin-top: 8rem;
+}
+
 .divider {
   width: 1px;
-  background: var(--red-to-pink-to-purple-vertical-gradient);
+  background: var(--red-to-orange-vertical-gradient);
   margin-inline: 0.5rem;
 }
 
@@ -120,15 +136,15 @@ main {
 }
 
 .pill-group .pill:nth-child(6n + 1) {
-  --pill-accent: var(--bright-blue);
+  --pill-accent: var(--bright-orange);
 }
-.pill-group .pill:nth-child(6n + 2) {
-  --pill-accent: var(--french-violet);
-}
+.pill-group .pill:nth-child(6n + 2),
 .pill-group .pill:nth-child(6n + 3),
-.pill-group .pill:nth-child(6n + 4),
+.pill-group .pill:nth-child(6n + 4) {
+  --pill-accent: var(--orange-yellow);
+}
 .pill-group .pill:nth-child(6n + 5) {
-  --pill-accent: var(--hot-red);
+  --pill-accent: var(--bright-yellow);
 }
 
 .pill-group svg {
