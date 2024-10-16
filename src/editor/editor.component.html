@@ -1,11 +1,23 @@
 <div id="diagram-space" class="sb-mobile-diagram">
   <div>
     <input id="openKEML" type="file" class="file-upload" style="display: none" (change)="loadKeml($event)">
-    <mat-toolbar>
-      <button (click)="newConversation()">New</button>
-      <button (click)="openKeml()">Open KEML</button>
-      <button (click)="saveKeml()">Save KEML</button>
-      <button (click)="saveSVG()">Save SVG</button>
+    <mat-toolbar class="file-level-bar">
+      <button class="file-level-button" (click)="newConversation()">
+        <mat-icon aria-hidden="false" fontIcon="insert_drive_file" ></mat-icon>
+        New
+      </button>
+      <button class="file-level-button" (click)="openKeml()">
+        <mat-icon aria-hidden="false" fontIcon="file_upload" ></mat-icon>
+        Open KEML
+      </button>
+      <button class="file-level-button" (click)="saveKeml()">
+        <mat-icon aria-hidden="false" fontIcon="file_download" ></mat-icon>
+        Save KEML
+      </button>
+      <button class="file-level-button" (click)="saveSVG()">
+        <mat-icon aria-hidden="false" fontIcon="photo_library" ></mat-icon>
+        Save SVG
+      </button>
     </mat-toolbar>
     <input id="title" type="text" [(ngModel)]="conversation.title" >
     <div style="width: 1500px; height: 1000px; overflow: auto;">
