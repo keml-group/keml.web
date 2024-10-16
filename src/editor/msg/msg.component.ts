@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {Message, ReceiveMessage} from "../../shared/models/sequence-diagram-models";
 import {NewInformation} from "../../shared/models/knowledge-models";
+import {LayoutHelper} from "../../shared/layout-helper";
 
 @Component({
   selector: '[msgG]',
@@ -11,7 +12,7 @@ export class MsgComponent {
   @Input() msg!: Message;
 
   computeY(): number {
-    return 180+60*this.msg.timing;
+    return LayoutHelper.computeMessageY(this.msg.timing);
   }
 
   isSend(): boolean {

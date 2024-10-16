@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Author, Conversation, ConversationPartner, Message, ReceiveMessage} from "../models/sequence-diagram-models";
+import {NewInformation, Preknowledge} from "../models/knowledge-models";
+import {LayoutHelper} from "../layout-helper";
 
 @Injectable({
   providedIn: 'root'
@@ -21,8 +23,9 @@ export class ModelIOService {
     // cannot, throws bc of circular ref this.repairSourceOfNewInfo(conv.author.messages);
 
     // now, the automatic conversion of the convP is included:
-    this.positionConversationPartners(conv.conversationPartners);
+    LayoutHelper.positionConversationPartners(conv.conversationPartners);
     this.timeMessages(conv.author.messages);
+    LayoutHelper.positionInfos(conv.author.preknowledge, conv.author.messages);
     console.log(conv);
     return conv;
   }
@@ -31,10 +34,11 @@ export class ModelIOService {
     const author: Author = {
       name: 'Author',
       xPosition: 0,
-      messages: []
+      messages: [],
+      preknowledge: [],
     }
     const convP = [{name: 'LLM', xPosition: 1, messages: []}];
-    this.positionConversationPartners(convP);
+    LayoutHelper.positionConversationPartners(convP);
     return {
       eClass: 'http://www.unikoblenz.de/keml#//Conversation',
       title: 'New Conversation',
@@ -49,35 +53,11 @@ export class ModelIOService {
     return parseInt(ref.substring(length))
   }
 
-  /*
-   positions the xPositions of the convPartners list.
-   It currently assumes no meaningful xPosition but just fills this field
-   It could later evaluate the current values and adjust them if things are not ok
-   */
-  private positionConversationPartners(convPartners: ConversationPartner[]) {
-    // distance to first partner should be bigger than distance in between:
-    const distanceToFirst: number = 300;
-    const distanceBetween: number = 150;
-    for (let i = 0; i < convPartners.length; i++) {
-      convPartners[i].xPosition = distanceToFirst + i*distanceBetween;
-    }
-  }
-
   private timeMessages(messages: Message[]) {
     for (let i = 0; i < messages.length; i++) {
       messages[i].timing = i+1;
     }
   }
-
-  /*
-  private positionMessages(messages: Message[]) {
-    const distanceToFirst: number = 180;
-    const distanceBetween: number = 60;
-
-    for (let i = 0; i < messages.length; i++) {
-      messages[i].timing = distanceToFirst + i*distanceBetween;
-    }
-  }*/
 
   // todo do not use, it causes circles
   repairSourceOfNewInfo(messages: Message[]) {
@@ -88,4 +68,5 @@ export class ModelIOService {
       })
     }
   }
+
 }

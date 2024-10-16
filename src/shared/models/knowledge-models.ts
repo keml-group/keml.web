@@ -1,5 +1,13 @@
 import {ReceiveMessage, SendMessage} from "./sequence-diagram-models";
 
+//try out: new helper for message positioning
+export interface Position {
+  x: number;
+  y: number;
+  width: number;
+  heigt: number;
+}
+
 export interface Information {
   eClass: string;
   message: string;
@@ -12,6 +20,8 @@ export interface Information {
 
   isUsedOn: SendMessage[];
   repeatedBy: ReceiveMessage[];
+  xPosition: number;
+  yPosition: number;
 }
 
 export interface Preknowledge extends Information {
