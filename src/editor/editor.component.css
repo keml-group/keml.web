@@ -40,7 +40,14 @@
   color: orange;
   height: 3rem;
   width: 3rem;
+  background: white;
+  border: 2px solid orange;
+  border-radius: 4px;
 }
 .tool-button:hover {
   box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.filter-to-orange{
+  filter: invert(73%) sepia(61%) saturate(3593%) hue-rotate(360deg) brightness(103%) contrast(104%);
 }
