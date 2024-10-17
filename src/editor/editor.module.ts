@@ -11,6 +11,7 @@ import {PersonSvgComponent} from "./person-svg/person-svg.component";
 import {AuthorComponent} from "./author/author.component";
 import {MsgComponent} from "./msg/msg.component";
 import {InfoComponent} from "./info/info.component";
+import {DatabaseSvgComponent} from "./database-svg/database-svg.component";
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import {InfoComponent} from "./info/info.component";
     EditorComponent,
     ConversationPartnerComponent,
     PersonSvgComponent,
+    DatabaseSvgComponent,
     AuthorComponent,
     MsgComponent,
     InfoComponent,
