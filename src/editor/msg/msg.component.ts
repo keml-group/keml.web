@@ -2,6 +2,8 @@ import {Component, Input} from '@angular/core';
 import {Message, ReceiveMessage} from "../../shared/models/sequence-diagram-models";
 import {NewInformation} from "../../shared/models/knowledge-models";
 import {LayoutHelper} from "../../shared/layout-helper";
+import {MsgFormComponent} from "../msg-form/msg-form.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: '[msgG]',
@@ -10,6 +12,8 @@ import {LayoutHelper} from "../../shared/layout-helper";
 })
 export class MsgComponent {
   @Input() msg!: Message;
+
+  constructor(private dialog: MatDialog) { }
 
   computeY(): number {
     return LayoutHelper.computeMessageY(this.msg.timing);
@@ -27,8 +31,13 @@ export class MsgComponent {
     }
   }
 
-  activateMessage() {
+  openMessageDetails() {
     console.log('Activate Message');
+    const dialogRef = this.dialog.open(MsgFormComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // do something
+      }
+    });
   }
-
 }

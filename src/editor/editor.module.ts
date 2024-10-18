@@ -12,6 +12,7 @@ import {AuthorComponent} from "./author/author.component";
 import {MsgComponent} from "./msg/msg.component";
 import {InfoComponent} from "./info/info.component";
 import {DatabaseSvgComponent} from "./database-svg/database-svg.component";
+import {MsgFormComponent} from "./msg-form/msg-form.component";
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import {DatabaseSvgComponent} from "./database-svg/database-svg.component";
     DatabaseSvgComponent,
     AuthorComponent,
     MsgComponent,
+    MsgFormComponent,
     InfoComponent,
   ],
   imports: [
