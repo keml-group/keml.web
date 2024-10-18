@@ -9,6 +9,8 @@ import {ConversationPartner} from "../../shared/models/sequence-diagram-models";
 export class ConversationPartnerComponent {
   @Input() conversationPartner!: ConversationPartner;
 
-
+  activateCP() {
+    console.log('activateCP');
+  }
 
 }
