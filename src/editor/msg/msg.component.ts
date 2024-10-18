@@ -27,4 +27,8 @@ export class MsgComponent {
     }
   }
 
+  activateMessage() {
+    console.log('Activate Message');
+  }
+
 }
