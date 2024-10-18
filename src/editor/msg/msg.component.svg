@@ -3,10 +3,10 @@
   <line x1="10" y1="5" attr.x2="{{msg.counterPart.xPosition + 5}}" y2="5" stroke="black"></line>
   <path d='M 20,0 L 10,5 L 20,10 L 18, 5 Z' fill="black" attr.transform="{{isSend() ? 'rotate(180 ' + (msg.counterPart.xPosition/2+10) + ' 5)' : 'rotate(0 0 0)' }}">
   </path>
-  <foreignObject height="80" attr.width="{{msg.counterPart.xPosition}}" x="25" y="-20">
+  <rect x="0" y="-20" [attr.width]="msg.counterPart.xPosition +10" height="40" fill="transparent" (click)="activateMessage()"></rect>
+  <foreignObject height="40" attr.width="{{msg.counterPart.xPosition -35}}" x="25" y="-20">
     <textarea id="msgT" type="text" [(ngModel)]="msg.content" cols="{{msg.counterPart.xPosition/10}}" style="height: auto;">
     </textarea>
   </foreignObject>
-  <rect x="0" y="-20" [attr.width]="msg.counterPart.xPosition +10" height="40" fill="transparent" (click)="activateMessage()"></rect>
   <g infoG *ngFor="let info of getInfos()" [info]="info"></g>
 </svg:g>
