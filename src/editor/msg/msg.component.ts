@@ -33,7 +33,11 @@ export class MsgComponent {
 
   openMessageDetails() {
     console.log('Activate Message');
-    const dialogRef = this.dialog.open(MsgFormComponent);
+    const dialogRef = this.dialog.open(
+      MsgFormComponent,
+      {width: '40%', height: '80%'}
+    );
+    dialogRef.componentInstance.msg = this.msg;
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         // do something

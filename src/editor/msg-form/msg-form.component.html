@@ -1,3 +1,26 @@
-<h2>Insert your name here:</h2>
-<input type="text">
+<h2>Message Details</h2>
+
+<div class="msg-form">
+  <label class="form-label">Conversation Partner</label>
+  <input type="text" />
+
+  <label class="form-label">Message Content</label>
+  <textarea type="text" [(ngModel)]="msg.content"></textarea>
+
+  <label class="form-label">Original (long) content</label>
+  <textarea type="text" [(ngModel)]="msg.originalContent"></textarea>
+
+  <label class="form-label">Timing</label>
+  <div class="timing">
+    <button class="tool-button" title="Move up" (click)="moveUp()" [disabled]="disableMoveUp()">
+      <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
+    </button>
+    <label>{{msg.timing}}</label>
+    <button class="tool-button" title="Move down" (click)="moveDown()">
+      <mat-icon aria-hidden="false" fontIcon="arrow_forward"></mat-icon>
+    </button>
+    <input type="text" [(ngModel)]="msg.timing"/>
+  </div>
+</div>
+
 <button (click)="onClose()">Cancel</button>

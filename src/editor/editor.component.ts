@@ -27,10 +27,6 @@ export class EditorComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
   }
 
-  addConversationPartner() {
-    this.modelIOService.addConversationPartner(this.conversation.conversationPartners);
-  }
-
   newConversation(): void {
     this.conversation = this.modelIOService.newKEML();
   }
@@ -62,6 +58,10 @@ export class EditorComponent implements OnInit, AfterViewInit {
       const contentBlob = new Blob([svgContent.outerHTML], {type: 'image/svg+xml'});
       this.ioService.saveFile(contentBlob, 'conversation.svg');
     }
+  }
+
+  addConversationPartner() {
+    this.modelIOService.addConversationPartner(this.conversation.conversationPartners);
   }
 
 }
