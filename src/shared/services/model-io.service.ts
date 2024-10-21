@@ -140,7 +140,7 @@ export class ModelIOService {
     }
   }
 
-  addNewMessage(counterPart: ConversationPartner, isSend: boolean, msgs: Message[]) {
+  addNewMessage(counterPart: ConversationPartner, isSend: boolean, msgs: Message[]): Message {
     const eClass = isSend? 'http://www.unikoblenz.de/keml#//SendMessage' : 'http://www.unikoblenz.de/keml#//ReceiveMessage';
     const content = isSend ? 'New send content' : 'New receive content';
     const newMsg: Message = {
@@ -151,7 +151,7 @@ export class ModelIOService {
       originalContent: 'Original content',
     }
     msgs.push(newMsg);
-    // todo focus new message details?
+    return newMsg;
   }
 
 }

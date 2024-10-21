@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {ConversationPartner, Message, ReceiveMessage} from "../../shared/models/sequence-diagram-models";
 import {NewInformation} from "../../shared/models/knowledge-models";
 import {LayoutHelper} from "../../shared/layout-helper";
@@ -14,6 +14,7 @@ export class MsgComponent {
   @Input() msg!: Message;
   @Input() msgs!: Message[];
   @Input() cps!: ConversationPartner[];
+  @Output() openDetails: EventEmitter<Message> = new EventEmitter();
 
 
   constructor(private dialog: MatDialog) { }
@@ -35,7 +36,8 @@ export class MsgComponent {
   }
 
   openMessageDetails() {
-    console.log('Activate Message');
+    this.openDetails.emit(this.msg);
+    /*console.log('Activate Message');
     const dialogRef = this.dialog.open(
       MsgFormComponent,
       {width: '40%', height: '80%'}
@@ -47,6 +49,6 @@ export class MsgComponent {
       if (result) {
         // do something
       }
-    });
+    });*/
   }
 }

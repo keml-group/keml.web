@@ -2,7 +2,9 @@ import {AfterViewInit, Component, ElementRef, OnInit, ViewChild,} from '@angular
 import {ModelIOService} from "../shared/services/model-io.service";
 import {DiagramService} from "../shared/services/diagram.service";
 import {IoService} from "../shared/services/io.service";
-import {Conversation} from "../shared/models/sequence-diagram-models";
+import {Conversation, Message} from "../shared/models/sequence-diagram-models";
+import {MsgFormComponent} from "./msg-form/msg-form.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'keml-editor',
@@ -18,6 +20,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   constructor(
     private modelIOService: ModelIOService,
     private ioService: IoService,
+    private dialog: MatDialog,
   ) {
     this.conversation = this.modelIOService.newKEML();
   }
@@ -64,10 +67,25 @@ export class EditorComponent implements OnInit, AfterViewInit {
     this.modelIOService.addNewConversationPartner(this.conversation.conversationPartners);
   }
 
+  openMessageDetails(msg: Message) {
+    const dialogRef = this.dialog.open(
+      MsgFormComponent,
+      {width: '40%', height: '80%'}
+    );
+    dialogRef.componentInstance.msg = msg;
+    dialogRef.componentInstance.msgs = this.conversation.author.messages;
+    dialogRef.componentInstance.cps = this.conversation.conversationPartners;
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // do something
+      }
+    });
+  }
   addMessage(isSend: boolean) {
     if (this.conversation.conversationPartners.length > 0) {
       const cp = this.conversation.conversationPartners[0];
-      this.modelIOService.addNewMessage(cp, isSend, this.conversation.author.messages);
+      const msg = this.modelIOService.addNewMessage(cp, isSend, this.conversation.author.messages);
+      this.openMessageDetails(msg);
     } else {
       console.error('No conversation partners found');
     }
