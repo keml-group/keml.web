@@ -61,7 +61,16 @@ export class EditorComponent implements OnInit, AfterViewInit {
   }
 
   addConversationPartner() {
-    this.modelIOService.addConversationPartner(this.conversation.conversationPartners);
+    this.modelIOService.addNewConversationPartner(this.conversation.conversationPartners);
+  }
+
+  addMessage(isSend: boolean) {
+    if (this.conversation.conversationPartners.length > 0) {
+      const cp = this.conversation.conversationPartners[0];
+      this.modelIOService.addNewMessage(cp, isSend, this.conversation.author.messages);
+    } else {
+      console.error('No conversation partners found');
+    }
   }
 
 }

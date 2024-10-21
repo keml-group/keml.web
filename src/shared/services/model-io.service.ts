@@ -59,7 +59,7 @@ export class ModelIOService {
     }
   }
 
-  addConversationPartner(cps: ConversationPartner[]) {
+  addNewConversationPartner(cps: ConversationPartner[]) {
     const cp: ConversationPartner = {
       name: 'New Partner',
       xPosition: LayoutHelper.nextConversationPartnerPosition(cps[cps.length-1].xPosition), //todo
@@ -138,6 +138,20 @@ export class ModelIOService {
         msgs[i].timing++;
       }
     }
+  }
+
+  addNewMessage(counterPart: ConversationPartner, isSend: boolean, msgs: Message[]) {
+    const eClass = isSend? 'http://www.unikoblenz.de/keml#//SendMessage' : 'http://www.unikoblenz.de/keml#//ReceiveMessage';
+    const content = isSend ? 'New send content' : 'New receive content';
+    const newMsg: Message = {
+      eClass: eClass,
+      counterPart: counterPart,
+      timing: msgs[msgs.length-1].timing+1,
+      content: content,
+      originalContent: 'Original content',
+    }
+    msgs.push(newMsg);
+    // todo focus new message details?
   }
 
 }
