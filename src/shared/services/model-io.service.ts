@@ -55,7 +55,7 @@ export class ModelIOService {
 
   private timeMessages(messages: Message[]) {
     for (let i = 0; i < messages.length; i++) {
-      messages[i].timing = i+1;
+      messages[i].timing = i;
     }
   }
 
@@ -79,30 +79,28 @@ export class ModelIOService {
 
   moveMessageUp(msg: Message, msgs: Message[]) {
     //actually, timing should be equal to the index - can we rely on it?
-    console.log(msgs[msg.timing])
     msgs[msg.timing] = msgs[msg.timing-1];
-    msgs[msg.timing].timing--;
+    msgs[msg.timing].timing++;
     msgs[msg.timing-1] = msg;
-    msg.timing++;
-    console.log(msgs[msg.timing]);
+    msg.timing--;
+    // todo propagate change to infos
   }
 
   disableMoveUp(msg: Message): boolean {
-    return msg.timing<=1;
+    return msg.timing<=0;
   }
 
   moveMessageDown(msg: Message, msgs: Message[]) {
     //actually, timing should be equal to the index - can we rely on it?
-    console.log(msgs[msg.timing])
     msgs[msg.timing] = msgs[msg.timing+1];
-    msgs[msg.timing].timing+=1;
+    msgs[msg.timing].timing-=1;
     msgs[msg.timing+1] = msg;
-    msg.timing-=1;
-    console.log(msgs[msg.timing]);
+    msg.timing+=1;
+    // todo propagate change to infos (move them?)
   }
 
   disableMoveDown(msg: Message, msgs: Message[]): boolean {
-    return msg.timing>=msgs.length;
+    return msg.timing>=msgs.length-1;
   }
 
 }
