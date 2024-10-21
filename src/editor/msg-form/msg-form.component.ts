@@ -45,7 +45,8 @@ export class MsgFormComponent {
   }
 
   duplicateMe(): void {
-
+    this.modelIOService.duplicateMessage(this.msg, this.msgs);
+    this.dialogRef.close();
   }
 
 }

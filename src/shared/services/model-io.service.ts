@@ -77,6 +77,14 @@ export class ModelIOService {
     }
   }
 
+  private msgPosFitsTiming(msg: Message, msgs: Message[]): boolean {
+    if (msgs.indexOf(msg) != msg.timing) {
+      console.error('Position and msg timing do not fit for ' + msg );
+      return false;
+    }
+    return true;
+  }
+
   moveMessageUp(msg: Message, msgs: Message[]) {
     //actually, timing should be equal to the index - can we rely on it?
     msgs[msg.timing] = msgs[msg.timing-1];
@@ -104,15 +112,31 @@ export class ModelIOService {
   }
 
   deleteMessage(msg: Message, msgs: Message[]) {
-    if (msgs.indexOf(msg) != msg.timing) {
-      console.error('Position and msg timing do not fit for ' + msg );
-      return;
+    if (this.msgPosFitsTiming(msg, msgs)) {
+      msgs.splice(msg.timing, 1);
+      // adapt later messages:
+      //todo also adapt infos
+      for(let i = msg.timing; i < msgs.length; i++) {
+        msgs[i].timing--;
+      }
     }
-    msgs.splice(msg.timing, 1);
-    // adapt later messages:
-    //todo also adapt infos
-    for(let i = msg.timing; i < msgs.length; i++) {
-      msgs[i].timing--;
+  }
+
+  duplicateMessage(msg: Message, msgs: Message[]) {
+    if (this.msgPosFitsTiming(msg, msgs)) {
+      const newMsg: Message = {
+        eClass: msg.eClass,
+        counterPart: msg.counterPart,
+        timing: msg.timing+1,
+        content: msg.content,
+        originalContent: msg.originalContent,
+      }
+      msgs.splice(msg.timing +1, 0, newMsg);
+      // adapt later messages:
+      //todo also adapt infos
+      for(let i = msg.timing +2; i < msgs.length; i++) {
+        msgs[i].timing++;
+      }
     }
   }
 
