@@ -77,4 +77,32 @@ export class ModelIOService {
     }
   }
 
+  moveMessageUp(msg: Message, msgs: Message[]) {
+    //actually, timing should be equal to the index - can we rely on it?
+    console.log(msgs[msg.timing])
+    msgs[msg.timing] = msgs[msg.timing-1];
+    msgs[msg.timing].timing--;
+    msgs[msg.timing-1] = msg;
+    msg.timing++;
+    console.log(msgs[msg.timing]);
+  }
+
+  disableMoveUp(msg: Message): boolean {
+    return msg.timing<=1;
+  }
+
+  moveMessageDown(msg: Message, msgs: Message[]) {
+    //actually, timing should be equal to the index - can we rely on it?
+    console.log(msgs[msg.timing])
+    msgs[msg.timing] = msgs[msg.timing+1];
+    msgs[msg.timing].timing+=1;
+    msgs[msg.timing+1] = msg;
+    msg.timing-=1;
+    console.log(msgs[msg.timing]);
+  }
+
+  disableMoveDown(msg: Message, msgs: Message[]): boolean {
+    return msg.timing>=msgs.length;
+  }
+
 }

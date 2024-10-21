@@ -16,7 +16,7 @@
       <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
     </button>
     <label>{{msg.timing}}</label>
-    <button class="tool-button" title="Move down" (click)="moveDown()">
+    <button class="tool-button" title="Move down" (click)="moveDown()" [disabled]="disableMoveDown()">
       <mat-icon aria-hidden="false" fontIcon="arrow_forward"></mat-icon>
     </button>
     <input type="text" [(ngModel)]="msg.timing"/>

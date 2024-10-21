@@ -12,6 +12,8 @@ import {MatDialog} from "@angular/material/dialog";
 })
 export class MsgComponent {
   @Input() msg!: Message;
+  @Input() msgs!: Message[];
+
 
   constructor(private dialog: MatDialog) { }
 
@@ -38,6 +40,7 @@ export class MsgComponent {
       {width: '40%', height: '80%'}
     );
     dialogRef.componentInstance.msg = this.msg;
+    dialogRef.componentInstance.msgs = this.msgs;
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         // do something

@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
 import {Message} from "../../shared/models/sequence-diagram-models";
+import {ModelIOService} from "../../shared/services/model-io.service";
 
 @Component({
   selector: 'msg-form',
@@ -9,8 +10,12 @@ import {Message} from "../../shared/models/sequence-diagram-models";
 })
 export class MsgFormComponent {
   @Input() msg!: Message;
+  @Input() msgs!: Message[];
 
-  constructor(public dialogRef: MatDialogRef<MsgFormComponent>) { }
+  constructor(
+    public dialogRef: MatDialogRef<MsgFormComponent>,
+    public modelIOService: ModelIOService,
+  ) { }
 
   onClose(): void {
     console.log(this.msg.timing);
@@ -18,19 +23,19 @@ export class MsgFormComponent {
   }
 
   moveUp() {
-
+    this.modelIOService.moveMessageUp(this.msg, this.msgs);
   }
 
   disableMoveUp(): boolean {
-    return this.msg.timing<=1;
+    return this.modelIOService.disableMoveUp(this.msg);
   }
 
   moveDown() {
-
+    this.modelIOService.moveMessageDown(this.msg, this.msgs);
   }
 
   disableMoveDown(): boolean {
-    return this.msg.timing>=1; //todo need length -> service?
+    return this.modelIOService.disableMoveDown(this.msg, this.msgs)
   }
 
 }
