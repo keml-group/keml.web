@@ -122,13 +122,13 @@ export class ModelIOService {
     }
   }
 
-  duplicateMessage(msg: Message, msgs: Message[]) {
+  duplicateMessage(msg: Message, msgs: Message[]): Message | null {
     if (this.msgPosFitsTiming(msg, msgs)) {
       const newMsg: Message = {
         eClass: msg.eClass,
         counterPart: msg.counterPart,
         timing: msg.timing+1,
-        content: msg.content,
+        content: 'Duplicate of ' + msg.content,
         originalContent: msg.originalContent,
       }
       msgs.splice(msg.timing +1, 0, newMsg);
@@ -137,7 +137,9 @@ export class ModelIOService {
       for(let i = msg.timing +2; i < msgs.length; i++) {
         msgs[i].timing++;
       }
+      return newMsg;
     }
+    return null;
   }
 
   addNewMessage(counterPart: ConversationPartner, isSend: boolean, msgs: Message[]): Message {
@@ -146,7 +148,7 @@ export class ModelIOService {
     const newMsg: Message = {
       eClass: eClass,
       counterPart: counterPart,
-      timing: msgs[msgs.length-1].timing+1,
+      timing: msgs.length,
       content: content,
       originalContent: 'Original content',
     }

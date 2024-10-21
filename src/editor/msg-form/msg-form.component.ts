@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
 import {ConversationPartner, Message} from "../../shared/models/sequence-diagram-models";
 import {ModelIOService} from "../../shared/services/model-io.service";
@@ -12,6 +12,7 @@ export class MsgFormComponent {
   @Input() msg!: Message;
   @Input() msgs!: Message[];
   @Input() cps!: ConversationPartner[];
+  @Output() openOtherDetails = new EventEmitter<Message>();
 
   constructor(
     public dialogRef: MatDialogRef<MsgFormComponent>,
@@ -45,8 +46,11 @@ export class MsgFormComponent {
   }
 
   duplicateMe(): void {
-    this.modelIOService.duplicateMessage(this.msg, this.msgs);
-    this.dialogRef.close();
+    const newM = this.modelIOService.duplicateMessage(this.msg, this.msgs);
+    if (newM) {
+      this.dialogRef.close();
+      this.openOtherDetails.emit(newM);
+    }
   }
 
 }

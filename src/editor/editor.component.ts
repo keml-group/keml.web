@@ -75,12 +75,14 @@ export class EditorComponent implements OnInit, AfterViewInit {
     dialogRef.componentInstance.msg = msg;
     dialogRef.componentInstance.msgs = this.conversation.author.messages;
     dialogRef.componentInstance.cps = this.conversation.conversationPartners;
+    dialogRef.componentInstance.openOtherDetails.subscribe(m => this.openMessageDetails(m))
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         // do something
       }
     });
   }
+
   addMessage(isSend: boolean) {
     if (this.conversation.conversationPartners.length > 0) {
       const cp = this.conversation.conversationPartners[0];

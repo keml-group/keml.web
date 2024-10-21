@@ -1,9 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {ConversationPartner, Message, ReceiveMessage} from "../../shared/models/sequence-diagram-models";
+import {Message, ReceiveMessage} from "../../shared/models/sequence-diagram-models";
 import {NewInformation} from "../../shared/models/knowledge-models";
 import {LayoutHelper} from "../../shared/layout-helper";
-import {MsgFormComponent} from "../msg-form/msg-form.component";
-import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: '[msgG]',
@@ -12,12 +10,10 @@ import {MatDialog} from "@angular/material/dialog";
 })
 export class MsgComponent {
   @Input() msg!: Message;
-  @Input() msgs!: Message[];
-  @Input() cps!: ConversationPartner[];
   @Output() openDetails: EventEmitter<Message> = new EventEmitter();
 
 
-  constructor(private dialog: MatDialog) { }
+  constructor() { }
 
   computeY(): number {
     return LayoutHelper.computeMessageY(this.msg.timing);
@@ -37,18 +33,5 @@ export class MsgComponent {
 
   openMessageDetails() {
     this.openDetails.emit(this.msg);
-    /*console.log('Activate Message');
-    const dialogRef = this.dialog.open(
-      MsgFormComponent,
-      {width: '40%', height: '80%'}
-    );
-    dialogRef.componentInstance.msg = this.msg;
-    dialogRef.componentInstance.msgs = this.msgs;
-    dialogRef.componentInstance.cps = this.cps;
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        // do something
-      }
-    });*/
   }
 }
