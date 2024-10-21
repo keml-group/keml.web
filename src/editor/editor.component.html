@@ -54,7 +54,7 @@
             </foreignObject>
             <g authorG [author]="conversation.author"></g>
             <g cp *ngFor="let convP of conversation.conversationPartners" [conversationPartner]="convP"></g>
-            <g msgG *ngFor="let m of conversation.author.messages" [msg]="m" [msgs]="conversation.author.messages"></g>
+            <g msgG *ngFor="let m of conversation.author.messages" [msg]="m" [msgs]="conversation.author.messages" [cps]="conversation.conversationPartners"></g>
           </g>
         </svg>
       </div>

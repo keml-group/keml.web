@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
-import {Message} from "../../shared/models/sequence-diagram-models";
+import {ConversationPartner, Message} from "../../shared/models/sequence-diagram-models";
 import {ModelIOService} from "../../shared/services/model-io.service";
 
 @Component({
@@ -11,6 +11,7 @@ import {ModelIOService} from "../../shared/services/model-io.service";
 export class MsgFormComponent {
   @Input() msg!: Message;
   @Input() msgs!: Message[];
+  @Input() cps!: ConversationPartner[];
 
   constructor(
     public dialogRef: MatDialogRef<MsgFormComponent>,

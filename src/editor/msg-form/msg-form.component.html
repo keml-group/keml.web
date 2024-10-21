@@ -2,7 +2,9 @@
 
 <div class="msg-form">
   <label class="form-label">Conversation Partner</label>
-  <input type="text" />
+  <select [(ngModel)]="msg.counterPart">
+    <option *ngFor="let cp of cps" [ngValue]="cp">{{cp.name}}</option>
+  </select>
 
   <label class="form-label">Message Content</label>
   <textarea type="text" [(ngModel)]="msg.content"></textarea>

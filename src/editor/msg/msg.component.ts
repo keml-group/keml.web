@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Message, ReceiveMessage} from "../../shared/models/sequence-diagram-models";
+import {ConversationPartner, Message, ReceiveMessage} from "../../shared/models/sequence-diagram-models";
 import {NewInformation} from "../../shared/models/knowledge-models";
 import {LayoutHelper} from "../../shared/layout-helper";
 import {MsgFormComponent} from "../msg-form/msg-form.component";
@@ -13,6 +13,7 @@ import {MatDialog} from "@angular/material/dialog";
 export class MsgComponent {
   @Input() msg!: Message;
   @Input() msgs!: Message[];
+  @Input() cps!: ConversationPartner[];
 
 
   constructor(private dialog: MatDialog) { }
@@ -41,6 +42,7 @@ export class MsgComponent {
     );
     dialogRef.componentInstance.msg = this.msg;
     dialogRef.componentInstance.msgs = this.msgs;
+    dialogRef.componentInstance.cps = this.cps;
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         // do something
