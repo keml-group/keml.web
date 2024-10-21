@@ -18,7 +18,7 @@ export class MsgFormComponent {
     public modelIOService: ModelIOService,
   ) { }
 
-  onClose(): void {
+  closeMe(): void {
     console.log(this.msg.timing);
     this.dialogRef.close();
   }
@@ -37,6 +37,15 @@ export class MsgFormComponent {
 
   disableMoveDown(): boolean {
     return this.modelIOService.disableMoveDown(this.msg, this.msgs)
+  }
+
+  deleteMe() {
+    this.modelIOService.deleteMessage(this.msg, this.msgs);
+    this.dialogRef.close();
+  }
+
+  duplicateMe(): void {
+
   }
 
 }

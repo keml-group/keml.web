@@ -103,4 +103,17 @@ export class ModelIOService {
     return msg.timing>=msgs.length-1;
   }
 
+  deleteMessage(msg: Message, msgs: Message[]) {
+    if (msgs.indexOf(msg) != msg.timing) {
+      console.error('Position and msg timing do not fit for ' + msg );
+      return;
+    }
+    msgs.splice(msg.timing, 1);
+    // adapt later messages:
+    //todo also adapt infos
+    for(let i = msg.timing; i < msgs.length; i++) {
+      msgs[i].timing--;
+    }
+  }
+
 }
