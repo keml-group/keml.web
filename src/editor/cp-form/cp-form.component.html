@@ -1,0 +1,32 @@
+<h2>Conversation Partner Details</h2>
+
+<div class="cp-form">
+  <label class="form-label">Name</label>
+  <textarea type="text" [(ngModel)]="cp.name"></textarea>
+
+  <label class="form-label">Position</label>
+  <div class="position">
+    <button class="tool-button" title="Move left" (click)="moveLeft()" [disabled]="disableMoveLeft()">
+      <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
+    </button>
+    <label>{{cps.indexOf(cp)}}</label>
+    <button class="tool-button" title="Move right" (click)="moveRight()" [disabled]="disableMoveRight()">
+      <mat-icon aria-hidden="false" fontIcon="arrow_forward"></mat-icon>
+    </button>
+  </div>
+</div>
+
+<div class="row">
+  <button class="tool-button-text" (click)="closeMe()">
+    <mat-icon aria-hidden="false" fontIcon="check"></mat-icon>
+    Ok
+  </button>
+  <button class="tool-button-text" (click)="duplicateMe()">
+    <mat-icon aria-hidden="false" fontIcon="note-add"></mat-icon>
+    Duplicate
+  </button>
+  <button class="tool-button-text" (click)="deleteMe()">
+    <mat-icon aria-hidden="false" fontIcon="delete"></mat-icon>
+    Delete
+  </button>
+</div>

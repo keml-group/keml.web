@@ -67,6 +67,50 @@ export class ModelIOService {
     cps.push(cp);
   }
 
+  disableMoveConversationPartnerRight(cp: ConversationPartner, cps: ConversationPartner[]): boolean {
+    const pos = cps.indexOf(cp);
+    return pos == -1 || pos+1 >= cps.length;
+  }
+
+  moveConversationPartnerRight(cp: ConversationPartner, cps: ConversationPartner[]) {
+    const pos = cps.indexOf(cp);
+    if (!this.disableMoveConversationPartnerRight(cp, cps)) {
+      cps[pos] = cps[pos+1];
+      cps[pos + 1] = cp;
+    }
+    // todo
+  }
+
+  disableMoveConversationPartnerLeft(cp: ConversationPartner, cps: ConversationPartner[]): boolean {
+    const pos = cps.indexOf(cp);
+    return pos <= 0;
+  }
+
+  moveConversationPartnerLeft(cp: ConversationPartner, cps: ConversationPartner[]) {
+    const pos = cps.indexOf(cp);
+    if (!this.disableMoveConversationPartnerLeft(cp, cps)) {
+      cps[pos] = cps[pos-1];
+      cps[pos-1] = cp;
+    }
+  }
+
+  deleteConversationPartner(cp: ConversationPartner, cps: ConversationPartner[]) {
+    //todo allow if last?
+    const pos = cps.indexOf(cp);
+    cps.splice(pos, 1);
+  }
+
+  duplicateConversationPartner(cp: ConversationPartner, cps: ConversationPartner[]): ConversationPartner {
+    const pos = cps.indexOf(cp);
+    const newCp: ConversationPartner = {
+      name: 'Duplicate of '+ cp.name,
+      xPosition: 0, //todo how would we later compute a good position?
+    }
+    cps.splice(pos+1, 0, newCp);
+    LayoutHelper.positionConversationPartners(cps); // complete re-positioning
+    return newCp;
+  }
+
   // todo do not use, it causes circles
   repairSourceOfNewInfo(messages: Message[]) {
     for (let msg of messages) {

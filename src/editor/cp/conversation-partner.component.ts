@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {ConversationPartner} from "../../shared/models/sequence-diagram-models";
 
 @Component({
@@ -8,9 +8,10 @@ import {ConversationPartner} from "../../shared/models/sequence-diagram-models";
 })
 export class ConversationPartnerComponent {
   @Input() conversationPartner!: ConversationPartner;
+  @Output() openDetails: EventEmitter<ConversationPartner> = new EventEmitter();
 
-  activateCP() {
-    console.log('activateCP');
+  openCpDetails() {
+    this.openDetails.emit(this.conversationPartner);
   }
 
 }

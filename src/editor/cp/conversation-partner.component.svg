@@ -1,5 +1,5 @@
 <svg:g attr.transform="translate({{conversationPartner.xPosition}})">
-  <rect x="-18.9" y=40.25 width="40" height="75" fill="transparent" (click)="activateCP()"></rect>
+  <rect x="-18.9" y=40.25 width="40" height="75" fill="transparent" (click)="openCpDetails()"></rect>
   <g person transform="translate(-48.7,0)"></g>
   <foreignObject height="25" width="150" x="-25" y="125">
     <input id="title" type="text" [(ngModel)]="conversationPartner.name" >
