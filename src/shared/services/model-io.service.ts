@@ -77,8 +77,8 @@ export class ModelIOService {
     if (!this.disableMoveConversationPartnerRight(cp, cps)) {
       cps[pos] = cps[pos+1];
       cps[pos + 1] = cp;
+      LayoutHelper.positionConversationPartners(cps);
     }
-    // todo
   }
 
   disableMoveConversationPartnerLeft(cp: ConversationPartner, cps: ConversationPartner[]): boolean {
@@ -91,6 +91,7 @@ export class ModelIOService {
     if (!this.disableMoveConversationPartnerLeft(cp, cps)) {
       cps[pos] = cps[pos-1];
       cps[pos-1] = cp;
+      LayoutHelper.positionConversationPartners(cps);
     }
   }
 
