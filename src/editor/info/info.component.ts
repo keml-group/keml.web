@@ -15,6 +15,10 @@ export class InfoComponent {
   w=200
   h=50
 
+  dragActive = false;
+  dragStartX: number = 0;
+  dragStartY: number = 0;
+
   protected readonly outerWidth = outerWidth;
   protected readonly innerWidth = innerWidth;
 
@@ -46,4 +50,29 @@ export class InfoComponent {
   computeInstructionBGColor(): string {
     return this.info.isInstruction ? '#ffcc00' : '#99cc00'
   }
+
+  startDrag(event: MouseEvent) {
+    this.dragActive = true;
+    this.dragStartX = event.clientX;
+    this.dragStartY = event.clientY;
+    console.log(this.dragStartX);
+    console.log(this.dragStartY);
+  }
+
+  drag(event: MouseEvent) {
+    if (this.dragActive) {
+      event.preventDefault();
+      var dragX = event.clientX;
+      this.x+= (dragX - this.dragStartX);
+      this.dragStartX = dragX;
+      var dragY = event.clientY;
+      this.y+= (dragY - this.dragStartY);
+      this.dragStartY = dragY;
+    }
+  }
+
+  endDrag() {
+    this.dragActive = false;
+  }
+
 }
