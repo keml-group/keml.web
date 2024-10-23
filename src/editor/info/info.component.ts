@@ -55,8 +55,6 @@ export class InfoComponent {
     this.dragActive = true;
     this.dragStartX = event.clientX;
     this.dragStartY = event.clientY;
-    console.log(this.dragStartX);
-    console.log(this.dragStartY);
   }
 
   drag(event: MouseEvent) {
