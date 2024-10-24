@@ -5,7 +5,7 @@ import {IoService} from "../shared/services/io.service";
 import {Conversation, ConversationPartner, Message} from "../shared/models/sequence-diagram-models";
 import {MsgFormComponent} from "./msg-form/msg-form.component";
 import {MatDialog} from "@angular/material/dialog";
-import {ConversationPartnerFormComponent} from "./cp-form/cp-form.component";
+import {ConversationPartnerDetailsComponent} from "./cp-details/cp-details.component";
 
 @Component({
   selector: 'keml-editor',
@@ -70,7 +70,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
 
   openConversationPartnerDetails(cp: ConversationPartner) {
     const dialogRef = this.dialog.open(
-      ConversationPartnerFormComponent,
+      ConversationPartnerDetailsComponent,
       {width: '40%', height: '80%'}
     )
     dialogRef.componentInstance.cp = cp;

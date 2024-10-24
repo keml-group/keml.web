@@ -13,14 +13,14 @@ import {MsgComponent} from "./msg/msg.component";
 import {InfoComponent} from "./info/info.component";
 import {DatabaseSvgComponent} from "./database-svg/database-svg.component";
 import {MsgFormComponent} from "./msg-form/msg-form.component";
-import {ConversationPartnerFormComponent} from "./cp-form/cp-form.component";
+import {ConversationPartnerDetailsComponent} from "./cp-details/cp-details.component";
 
 
 @NgModule({
   declarations: [
     EditorComponent,
     ConversationPartnerComponent,
-    ConversationPartnerFormComponent,
+    ConversationPartnerDetailsComponent,
     PersonSvgComponent,
     DatabaseSvgComponent,
     AuthorComponent,
