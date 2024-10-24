@@ -52,6 +52,7 @@ export class InfoComponent {
   }
 
   startDrag(event: MouseEvent) {
+    console.log('startDrag');
     this.dragActive = true;
     this.dragStartX = event.clientX;
     this.dragStartY = event.clientY;
@@ -69,8 +70,13 @@ export class InfoComponent {
     }
   }
 
-  endDrag() {
-    this.dragActive = false;
+  endDrag(event: MouseEvent) {
+    console.log('endDrag');
+    setTimeout(() => {this.dragActive = false;}, 50);
+  }
+
+  openDetails() {
+    if (!this.dragActive) {console.log('click');}
   }
 
 }
