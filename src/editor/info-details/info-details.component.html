@@ -4,6 +4,25 @@
   <label class="form-label">Message</label>
   <textarea type="text" [(ngModel)]="info.message"></textarea>
 
+  <label class="form-label">Is Instruction</label>
+  <svg width="20" height="50">
+    <g is-instr [info]="info" [w]="200" [h]="50"></g>
+  </svg>
+
+  <label class="form-label">Position</label>
+  <div class="row">
+    <div class="column">
+      <span>x:</span>
+      <input type="number" name="x" min="-500" [attr.max]="400-200" [(ngModel)]="info.x">
+    </div>
+
+    <div class="column">
+      <span>y:</span>
+      <input type="number" name="y" min="0" [attr.max]="1000" [(ngModel)]="info.y">
+    </div>
+  </div>
+
+  <label class="form-label">Message</label>
 
 </div>
 

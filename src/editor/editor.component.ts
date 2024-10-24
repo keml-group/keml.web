@@ -118,4 +118,19 @@ export class EditorComponent implements OnInit, AfterViewInit {
     dialogRef.componentInstance.openOtherDetails.subscribe(i => this.openInfoDetails(i))
   }
 
+  addNewInfo() {
+    const rec = this.modelIOService.getFirstReceive(this.conversation.author.messages);
+    if (rec) {
+      const newInfo = this.modelIOService.addNewNewInfo(rec)
+      this.openInfoDetails(newInfo);
+    } else {
+      console.error('No receive messages found');
+    }
+  }
+
+  addPreknowledge() {
+    const pre = this.modelIOService.addNewPreknowledge(this.conversation.author.preknowledge);
+    this.openInfoDetails(pre);
+  }
+
 }

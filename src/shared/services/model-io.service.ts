@@ -262,11 +262,50 @@ export class ModelIOService {
     return msg.generates.indexOf(<NewInformation>info)>-1;
   }
 
-  addNewPreknowledge(pres: Preknowledge[]) {
-
+  addNewPreknowledge(pres: Preknowledge[]): Preknowledge {
+    const preknowledge: Preknowledge = {
+      causes: [],
+      currentTrust: 0.5,
+      eClass: "http://www.unikoblenz.de/keml#//PreKnowledge",
+      initialTrust: 0.5,
+      isInstruction: false,
+      isUsedOn: [],
+      message: "New preknowledge",
+      repeatedBy: [],
+      targetedBy: [],
+      x: 0,
+      y: 0
+    };
+    pres.push(preknowledge);
+    return preknowledge;
   }
 
-  addNewNewInfo(causeMsg: ReceiveMessage) {
-
+  addNewNewInfo(causeMsg: ReceiveMessage): NewInformation {
+    const newInfo: NewInformation = {
+      causes: [],
+      currentTrust: 0.5,
+      eClass: "http://www.unikoblenz.de/keml#//NewInformation",
+      initialTrust: 0.5,
+      isInstruction: false,
+      isUsedOn: [],
+      message: "New Information",
+      repeatedBy: [],
+      source: causeMsg,
+      targetedBy: [],
+      x: 0,
+      y: 0
+    }
+    causeMsg.generates.push(newInfo);
+    return newInfo;
   }
+
+  getFirstReceive(msgs: Message[]): ReceiveMessage | null {
+    const receives = this.filterReceives(msgs);
+    if (receives.length > 0) {
+      return receives[0];
+    } else {
+      return null;
+    }
+  }
+
 }
