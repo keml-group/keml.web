@@ -4,18 +4,18 @@ import {ConversationPartner, Message} from "../../shared/models/sequence-diagram
 import {ModelIOService} from "../../shared/services/model-io.service";
 
 @Component({
-  selector: 'msg-form',
-  templateUrl: './msg-form.component.html',
-  styleUrl: './msg-form.component.css'
+  selector: 'msg-details',
+  templateUrl: './msg-details.component.html',
+  styleUrl: './msg-details.component.css'
 })
-export class MsgFormComponent {
+export class MsgDetailsComponent {
   @Input() msg!: Message;
   @Input() msgs!: Message[];
   @Input() cps!: ConversationPartner[];
   @Output() openOtherDetails = new EventEmitter<Message>();
 
   constructor(
-    public dialogRef: MatDialogRef<MsgFormComponent>,
+    public dialogRef: MatDialogRef<MsgDetailsComponent>,
     public modelIOService: ModelIOService,
   ) { }
 

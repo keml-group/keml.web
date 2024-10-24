@@ -12,7 +12,7 @@ import {AuthorComponent} from "./author/author.component";
 import {MsgComponent} from "./msg/msg.component";
 import {InfoComponent} from "./info/info.component";
 import {DatabaseSvgComponent} from "./database-svg/database-svg.component";
-import {MsgFormComponent} from "./msg-form/msg-form.component";
+import {MsgDetailsComponent} from "./msg-details/msg-details.component";
 import {ConversationPartnerDetailsComponent} from "./cp-details/cp-details.component";
 
 
@@ -25,7 +25,7 @@ import {ConversationPartnerDetailsComponent} from "./cp-details/cp-details.compo
     DatabaseSvgComponent,
     AuthorComponent,
     MsgComponent,
-    MsgFormComponent,
+    MsgDetailsComponent,
     InfoComponent,
   ],
   imports: [

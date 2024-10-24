@@ -3,7 +3,7 @@ import {ModelIOService} from "../shared/services/model-io.service";
 import {DiagramService} from "../shared/services/diagram.service";
 import {IoService} from "../shared/services/io.service";
 import {Conversation, ConversationPartner, Message} from "../shared/models/sequence-diagram-models";
-import {MsgFormComponent} from "./msg-form/msg-form.component";
+import {MsgDetailsComponent} from "./msg-details/msg-details.component";
 import {MatDialog} from "@angular/material/dialog";
 import {ConversationPartnerDetailsComponent} from "./cp-details/cp-details.component";
 
@@ -82,7 +82,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
 
   openMessageDetails(msg: Message) {
     const dialogRef = this.dialog.open(
-      MsgFormComponent,
+      MsgDetailsComponent,
       {width: '40%', height: '80%'}
     );
     dialogRef.componentInstance.msg = msg;
