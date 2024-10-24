@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CpFormComponent } from './cp-form.component';
+import { ConversationPartnerDetailsComponent } from './cp-details.component';
 
-describe('MsgFormComponent', () => {
-  let component: CpFormComponent;
-  let fixture: ComponentFixture<CpFormComponent>;
+describe('ConversationPartnerDetailsComponent', () => {
+  let component: ConversationPartnerDetailsComponent;
+  let fixture: ComponentFixture<ConversationPartnerDetailsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CpFormComponent]
+      imports: [ConversationPartnerDetailsComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CpFormComponent);
+    fixture = TestBed.createComponent(ConversationPartnerDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
