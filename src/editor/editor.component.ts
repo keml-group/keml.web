@@ -6,6 +6,8 @@ import {Conversation, ConversationPartner, Message} from "../shared/models/seque
 import {MsgDetailsComponent} from "./msg-details/msg-details.component";
 import {MatDialog} from "@angular/material/dialog";
 import {ConversationPartnerDetailsComponent} from "./cp-details/cp-details.component";
+import {Information} from "../shared/models/knowledge-models";
+import {InfoDetailsComponent} from "./info-details/info-details.component";
 
 @Component({
   selector: 'keml-editor',
@@ -104,6 +106,16 @@ export class EditorComponent implements OnInit, AfterViewInit {
     } else {
       console.error('No conversation partners found');
     }
+  }
+
+  openInfoDetails(info: Information) {
+    const dialogRef = this.dialog.open(
+      InfoDetailsComponent,
+      {width: '40%', height: '80%'}
+    );
+    dialogRef.componentInstance.info = info;
+    dialogRef.componentInstance.infos = this.modelIOService.findInfoList(info, this.conversation.author.preknowledge, this.conversation.author.messages); // todo
+    dialogRef.componentInstance.openOtherDetails.subscribe(i => this.openInfoDetails(i))
   }
 
 }

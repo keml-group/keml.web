@@ -8,5 +8,5 @@
     <textarea id="msgT" type="text" [(ngModel)]="msg.content" cols="{{msg.counterPart.xPosition/10}}" style="height: auto;">
     </textarea>
   </foreignObject>
-  <g infoG *ngFor="let info of getInfos()" [info]="info"></g>
+  <g infoG *ngFor="let info of getInfos()" [info]="info" (openDetails)="openInfoDetails(info)"></g>
 </svg:g>

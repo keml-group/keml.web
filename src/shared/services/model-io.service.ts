@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
-import {Author, Conversation, ConversationPartner, Message, ReceiveMessage} from "../models/sequence-diagram-models";
-import {NewInformation, Preknowledge} from "../models/knowledge-models";
+import {
+  Author,
+  Conversation,
+  ConversationPartner,
+  Message,
+  ReceiveMessage,
+} from "../models/sequence-diagram-models";
+import {Information, NewInformation, Preknowledge} from "../models/knowledge-models";
 import {LayoutHelper} from "../layout-helper";
+import {find} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -112,16 +119,6 @@ export class ModelIOService {
     return newCp;
   }
 
-  // todo do not use, it causes circles
-  repairSourceOfNewInfo(messages: Message[]) {
-    for (let msg of messages) {
-      //const infos = (msg as ReceiveMessage).generates;
-      (msg as ReceiveMessage)?.generates?.forEach(r => {
-        r.source = <ReceiveMessage>msg;
-      })
-    }
-  }
-
   private msgPosFitsTiming(msg: Message, msgs: Message[]): boolean {
     if (msgs.indexOf(msg) != msg.timing) {
       console.error('Position and msg timing do not fit for ' + msg );
@@ -201,4 +198,75 @@ export class ModelIOService {
     return newMsg;
   }
 
+  // todo do not use, it causes circles
+  repairSourceOfNewInfo(messages: Message[]) {
+    for (let msg of messages) {
+      //const infos = (msg as ReceiveMessage).generates;
+      (msg as ReceiveMessage)?.generates?.forEach(r => {
+        r.source = <ReceiveMessage>msg;
+      })
+    }
+  }
+
+  deleteInfo(info: Information, infos: Information[]) {
+    const pos = infos.indexOf(info);
+    if (pos > -1) {
+      infos.splice(pos, 1);
+    }
+  }
+
+  duplicateInfo(info: Information, infos: Information[]): Information {
+    const newInfo: Information = {
+      causes: info.causes,
+      currentTrust: info.currentTrust,
+      eClass: info.eClass,
+      initialTrust: info.initialTrust,
+      isInstruction: info.isInstruction,
+      isUsedOn: info.isUsedOn,
+      message: 'Copy of' + info.message,
+      repeatedBy: info.repeatedBy,
+      targetedBy: info.targetedBy,
+      xPosition: info.xPosition, //todo use layout helper?
+      yPosition: info.yPosition //todo use layout helper?
+    }
+    infos.push(newInfo); //todo position right after current info?
+    return newInfo;
+  }
+
+  findInfoList(info: Information, pre: Preknowledge[], msgs: Message[]): Information[] {
+    let pos = pre.indexOf(info);
+    if (pos > -1) {
+      return pre;
+    } else {
+      const receives = this.filterReceives(msgs);
+      for (let i = 0; i <= receives.length - 1; i++) {
+        if (this.isInfoFromMessage(info, receives[i])) {
+            return receives[i].generates;
+        }
+      }
+    }
+    return [];
+  }
+
+  isReceive(msg: Message): boolean {
+    return msg.eClass.endsWith('ReceiveMessage');
+  }
+
+  filterReceives(msgs: Message[]): ReceiveMessage[] {
+    return msgs.filter(msg => this.isReceive(msg))
+      .map(msg => msg as ReceiveMessage)
+  }
+
+  private isInfoFromMessage(info: Information, msg: ReceiveMessage): boolean {
+    console.log(msg.generates)
+    return msg.generates.indexOf(<NewInformation>info)>-1;
+  }
+
+  addNewPreknowledge(pres: Preknowledge[]) {
+
+  }
+
+  addNewNewInfo(causeMsg: ReceiveMessage) {
+
+  }
 }

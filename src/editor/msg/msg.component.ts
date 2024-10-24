@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Message, ReceiveMessage} from "../../shared/models/sequence-diagram-models";
-import {NewInformation} from "../../shared/models/knowledge-models";
+import {Information, NewInformation} from "../../shared/models/knowledge-models";
 import {LayoutHelper} from "../../shared/layout-helper";
 
 @Component({
@@ -11,7 +11,7 @@ import {LayoutHelper} from "../../shared/layout-helper";
 export class MsgComponent {
   @Input() msg!: Message;
   @Output() openDetails: EventEmitter<Message> = new EventEmitter();
-
+  @Output() openInfo = new EventEmitter<Information>();
 
   constructor() { }
 
@@ -33,5 +33,9 @@ export class MsgComponent {
 
   openMessageDetails() {
     this.openDetails.emit(this.msg);
+  }
+
+  openInfoDetails(info: Information) {
+    this.openInfo.emit(info);
   }
 }

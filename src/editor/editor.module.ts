@@ -14,6 +14,7 @@ import {InfoComponent} from "./info/info.component";
 import {DatabaseSvgComponent} from "./database-svg/database-svg.component";
 import {MsgDetailsComponent} from "./msg-details/msg-details.component";
 import {ConversationPartnerDetailsComponent} from "./cp-details/cp-details.component";
+import {InfoDetailsComponent} from "./info-details/info-details.component";
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import {ConversationPartnerDetailsComponent} from "./cp-details/cp-details.compo
     MsgComponent,
     MsgDetailsComponent,
     InfoComponent,
+    InfoDetailsComponent,
   ],
   imports: [
     CommonModule,

@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Information, NewInformation} from "../../shared/models/knowledge-models";
 
 @Component({
@@ -8,6 +8,7 @@ import {Information, NewInformation} from "../../shared/models/knowledge-models"
 })
 export class InfoComponent {
   @Input() info!: Information;
+  @Output() openDetails = new EventEmitter<Information>();
 
   //todo: into info?
   x=0;
@@ -72,11 +73,18 @@ export class InfoComponent {
 
   endDrag(event: MouseEvent) {
     console.log('endDrag');
-    setTimeout(() => {this.dragActive = false;}, 50);
+    this.dragActive = false;
+    // todo was working for click vs drag, not now setTimeout(() => {this.dragActive = false;}, 50);
   }
 
-  openDetails() {
-    if (!this.dragActive) {console.log('click');}
+  openInfoDetails() {
+    console.log('openInfoDetails');
+    this.openDetails.emit(this.info);
+    /* todo: why is click not fired any more like below?
+    if (!this.dragActive) {
+      console.log('click');
+      this.openDetails.emit(this.info);
+    }*/
   }
 
 }
