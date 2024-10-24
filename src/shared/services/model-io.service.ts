@@ -223,11 +223,11 @@ export class ModelIOService {
       initialTrust: info.initialTrust,
       isInstruction: info.isInstruction,
       isUsedOn: info.isUsedOn,
-      message: 'Copy of' + info.message,
+      message: 'Copy of ' + info.message,
       repeatedBy: info.repeatedBy,
       targetedBy: info.targetedBy,
-      xPosition: info.xPosition, //todo use layout helper?
-      yPosition: info.yPosition //todo use layout helper?
+      x: info.x, //todo use layout helper?
+      y: info.y //todo use layout helper?
     }
     infos.push(newInfo); //todo position right after current info?
     return newInfo;

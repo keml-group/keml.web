@@ -11,8 +11,6 @@ export class InfoComponent {
   @Output() openDetails = new EventEmitter<Information>();
 
   //todo: into info?
-  x=0;
-  y=0;
   w=200
   h=50
 
@@ -57,18 +55,18 @@ export class InfoComponent {
     this.dragActive = true;
     this.dragStartX = event.clientX;
     this.dragStartY = event.clientY;
-    console.log(this.info.xPosition)
-    console.log(this.info.yPosition)
+    console.log(this.info.x)
+    console.log(this.info.y)
   }
 
   drag(event: MouseEvent) {
     if (this.dragActive) {
       event.preventDefault();
       var dragX = event.clientX;
-      this.x+= (dragX - this.dragStartX);
+      this.info.x+= (dragX - this.dragStartX);
       this.dragStartX = dragX;
       var dragY = event.clientY;
-      this.y+= (dragY - this.dragStartY);
+      this.info.y+= (dragY - this.dragStartY);
       this.dragStartY = dragY;
     }
   }

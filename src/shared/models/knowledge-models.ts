@@ -20,8 +20,8 @@ export interface Information {
 
   isUsedOn: SendMessage[];
   repeatedBy: ReceiveMessage[];
-  xPosition: number;
-  yPosition: number;
+  x: number;
+  y: number;
 }
 
 export interface Preknowledge extends Information {

@@ -1,7 +1,7 @@
 /* documents all layout specific choices (distances) so that we can work from taht on
 * treats (0,0) as author position -> knowledge has a negative x, messages a positive x.
 */
-import {ConversationPartner, Message} from "./models/sequence-diagram-models";
+import {ConversationPartner, Message, ReceiveMessage} from "./models/sequence-diagram-models";
 import {Preknowledge} from "./models/knowledge-models";
 
 export class LayoutHelper {
@@ -38,17 +38,28 @@ export class LayoutHelper {
     return 180+60*timing;
   }
 
+  static initializeInfoPos(messages: Message[]) {
+    for (let msg of messages) {
+      //const infos = (msg as ReceiveMessage).generates;
+      (msg as ReceiveMessage)?.generates?.forEach(r => {
+        r.x = 0;
+        r.y = 0;
+      })
+    }
+  }
+
   static positionInfos(pre: Preknowledge[], msgs: Message[]): void {
+    //todo currently position new infos as 0:
+    this.initializeInfoPos(msgs);
+
     pre.forEach(p => {
       const timing = Math.min(...p.isUsedOn.map(send => send.timing));
-      p.yPosition=LayoutHelper.computeMessageY(timing);
+      p.y=LayoutHelper.computeMessageY(timing);
     })
     pre.sort((a, b) => {
-      return a.yPosition - b.yPosition
+      return a.y - b.y
     })
     // use map to organize preknowledge? Or just pointer? Maybe easier
-
-
   }
 
 
