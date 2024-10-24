@@ -15,6 +15,7 @@ import {DatabaseSvgComponent} from "./database-svg/database-svg.component";
 import {MsgDetailsComponent} from "./msg-details/msg-details.component";
 import {ConversationPartnerDetailsComponent} from "./cp-details/cp-details.component";
 import {InfoDetailsComponent} from "./info-details/info-details.component";
+import {IsInstrSvgComponent} from "./is-instr-svg/is-instr-svg.component";
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import {InfoDetailsComponent} from "./info-details/info-details.component";
     AuthorComponent,
     MsgComponent,
     MsgDetailsComponent,
+    IsInstrSvgComponent,
     InfoComponent,
     InfoDetailsComponent,
   ],
