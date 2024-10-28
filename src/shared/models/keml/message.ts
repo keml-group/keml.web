@@ -1,4 +1,4 @@
-import {ConversationPartner} from "../sequence-diagram-models";
+import {ConversationPartner} from "./conversation-partner";
 import {IOHelper} from "./iohelper";
 import {SendMessage} from "./send-message";
 import {ReceiveMessage} from "./receive-message";

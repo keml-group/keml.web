@@ -1,5 +1,5 @@
 import {Message} from "./message";
-import {ConversationPartner} from "../sequence-diagram-models";
+import {ConversationPartner} from "./conversation-partner";
 
 export class ReceiveMessage extends Message {
   static eClass: string = "http://www.unikoblenz.de/keml#//ReceiveMessage";
