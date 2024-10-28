@@ -9,6 +9,9 @@ export class LayoutHelper {
   static distanceToFirstCP: number = 300;
   static distanceBetweenCP: number = 150;
 
+  static distanceToFirstMessage: number = 180;
+  static distanceBetweenMessages: number = 60;
+
   /*
  positions the xPositions of the convPartners list.
  It currently assumes no meaningful xPosition but just fills this field
@@ -24,18 +27,8 @@ export class LayoutHelper {
     return positionBefore + LayoutHelper.distanceBetweenCP;
   }
 
-  // unused since currently message timing is a simple index used on the fly
-  static positionMessages(messages: Message[]) {
-    const distanceToFirst: number = 180;
-    const distanceBetween: number = 60;
-
-    for (let i = 0; i < messages.length; i++) {
-      messages[i].timing = distanceToFirst + i*distanceBetween;
-    }
-  }
-
   static  computeMessageY(timing: number): number {
-    return 180+60*timing;
+    return LayoutHelper.distanceToFirstMessage+LayoutHelper.distanceBetweenMessages*timing;
   }
 
   static initializeInfoPos(messages: Message[]) {
