@@ -55,7 +55,7 @@
             <g authorG [author]="conversation.author"></g>
             <g cp *ngFor="let convP of conversation.conversationPartners" [conversationPartner]="convP" (openDetails)="openConversationPartnerDetails(convP)"></g>
             <g msgG *ngFor="let m of conversation.author.messages" [msg]="m" (openDetails)="openMessageDetails(m)" (openInfo)="openInfoDetails($event)"></g>
-            <g preknowG *ngFor="let pre of conversation.author.preknowledge" (openDetails)="openInfoDetails(pre)"></g>
+            <!-- <g preknowG *ngFor="let pre of conversation.author.preknowledge" (openDetails)="openInfoDetails(pre)"></g> -->
           </g>
         </svg>
       </div>
