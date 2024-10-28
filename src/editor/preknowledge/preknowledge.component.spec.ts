@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PreknowledgeComponent } from './info.component';
+import { PreknowledgeComponent } from './preknowledge.component';
 
-describe('InfoComponent', () => {
+describe('PreknowledgeComponent', () => {
   let component: PreknowledgeComponent;
   let fixture: ComponentFixture<PreknowledgeComponent>;
 

@@ -8,7 +8,6 @@ import {
 } from "../models/sequence-diagram-models";
 import {Information, NewInformation, Preknowledge} from "../models/knowledge-models";
 import {LayoutHelper} from "../layout-helper";
-import {find} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
