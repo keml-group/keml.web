@@ -26,8 +26,8 @@ describe('ModelIOService', () => {
       "     \"name\" : \"Other\"\n" +
       "     }" +
       " ]\n";
-    let cp0: ConversationPartner = {name: "LLM"};
-    let cp1: ConversationPartner = {name: "Other"};
+    let cp0: ConversationPartner = {name: "LLM", xPosition:300};
+    let cp1: ConversationPartner = {name: "Other", xPosition:450};
     let convPartners: ConversationPartner[] = [cp0, cp1];
 
     let info1aJson = " {\n" +
