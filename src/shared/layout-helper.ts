@@ -52,13 +52,19 @@ export class LayoutHelper {
     //todo currently position new infos as 0:
     this.initializeInfoPos(msgs);
 
+    console.log(msgs)
+
     pre.forEach(p => {
+      console.log(p.isUsedOn.map(send => send.timing))
       const timing = Math.min(...p.isUsedOn.map(send => send.timing));
+      console.log(timing);
+      p.x=0;
       p.y=LayoutHelper.computeMessageY(timing);
     })
     pre.sort((a, b) => {
       return a.y - b.y
     })
+    console.log(pre);
     // use map to organize preknowledge? Or just pointer? Maybe easier
   }
 

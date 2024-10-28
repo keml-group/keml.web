@@ -16,6 +16,7 @@ import {MsgDetailsComponent} from "./msg-details/msg-details.component";
 import {ConversationPartnerDetailsComponent} from "./cp-details/cp-details.component";
 import {InfoDetailsComponent} from "./info-details/info-details.component";
 import {IsInstrSvgComponent} from "./is-instr-svg/is-instr-svg.component";
+import {PreknowledgeComponent} from "./preknowledge/preknowledge.component";
 
 
 @NgModule({
@@ -31,6 +32,7 @@ import {IsInstrSvgComponent} from "./is-instr-svg/is-instr-svg.component";
     IsInstrSvgComponent,
     InfoComponent,
     InfoDetailsComponent,
+    PreknowledgeComponent,
   ],
   imports: [
     CommonModule,
