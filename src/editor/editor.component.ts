@@ -1,6 +1,5 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild,} from '@angular/core';
 import {ModelIOService} from "../shared/services/model-io.service";
-import {DiagramService} from "../shared/services/diagram.service";
 import {IoService} from "../shared/services/io.service";
 import {Conversation, ConversationPartner, Message} from "../shared/models/sequence-diagram-models";
 import {MsgDetailsComponent} from "./msg-details/msg-details.component";
@@ -13,7 +12,7 @@ import {InfoDetailsComponent} from "./info-details/info-details.component";
   selector: 'keml-editor',
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.css',
-  providers: [ModelIOService, DiagramService, IoService]
+  providers: [ModelIOService, IoService]
 })
 export class EditorComponent implements OnInit, AfterViewInit {
 
