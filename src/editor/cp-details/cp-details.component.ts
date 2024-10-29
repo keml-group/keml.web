@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
-import {ConversationPartner, Message} from "../../shared/models/sequence-diagram-models";
+import {ConversationPartner} from "../../shared/models/keml/conversation-partner";
+import {Message} from "../../shared/models/keml/message";
 import {ModelIOService} from "../../shared/services/model-io.service";
 
 @Component({

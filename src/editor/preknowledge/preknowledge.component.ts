@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Information} from "../../shared/models/knowledge-models";
+import {Information} from "../../shared/models/keml/information";
 import {InfoComponent} from "../info/info.component";
 
 @Component({

@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Author} from "../../shared/models/sequence-diagram-models";
+import {Author} from "../../shared/models/keml/author";
 
 @Component({
   selector: '[authorG]',

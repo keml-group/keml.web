@@ -26,7 +26,7 @@ export interface Message {
   content: string;
   originalContent?: string;
   timing: number;
-  counterPart: ConversationPartner;
+  counterPart: Reference;
 }
 
 export interface SendMessage extends Message {

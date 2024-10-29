@@ -1,6 +1,8 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Message, ReceiveMessage} from "../../shared/models/sequence-diagram-models";
-import {Information, NewInformation} from "../../shared/models/knowledge-models";
+import {Message} from "../../shared/models/keml/message";
+import {ReceiveMessage} from "../../shared/models/keml/receive-message";
+import {Information} from "../../shared/models/keml/information";
+import {NewInformation} from "../../shared/models/keml/new-information";
 import {LayoutHelper} from "../../shared/layout-helper";
 
 @Component({

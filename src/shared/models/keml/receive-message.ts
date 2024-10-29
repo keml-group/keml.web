@@ -1,14 +1,17 @@
 import {Message} from "./message";
 import {ConversationPartner} from "./conversation-partner";
+import {NewInformation} from "./new-information";
 
 export class ReceiveMessage extends Message {
-  static eClass: string = "http://www.unikoblenz.de/keml#//ReceiveMessage";
+  override readonly eClass: string = "http://www.unikoblenz.de/keml#//ReceiveMessage";
+  generates: NewInformation[];
 
   constructor(
     counterPart: ConversationPartner,
     timing: number,
     content?: string,
     originalContent?: string,
+    generates: NewInformation[] = [],
   ) {
     super(
       counterPart,
@@ -16,6 +19,7 @@ export class ReceiveMessage extends Message {
       content? content: "NewReceive_"+timing,
       originalContent
     );
+    this.generates = generates;
   }
 
 }

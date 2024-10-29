@@ -1,11 +1,13 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild,} from '@angular/core';
 import {ModelIOService} from "../shared/services/model-io.service";
 import {IoService} from "../shared/services/io.service";
-import {Conversation, ConversationPartner, Message} from "../shared/models/sequence-diagram-models";
+import {Conversation} from "../shared/models/keml/conversation";
+import {ConversationPartner} from "../shared/models/keml/conversation-partner";
+import {Message} from "../shared/models/keml/message";
 import {MsgDetailsComponent} from "./msg-details/msg-details.component";
 import {MatDialog} from "@angular/material/dialog";
 import {ConversationPartnerDetailsComponent} from "./cp-details/cp-details.component";
-import {Information} from "../shared/models/knowledge-models";
+import {Information} from "../shared/models/keml/information";
 import {InfoDetailsComponent} from "./info-details/info-details.component";
 
 @Component({

@@ -1,9 +1,10 @@
 import {Author} from "./author";
 import {ConversationPartner} from "./conversation-partner";
 import {IOHelper} from "./iohelper";
+import {Conversation as ConversationJson} from "../sequence-diagram-models";
 
 export class Conversation {
-  eClass ='http://www.unikoblenz.de/keml#//Conversation';
+  readonly eClass ='http://www.unikoblenz.de/keml#//Conversation';
   title: string;
   author: Author;
   conversationPartners: ConversationPartner[] = [];
@@ -40,16 +41,10 @@ export class Conversation {
     })
   }
 
-  static fromJSON (json: string): Conversation {
-    let conv =  <Conversation>JSON.parse(json);
+  static fromJSON (conv: ConversationJson): Conversation {
+    let convPartners: ConversationPartner[] = conv.conversationPartners.map(cp => ConversationPartner.fromJSON(cp))
+    let author: Author = Author.fromJson(conv.author, convPartners);
 
-    //resolve conv Partner refs
-    let convPartners = conv.conversationPartners;
-    conv.author.messages?.forEach(message => {
-      let ref = message.counterPart.$ref; //todo is correct because references are not correctly parsed now
-      message.counterPart = convPartners[IOHelper.resolveConversationPartnerReference(ref? ref : "")];
-    })
-    // todo resolve others
-    return Object.assign(new Conversation(), conv);
+    return new Conversation(conv.title, author, convPartners)
   }
 }

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Information} from "../../shared/models/knowledge-models";
+import {Information} from "../../shared/models/keml/information";
 import {MatDialogRef} from "@angular/material/dialog";
 import {ModelIOService} from "../../shared/services/model-io.service";
 

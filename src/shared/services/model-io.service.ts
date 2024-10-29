@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import {
-  Author,
-  Conversation,
-  ConversationPartner,
-  Message,
-  ReceiveMessage,
+  Conversation as ConversationJson,
 } from "../models/sequence-diagram-models";
-import {Information, NewInformation, Preknowledge} from "../models/knowledge-models";
+import {Information} from "../models/keml/information";
+import {Preknowledge} from "../models/keml/preknowledge";
+import {NewInformation} from "../models/keml/new-information";
 import {LayoutHelper} from "../layout-helper";
+import {Conversation} from "../models/keml/conversation";
+import {ConversationPartner} from "../models/keml/conversation-partner";
+import {Message} from "../models/keml/message";
+import {ReceiveMessage} from "../models/keml/receive-message"
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +19,14 @@ export class ModelIOService {
   constructor() { }
 
   loadKEML(json: string): Conversation {
-    let conv =  <Conversation>JSON.parse(json);
+    let conv =  <ConversationJson>JSON.parse(json);
 
+    let conv2 = Conversation.fromJSON(conv);
+    console.log(conv2)
+    console.log(conv2.toJson())
+    return conv2;
+
+    /*
     //resolve conv Partner refs
     let convPartners = conv.conversationPartners;
     conv.author.messages?.forEach(message => {
@@ -34,10 +42,14 @@ export class ModelIOService {
     LayoutHelper.positionInfos(conv.author.preknowledge, conv.author.messages);
     console.log(conv);
     return conv;
+    */
   }
 
   newKEML(): Conversation {
-    const author: Author = {
+
+    return new Conversation();
+
+    /*const author: Author = {
       name: 'Author',
       xPosition: 0,
       messages: [],
@@ -50,7 +62,7 @@ export class ModelIOService {
       title: 'New Conversation',
       author: author,
       conversationPartners: convP
-    }
+    }*/
   }
 
   resolveConversationPartnerReference(ref: string): number {
@@ -164,23 +176,7 @@ export class ModelIOService {
   }
 
   duplicateMessage(msg: Message, msgs: Message[]): Message | null {
-    if (this.msgPosFitsTiming(msg, msgs)) {
-      const newMsg: Message = {
-        eClass: msg.eClass,
-        counterPart: msg.counterPart,
-        timing: msg.timing+1,
-        content: 'Duplicate of ' + msg.content,
-        originalContent: msg.originalContent,
-      }
-      msgs.splice(msg.timing +1, 0, newMsg);
-      // adapt later messages:
-      //todo also adapt infos
-      for(let i = msg.timing +2; i < msgs.length; i++) {
-        msgs[i].timing++;
-      }
-      return newMsg;
-    }
-    return null;
+    return Message.duplicateMessage(msg, msgs)
   }
 
   addNewMessage(counterPart: ConversationPartner, isSend: boolean, msgs: Message[]): Message {

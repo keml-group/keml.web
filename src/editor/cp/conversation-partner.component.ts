@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {ConversationPartner} from "../../shared/models/sequence-diagram-models";
+import {ConversationPartner} from "../../shared/models/keml/conversation-partner";
 
 @Component({
   selector: '[cp]',
