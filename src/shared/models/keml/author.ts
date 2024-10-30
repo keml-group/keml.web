@@ -1,8 +1,8 @@
 import {LifeLine} from "./life-line";
-import {Message} from "./message";
+import {Message} from "./msg-info";
 import {Author as AuthorJson} from "../sequence-diagram-models"
 import {ConversationPartner} from "./conversation-partner";
-import {Preknowledge} from "./preknowledge";
+import {Preknowledge} from "./msg-info";
 
 export class Author extends LifeLine{
   // todo necessary? eClass = "http://www.unikoblenz.de/keml#//Author",

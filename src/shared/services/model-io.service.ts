@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import {
   Conversation as ConversationJson,
 } from "../models/sequence-diagram-models";
-import {Information} from "../models/keml/information";
-import {Preknowledge} from "../models/keml/preknowledge";
-import {NewInformation} from "../models/keml/new-information";
+import {Information} from "../models/keml/msg-info";
+import {Preknowledge} from "../models/keml/msg-info";
+import {NewInformation} from "../models/keml/msg-info";
 import {LayoutHelper} from "../layout-helper";
 import {Conversation} from "../models/keml/conversation";
 import {ConversationPartner} from "../models/keml/conversation-partner";
-import {Message} from "../models/keml/message";
-import {ReceiveMessage} from "../models/keml/receive-message"
+import {Message} from "../models/keml/msg-info";
+import {ReceiveMessage} from "../models/keml/msg-info"
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +22,7 @@ export class ModelIOService {
     let conv =  <ConversationJson>JSON.parse(json);
 
     let conv2 = Conversation.fromJSON(conv);
+    LayoutHelper.positionConversationPartners(conv2.conversationPartners)
     console.log(conv2)
     console.log(conv2.toJson())
     return conv2;
@@ -47,7 +48,10 @@ export class ModelIOService {
 
   newKEML(): Conversation {
 
-    return new Conversation();
+    const conv = new Conversation();
+    LayoutHelper.positionConversationPartners(conv.conversationPartners)
+
+    return conv;
 
     /*const author: Author = {
       name: 'Author',

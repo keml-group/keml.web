@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Information} from "../../shared/models/keml/information";
+import {Information} from "../../shared/models/keml/msg-info";
 
 @Component({
   selector: '[is-instr]',

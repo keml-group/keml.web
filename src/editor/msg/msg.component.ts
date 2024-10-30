@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Message} from "../../shared/models/keml/message";
-import {ReceiveMessage} from "../../shared/models/keml/receive-message";
-import {Information} from "../../shared/models/keml/information";
-import {NewInformation} from "../../shared/models/keml/new-information";
+import {Message} from "../../shared/models/keml/msg-info";
+import {ReceiveMessage} from "../../shared/models/keml/msg-info";
+import {Information} from "../../shared/models/keml/msg-info";
+import {NewInformation} from "../../shared/models/keml/msg-info";
 import {LayoutHelper} from "../../shared/layout-helper";
 
 @Component({

@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Information} from "../../shared/models/keml/information";
-import {NewInformation} from "../../shared/models/keml/new-information";
+import {Information} from "../../shared/models/keml/msg-info";
+import {NewInformation} from "../../shared/models/keml/msg-info";
 
 @Component({
   selector: '[infoG]',
