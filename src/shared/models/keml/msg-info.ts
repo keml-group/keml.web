@@ -48,11 +48,12 @@ export abstract class Message {
 
   static duplicateMessage(msg: Message, msgs: Message[]): Message | null {
     if (this.msgPosFitsTiming(msg, msgs)) {
+      let contentAddition = 'Duplicate of '
       let duplicate;
       if(IOHelper.isSend(msg.eClass)) {
-        duplicate = new SendMessage(msg.counterPart, msg.timing, msg.content, msg.originalContent)
+        duplicate = new SendMessage(msg.counterPart, msg.timing+1, contentAddition + msg.content, msg.originalContent)
       } else {
-        duplicate = new ReceiveMessage(msg.counterPart, msg.timing, msg.content, msg.originalContent)
+        duplicate = new ReceiveMessage(msg.counterPart, msg.timing+1, contentAddition + msg.content, msg.originalContent)
       }
       this.insertMsgInPos(duplicate, msgs)
       return duplicate;
