@@ -100,6 +100,7 @@ export class SendMessage extends Message {
 export class ReceiveMessage extends Message {
   override readonly eClass: string = "http://www.unikoblenz.de/keml#//ReceiveMessage";
   generates: NewInformation[];
+  isInterrupted: boolean = false;
 
   constructor(
     counterPart: ConversationPartner,
@@ -107,6 +108,7 @@ export class ReceiveMessage extends Message {
     content?: string,
     originalContent?: string,
     generates: NewInformation[] = [],
+    isInterrupted: boolean = false,
   ) {
     super(
       counterPart,
@@ -115,6 +117,7 @@ export class ReceiveMessage extends Message {
       originalContent
     );
     this.generates = generates;
+    this.isInterrupted = isInterrupted;
   }
 
 }
