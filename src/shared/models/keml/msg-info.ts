@@ -2,6 +2,8 @@ import {ConversationPartner} from "./conversation-partner";
 import {IOHelper} from "./iohelper";
 
 import {Message as MessageJson} from "../sequence-diagram-models";
+import {ReceiveMessage as ReceiveMessageJson} from "../sequence-diagram-models";
+import {NewInformation as NewInformationJson} from "../knowledge-models";
 import {Preknowledge as PreknowledgeJson} from "../knowledge-models";
 
 export abstract class Message {
@@ -46,7 +48,16 @@ export abstract class Message {
       timing = 0;
     }
     let counterPart: ConversationPartner = conversationPartners[IOHelper.getIndexFromString(msg.counterPart.$ref)];
-    return Message.newMessage(this.isSend(msg.eClass), counterPart, timing, msg.content, msg.originalContent)
+    let msgC =  Message.newMessage(this.isSend(msg.eClass), counterPart, timing, msg.content, msg.originalContent)
+    if (msgC.isSend()) {
+
+    } else {
+      let receive = msgC as ReceiveMessage
+      let infos = (msg as ReceiveMessageJson).generates
+      let generated: NewInformation[] = infos?.map(info => NewInformation.fromJson(info, receive))
+      receive.addGenerates(generated)
+    }
+    return msgC
   }
 
   private static msgPosFitsTiming(msg: Message, msgs: Message[]): boolean {
@@ -99,7 +110,8 @@ export class SendMessage extends Message {
 
 export class ReceiveMessage extends Message {
   override readonly eClass: string = "http://www.unikoblenz.de/keml#//ReceiveMessage";
-  generates: NewInformation[];
+  generates: NewInformation[] = [];
+  repeats: NewInformation[] = [];
   isInterrupted: boolean = false;
 
   constructor(
@@ -108,6 +120,7 @@ export class ReceiveMessage extends Message {
     content?: string,
     originalContent?: string,
     generates: NewInformation[] = [],
+    repeats: NewInformation[] = [],
     isInterrupted: boolean = false,
   ) {
     super(
@@ -116,8 +129,30 @@ export class ReceiveMessage extends Message {
       content? content: "New receive content",
       originalContent
     );
-    this.generates = generates;
+    this.addGenerates(generates);
+    this.repeats = repeats;
     this.isInterrupted = isInterrupted;
+  }
+
+  // does both directions (source and generates)
+  addGenerates(generated: NewInformation[]) {
+    generated?.forEach(info => {
+      if(info.source != this) {
+        info.source?.removeFromGenerates(info)
+        info.source = this;
+      }
+      if (this.generates.findIndex(i => i == info)==-1)//todo can duplicates exist
+        this.generates.push(info)
+    })
+  }
+
+  private removeFromGenerates(info: NewInformation): boolean {
+    let pos = this.generates.findIndex(i => i == info)
+    if (pos != -1) {
+      this.generates.splice(pos, 1)
+      return true;
+    }
+    return false;
   }
 
 }
@@ -170,6 +205,10 @@ export class NewInformation extends Information {
       causes, targetedBy,
       isUsedOn, repeatedBy,);
     this.source = source;
+  }
+
+  static fromJson(newInfo: NewInformationJson, source: ReceiveMessage): NewInformation {
+    return new NewInformation(source, newInfo.message, newInfo.isInstruction)
   }
 }
 

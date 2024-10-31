@@ -23,8 +23,6 @@ export class ModelIOService {
 
     let conv2 = Conversation.fromJSON(conv);
     LayoutHelper.positionConversationPartners(conv2.conversationPartners)
-    console.log(conv2)
-    console.log(conv2.toJson())
     return conv2;
 
     /*

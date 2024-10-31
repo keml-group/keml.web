@@ -46,7 +46,6 @@ export class EditorComponent implements OnInit, AfterViewInit {
     this.ioService.loadStringFromFile(event).then(txt => {
       //todo insert detection code for wrong files (no json, not appropriately structured
       this.conversation = this.modelIOService.loadKEML(txt);
-      console.log(JSON.stringify(this.conversation));
     });
   }
 
