@@ -5,7 +5,7 @@ import {Message as MessageJson} from "../sequence-diagram-models";
 import {Preknowledge as PreknowledgeJson} from "../knowledge-models";
 
 export abstract class Message {
-  eClass: string = '';
+  protected readonly eClass: string = '';
   counterPart: ConversationPartner;
   timing: number = 0;
   content: string;
@@ -23,19 +23,30 @@ export abstract class Message {
     this.originalContent = originalContent;
   }
 
+  static isSend(eClass: string) {
+    return eClass.endsWith("SendMessage");
+  }
+
+  isSend(): boolean {
+    return Message.isSend(this.eClass);
+  }
+
+  static newMessage(isSend: boolean, counterPart: ConversationPartner, timing: number, content: string, originalContent: string = 'Original content'): Message {
+    if (isSend) {
+      return new SendMessage(counterPart, timing, content, originalContent)
+    } else {
+      return new ReceiveMessage(counterPart, timing, content, originalContent)
+    }
+  }
+
   static fromJSON(msg: MessageJson, conversationPartners: ConversationPartner[]): Message {
     //deal with unexpected undefined for timing 0:
     let timing = msg.timing;
     if (!timing) {
       timing = 0;
     }
-
-    let counterPart: ConversationPartner = conversationPartners[IOHelper.resolveConversationPartnerReference(msg.counterPart.$ref)];
-    if(IOHelper.isSend(msg.eClass)) {
-      return new SendMessage(counterPart, timing, msg.content, msg.originalContent)
-    } else {
-      return new ReceiveMessage(counterPart, timing, msg.content, msg.originalContent)
-    }
+    let counterPart: ConversationPartner = conversationPartners[IOHelper.getIndexFromString(msg.counterPart.$ref)];
+    return Message.newMessage(this.isSend(msg.eClass), counterPart, timing, msg.content, msg.originalContent)
   }
 
   private static msgPosFitsTiming(msg: Message, msgs: Message[]): boolean {
@@ -48,13 +59,7 @@ export abstract class Message {
 
   static duplicateMessage(msg: Message, msgs: Message[]): Message | null {
     if (this.msgPosFitsTiming(msg, msgs)) {
-      let contentAddition = 'Duplicate of '
-      let duplicate;
-      if(IOHelper.isSend(msg.eClass)) {
-        duplicate = new SendMessage(msg.counterPart, msg.timing+1, contentAddition + msg.content, msg.originalContent)
-      } else {
-        duplicate = new ReceiveMessage(msg.counterPart, msg.timing+1, contentAddition + msg.content, msg.originalContent)
-      }
+      let duplicate = Message.newMessage(msg.isSend(), msg.counterPart, msg.timing+1, 'Duplicate of '+ msg.content, msg.originalContent);
       this.insertMsgInPos(duplicate, msgs)
       return duplicate;
     }
@@ -78,13 +83,13 @@ export class SendMessage extends Message {
   constructor(
     counterPart: ConversationPartner,
     timing: number,
-    content?: string,
+    content: string = 'New send content',
     originalContent?: string,
   ) {
     super(
       counterPart,
       timing,
-      content? content: "NewSend_"+timing,
+      content,
       originalContent
     );
   }
@@ -106,7 +111,7 @@ export class ReceiveMessage extends Message {
     super(
       counterPart,
       timing,
-      content? content: "NewReceive_"+timing,
+      content? content: "New receive content",
       originalContent
     );
     this.generates = generates;

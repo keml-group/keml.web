@@ -23,8 +23,10 @@ export class LayoutHelper {
     }
   }
 
-  static nextConversationPartnerPosition(positionBefore: number): number {
-    return positionBefore + LayoutHelper.distanceBetweenCP;
+  static nextConversationPartnerPosition(positionBefore?: number): number {
+    if(positionBefore) {
+      return positionBefore + LayoutHelper.distanceBetweenCP;
+    } else {return LayoutHelper.distanceToFirstCP;}
   }
 
   static  computeMessageY(timing: number): number {

@@ -22,7 +22,7 @@ export class MsgComponent {
   }
 
   isSend(): boolean {
-    return this.msg.eClass.endsWith('SendMessage')
+    return this.msg.isSend()
   }
 
   getInfos(): NewInformation[] {

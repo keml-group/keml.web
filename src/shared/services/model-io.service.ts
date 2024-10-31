@@ -69,12 +69,6 @@ export class ModelIOService {
     }*/
   }
 
-  resolveConversationPartnerReference(ref: string): number {
-    // form is //@conversationPartners.<digits> - so we just remove a prefix
-    let length = "//@conversationPartners.".length;
-    return parseInt(ref.substring(length))
-  }
-
   private timeMessages(messages: Message[]) {
     for (let i = 0; i < messages.length; i++) {
       messages[i].timing = i;
@@ -84,7 +78,7 @@ export class ModelIOService {
   addNewConversationPartner(cps: ConversationPartner[]) {
     const cp: ConversationPartner = {
       name: 'New Partner',
-      xPosition: LayoutHelper.nextConversationPartnerPosition(cps[cps.length-1].xPosition), //todo
+      xPosition: LayoutHelper.nextConversationPartnerPosition(cps[cps.length-1]?.xPosition), //todo
     }
     cps.push(cp);
   }
@@ -184,15 +178,8 @@ export class ModelIOService {
   }
 
   addNewMessage(counterPart: ConversationPartner, isSend: boolean, msgs: Message[]): Message {
-    const eClass = isSend? 'http://www.unikoblenz.de/keml#//SendMessage' : 'http://www.unikoblenz.de/keml#//ReceiveMessage';
     const content = isSend ? 'New send content' : 'New receive content';
-    const newMsg: Message = {
-      eClass: eClass,
-      counterPart: counterPart,
-      timing: msgs.length,
-      content: content,
-      originalContent: 'Original content',
-    }
+    const newMsg: Message = Message.newMessage(isSend, counterPart, msgs.length, content)
     msgs.push(newMsg);
     return newMsg;
   }
@@ -247,12 +234,8 @@ export class ModelIOService {
     return [];
   }
 
-  isReceive(msg: Message): boolean {
-    return msg.eClass.endsWith('ReceiveMessage');
-  }
-
   filterReceives(msgs: Message[]): ReceiveMessage[] {
-    return msgs.filter(msg => this.isReceive(msg))
+    return msgs.filter(msg => !msg.isSend())
       .map(msg => msg as ReceiveMessage)
   }
 

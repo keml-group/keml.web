@@ -19,8 +19,6 @@ export class InfoComponent {
   dragStartX: number = 0;
   dragStartY: number = 0;
 
-  protected readonly outerWidth = outerWidth;
-  protected readonly innerWidth = innerWidth;
 
   // todo cannot use, somehow often not set - problem in json lib?
   isNewInfo() {
