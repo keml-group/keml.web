@@ -73,7 +73,7 @@ export abstract class Message {
 }
 
 export class SendMessage extends Message {
-  static eClass: string = "http://www.unikoblenz.de/keml#//SendMessage";
+  override readonly eClass: string = "http://www.unikoblenz.de/keml#//SendMessage";
 
   constructor(
     counterPart: ConversationPartner,
