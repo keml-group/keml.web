@@ -18,7 +18,8 @@ export class DatabaseSvgComponent {
     const w = this.w;
     const h = this.h;
     const h1 = w/6;
-    const hges = h1+h;
+    const curveHeight= w/8; //Bezier curve computation for highest point t=w/2
+    const hges = h+curveHeight;
 
     return 'M 0 '+h1+' C 1 '+(2*h1)+' '+(w-1)+' '+(2*h1)+' '+w+' '+h1+'\n'
       +' C '+(w-1)+' 0 1 '+' 0 0 '+h1+'\n'
@@ -26,5 +27,4 @@ export class DatabaseSvgComponent {
       +' C 1 '+(2*h1+hges)+' '+(w-1)+' '+(2*h1+hges)+' '+w+' '+(h1+hges)+'\n'
       +'v -'+hges;
   }
-
 }
