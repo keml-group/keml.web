@@ -1,6 +1,6 @@
 <svg:g [attr.transform]="'translate('+ (-400+info.x) + ', ' + info.y +')'" (mousedown)="startDrag($event)" (mousemove)="drag($event)" (mouseup)="endDrag($event)" (mouseleave)="endDrag($event)" (click)="openInfoDetails()">
   <g is-instr [info]="info" [w]="w" [h]="h"></g>
-  <g database [attr.transform]="'translate(-9, -50) scale(3.8, 2)'" [attr.fill]="computeTextColor()"></g>
+  <g database [attr.transform]="'translate(20, -25) scale(3.8, 2)'" [fill]="computeTextColor()"></g>
   <foreignObject [attr.x]="w*0.1" y="0" [attr.width]="w*0.9" [attr.height]="h">
     <textarea id="infoT" type="text" [(ngModel)]="info.message" [attr.style]="'background: '+ computeTextColor()">
     </textarea>
