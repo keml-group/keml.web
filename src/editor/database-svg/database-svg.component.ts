@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: '[database]',
@@ -6,5 +6,8 @@ import { Component } from '@angular/core';
   styleUrl: './database-svg.component.css'
 })
 export class DatabaseSvgComponent {
+
+  @Input() stroke: string = 'black'
+  @Input() fill: string = 'grey';
 
 }
