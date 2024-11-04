@@ -19,13 +19,6 @@ export class InfoComponent {
   dragStartX: number = 0;
   dragStartY: number = 0;
 
-
-  // todo cannot use, somehow often not set - problem in json lib?
-  isNewInfo() {
-    console.log(this.info)
-    return this.info.eClass?.endsWith('NewInformation');
-  }
-
   // todo later use color here, then this is main method
   getConvPartnerName(): string {
     const source = (this.info as NewInformation).source
@@ -65,6 +58,7 @@ export class InfoComponent {
     console.log('endDrag');
     this.dragActive = false;
     // todo was working for click vs drag, not now setTimeout(() => {this.dragActive = false;}, 50);
+    event.preventDefault();
   }
 
   openInfoDetails() {
