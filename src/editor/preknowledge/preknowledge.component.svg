@@ -1,9 +1,9 @@
 <svg:g [attr.transform]="'translate('+ (-400+info.x) + ', ' + info.y +')'" (mousedown)="startDrag($event)" (mousemove)="drag($event)" (mouseup)="endDrag($event)" (mouseleave)="endDrag($event)" (click)="openInfoDetails()">
-  <g is-instr [attr.transform]="'translate(0, '+(w*0.2)+')'" [info]="info" [w]="w" [h]="h"></g>
-  <g database [attr.transform]="'translate('+(w*0.1)+')'" [w]="w*0.9" [h]="h" [fill]="computeTextColor()"></g>
-  <foreignObject [attr.x]="w*0.1" [attr.y]="(0.9*(w/8+w/6))" [attr.width]="w*0.9" [attr.height]="h">
+  <circle cx="0" cy="0"r="1" fill="red"></circle>
+  <g is-instr [attr.transform]="'translate(0, -'+ 0.9*w/8 +')'" [info]="info" [w]="w" [h]="h+0.9*w/8"></g>
+  <g database [attr.transform]="'translate('+(w*0.1)+','+ -(0.9*(w/8+w/6)) +')'" [w]="w*0.9" [h]="h" [fill]="computeTextColor()"></g>
+  <foreignObject [attr.x]="w*0.1" [attr.y]="0" [attr.width]="w*0.9" [attr.height]="h">
     <textarea id="infoT" type="text" [(ngModel)]="info.message" [attr.style]="'background: '+ computeTextColor()">
     </textarea>
   </foreignObject>
-  <circle [attr.cx]="w*0.1+w/2" [attr.cy]="(0.9*(w/8+w/6))" r="1" fill="red"></circle>
 </svg:g>
