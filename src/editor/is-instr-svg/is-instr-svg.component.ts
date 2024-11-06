@@ -13,7 +13,6 @@ export class IsInstrSvgComponent {
   @Input() h!: number;
 
   changeIsInstr():void {
-    console.log('change')
     this.info.isInstruction = !this.info.isInstruction;
   }
 
