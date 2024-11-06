@@ -50,7 +50,7 @@
         <svg #svg id="svg" style="border: 1px solid black;" width="1500" height="2000" overflow="scroll">
           <g transform="translate(750,0)">
             <foreignObject height="25" width="600">
-              <input id="title" type="text" [(ngModel)]="conversation.title" >
+              <input id="convtitle" type="text" [(ngModel)]="conversation.title" >
             </foreignObject>
             <g authorG [author]="conversation.author"></g>
             <g cp *ngFor="let convP of conversation.conversationPartners" [conversationPartner]="convP" (openDetails)="openConversationPartnerDetails(convP)"></g>
