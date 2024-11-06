@@ -67,12 +67,6 @@ export class ModelIOService {
     }*/
   }
 
-  private timeMessages(messages: Message[]) {
-    for (let i = 0; i < messages.length; i++) {
-      messages[i].timing = i;
-    }
-  }
-
   addNewConversationPartner(cps: ConversationPartner[]) {
     const cp: ConversationPartner = {
       name: 'New Partner',

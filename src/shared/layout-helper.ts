@@ -37,7 +37,7 @@ export class LayoutHelper {
     for (let msg of messages) {
       //const infos = (msg as ReceiveMessage).generates;
       (msg as ReceiveMessage)?.generates?.forEach(r => {
-        r.x = 0;
+        r.x = -400;
         r.y = 0;
       })
     }
