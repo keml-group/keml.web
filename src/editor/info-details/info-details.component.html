@@ -5,8 +5,9 @@
   <textarea type="text" [(ngModel)]="info.message"></textarea>
 
   <label class="form-label">Is Instruction</label>
-  <svg width="20" height="50">
-    <g is-instr [info]="info" [w]="20" [h]="50"></g>
+  <svg width="40" height="60">
+    <g is-instr [info]="info" [w]="40" [h]="60"></g>
+    <!--todo currently we use 40 and 60 both on svg and inner element - mangae connection? -->
   </svg>
 
   <label class="form-label">Position</label>
