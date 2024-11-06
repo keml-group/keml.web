@@ -182,16 +182,6 @@ export class ModelIOService {
     return newMsg;
   }
 
-  // todo do not use, it causes circles
-  repairSourceOfNewInfo(messages: Message[]) {
-    for (let msg of messages) {
-      //const infos = (msg as ReceiveMessage).generates;
-      (msg as ReceiveMessage)?.generates?.forEach(r => {
-        r.source = <ReceiveMessage>msg;
-      })
-    }
-  }
-
   deleteInfo(info: Information, infos: Information[]) {
     const pos = infos.indexOf(info);
     if (pos > -1) {
