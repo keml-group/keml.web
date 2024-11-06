@@ -1,10 +1,10 @@
 import {ConversationPartner} from "./conversation-partner";
-import {IOHelper} from "./iohelper";
 
 import {Message as MessageJson} from "../sequence-diagram-models";
 import {ReceiveMessage as ReceiveMessageJson} from "../sequence-diagram-models";
 import {NewInformation as NewInformationJson} from "../knowledge-models";
 import {Preknowledge as PreknowledgeJson} from "../knowledge-models";
+import {Ref} from "./parser/ref";
 
 export abstract class Message {
   protected readonly eClass: string = '';
@@ -47,7 +47,7 @@ export abstract class Message {
     if (!timing) {
       timing = 0;
     }
-    let counterPart: ConversationPartner = conversationPartners[IOHelper.getIndexFromString(msg.counterPart.$ref)];
+    let counterPart: ConversationPartner = conversationPartners[Ref.getIndexFromString(msg.counterPart.$ref)];
     let msgC =  Message.newMessage(this.isSend(msg.eClass), counterPart, timing, msg.content, msg.originalContent)
     if (msgC.isSend()) {
 

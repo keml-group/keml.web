@@ -6,4 +6,9 @@ export class Ref {
     this.$ref = ref;
     this.eClass = eClass;
   }
+
+  static getIndexFromString(ref: string): number {
+    let substrings = ref.split('.');
+    return parseInt(substrings[substrings.length-1]);
+  }
 }
