@@ -1,5 +1,5 @@
 <svg:g >
   <rect x="0" y="0" [attr.width]="w" [attr.height]="h" [attr.fill]="computeInstructionBGColor()" (click)="changeIsInstr()"></rect>
   <g person *ngIf="info.isInstruction" [attr.transform]="'scale(0.4, 0.4) translate('+  (-w) +', '+ -h*0.4 +')'"></g>
-  <text *ngIf="!info.isInstruction" x="10" [attr.y]="h*0.35" font-size="100%" transform="scale(1, 2)">!</text>
+  <text *ngIf="!info.isInstruction" [attr.x]="0.5*w" [attr.y]="h*0.35" font-size="100%" transform="scale(1, 2)">!</text>
 </svg:g>
