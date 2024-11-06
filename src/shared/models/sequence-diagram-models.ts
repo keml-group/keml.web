@@ -1,4 +1,5 @@
 import {Information, Preknowledge, NewInformation} from "./knowledge-models";
+import {Ref} from "./keml/parser/ref";
 
 export interface Conversation {
   eClass: string;
@@ -26,22 +27,16 @@ export interface Message {
   content: string;
   originalContent?: string;
   timing: number;
-  counterPart: Reference;
+  counterPart: Ref<ConversationPartner>;
 }
 
 export interface SendMessage extends Message {
-  uses?: Information[];
+  uses?: Ref<Information>[];
 }
 
 export interface ReceiveMessage extends Message {
   generates: (NewInformation)[];
-  repeats?: (Information)[];
-}
-
-// todo should be used to construct a reference
-export interface Reference {
-  eClass: string;
-  $ref: string;
+  repeats?: (Ref<Information>)[];
 }
 
 

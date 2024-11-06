@@ -1,8 +1,8 @@
 /* documents all layout specific choices (distances) so that we can work from taht on
 * treats (0,0) as author position -> knowledge has a negative x, messages a positive x.
 */
-import {ConversationPartner, Message, ReceiveMessage} from "./models/sequence-diagram-models";
-import {Preknowledge} from "./models/knowledge-models";
+import {ConversationPartner} from './models/keml/conversation-partner';
+import {Message, ReceiveMessage, Preknowledge} from "./models/keml/msg-info";
 
 export class LayoutHelper {
   // distance to first partner should be bigger than distance in between:

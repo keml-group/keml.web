@@ -1,6 +1,7 @@
-export class Ref {
+export class Ref<T> {
   $ref: string;
   eClass?: string;
+  content?: T;
 
   constructor(ref: string, eClass?: string) {
     this.$ref = ref;

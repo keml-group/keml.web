@@ -1,4 +1,5 @@
 import {ReceiveMessage, SendMessage} from "./sequence-diagram-models";
+import {Ref} from "./keml/parser/ref";
 
 //try out: new helper for message positioning
 export interface Position {
@@ -15,11 +16,11 @@ export interface Information {
   initialTrust: number;
   currentTrust: number;
 
-  causes: InformationLink[]; //todo avoid?
-  targetedBy: InformationLink[]; //todo avoid?
+  causes: InformationLink[];
+  targetedBy: Ref<InformationLink>[];
 
-  isUsedOn: SendMessage[];
-  repeatedBy: ReceiveMessage[];
+  isUsedOn: Ref<SendMessage>[];
+  repeatedBy: Ref<ReceiveMessage>[];
   x: number;
   y: number;
 }
@@ -29,14 +30,14 @@ export interface Preknowledge extends Information {
 }
 
 export interface NewInformation extends Information {
-  source: ReceiveMessage;
+  source: ReceiveMessage; //backwards but main
 }
 
 export interface InformationLink {
   linkText?: string;
   type: InformationLinkType;
-  source: Information;
-  target: Information;
+  source: Information; //backwards but main
+  target: Ref<Information>;
 }
 
 export enum InformationLinkType {
