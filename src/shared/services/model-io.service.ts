@@ -21,6 +21,20 @@ export class ModelIOService {
     return conv;
   }
 
+  initializeKEML(): Conversation {
+    return {
+      eClass: 'http://www.unikoblenz.de/keml#//Conversation',
+      title: 'New Conversation',
+      author: {
+        name: 'Author',
+        messages: []
+      },
+      conversationPartners: [
+        {name: 'LLM'}
+      ]
+    };
+  }
+
   resolveConversationPartnerReference(ref: string): number {
     // form is //@conversationPartners.<digits> - so we just remove a prefix
     let length = "//@conversationPartners.".length;

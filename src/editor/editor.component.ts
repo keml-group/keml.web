@@ -18,22 +18,28 @@ import {Author, Conversation} from "../shared/models/sequence-diagram-models";
 export class EditorComponent implements OnInit, AfterViewInit {
 
   @ViewChild("diagram") diagram!: DiagramComponent;
+  conv: Conversation;
 
   ngOnInit(): void {
   }
 
   ngAfterViewInit(): void {
-    //console.log(this.diagram);
+    this.diagram.serializationSettings.preventDefaults = true;
+    console.log(this.conv);
+    this.diagramService.loadConversationAsDiagram(this.conv, this.diagram)
   }
 
   constructor(
     private modelIOService: ModelIOService,
     private diagramService: DiagramService,
     private ioService: IoService,
-  ) {}
+  ) {
+    this.conv = this.modelIOService.initializeKEML();
+  }
 
   newDiagram() {
-    this.diagramService.initializeConversationDiagram(this.diagram);
+    this.conv = this.modelIOService.initializeKEML();
+    this.diagramService.loadConversationAsDiagram(this.conv, this.diagram)
   }
 
   openKeml() {
