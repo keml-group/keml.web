@@ -5,6 +5,7 @@ import {ReceiveMessage as ReceiveMessageJson} from "../sequence-diagram-models";
 import {NewInformation as NewInformationJson} from "../knowledge-models";
 import {Preknowledge as PreknowledgeJson} from "../knowledge-models";
 import {Ref} from "./parser/ref";
+import {ParserContext} from "./parser/parser-context";
 
 export abstract class Message {
   protected readonly eClass: string = '';
@@ -41,13 +42,13 @@ export abstract class Message {
     }
   }
 
-  static fromJSON(msg: MessageJson, conversationPartners: ConversationPartner[]): Message {
+  static fromJSON(msg: MessageJson, context: ParserContext): Message {
     //deal with unexpected undefined for timing 0:
     let timing = msg.timing;
     if (!timing) {
       timing = 0;
     }
-    let counterPart: ConversationPartner = conversationPartners[Ref.getIndexFromString(msg.counterPart.$ref)];
+    let counterPart: ConversationPartner = context.get(msg.counterPart.$ref);
     let msgC =  Message.newMessage(this.isSend(msg.eClass), counterPart, timing, msg.content, msg.originalContent)
     if (msgC.isSend()) {
 
@@ -55,6 +56,7 @@ export abstract class Message {
       let receive = msgC as ReceiveMessage
       let infos = (msg as ReceiveMessageJson).generates
       let generated: NewInformation[] = infos?.map(info => NewInformation.fromJson(info, receive))
+      context.putList('todo', 'generates', generated)
       receive.addGenerates(generated)
     }
     return msgC

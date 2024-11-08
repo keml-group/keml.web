@@ -1,8 +1,8 @@
 import {LifeLine} from "./life-line";
 import {Message} from "./msg-info";
 import {Author as AuthorJson} from "../sequence-diagram-models"
-import {ConversationPartner} from "./conversation-partner";
 import {Preknowledge} from "./msg-info";
+import {ParserContext} from "./parser/parser-context";
 
 export class Author extends LifeLine{
   // todo necessary? eClass = "http://www.unikoblenz.de/keml#//Author",
@@ -15,10 +15,12 @@ export class Author extends LifeLine{
     this.messages = messages;
   }
 
-  static fromJson(author: AuthorJson, convPartners: ConversationPartner[]): Author {
+  static fromJson(author: AuthorJson, context: ParserContext): Author {
 
     let preknowledge = author.preknowledge.map(pre => Preknowledge.fromJSON(pre))
-    let msgs = author.messages.map(message => Message.fromJSON(message, convPartners))
+    context.putList('todo', 'preknowledge', preknowledge);
+    console.log(context)
+    let msgs = author.messages.map(message => Message.fromJSON(message, context))
 
     return new Author(author.name, author.xPosition, preknowledge, msgs) //todo
   }

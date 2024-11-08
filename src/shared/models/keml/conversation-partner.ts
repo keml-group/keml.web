@@ -1,5 +1,6 @@
 import {LifeLine} from "./life-line";
 import {ConversationPartner as ConversationPartnerJson} from "../sequence-diagram-models"
+import {ParserContext} from "./parser/parser-context";
 
 export class ConversationPartner extends LifeLine {
 
@@ -7,7 +8,7 @@ export class ConversationPartner extends LifeLine {
       super(name, xPosition);
     }
 
-    static fromJSON(cp: ConversationPartnerJson): ConversationPartner {
+    static fromJSON(cp: ConversationPartnerJson, _: ParserContext): ConversationPartner {
       return new ConversationPartner(cp.name, cp.xPosition);
     }
 }
