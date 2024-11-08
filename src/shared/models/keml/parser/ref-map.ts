@@ -10,7 +10,7 @@ export class RefMap<T> {
   }
 
   refFromIndex(index: number): string {
-    if (this.isSingleton)
+    if (!this.isSingleton)
       return this.prefix+'.'+index
     else {
       console.error('You should not call index computation for singleton')
