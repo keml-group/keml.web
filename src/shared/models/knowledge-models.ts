@@ -17,10 +17,10 @@ export interface Information {
   currentTrust: number;
 
   causes: InformationLink[];
-  targetedBy: Ref<InformationLink>[];
+  targetedBy: Ref[];
 
-  isUsedOn: Ref<SendMessage>[];
-  repeatedBy: Ref<ReceiveMessage>[];
+  isUsedOn: Ref[];
+  repeatedBy: Ref[];
   x: number;
   y: number;
 }
@@ -37,7 +37,7 @@ export interface InformationLink {
   linkText?: string;
   type: InformationLinkType;
   source: Information; //backwards but main
-  target: Ref<Information>;
+  target: Ref;
 }
 
 export enum InformationLinkType {

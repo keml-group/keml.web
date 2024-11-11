@@ -3,6 +3,8 @@ import {Message} from "./msg-info";
 import {Author as AuthorJson} from "../sequence-diagram-models"
 import {Preknowledge} from "./msg-info";
 import {ParserContext} from "./parser/parser-context";
+import {Ref} from "./parser/ref";
+import {Referencable} from "./parser/referenceable";
 
 export class Author extends LifeLine{
   // todo necessary? eClass = "http://www.unikoblenz.de/keml#//Author",
@@ -23,6 +25,21 @@ export class Author extends LifeLine{
     let msgs = author.messages.map(message => Message.fromJSON(message, context))
 
     return new Author(author.name, author.xPosition, preknowledge, msgs) //todo
+  }
+
+  prepare(ownPos: string) {
+    this.ref = new Ref(ownPos) //todo no eclass
+    const prefixPre = Ref.computePrefix(ownPos, 'preknowledge')
+    Referencable.prepareList(prefixPre, this.preknowledge)
+  }
+
+  toJson(): AuthorJson {
+    return {
+      name: this.name,
+      xPosition: this.xPosition,
+      messages: [], //todo
+      preknowledge: [], // todo
+    }
   }
 
 }

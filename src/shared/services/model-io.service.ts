@@ -10,6 +10,7 @@ import {Conversation} from "../models/keml/conversation";
 import {ConversationPartner} from "../models/keml/conversation-partner";
 import {Message} from "../models/keml/msg-info";
 import {ReceiveMessage} from "../models/keml/msg-info"
+import {ParserContext} from "../models/keml/parser/parser-context";
 
 @Injectable({
   providedIn: 'root'
@@ -67,11 +68,16 @@ export class ModelIOService {
     }*/
   }
 
+  saveKEML(conv: Conversation): string {
+    let convJson = conv.toJson()
+    return JSON.stringify(convJson);
+  }
+
   addNewConversationPartner(cps: ConversationPartner[]) {
-    const cp: ConversationPartner = {
-      name: 'New Partner',
-      xPosition: LayoutHelper.nextConversationPartnerPosition(cps[cps.length-1]?.xPosition), //todo
-    }
+    const cp: ConversationPartner = new ConversationPartner(
+      'New Partner',
+      LayoutHelper.nextConversationPartnerPosition(cps[cps.length-1]?.xPosition), //todo
+    );
     cps.push(cp);
   }
 
@@ -111,10 +117,10 @@ export class ModelIOService {
 
   duplicateConversationPartner(cp: ConversationPartner, cps: ConversationPartner[]): ConversationPartner {
     const pos = cps.indexOf(cp);
-    const newCp: ConversationPartner = {
-      name: 'Duplicate of '+ cp.name,
-      xPosition: 0, //todo how would we later compute a good position?
-    }
+    const newCp: ConversationPartner = new ConversationPartner(
+      'Duplicate of '+ cp.name,
+      0 //todo how would we later compute a good position?
+    )
     cps.splice(pos+1, 0, newCp);
     LayoutHelper.positionConversationPartners(cps); // complete re-positioning
     return newCp;
@@ -184,19 +190,7 @@ export class ModelIOService {
   }
 
   duplicateInfo(info: Information, infos: Information[]): Information {
-    const newInfo: Information = {
-      causes: info.causes,
-      currentTrust: info.currentTrust,
-      eClass: info.eClass,
-      initialTrust: info.initialTrust,
-      isInstruction: info.isInstruction,
-      isUsedOn: info.isUsedOn,
-      message: 'Copy of ' + info.message,
-      repeatedBy: info.repeatedBy,
-      targetedBy: info.targetedBy,
-      x: info.x, //todo use layout helper?
-      y: info.y //todo use layout helper?
-    }
+    const newInfo = info.duplicate()
     infos.push(newInfo); //todo position right after current info?
     return newInfo;
   }
@@ -227,38 +221,36 @@ export class ModelIOService {
   }
 
   addNewPreknowledge(pres: Preknowledge[]): Preknowledge {
-    const preknowledge: Preknowledge = {
-      causes: [],
-      currentTrust: 0.5,
-      eClass: "http://www.unikoblenz.de/keml#//PreKnowledge",
-      initialTrust: 0.5,
-      isInstruction: false,
-      isUsedOn: [],
-      message: "New preknowledge",
-      repeatedBy: [],
-      targetedBy: [],
-      x: 0,
-      y: 0
-    };
+    const preknowledge: Preknowledge = new Preknowledge(
+      "New preknowledge",
+      false,
+      0,
+      0,
+      0.5,
+      0.5,
+      [],
+      [],
+      [],
+      [],
+    );
     pres.push(preknowledge);
     return preknowledge;
   }
 
   addNewNewInfo(causeMsg: ReceiveMessage): NewInformation {
-    const newInfo: NewInformation = {
-      causes: [],
-      currentTrust: 0.5,
-      eClass: "http://www.unikoblenz.de/keml#//NewInformation",
-      initialTrust: 0.5,
-      isInstruction: false,
-      isUsedOn: [],
-      message: "New Information",
-      repeatedBy: [],
-      source: causeMsg,
-      targetedBy: [],
-      x: 0,
-      y: 0
-    }
+    const newInfo: NewInformation = new NewInformation(
+      causeMsg,
+      'New Information',
+      false,
+      0,
+      0,
+      0.5,
+      0.5,
+      [],
+      [],
+      [],
+      [],
+    );
     causeMsg.generates.push(newInfo);
     return newInfo;
   }

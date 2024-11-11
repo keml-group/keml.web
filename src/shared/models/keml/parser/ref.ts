@@ -1,7 +1,7 @@
-export class Ref<T> {
+
+export class Ref {
   $ref: string;
   eClass?: string;
-  content?: T;
 
   constructor(ref: string, eClass?: string) {
     this.$ref = ref;
@@ -12,4 +12,13 @@ export class Ref<T> {
     let substrings = ref.split('.');
     return parseInt(substrings[substrings.length-1]);
   }
+
+  static computePrefix(formerPrefix: string, ownHeader: string): string {
+    return formerPrefix+'/@'+ownHeader;
+  }
+
+  static mixWithIndex(prefix: string, index: number): string {
+    return prefix+'.'+index;
+  }
+
 }

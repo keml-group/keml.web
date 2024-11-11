@@ -27,16 +27,16 @@ export interface Message {
   content: string;
   originalContent?: string;
   timing: number;
-  counterPart: Ref<ConversationPartner>;
+  counterPart: Ref;
 }
 
 export interface SendMessage extends Message {
-  uses?: Ref<Information>[];
+  uses?: Ref[];
 }
 
 export interface ReceiveMessage extends Message {
   generates: (NewInformation)[];
-  repeats?: (Ref<Information>)[];
+  repeats?: (Ref)[];
 }
 
 

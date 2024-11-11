@@ -6,6 +6,7 @@ import {NewInformation as NewInformationJson} from "../knowledge-models";
 import {Preknowledge as PreknowledgeJson} from "../knowledge-models";
 import {Ref} from "./parser/ref";
 import {ParserContext} from "./parser/parser-context";
+import {Referencable} from "./parser/referenceable";
 
 export abstract class Message {
   protected readonly eClass: string = '';
@@ -160,7 +161,7 @@ export class ReceiveMessage extends Message {
 }
 
 
-export abstract class Information {
+export abstract class Information extends Referencable {
 
   eClass = '';
   message: string;
@@ -181,6 +182,7 @@ export abstract class Information {
                         initialTrust: number = 0.5, currentTrust: number = 0.5,
                         causes: InformationLink[] = [], targetedBy: InformationLink[] = [],
                         isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],) {
+    super();
     this.message = message;
     this.isInstruction = isInstruction;
     this.x = x;
@@ -192,6 +194,13 @@ export abstract class Information {
     this.isUsedOn = isUsedOn;
     this.repeatedBy = repeatedBy;
   }
+
+  prepare(ownPos: string): void {
+    this.ref = new Ref(ownPos, this.eClass)
+    Referencable.prepareList(Ref.computePrefix(ownPos, 'causes'), this.causes)
+  }
+
+  abstract duplicate(): Information;
 }
 
 export class NewInformation extends Information {
@@ -212,6 +221,19 @@ export class NewInformation extends Information {
   static fromJson(newInfo: NewInformationJson, source: ReceiveMessage): NewInformation {
     return new NewInformation(source, newInfo.message, newInfo.isInstruction)
   }
+
+  override duplicate(): NewInformation {
+    return new NewInformation(
+      this.source,
+      'Copy of '+this.message,
+      this.isInstruction,
+      this.x,  //todo use layout helper?
+      this.y,  //todo use layout helper?
+      this.initialTrust,
+      this.currentTrust,
+      //todo none of these are currently set (they are bidirectional)
+    );
+  }
 }
 
 export class Preknowledge extends Information {
@@ -229,15 +251,33 @@ export class Preknowledge extends Information {
   static fromJSON(pre: PreknowledgeJson): Preknowledge {
     return new Preknowledge(pre.message, pre.isInstruction);
   }
+
+  override duplicate(): Preknowledge {
+    return new Preknowledge(
+      'Copy of '+this.message,
+      this.isInstruction,
+      this.x,  //todo use layout helper?
+      this.y,  //todo use layout helper?
+      this.initialTrust,
+      this.currentTrust,
+      //todo none of these are currently set (they are bidirectional)
+    );
+  }
 }
 
-export class InformationLink {
+export class InformationLink extends Referencable {
   source: Information;
   target: Information;
 
   constructor(source: Information, target: Information) {
+    super();
     this.source = source;
     this.target = target;
   }
+
+  prepare(ownPos: string): void {
+    this.ref = new Ref(ownPos); //todo no eclass
+  }
+
 }
 
