@@ -242,7 +242,21 @@ export abstract class Information extends Referencable {
 
   abstract duplicate(): Information;
 
-  abstract toJson(): InformationJson;
+  toJson(): InformationJson {
+    return {
+      causes: this.causes.map(c => c.toJson()),
+      currentTrust: this.currentTrust,
+      eClass: this.eClass,
+      initialTrust: this.initialTrust,
+      isInstruction: this.isInstruction,
+      isUsedOn: Referencable.listToRefs(this.isUsedOn),
+      message: this.message,
+      repeatedBy:  Referencable.listToRefs(this.repeatedBy),
+      targetedBy:  Referencable.listToRefs(this.targetedBy),
+      x: this.x,
+      y: this.y
+    }
+  }
 }
 
 export class NewInformation extends Information {
@@ -278,20 +292,9 @@ export class NewInformation extends Information {
   }
 
   override toJson(): NewInformationJson {
-    return {
-      source: this.source.getRef(),
-      causes: this.causes.map(c => c.toJson()),
-      currentTrust: this.currentTrust,
-      eClass: this.eClass,
-      initialTrust: this.initialTrust,
-      isInstruction: this.isInstruction,
-      isUsedOn: Referencable.listToRefs(this.isUsedOn),
-      message: this.message,
-      repeatedBy:  Referencable.listToRefs(this.repeatedBy),
-      targetedBy:  Referencable.listToRefs(this.targetedBy),
-      x: this.x,
-      y: this.y
-    };
+    let res = (<NewInformationJson>super.toJson());
+    res.source = this.source.getRef()
+    return res;
   }
 }
 
@@ -323,20 +326,8 @@ export class Preknowledge extends Information {
     );
   }
 
-  toJson(): PreknowledgeJson {
-    return {
-      causes: this.causes.map(c => c.toJson()),
-      currentTrust: this.currentTrust,
-      eClass: this.eClass,
-      initialTrust: this.initialTrust,
-      isInstruction: this.isInstruction,
-      isUsedOn: Referencable.listToRefs(this.isUsedOn),
-      message: this.message,
-      repeatedBy:  Referencable.listToRefs(this.repeatedBy),
-      targetedBy:  Referencable.listToRefs(this.targetedBy),
-      x: this.x,
-      y: this.y
-    }
+  override toJson(): PreknowledgeJson {
+    return (<PreknowledgeJson>super.toJson())
   }
 }
 
