@@ -31,6 +31,8 @@ export class Author extends LifeLine{
     this.ref = new Ref(ownPos) //todo no eclass
     const prefixPre = Ref.computePrefix(ownPos, 'preknowledge')
     Referencable.prepareList(prefixPre, this.preknowledge)
+    const prefixMsgs = Ref.computePrefix(ownPos, 'messages')
+    Referencable.prepareList(prefixMsgs, this.messages)
   }
 
   toJson(): AuthorJson {

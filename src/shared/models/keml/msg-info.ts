@@ -181,6 +181,13 @@ export class ReceiveMessage extends Message {
     Referencable.prepareList(generatesPrefix, this.generates)
   }
 
+  override toJson(): ReceiveMessageJson {
+    let res = (<ReceiveMessageJson>super.toJson());
+    res.generates = this.generates.map(g => g.toJson())
+    res.repeats = this.repeats.map(r => r.getRef())
+    return res;
+  }
+
 
 }
 
