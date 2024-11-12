@@ -1,7 +1,7 @@
 import {ConversationPartner} from "./conversation-partner";
 
 import {Message as MessageJson} from "../sequence-diagram-models";
-import {ReceiveMessage as ReceiveMessageJson} from "../sequence-diagram-models";
+import {ReceiveMessage as ReceiveMessageJson, SendMessage as SendMessageJson} from "../sequence-diagram-models";
 import {Information as InformationJson} from "../knowledge-models";
 import {NewInformation as NewInformationJson} from "../knowledge-models";
 import {Preknowledge as PreknowledgeJson} from "../knowledge-models";
@@ -110,12 +110,14 @@ export abstract class Message extends Referencable{
 
 export class SendMessage extends Message {
   override readonly eClass: string = "http://www.unikoblenz.de/keml#//SendMessage";
+  uses: Information[];
 
   constructor(
     counterPart: ConversationPartner,
     timing: number,
     content: string = 'New send content',
     originalContent?: string,
+    uses: Information[] = [],
   ) {
     super(
       counterPart,
@@ -123,6 +125,13 @@ export class SendMessage extends Message {
       content,
       originalContent
     );
+    this.uses = uses
+  }
+
+  override toJson(): SendMessageJson {
+    let res = (<SendMessageJson>super.toJson());
+    res.uses = this.uses.map(u => u.getRef())
+    return res;
   }
 
 }
