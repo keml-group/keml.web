@@ -30,13 +30,13 @@ export interface Preknowledge extends Information {
 }
 
 export interface NewInformation extends Information {
-  source: ReceiveMessage; //backwards but main
+  source: Ref;//ReceiveMessage; //backwards but main
 }
 
 export interface InformationLink {
   linkText?: string;
   type: InformationLinkType;
-  source: Information; //backwards but main
+  source: Ref; //backwards but main
   target: Ref;
 }
 

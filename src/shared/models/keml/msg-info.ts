@@ -2,13 +2,15 @@ import {ConversationPartner} from "./conversation-partner";
 
 import {Message as MessageJson} from "../sequence-diagram-models";
 import {ReceiveMessage as ReceiveMessageJson} from "../sequence-diagram-models";
+import {Information as InformationJson} from "../knowledge-models";
 import {NewInformation as NewInformationJson} from "../knowledge-models";
 import {Preknowledge as PreknowledgeJson} from "../knowledge-models";
+import {InformationLinkType, InformationLink as InformationLinkJson} from "../knowledge-models";
 import {Ref} from "./parser/ref";
 import {ParserContext} from "./parser/parser-context";
 import {Referencable} from "./parser/referenceable";
 
-export abstract class Message {
+export abstract class Message extends Referencable{
   protected readonly eClass: string = '';
   counterPart: ConversationPartner;
   timing: number = 0;
@@ -21,6 +23,7 @@ export abstract class Message {
     content: string,
     originalContent?: string,
   ) {
+    super();
     this.counterPart = counterPart;
     this.timing = timing;
     this.content = content;
@@ -33,6 +36,20 @@ export abstract class Message {
 
   isSend(): boolean {
     return Message.isSend(this.eClass);
+  }
+
+  prepare(ownPos: string) {
+    this.ref = new Ref(ownPos, this.eClass);
+  }
+
+  toJson(): MessageJson {
+    return {
+      content: this.content,
+      counterPart: this.counterPart.getRef(),
+      eClass: this.eClass,
+      originalContent: this.originalContent,
+      timing: this.timing
+    }
   }
 
   static newMessage(isSend: boolean, counterPart: ConversationPartner, timing: number, content: string, originalContent: string = 'Original content'): Message {
@@ -158,6 +175,13 @@ export class ReceiveMessage extends Message {
     return false;
   }
 
+  override prepare(ownPos: string) {
+    super.prepare(ownPos);
+    const generatesPrefix = Ref.computePrefix(ownPos, 'generates')
+    Referencable.prepareList(generatesPrefix, this.generates)
+  }
+
+
 }
 
 
@@ -201,6 +225,8 @@ export abstract class Information extends Referencable {
   }
 
   abstract duplicate(): Information;
+
+  abstract toJson(): InformationJson;
 }
 
 export class NewInformation extends Information {
@@ -234,6 +260,23 @@ export class NewInformation extends Information {
       //todo none of these are currently set (they are bidirectional)
     );
   }
+
+  override toJson(): NewInformationJson {
+    return {
+      source: this.source.getRef(),
+      causes: this.causes.map(c => c.toJson()),
+      currentTrust: this.currentTrust,
+      eClass: this.eClass,
+      initialTrust: this.initialTrust,
+      isInstruction: this.isInstruction,
+      isUsedOn: Referencable.listToRefs(this.isUsedOn),
+      message: this.message,
+      repeatedBy:  Referencable.listToRefs(this.repeatedBy),
+      targetedBy:  Referencable.listToRefs(this.targetedBy),
+      x: this.x,
+      y: this.y
+    };
+  }
 }
 
 export class Preknowledge extends Information {
@@ -263,20 +306,49 @@ export class Preknowledge extends Information {
       //todo none of these are currently set (they are bidirectional)
     );
   }
+
+  toJson(): PreknowledgeJson {
+    return {
+      causes: this.causes.map(c => c.toJson()),
+      currentTrust: this.currentTrust,
+      eClass: this.eClass,
+      initialTrust: this.initialTrust,
+      isInstruction: this.isInstruction,
+      isUsedOn: Referencable.listToRefs(this.isUsedOn),
+      message: this.message,
+      repeatedBy:  Referencable.listToRefs(this.repeatedBy),
+      targetedBy:  Referencable.listToRefs(this.targetedBy),
+      x: this.x,
+      y: this.y
+    }
+  }
 }
 
 export class InformationLink extends Referencable {
   source: Information;
   target: Information;
+  type: InformationLinkType;
+  linkText?: string;
 
-  constructor(source: Information, target: Information) {
+  constructor(source: Information, target: Information, type: InformationLinkType, linkText?: string) {
     super();
     this.source = source;
     this.target = target;
+    this.type = type;
+    this.linkText = linkText;
   }
 
   prepare(ownPos: string): void {
     this.ref = new Ref(ownPos); //todo no eclass
+  }
+
+  toJson(): InformationLinkJson {
+    return {
+      source: this.source.getRef(),
+      target: this.target.getRef(),
+      type: this.type,
+      linkText: this.linkText,
+    }
   }
 
 }

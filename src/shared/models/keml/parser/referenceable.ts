@@ -5,7 +5,10 @@ export abstract class Referencable {
   protected ref?: Ref;
 
 
-  getRef () {
+  public getRef(): Ref {
+    if (!this.ref) {
+      throw 'No ref found for '+this+', did you set it?'
+    }
     return this.ref;
   }
 
@@ -17,6 +20,10 @@ export abstract class Referencable {
         ref.prepare(Ref.mixWithIndex(prefix, index))
       })
     }
+  }
+
+  static listToRefs<T extends Referencable>(list: T[]): Ref[] {
+    return list.map(elem => elem.getRef())
   }
 
 }

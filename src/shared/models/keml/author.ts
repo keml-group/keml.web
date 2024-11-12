@@ -37,8 +37,8 @@ export class Author extends LifeLine{
     return {
       name: this.name,
       xPosition: this.xPosition,
-      messages: [], //todo
-      preknowledge: [], // todo
+      messages: this.messages.map(m => m.toJson()),
+      preknowledge: this.preknowledge.map(p => p.toJson()),
     }
   }
 
