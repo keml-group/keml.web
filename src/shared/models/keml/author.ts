@@ -7,7 +7,7 @@ import {Ref} from "./parser/ref";
 import {Referencable} from "./parser/referenceable";
 
 export class Author extends LifeLine{
-  // todo necessary? eClass = "http://www.unikoblenz.de/keml#//Author",
+  eClass = "http://www.unikoblenz.de/keml#//Author";
   preknowledge: Preknowledge[];
   messages: Message[];
 
@@ -28,7 +28,7 @@ export class Author extends LifeLine{
   }
 
   prepare(ownPos: string) {
-    this.ref = new Ref(ownPos) //todo no eclass
+    this.ref = new Ref(ownPos, this.eClass);
     const prefixPre = Ref.computePrefix(ownPos, 'preknowledge')
     Referencable.prepareList(prefixPre, this.preknowledge)
     const prefixMsgs = Ref.computePrefix(ownPos, 'messages')
@@ -37,6 +37,7 @@ export class Author extends LifeLine{
 
   toJson(): AuthorJson {
     return {
+      eClass: this.eClass,
       name: this.name,
       xPosition: this.xPosition,
       messages: this.messages.map(m => m.toJson()),

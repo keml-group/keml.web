@@ -5,6 +5,8 @@ import {Ref} from "./parser/ref";
 
 export class ConversationPartner extends LifeLine {
 
+    eClass = 'http://www.unikoblenz.de/keml#//ConversationPartner';
+
     constructor(name: string = 'NewPartner', xPosition: number = 0) {
       super(name, xPosition);
     }
@@ -13,14 +15,15 @@ export class ConversationPartner extends LifeLine {
       return new ConversationPartner(cp.name, cp.xPosition);
     }
 
+    prepare(ownPos: string) {
+      this.ref = new Ref(ownPos, this.eClass)
+    }
+
     toJson(): ConversationPartnerJson {
       return {
+        eClass: this.eClass,
         name: this.name,
         xPosition: this.xPosition,
       }
-    }
-
-    prepare(ownPos: string) {
-      this.ref = new Ref(ownPos) // todo no eclass
     }
 }

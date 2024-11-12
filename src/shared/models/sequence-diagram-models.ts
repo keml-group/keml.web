@@ -11,6 +11,7 @@ export interface Conversation {
 interface LifeLine {
   name: string;
   xPosition: number; //int todo
+  eClass: string;
 }
 
 export interface ConversationPartner extends LifeLine {
