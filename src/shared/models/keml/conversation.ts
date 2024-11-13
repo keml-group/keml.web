@@ -17,7 +17,7 @@ export class Conversation extends Referencable {
   constructor(
     title: string = 'New Conversation',
     author: Author = new Author(),
-    conversationPartners: ConversationPartner[] = []
+    conversationPartners: ConversationPartner[] = [],
   ) {
     super();
     this.title = title;

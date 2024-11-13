@@ -4,6 +4,11 @@ export abstract class Referencable {
 
   protected ref?: Ref;
 
+  /* todo two open points:
+      1) we could enforce eClass already here and use it instead if deferring that to the constructor,
+      2) we could allow the parent to set the refpath so that we coul avoid the parameter of prepare
+  * */
+
   singleChildren: Map<string, Referencable> = new Map();
   listChildren: Map<string, Referencable[]> = new Map();
 
@@ -15,11 +20,10 @@ export abstract class Referencable {
     return this.ref;
   }
 
-  setRef(ownPos: string) {
+  private setRef(ownPos: string) {
     this.ref = new Ref(ownPos, this.ref?.eClass)
   }
 
-  //could assume that ref is already set, we will use its ref ;)
   prepare(ownPos: string) {
     this.setRef(ownPos)
     for (let single of this.singleChildren) {
