@@ -9,14 +9,11 @@ export class ConversationPartner extends LifeLine {
 
     constructor(name: string = 'NewPartner', xPosition: number = 0) {
       super(name, xPosition);
+      this.ref = new Ref('', this.eClass)
     }
 
     static fromJSON(cp: ConversationPartnerJson, _: ParserContext): ConversationPartner {
       return new ConversationPartner(cp.name, cp.xPosition);
-    }
-
-    prepare(ownPos: string) {
-      this.ref = new Ref(ownPos, this.eClass)
     }
 
     toJson(): ConversationPartnerJson {

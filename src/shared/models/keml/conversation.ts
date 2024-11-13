@@ -9,7 +9,9 @@ import {Referencable} from "./parser/referenceable";
 export class Conversation extends Referencable {
   readonly eClass ='http://www.unikoblenz.de/keml#//Conversation';
   title: string;
+  static readonly authorPrefix = 'author';
   author: Author;
+  static readonly conversationPartnersPrefix = 'conversationPartners';
   conversationPartners: ConversationPartner[] = [];
 
   constructor(
@@ -21,18 +23,14 @@ export class Conversation extends Referencable {
     this.title = title;
     this.author = author;
     this.conversationPartners = conversationPartners;
-  }
 
-  prepare(ownPos: string) {
-    this.ref = new Ref(ownPos, this.eClass);
-    const prefix = Ref.computePrefix(ownPos, 'conversationPartners')
-    this.conversationPartners.map( (cp, index) =>  cp.prepare(Ref.mixWithIndex(prefix, index)))
-    this.author.prepare(Ref.computePrefix(ownPos, 'author'));
+    this.ref = new Ref('', this.eClass)
+    this.singleChildren.set(Conversation.authorPrefix, this.author)
+    this.listChildren.set(Conversation.conversationPartnersPrefix, this.conversationPartners)
   }
 
   toJson(): ConversationJson {
     this.prepare('/');
-
     let cps = this.conversationPartners.map(x => x.toJson())
 
     return {

@@ -4,35 +4,32 @@ import {Author as AuthorJson} from "../sequence-diagram-models"
 import {Preknowledge} from "./msg-info";
 import {ParserContext} from "./parser/parser-context";
 import {Ref} from "./parser/ref";
-import {Referencable} from "./parser/referenceable";
 
 export class Author extends LifeLine{
   eClass = "http://www.unikoblenz.de/keml#//Author";
+  static readonly preknowledgePrefix: string = 'preknowledge';
   preknowledge: Preknowledge[];
+  static readonly messagesPrefix: string = 'messages';
   messages: Message[];
 
   constructor(name = 'Author', xPosition: number = 0, preknowledge: Preknowledge[] = [], messages: Message[] = []) {
     super(name, xPosition);
     this.preknowledge = preknowledge;
     this.messages = messages;
+
+    this.ref = new Ref('', this.eClass)
+    this.listChildren.set(Author.preknowledgePrefix, this.preknowledge)
+    this.listChildren.set(Author.messagesPrefix, this.messages)
   }
 
   static fromJson(author: AuthorJson, context: ParserContext): Author {
 
     let preknowledge = author.preknowledge.map(pre => Preknowledge.fromJSON(pre))
-    context.putList('todo', 'preknowledge', preknowledge);
+    context.putList('todo', this.preknowledgePrefix, preknowledge);
     console.log(context)
     let msgs = author.messages.map(message => Message.fromJSON(message, context))
 
     return new Author(author.name, author.xPosition, preknowledge, msgs) //todo
-  }
-
-  prepare(ownPos: string) {
-    this.ref = new Ref(ownPos, this.eClass);
-    const prefixPre = Ref.computePrefix(ownPos, 'preknowledge')
-    Referencable.prepareList(prefixPre, this.preknowledge)
-    const prefixMsgs = Ref.computePrefix(ownPos, 'messages')
-    Referencable.prepareList(prefixMsgs, this.messages)
   }
 
   toJson(): AuthorJson {

@@ -28,6 +28,8 @@ export abstract class Message extends Referencable {
     this.timing = timing;
     this.content = content;
     this.originalContent = originalContent;
+
+    this.ref = new Ref('', this.eClass);
   }
 
   static isSend(eClass: string) {
@@ -36,10 +38,6 @@ export abstract class Message extends Referencable {
 
   isSend(): boolean {
     return Message.isSend(this.eClass);
-  }
-
-  prepare(ownPos: string) {
-    this.ref = new Ref(ownPos, this.eClass);
   }
 
   toJson(): MessageJson {
@@ -137,6 +135,7 @@ export class SendMessage extends Message {
 
 export class ReceiveMessage extends Message {
   override readonly eClass: string = "http://www.unikoblenz.de/keml#//ReceiveMessage";
+  static readonly generatesPrefix: string = 'generates';
   generates: NewInformation[] = [];
   repeats: NewInformation[] = [];
   isInterrupted: boolean = false;
@@ -159,6 +158,9 @@ export class ReceiveMessage extends Message {
     this.addGenerates(generates);
     this.repeats = repeats;
     this.isInterrupted = isInterrupted;
+
+    this.ref = new Ref('', this.eClass)
+    this.listChildren.set(ReceiveMessage.generatesPrefix, this.generates)
   }
 
   // does both directions (source and generates)
@@ -182,19 +184,12 @@ export class ReceiveMessage extends Message {
     return false;
   }
 
-  override prepare(ownPos: string) {
-    super.prepare(ownPos);
-    const generatesPrefix = Ref.computePrefix(ownPos, 'generates')
-    Referencable.prepareList(generatesPrefix, this.generates)
-  }
-
   override toJson(): ReceiveMessageJson {
     let res = (<ReceiveMessageJson>super.toJson());
     res.generates = this.generates.map(g => g.toJson())
     res.repeats = this.repeats.map(r => r.getRef())
     return res;
   }
-
 
 }
 
@@ -209,7 +204,8 @@ export abstract class Information extends Referencable {
   initialTrust: number;
   currentTrust: number;
 
-  causes: InformationLink[]; //todo avoid?
+  causes: InformationLink[];
+  static readonly causesPrefix: string = 'causes'
   targetedBy: InformationLink[]; //todo avoid?
 
   isUsedOn: SendMessage[];
@@ -231,11 +227,9 @@ export abstract class Information extends Referencable {
     this.targetedBy = targetedBy;
     this.isUsedOn = isUsedOn;
     this.repeatedBy = repeatedBy;
-  }
 
-  prepare(ownPos: string): void {
-    this.ref = new Ref(ownPos, this.eClass)
-    Referencable.prepareList(Ref.computePrefix(ownPos, 'causes'), this.causes)
+    this.ref = new Ref('', this.eClass)
+    this.listChildren.set(Information.causesPrefix, this.causes)
   }
 
   abstract duplicate(): Information;
@@ -341,10 +335,7 @@ export class InformationLink extends Referencable {
     this.target = target;
     this.type = type;
     this.linkText = linkText;
-  }
-
-  prepare(ownPos: string): void {
-    this.ref = new Ref(ownPos); //todo no eclass
+    //todo no eclass
   }
 
   toJson(): InformationLinkJson {
