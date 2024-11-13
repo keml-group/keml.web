@@ -10,7 +10,7 @@ import {Ref} from "./parser/ref";
 import {ParserContext} from "./parser/parser-context";
 import {Referencable} from "./parser/referenceable";
 
-export abstract class Message extends Referencable{
+export abstract class Message extends Referencable {
   protected readonly eClass: string = '';
   counterPart: ConversationPartner;
   timing: number = 0;
@@ -68,9 +68,7 @@ export abstract class Message extends Referencable{
     }
     let counterPart: ConversationPartner = context.get(msg.counterPart.$ref);
     let msgC =  Message.newMessage(this.isSend(msg.eClass), counterPart, timing, msg.content, msg.originalContent)
-    if (msgC.isSend()) {
-
-    } else {
+    if (!msgC.isSend()) {
       let receive = msgC as ReceiveMessage
       let infos = (msg as ReceiveMessageJson).generates
       let generated: NewInformation[] = infos?.map(info => NewInformation.fromJson(info, receive))
