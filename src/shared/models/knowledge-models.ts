@@ -1,4 +1,3 @@
-import {ReceiveMessage, SendMessage} from "./sequence-diagram-models";
 import {Ref} from "./keml/parser/ref";
 
 //try out: new helper for message positioning

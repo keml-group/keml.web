@@ -7,7 +7,7 @@ export class ConversationPartner extends LifeLine {
 
     eClass = 'http://www.unikoblenz.de/keml#//ConversationPartner';
 
-    constructor(name: string = 'NewPartner', xPosition: number = 0) {
+    constructor(name: string = 'NewPartner', xPosition: number = 0, cpJson?: ConversationPartnerJson,) {
       super(name, xPosition);
       this.ref = new Ref('', this.eClass)
     }

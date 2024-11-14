@@ -6,18 +6,18 @@ import {ParserContext} from "./parser/parser-context";
 import {Ref} from "./parser/ref";
 
 export class Author extends LifeLine{
-  eClass = "http://www.unikoblenz.de/keml#//Author";
+  static readonly eClass = "http://www.unikoblenz.de/keml#//Author";
   static readonly preknowledgePrefix: string = 'preknowledge';
   preknowledge: Preknowledge[];
   static readonly messagesPrefix: string = 'messages';
   messages: Message[];
 
-  constructor(name = 'Author', xPosition: number = 0, preknowledge: Preknowledge[] = [], messages: Message[] = []) {
+  constructor(name = 'Author', xPosition: number = 0, preknowledge: Preknowledge[] = [], messages: Message[] = [], authorJson?: AuthorJson,) {
     super(name, xPosition);
     this.preknowledge = preknowledge;
     this.messages = messages;
 
-    this.ref = new Ref('', this.eClass)
+    this.ref = new Ref('', Author.eClass)
     this.listChildren.set(Author.preknowledgePrefix, this.preknowledge)
     this.listChildren.set(Author.messagesPrefix, this.messages)
   }
@@ -34,7 +34,7 @@ export class Author extends LifeLine{
 
   toJson(): AuthorJson {
     return {
-      eClass: this.eClass,
+      eClass: Author.eClass,
       name: this.name,
       xPosition: this.xPosition,
       messages: this.messages.map(m => m.toJson()),
