@@ -3,6 +3,8 @@ export class Ref {
   $ref: string;
   eClass?: string;
 
+  static readonly pathDivider: string = '/@';
+
   constructor(ref: string, eClass?: string) {
     this.$ref = ref;
     this.eClass = eClass;
@@ -14,11 +16,15 @@ export class Ref {
   }
 
   static computePrefix(formerPrefix: string, ownHeader: string): string {
-    return formerPrefix+'/@'+ownHeader;
+    return formerPrefix+Ref.pathDivider+ownHeader;
   }
 
   static mixWithIndex(prefix: string, index: number): string {
     return prefix+'.'+index;
+  }
+
+  public toString(): string {
+    return `{ ${this.$ref}, ${this.eClass} }`
   }
 
 }

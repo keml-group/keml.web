@@ -5,11 +5,11 @@ import {Ref} from "./parser/ref";
 
 export class ConversationPartner extends LifeLine {
 
-    eClass = 'http://www.unikoblenz.de/keml#//ConversationPartner';
+    static readonly eClass = 'http://www.unikoblenz.de/keml#//ConversationPartner';
 
-    constructor(name: string = 'NewPartner', xPosition: number = 0, cpJson?: ConversationPartnerJson,) {
+    constructor(name: string = 'NewPartner', xPosition: number = 0, cpJson?: ConversationPartnerJson, parserContext?: ParserContext) {
       super(name, xPosition);
-      this.ref = new Ref('', this.eClass)
+      this.ref = new Ref('', ConversationPartner.eClass)
     }
 
     static fromJSON(cp: ConversationPartnerJson, _: ParserContext): ConversationPartner {
@@ -18,7 +18,7 @@ export class ConversationPartner extends LifeLine {
 
     toJson(): ConversationPartnerJson {
       return {
-        eClass: this.eClass,
+        eClass: ConversationPartner.eClass,
         name: this.name,
         xPosition: this.xPosition,
       }

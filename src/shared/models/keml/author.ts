@@ -12,14 +12,29 @@ export class Author extends LifeLine{
   static readonly messagesPrefix: string = 'messages';
   messages: Message[];
 
-  constructor(name = 'Author', xPosition: number = 0, preknowledge: Preknowledge[] = [], messages: Message[] = [], authorJson?: AuthorJson,) {
-    super(name, xPosition);
-    this.preknowledge = preknowledge;
-    this.messages = messages;
+  constructor(name = 'Author', xPosition: number = 0, preknowledge: Preknowledge[] = [], messages: Message[] = [],
+              authorJson?: AuthorJson, parserContext?: ParserContext) {
+    if (parserContext) {
+      console.log("Reached author constructor with context")
+      super(authorJson!.name, authorJson!.xPosition)
+      //todo
+      this.preknowledge = preknowledge;
+      this.messages = messages;
+      this.ref = new Ref('', Author.eClass)
+      this.listChildren.set(Author.preknowledgePrefix, this.preknowledge)
+      this.listChildren.set(Author.messagesPrefix, this.messages)
 
-    this.ref = new Ref('', Author.eClass)
-    this.listChildren.set(Author.preknowledgePrefix, this.preknowledge)
-    this.listChildren.set(Author.messagesPrefix, this.messages)
+
+    } else{
+      super(name, xPosition);
+      this.preknowledge = preknowledge;
+      this.messages = messages;
+
+      this.ref = new Ref('', Author.eClass)
+      this.listChildren.set(Author.preknowledgePrefix, this.preknowledge)
+      this.listChildren.set(Author.messagesPrefix, this.messages)
+
+    }
   }
 
   static fromJson(author: AuthorJson, context: ParserContext): Author {

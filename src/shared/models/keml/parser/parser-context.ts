@@ -21,25 +21,33 @@ export class ParserContext {
   constructor(conv: ConversationJson) {
     this.conv = conv;
 
-    //create function pointers for all existing types:
-    const authorFun: (_ :string) => Author = function (_:string) {
+    //create function pointers (!arrow functions (!) to have parsercontext as this) for all existing types:
+    const authorFun: (_ :string) => Author =  (_:string) => {
       let authorJson: AuthorJson = conv.author
-      return new Author( undefined, 0, [], [], authorJson,)
+      return new Author( undefined, 0, [], [], authorJson, this)
     }
     this.constructorPointers.set('http://www.unikoblenz.de/keml#//Author', authorFun)
 
-    const convPartnerFun: (path: string) => ConversationPartner = function (path: string) {
-      let cpJson: ConversationPartnerJson = ParserContext.getJsonFromTree(path, conv)
-      return new ConversationPartner(undefined, 0, cpJson)
+    const convPartnerFun: (path: string) => ConversationPartner = (path: string) => {
+      let cpJson: ConversationPartnerJson = this.getJsonFromTree(path)
+      return new ConversationPartner(undefined, 0, cpJson, this)
     }
     this.constructorPointers.set('http://www.unikoblenz.de/keml#//ConversationPartner', convPartnerFun)
   }
 
-  static getJsonFromTree(path: string, conv: ConversationJson): any { //actually a Json type
-
+  getJsonFromTree<T>(path: string): T {
+    const accessPaths = path.split(Ref.pathDivider)
+    console.log(accessPaths)
+    let res = (this.conv as any);
+    for (let i = 1; i<accessPaths.length; i++) {
+      res = res[(accessPaths[i])]
+    }
+    console.log(res)
+    return (res as T);
   }
 
   getOrCreate<T extends Referencable>(ref: Ref): T {
+    console.log('Called with '+ref);
     //get constructor from ref.eclass
     let res = this.get<T>(ref.$ref)
     if (res)
@@ -71,8 +79,14 @@ export class ParserContext {
     )
   }
 
-  createReferenceList<T extends Referencable>(formerPrefix: string, ownHeader: string, content: T[]) {
+  static createRefList(formerPrefix: string, ownHeader: string, eClass: string, contentLength: number,): Ref[] {
+    const prefix = Ref.computePrefix(formerPrefix, ownHeader);
+    return new Array(contentLength).map((_, index) => new Ref(Ref.mixWithIndex(prefix, index), eClass))
+  }
 
+  static createSingleRef(formerPrefix: string, ownHeader: string, eClass: string): Ref {
+    const ref = Ref.computePrefix(formerPrefix, ownHeader)
+    return new Ref(ref, eClass)
   }
 
 }

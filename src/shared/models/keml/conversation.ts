@@ -26,13 +26,10 @@ export class Conversation extends Referencable {
       this.ref = new Ref(Conversation.ownPath, this.eClass)
       parserContext.put(this)
       this.title = parserContext.conv.title;
-      const authorRef = new Ref(
-        Ref.computePrefix(Conversation.ownPath, Conversation.authorPrefix),
-        Author.eClass
-      )
+      const authorRef = ParserContext.createSingleRef(Conversation.ownPath, Conversation.authorPrefix, Author.eClass)
       this.author = parserContext.getOrCreate<Author>(authorRef);
-      // todo create conv partners
-
+      const cpRefs: Ref[] = ParserContext.createRefList(Conversation.ownPath, Conversation.conversationPartnersPrefix, ConversationPartner.eClass, parserContext.conv.conversationPartners.length)
+      this.conversationPartners = cpRefs.map( cp => parserContext.getOrCreate<ConversationPartner>(cp))
     } else {
       this.title = title;
       this.author = author;
@@ -58,14 +55,17 @@ export class Conversation extends Referencable {
 
   static fromJSON (conv: ConversationJson): Conversation {
     let context = new ParserContext(conv);
+    return new Conversation(undefined, undefined, undefined, context)
+
+    /*
     let currentPrefix = '/';
     let convPPrefix = 'conversationPartners';
     let convPartners: ConversationPartner[] = conv.conversationPartners.map(cp => ConversationPartner.fromJSON(cp, context))
-    context.putList(currentPrefix, convPPrefix, convPartners);
-
+    //context.putList(currentPrefix, convPPrefix, convPartners);
 
     let author: Author = Author.fromJson(conv.author, context);
 
     return new Conversation(conv.title, author, convPartners)
+     */
   }
 }
