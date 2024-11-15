@@ -22,8 +22,8 @@ export class Conversation extends Referencable {
     parserContext?: ParserContext,
   ) {
     super();
+    this.ref = new Ref(Conversation.ownPath, this.eClass)
     if (parserContext) {
-      this.ref = new Ref(Conversation.ownPath, this.eClass)
       parserContext.put(this)
       this.title = parserContext.conv.title;
       const authorRef = ParserContext.createSingleRef(Conversation.ownPath, Conversation.authorPrefix, Author.eClass)
@@ -34,11 +34,9 @@ export class Conversation extends Referencable {
       this.title = title;
       this.author = author;
       this.conversationPartners = conversationPartners;
-
-      this.ref = new Ref('', this.eClass)
-      this.singleChildren.set(Conversation.authorPrefix, this.author)
-      this.listChildren.set(Conversation.conversationPartnersPrefix, this.conversationPartners)
     }
+    this.singleChildren.set(Conversation.authorPrefix, this.author)
+    this.listChildren.set(Conversation.conversationPartnersPrefix, this.conversationPartners)
   }
 
   toJson(): ConversationJson {

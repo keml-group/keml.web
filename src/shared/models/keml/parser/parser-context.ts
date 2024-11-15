@@ -26,23 +26,23 @@ export class ParserContext {
       let authorJson: AuthorJson = conv.author
       return new Author( undefined, 0, [], [], authorJson, this)
     }
-    this.constructorPointers.set('http://www.unikoblenz.de/keml#//Author', authorFun)
+    this.constructorPointers.set(Author.eClass, authorFun)
 
     const convPartnerFun: (path: string) => ConversationPartner = (path: string) => {
       let cpJson: ConversationPartnerJson = this.getJsonFromTree(path)
       return new ConversationPartner(undefined, 0, cpJson, this)
     }
-    this.constructorPointers.set('http://www.unikoblenz.de/keml#//ConversationPartner', convPartnerFun)
+    this.constructorPointers.set(ConversationPartner.eClass, convPartnerFun)
   }
 
   getJsonFromTree<T>(path: string): T {
-    const accessPaths = path.split(Ref.pathDivider)
-    console.log(accessPaths)
+    //first replace index access (.) by normal path divider, since they are all finally [] accesses
+    const accessPaths = path.replaceAll('.', Ref.pathDivider).split(Ref.pathDivider)
+      //path.split( new RegExp('(/@|\\.)'), -1)
     let res = (this.conv as any);
     for (let i = 1; i<accessPaths.length; i++) {
       res = res[(accessPaths[i])]
     }
-    console.log(res)
     return (res as T);
   }
 
@@ -81,7 +81,7 @@ export class ParserContext {
 
   static createRefList(formerPrefix: string, ownHeader: string, eClass: string, contentLength: number,): Ref[] {
     const prefix = Ref.computePrefix(formerPrefix, ownHeader);
-    return new Array(contentLength).map((_, index) => new Ref(Ref.mixWithIndex(prefix, index), eClass))
+    return new Array(contentLength, 0).map((_, index) => new Ref(Ref.mixWithIndex(prefix, index), eClass))
   }
 
   static createSingleRef(formerPrefix: string, ownHeader: string, eClass: string): Ref {
