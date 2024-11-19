@@ -24,6 +24,8 @@ export class ModelIOService {
 
     let conv2 = Conversation.fromJSON(conv);
     LayoutHelper.positionConversationPartners(conv2.conversationPartners)
+    LayoutHelper.positionInfos(conv2.author.preknowledge, conv2.author.messages);
+
     return conv2;
 
     /*
