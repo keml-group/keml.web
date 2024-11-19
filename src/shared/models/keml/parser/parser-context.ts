@@ -3,7 +3,7 @@ import {Referencable} from "./referenceable";
 import {Conversation as ConversationJson, ConversationPartner as ConversationPartnerJson} from "../../sequence-diagram-models";
 import {Author} from "../author";
 import {ConversationPartner} from "../conversation-partner";
-import {Message, Preknowledge, SendMessage} from "../msg-info";
+import {Message, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "../msg-info";
 
 /*
 idea:
@@ -41,16 +41,25 @@ export class ParserContext {
     }
     this.constructorPointers.set(Preknowledge.eClass, preknowledgeFun)
 
-    const messageFun: (path: string) => Message = (path: string) => {
-      // todo need to get json here to determine real class
-      let json: any = this.getJsonFromTree(path)
-      let ref = new Ref(path, json['eClass'])
-      console.log(ref)
-      //todo
-
-      return new SendMessage(new ConversationPartner(), 0)
+    const newInfoFun: (path: string) => NewInformation = (path: string) => {
+      let ref = new Ref(path, NewInformation.eClass)
+      //todo not nice source
+      let dummySource = new ReceiveMessage(new ConversationPartner(), 0)
+      return new NewInformation(dummySource, '', undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, ref, this)
     }
-    this.constructorPointers.set(Message.eClass, messageFun)
+    this.constructorPointers.set(NewInformation.eClass, newInfoFun)
+
+    const sendMessageFun: (path: string) => SendMessage = (path: string) => {
+      let ref: Ref = new Ref(path, SendMessage.eClass)
+      return new SendMessage(new ConversationPartner(), 0, undefined, undefined, undefined, ref, this)
+    }
+    this.constructorPointers.set(SendMessage.eClass, sendMessageFun)
+
+    const receiveMessageFun: (path: string) => ReceiveMessage = (path: string) => {
+      let ref: Ref = new Ref(path, ReceiveMessage.eClass)
+      return new ReceiveMessage(new ConversationPartner(), 0, undefined, undefined, undefined, undefined, undefined, ref, this)
+    }
+    this.constructorPointers.set(ReceiveMessage.eClass, receiveMessageFun)
   }
 
   getJsonFromTree<T>(path: string): T {
@@ -66,6 +75,8 @@ export class ParserContext {
 
   getOrCreate<T extends Referencable>(ref: Ref): T {
     console.log('Called with '+ref);
+    console.log(ref.$ref)
+    console.log(ref.eClass)
     //get constructor from ref.eclass
     let res = this.get<T>(ref.$ref)
     if (res)
@@ -100,6 +111,13 @@ export class ParserContext {
   static createRefList(formerPrefix: string, ownHeader: string, eClass: string, contentLength: number,): Ref[] {
     const prefix = Ref.computePrefix(formerPrefix, ownHeader);
     return new Array(contentLength, 0).map((_, index) => new Ref(Ref.mixWithIndex(prefix, index), eClass))
+  }
+
+  // changing eClass assignment (i.e. on subtypes)
+  static createRefList2(formerPrefix: string, ownHeader: string, eClasses: string[] = []): Ref[] {
+    const prefix = Ref.computePrefix(formerPrefix, ownHeader);
+    console.log(eClasses)
+    return eClasses.map((eClass, index) => new Ref(Ref.mixWithIndex(prefix, index), eClass))
   }
 
   static createSingleRef(formerPrefix: string, ownHeader: string, eClass: string): Ref {

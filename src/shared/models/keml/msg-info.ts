@@ -12,7 +12,7 @@ import {Referencable} from "./parser/referenceable";
 
 export abstract class Message extends Referencable {
   protected readonly eClass: string = '';
-  static readonly eClass = 'http://www.unikoblenz.de/keml#//Message'
+  static eClass = 'http://www.unikoblenz.de/keml#//Message'
   counterPart: ConversationPartner;
   timing: number = 0;
   content: string;
@@ -23,14 +23,25 @@ export abstract class Message extends Referencable {
     timing: number,
     content: string,
     originalContent?: string,
+    ref?: Ref, parserContext?: ParserContext, jsonOpt?: MessageJson,
   ) {
-    super();
-    this.counterPart = counterPart;
-    this.timing = timing;
-    this.content = content;
-    this.originalContent = originalContent;
+    super(ref);
+    if(parserContext) {
+      parserContext.put(this)
+      console.log(jsonOpt)
+      let json: MessageJson = jsonOpt? jsonOpt: parserContext.getJsonFromTree(ref!.$ref);
+      this.counterPart = parserContext.getOrCreate(json.counterPart)
+      this.timing = json.timing;
+      this.content = content;
+      this.originalContent = json.originalContent;
+    } else {
+      this.counterPart = counterPart;
+      this.timing = timing;
+      this.content = content;
+      this.originalContent = originalContent;
 
-    this.ref = new Ref('', this.eClass);
+      this.ref = new Ref('', this.eClass);
+    }
   }
 
   static isSend(eClass: string) {
@@ -60,12 +71,15 @@ export abstract class Message extends Referencable {
   }
 
   static newFromContext(ref: Ref, json: MessageJson, parserContext: ParserContext): any {
+    let dummyCp = new ConversationPartner() //todo not nice
     if(Message.isSend(json.eClass)) {
-      //todo convpartner
-      return new SendMessage(new ConversationPartner(), 0, undefined, undefined, undefined,
+      return new SendMessage(dummyCp, 0, undefined, undefined, undefined,
+        ref, parserContext, (json as SendMessageJson)
         )
     } else {
-
+      return new ReceiveMessage(dummyCp, 0, undefined, undefined, undefined, undefined, undefined,
+        ref, parserContext, (json as ReceiveMessageJson)
+      )
     }
   }
 
@@ -116,6 +130,7 @@ export abstract class Message extends Referencable {
 }
 
 export class SendMessage extends Message {
+  static override readonly eClass: string = 'http://www.unikoblenz.de/keml#//SendMessage'
   override readonly eClass: string = "http://www.unikoblenz.de/keml#//SendMessage";
   uses: Information[];
 
@@ -125,14 +140,27 @@ export class SendMessage extends Message {
     content: string = 'New send content',
     originalContent?: string,
     uses: Information[] = [],
+    ref?: Ref, parserContext?: ParserContext, jsonOpt?: SendMessageJson,
   ) {
+    let resRef = ref? ref : new Ref('')
+    resRef.eClass = SendMessage.eClass
     super(
       counterPart,
       timing,
       content,
-      originalContent
+      originalContent,
+      resRef,
+      parserContext,
+      jsonOpt
     );
-    this.uses = uses
+    if (parserContext) {
+      //parserContext.put(this) // already done in super
+      let json: SendMessageJson = jsonOpt ? jsonOpt : parserContext?.getJsonFromTree(ref!.$ref);
+      let uses = json.uses? json.uses : []
+      this.uses = uses.map(u => parserContext.getOrCreate(u))
+    } else {
+      this.uses = uses
+    }
   }
 
   override toJson(): SendMessageJson {
@@ -158,18 +186,28 @@ export class ReceiveMessage extends Message {
     generates: NewInformation[] = [],
     repeats: NewInformation[] = [],
     isInterrupted: boolean = false,
+    ref?: Ref, parserContext?: ParserContext, jsonOpt?: ReceiveMessageJson,
   ) {
     super(
       counterPart,
       timing,
       content? content: "New receive content",
-      originalContent
+      originalContent,
+      ref, parserContext, jsonOpt
     );
-    this.addGenerates(generates);
-    this.repeats = repeats;
-    this.isInterrupted = isInterrupted;
-
-    this.ref = new Ref('', this.eClass)
+    if (parserContext) {
+      let json: ReceiveMessageJson = jsonOpt ? jsonOpt : parserContext.getJsonFromTree(ref!.$ref)
+      let generatesRefs = ParserContext.createRefList2(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates.map(g => g.eClass))
+      this.generates = generatesRefs.map(g => parserContext.getOrCreate(g))
+      let reps = json.repeats?.map(r => parserContext.getOrCreate<NewInformation>(r))
+      this.repeats = reps ? reps : []
+      this.isInterrupted = json.isInterrupted;
+    } else {
+      this.addGenerates(generates);
+      this.repeats = repeats;
+      this.isInterrupted = isInterrupted;
+//    this.ref = new Ref('', this.eClass)
+    }
     this.listChildren.set(ReceiveMessage.generatesPrefix, this.generates)
   }
 
@@ -225,20 +263,36 @@ export abstract class Information extends Referencable {
   protected constructor(message: string, isInstruction: boolean = false,  x: number = 0, y: number = 0,
                         initialTrust: number = 0.5, currentTrust: number = 0.5,
                         causes: InformationLink[] = [], targetedBy: InformationLink[] = [],
-                        isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],) {
-    super();
-    this.message = message;
-    this.isInstruction = isInstruction;
-    this.x = x;
-    this.y = y;
-    this.initialTrust = initialTrust;
-    this.currentTrust = currentTrust;
-    this.causes = causes;
-    this.targetedBy = targetedBy;
-    this.isUsedOn = isUsedOn;
-    this.repeatedBy = repeatedBy;
-
-    this.ref = new Ref('', this.eClass)
+                        isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
+                        ref?: Ref, parserContext?: ParserContext, jsonOpt?: InformationJson
+                        ) {
+    super(ref);
+    if (parserContext) {
+      parserContext.put(this)
+      let json: InformationJson = jsonOpt ? jsonOpt : parserContext.getJsonFromTree(ref!.$ref)
+      this.message = json.message;
+      this.isInstruction = json.isInstruction;
+      this.x = json.x;
+      this.y = json.y;
+      this.initialTrust = json.initialTrust;
+      this.currentTrust = json.currentTrust;
+      let causesRefs = ParserContext.createRefList2(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass))
+      this.causes = causesRefs.map(r => parserContext.getOrCreate<InformationLink>(r))
+      this.targetedBy = json.targetedBy?.map(r =>  parserContext.getOrCreate(r))
+      this.isUsedOn = json.isUsedOn?.map(r => parserContext.getOrCreate<SendMessage>(r))
+      this.repeatedBy = json.repeatedBy?.map(r => parserContext.getOrCreate<ReceiveMessage>(r))
+    } else {
+      this.message = message;
+      this.isInstruction = isInstruction;
+      this.x = x;
+      this.y = y;
+      this.initialTrust = initialTrust;
+      this.currentTrust = currentTrust;
+      this.causes = causes;
+      this.targetedBy = targetedBy;
+      this.isUsedOn = isUsedOn;
+      this.repeatedBy = repeatedBy;
+    }
     this.listChildren.set(Information.causesPrefix, this.causes)
   }
 
@@ -262,18 +316,27 @@ export abstract class Information extends Referencable {
 }
 
 export class NewInformation extends Information {
+  static eClass: string = 'http://www.unikoblenz.de/keml#//NewInformation'
   source: ReceiveMessage;
 
   constructor(source: ReceiveMessage,
               message: string, isInstruction: boolean = false,  x: number = 0, y: number = 0,
               initialTrust: number = 0.5, currentTrust: number = 0.5,
               causes: InformationLink[] = [], targetedBy: InformationLink[] = [],
-              isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],) {
+              isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
+              ref?: Ref, parserContext?: ParserContext, jsonOpt?: NewInformationJson
+  ) {
     super(message, isInstruction, x, y,
       initialTrust, currentTrust,
       causes, targetedBy,
-      isUsedOn, repeatedBy,);
-    this.source = source;
+      isUsedOn, repeatedBy,
+      ref, parserContext, jsonOpt);
+    if(parserContext) {
+      let json: NewInformationJson = jsonOpt ? jsonOpt : parserContext.getJsonFromTree(ref!.$ref)
+      this.source = parserContext.getOrCreate(json.source)
+    } else {
+      this.source = source;
+    }
   }
 
   static fromJson(newInfo: NewInformationJson, source: ReceiveMessage): NewInformation {
@@ -308,11 +371,13 @@ export class Preknowledge extends Information {
               initialTrust: number = 0.5, currentTrust: number = 0.5,
               causes: InformationLink[] = [], targetedBy: InformationLink[] = [],
               isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
-              ref?: Ref, parserContext?: ParserContext) {
+              ref?: Ref, parserContext?: ParserContext, jsonOpt?: PreknowledgeJson) {
     super(message, isInstruction, x, y,
       initialTrust, currentTrust,
       causes, targetedBy,
-      isUsedOn, repeatedBy,);
+      isUsedOn, repeatedBy,
+      ref, parserContext, jsonOpt,
+      );
   }
 
   override duplicate(): Preknowledge {
@@ -340,17 +405,28 @@ export class InformationLink extends Referencable {
   type: InformationLinkType;
   linkText?: string;
 
-  constructor(source: Information, target: Information, type: InformationLinkType, linkText?: string) {
-    super();
-    this.source = source;
-    this.target = target;
-    this.type = type;
-    this.linkText = linkText;
-    //todo no eclass
+  constructor(source: Information, target: Information, type: InformationLinkType, linkText?: string,
+              ref?: Ref, parserContext?: ParserContext, jsonOpt?: InformationLinkJson
+  ) {
+    super(ref);
+    if(parserContext) {
+      parserContext.put(this)
+      let json: InformationLinkJson = jsonOpt ? jsonOpt : parserContext.getJsonFromTree(ref!.$ref)
+      this.source = parserContext.getOrCreate(json.source);
+      this.target = parserContext.getOrCreate(json.target);
+      this.type = json.type;
+      this.linkText = json.linkText;
+    } else {
+      this.source = source;
+      this.target = target;
+      this.type = type;
+      this.linkText = linkText;
+    }
   }
 
   toJson(): InformationLinkJson {
     return {
+      eClass: InformationLink.eClass,
       source: this.source.getRef(),
       target: this.target.getRef(),
       type: this.type,

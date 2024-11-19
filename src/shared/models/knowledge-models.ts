@@ -33,6 +33,7 @@ export interface NewInformation extends Information {
 }
 
 export interface InformationLink {
+  eClass: string;
   linkText?: string;
   type: InformationLinkType;
   source: Ref; //backwards but main

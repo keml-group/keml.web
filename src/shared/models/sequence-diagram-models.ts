@@ -38,6 +38,7 @@ export interface SendMessage extends Message {
 export interface ReceiveMessage extends Message {
   generates: (NewInformation)[];
   repeats?: (Ref)[];
+  isInterrupted: boolean;
 }
 
 

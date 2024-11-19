@@ -12,6 +12,9 @@ export abstract class Referencable {
   singleChildren: Map<string, Referencable> = new Map();
   listChildren: Map<string, Referencable[]> = new Map();
 
+  protected constructor(ref?: Ref) {
+    this.ref = ref;
+  }
 
   public getRef(): Ref {
     if (!this.ref) {
