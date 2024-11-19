@@ -28,8 +28,9 @@ export abstract class Message extends Referencable {
     super(ref);
     if(parserContext) {
       parserContext.put(this)
-      console.log(jsonOpt)
       let json: MessageJson = jsonOpt? jsonOpt: parserContext.getJsonFromTree(ref!.$ref);
+      console.log(jsonOpt)
+      console.log(json)
       this.counterPart = parserContext.getOrCreate(json.counterPart)
       this.timing = json.timing;
       this.content = content;
@@ -173,6 +174,7 @@ export class SendMessage extends Message {
 
 export class ReceiveMessage extends Message {
   override readonly eClass: string = "http://www.unikoblenz.de/keml#//ReceiveMessage";
+  static override readonly eClass: string = 'http://www.unikoblenz.de/keml#//ReceiveMessage'
   static readonly generatesPrefix: string = 'generates';
   generates: NewInformation[] = [];
   repeats: NewInformation[] = [];
@@ -197,7 +199,8 @@ export class ReceiveMessage extends Message {
     );
     if (parserContext) {
       let json: ReceiveMessageJson = jsonOpt ? jsonOpt : parserContext.getJsonFromTree(ref!.$ref)
-      let generatesRefs = ParserContext.createRefList2(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates.map(g => g.eClass))
+      console.log(json)
+      let generatesRefs = ParserContext.createRefList2(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates.map(g => g.eClass? g.eClass: NewInformation.eClass))
       this.generates = generatesRefs.map(g => parserContext.getOrCreate(g))
       let reps = json.repeats?.map(r => parserContext.getOrCreate<NewInformation>(r))
       this.repeats = reps ? reps : []

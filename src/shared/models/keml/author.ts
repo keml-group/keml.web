@@ -23,7 +23,7 @@ export class Author extends LifeLine{
       let preknowledgeRefs = ParserContext.createRefList(ref!.$ref, Author.preknowledgePrefix, Preknowledge.eClass, authorJson.preknowledge.length)
       this.preknowledge = preknowledgeRefs.map(r => parserContext.getOrCreate<Preknowledge>(r));
       //todo how to get specific type?
-      let messageRefs = ParserContext.createRefList(ref!.$ref, Author.messagesPrefix, Message.eClass, authorJson.messages.length)
+      let messageRefs = ParserContext.createRefList2(ref!.$ref, Author.messagesPrefix, authorJson.messages.map(r => r.eClass))
       this.messages = messageRefs.map(r => parserContext.getOrCreate<Message>(r));
     } else {
       super(name, xPosition);

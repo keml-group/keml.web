@@ -3,7 +3,8 @@ import {Referencable} from "./referenceable";
 import {Conversation as ConversationJson, ConversationPartner as ConversationPartnerJson} from "../../sequence-diagram-models";
 import {Author} from "../author";
 import {ConversationPartner} from "../conversation-partner";
-import {Message, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "../msg-info";
+import {InformationLink, Message, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "../msg-info";
+import {InformationLinkType} from "../../knowledge-models";
 
 /*
 idea:
@@ -60,6 +61,13 @@ export class ParserContext {
       return new ReceiveMessage(new ConversationPartner(), 0, undefined, undefined, undefined, undefined, undefined, ref, this)
     }
     this.constructorPointers.set(ReceiveMessage.eClass, receiveMessageFun)
+
+    const informationLinkFun: (path: string) => InformationLink = (path: string) => {
+      let ref: Ref = new Ref(path, InformationLink.eClass)
+      let dummyInfo = new Preknowledge()
+      return new InformationLink(dummyInfo, dummyInfo, InformationLinkType.SUPPLEMENT, undefined, ref, this)
+    }
+    this.constructorPointers.set(InformationLink.eClass, informationLinkFun)
   }
 
   getJsonFromTree<T>(path: string): T {
