@@ -2,8 +2,8 @@ import {Ref} from "./ref";
 import {Referencable} from "./referenceable";
 import {Conversation as ConversationJson, ConversationPartner as ConversationPartnerJson} from "../../sequence-diagram-models";
 import {Author} from "../author";
-import {Author as AuthorJson} from '../../sequence-diagram-models'
 import {ConversationPartner} from "../conversation-partner";
+import {Message, Preknowledge, SendMessage} from "../msg-info";
 
 /*
 idea:
@@ -22,17 +22,35 @@ export class ParserContext {
     this.conv = conv;
 
     //create function pointers (!arrow functions (!) to have parsercontext as this) for all existing types:
-    const authorFun: (_ :string) => Author =  (_:string) => {
-      let authorJson: AuthorJson = conv.author
-      return new Author( undefined, 0, [], [], authorJson, this)
+    const authorFun: (path :string) => Author =  (path:string) => {
+      let ref = new Ref(path, Author.eClass)
+      return new Author( undefined, 0, [], [], ref, this)
     }
     this.constructorPointers.set(Author.eClass, authorFun)
 
     const convPartnerFun: (path: string) => ConversationPartner = (path: string) => {
-      let cpJson: ConversationPartnerJson = this.getJsonFromTree(path)
-      return new ConversationPartner(undefined, 0, cpJson, this)
+      let ref = new Ref(path, ConversationPartner.eClass)
+      return new ConversationPartner(undefined, 0, ref, this)
     }
     this.constructorPointers.set(ConversationPartner.eClass, convPartnerFun)
+
+    const preknowledgeFun: (path: string) => Preknowledge = (path: string) => {
+      let ref = new Ref(path, Preknowledge.eClass)
+      return new Preknowledge(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
+        ref, this)
+    }
+    this.constructorPointers.set(Preknowledge.eClass, preknowledgeFun)
+
+    const messageFun: (path: string) => Message = (path: string) => {
+      // todo need to get json here to determine real class
+      let json: any = this.getJsonFromTree(path)
+      let ref = new Ref(path, json['eClass'])
+      console.log(ref)
+      //todo
+
+      return new SendMessage(new ConversationPartner(), 0)
+    }
+    this.constructorPointers.set(Message.eClass, messageFun)
   }
 
   getJsonFromTree<T>(path: string): T {

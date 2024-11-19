@@ -7,12 +7,12 @@ export class ConversationPartner extends LifeLine {
 
     static readonly eClass = 'http://www.unikoblenz.de/keml#//ConversationPartner';
 
-    constructor(name: string = 'NewPartner', xPosition?: number, cpJson?: ConversationPartnerJson, parserContext?: ParserContext) {
+    constructor(name: string = 'NewPartner', xPosition?: number, ref?: Ref, parserContext?: ParserContext) {
       if(parserContext) {
-        super(cpJson!.name, cpJson?.xPosition)
-        this.ref = new Ref('', ConversationPartner.eClass)
+        let cpJson: ConversationPartnerJson = parserContext.getJsonFromTree(ref!.$ref)
+        super(cpJson.name, cpJson.xPosition)
+        this.ref = ref!
         parserContext.put(this)
-        console.log(this)
       } else {
         super(name, xPosition);
         this.ref = new Ref('', ConversationPartner.eClass)

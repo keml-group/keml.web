@@ -13,38 +13,26 @@ export class Author extends LifeLine{
   messages: Message[];
 
   constructor(name = 'Author', xPosition: number = 0, preknowledge: Preknowledge[] = [], messages: Message[] = [],
-              authorJson?: AuthorJson, parserContext?: ParserContext) {
+              ref?: Ref, parserContext?: ParserContext) {
     if (parserContext) {
-      console.log("Reached author constructor with context")
-      super(authorJson!.name, authorJson!.xPosition)
-      //todo
-      this.preknowledge = preknowledge;
-      this.messages = messages;
-      this.ref = new Ref('', Author.eClass)
-      this.listChildren.set(Author.preknowledgePrefix, this.preknowledge)
-      this.listChildren.set(Author.messagesPrefix, this.messages)
-
-
-    } else{
+      let authorJson: AuthorJson = parserContext?.getJsonFromTree(ref!.$ref)
+      super(authorJson.name, authorJson.xPosition)
+      this.ref = ref!
+      parserContext.put(this)
+      //compute and use refs for all tree children:
+      let preknowledgeRefs = ParserContext.createRefList(ref!.$ref, Author.preknowledgePrefix, Preknowledge.eClass, authorJson.preknowledge.length)
+      this.preknowledge = preknowledgeRefs.map(r => parserContext.getOrCreate<Preknowledge>(r));
+      //todo how to get specific type?
+      let messageRefs = ParserContext.createRefList(ref!.$ref, Author.messagesPrefix, Message.eClass, authorJson.messages.length)
+      this.messages = messageRefs.map(r => parserContext.getOrCreate<Message>(r));
+    } else {
       super(name, xPosition);
       this.preknowledge = preknowledge;
       this.messages = messages;
-
-      this.ref = new Ref('', Author.eClass)
-      this.listChildren.set(Author.preknowledgePrefix, this.preknowledge)
-      this.listChildren.set(Author.messagesPrefix, this.messages)
-
+      //this.ref = new Ref('', Author.eClass)
     }
-  }
-
-  static fromJson(author: AuthorJson, context: ParserContext): Author {
-
-    let preknowledge = author.preknowledge.map(pre => Preknowledge.fromJSON(pre))
-    context.putList('todo', this.preknowledgePrefix, preknowledge);
-    console.log(context)
-    let msgs = author.messages.map(message => Message.fromJSON(message, context))
-
-    return new Author(author.name, author.xPosition, preknowledge, msgs) //todo
+    this.listChildren.set(Author.preknowledgePrefix, this.preknowledge)
+    this.listChildren.set(Author.messagesPrefix, this.messages)
   }
 
   toJson(): AuthorJson {

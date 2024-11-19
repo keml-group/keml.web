@@ -12,6 +12,7 @@ import {Referencable} from "./parser/referenceable";
 
 export abstract class Message extends Referencable {
   protected readonly eClass: string = '';
+  static readonly eClass = 'http://www.unikoblenz.de/keml#//Message'
   counterPart: ConversationPartner;
   timing: number = 0;
   content: string;
@@ -55,6 +56,16 @@ export abstract class Message extends Referencable {
       return new SendMessage(counterPart, timing, content, originalContent)
     } else {
       return new ReceiveMessage(counterPart, timing, content, originalContent)
+    }
+  }
+
+  static newFromContext(ref: Ref, json: MessageJson, parserContext: ParserContext): any {
+    if(Message.isSend(json.eClass)) {
+      //todo convpartner
+      return new SendMessage(new ConversationPartner(), 0, undefined, undefined, undefined,
+        )
+    } else {
+
     }
   }
 
@@ -131,7 +142,6 @@ export class SendMessage extends Message {
   }
 
 }
-
 
 export class ReceiveMessage extends Message {
   override readonly eClass: string = "http://www.unikoblenz.de/keml#//ReceiveMessage";
@@ -292,18 +302,17 @@ export class NewInformation extends Information {
 
 export class Preknowledge extends Information {
 
-  constructor(message: string, isInstruction: boolean = false,  x: number = 0, y: number = 0,
+  static readonly eClass: string = 'http://www.unikoblenz.de/keml#//Preknowlede';
+
+  constructor(message: string = 'Preknowledge', isInstruction: boolean = false,  x: number = 0, y: number = 0,
               initialTrust: number = 0.5, currentTrust: number = 0.5,
               causes: InformationLink[] = [], targetedBy: InformationLink[] = [],
-              isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],) {
+              isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
+              ref?: Ref, parserContext?: ParserContext) {
     super(message, isInstruction, x, y,
       initialTrust, currentTrust,
       causes, targetedBy,
       isUsedOn, repeatedBy,);
-  }
-
-  static fromJSON(pre: PreknowledgeJson): Preknowledge {
-    return new Preknowledge(pre.message, pre.isInstruction);
   }
 
   override duplicate(): Preknowledge {
@@ -324,6 +333,8 @@ export class Preknowledge extends Information {
 }
 
 export class InformationLink extends Referencable {
+  static readonly eClass = 'http://www.unikoblenz.de/keml#//InformationLink'
+
   source: Information;
   target: Information;
   type: InformationLinkType;
