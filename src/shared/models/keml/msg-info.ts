@@ -9,6 +9,7 @@ import {InformationLinkType, InformationLink as InformationLinkJson} from "../kn
 import {Ref} from "./parser/ref";
 import {ParserContext} from "./parser/parser-context";
 import {Referencable} from "./parser/referenceable";
+import {JsonFixer} from "./parser/json-fixer";
 
 export abstract class Message extends Referencable {
   protected readonly eClass: string = '';
@@ -200,7 +201,7 @@ export class ReceiveMessage extends Message {
     if (parserContext) {
       let json: ReceiveMessageJson = jsonOpt ? jsonOpt : parserContext.getJsonFromTree(ref!.$ref)
       console.log(json)
-      let generatesRefs = ParserContext.createRefList2(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates.map(g => g.eClass? g.eClass: NewInformation.eClass))
+      let generatesRefs = ParserContext.createRefList2(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates?.map(g => g.eClass? g.eClass: NewInformation.eClass))
       this.generates = generatesRefs.map(g => parserContext.getOrCreate(g))
       let reps = json.repeats?.map(r => parserContext.getOrCreate<NewInformation>(r))
       this.repeats = reps ? reps : []
@@ -279,7 +280,8 @@ export abstract class Information extends Referencable {
       this.y = json.y;
       this.initialTrust = json.initialTrust;
       this.currentTrust = json.currentTrust;
-      let causesRefs = ParserContext.createRefList2(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass))
+      //todo actually, causes should exist on the json, however, it is missing and we hence set it manually:
+      let causesRefs = ParserContext.createRefList2(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass? c.eClass : JsonFixer.determineParentInfoClass(ref!.$ref)))
       this.causes = causesRefs.map(r => parserContext.getOrCreate<InformationLink>(r))
       this.targetedBy = json.targetedBy?.map(r =>  parserContext.getOrCreate(r))
       this.isUsedOn = json.isUsedOn?.map(r => parserContext.getOrCreate<SendMessage>(r))
@@ -336,7 +338,9 @@ export class NewInformation extends Information {
       ref, parserContext, jsonOpt);
     if(parserContext) {
       let json: NewInformationJson = jsonOpt ? jsonOpt : parserContext.getJsonFromTree(ref!.$ref)
-      this.source = parserContext.getOrCreate(json.source)
+      //todo this works against a bug in the used json lib: it computes the necessary source if it is not present
+      let src = json.source? json.source : new Ref(Ref.getParentAddress(ref!.$ref), ReceiveMessage.eClass)
+      this.source = parserContext.getOrCreate(src)
     } else {
       this.source = source;
     }
@@ -415,7 +419,9 @@ export class InformationLink extends Referencable {
     if(parserContext) {
       parserContext.put(this)
       let json: InformationLinkJson = jsonOpt ? jsonOpt : parserContext.getJsonFromTree(ref!.$ref)
-      this.source = parserContext.getOrCreate(json.source);
+      //todo this works against a bug in the used json lib: it computes the necessary source if it is not present
+      let src = json.source? json.source : new Ref(Ref.getParentAddress(ref!.$ref), JsonFixer.determineParentInfoClass(ref!.$ref))
+      this.source = parserContext.getOrCreate(src)
       this.target = parserContext.getOrCreate(json.target);
       this.type = json.type;
       this.linkText = json.linkText;

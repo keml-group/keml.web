@@ -19,6 +19,11 @@ export class Ref {
     return formerPrefix+Ref.pathDivider+ownHeader;
   }
 
+  static getParentAddress(ref: string): string {
+    let pos = ref.lastIndexOf(this.pathDivider)
+    return ref.substring(0, pos)
+  }
+
   static mixWithIndex(prefix: string, index: number): string {
     return prefix+'.'+index;
   }
