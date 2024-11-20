@@ -279,7 +279,7 @@ export abstract class Information extends Referencable {
       this.initialTrust = json.initialTrust;
       this.currentTrust = json.currentTrust;
       //todo actually, causes should exist on the json, however, it is missing and we hence set it manually:
-      let causesRefs = ParserContext.createRefList2(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass? c.eClass : JsonFixer.determineParentInfoClass(ref!.$ref)))
+      let causesRefs = ParserContext.createRefList2(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass? c.eClass : InformationLink.eClass))
       this.causes = causesRefs.map(r => parserContext.getOrCreate<InformationLink>(r))
       this.targetedBy = json.targetedBy?.map(r =>  parserContext.getOrCreate(r))
       this.isUsedOn = json.isUsedOn?.map(r => parserContext.getOrCreate<SendMessage>(r))
@@ -370,7 +370,7 @@ export class NewInformation extends Information {
 
 export class Preknowledge extends Information {
 
-  static readonly eClass: string = 'http://www.unikoblenz.de/keml#//Preknowlede';
+  static readonly eClass: string = 'http://www.unikoblenz.de/keml#//PreKnowledge';
 
   constructor(message: string = 'Preknowledge', isInstruction: boolean = false,  x: number = 0, y: number = 0,
               initialTrust: number = 0.5, currentTrust: number = 0.5,

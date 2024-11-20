@@ -46,7 +46,10 @@ export abstract class Referencable {
   }
 
   static listToRefs<T extends Referencable>(list: T[]): Ref[] {
-    return list.map(elem => elem.getRef())
+    if (list)
+      return list.map(elem => elem.getRef())
+    else
+      return []
   }
 
 }
