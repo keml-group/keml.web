@@ -30,11 +30,9 @@ export abstract class Message extends Referencable {
     if(parserContext) {
       parserContext.put(this)
       let json: MessageJson = jsonOpt? jsonOpt: parserContext.getJsonFromTree(ref!.$ref);
-      console.log(jsonOpt)
-      console.log(json)
       this.counterPart = parserContext.getOrCreate(json.counterPart)
       this.timing = json.timing? json.timing : 0;
-      this.content = content;
+      this.content = json.content;
       this.originalContent = json.originalContent;
     } else {
       this.counterPart = counterPart;
