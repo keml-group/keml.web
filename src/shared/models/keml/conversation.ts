@@ -28,7 +28,7 @@ export class Conversation extends Referencable {
       this.title = parserContext.conv.title;
       const authorRef = ParserContext.createSingleRef(Conversation.ownPath, Conversation.authorPrefix, Author.eClass)
       this.author = parserContext.getOrCreate<Author>(authorRef);
-      const cpRefs: Ref[] = ParserContext.createRefList(Conversation.ownPath, Conversation.conversationPartnersPrefix, ConversationPartner.eClass, parserContext.conv.conversationPartners.length)
+      const cpRefs: Ref[] = ParserContext.createRefList2(Conversation.ownPath, Conversation.conversationPartnersPrefix, parserContext.conv.conversationPartners.map(_ => ConversationPartner.eClass))
       this.conversationPartners = cpRefs.map( cp => parserContext.getOrCreate<ConversationPartner>(cp))
     } else {
       this.title = title;

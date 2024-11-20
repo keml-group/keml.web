@@ -11,6 +11,7 @@ import {ConversationPartner} from "../models/keml/conversation-partner";
 import {Message} from "../models/keml/msg-info";
 import {ReceiveMessage} from "../models/keml/msg-info"
 import {ParserContext} from "../models/keml/parser/parser-context";
+import {JsonFixer} from "../models/keml/parser/json-fixer";
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,7 @@ export class ModelIOService {
 
   loadKEML(json: string): Conversation {
     let conv =  <ConversationJson>JSON.parse(json);
+    JsonFixer.prepareJsonInfoLinkSources(conv);
 
     let conv2 = Conversation.fromJSON(conv);
     LayoutHelper.positionConversationPartners(conv2.conversationPartners)

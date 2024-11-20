@@ -82,9 +82,6 @@ export class ParserContext {
   }
 
   getOrCreate<T extends Referencable>(ref: Ref): T {
-    console.log('Called with '+ref);
-    console.log(ref.$ref)
-    console.log(ref.eClass)
     //get constructor from ref.eclass
     let res = this.get<T>(ref.$ref)
     if (res)
@@ -114,11 +111,6 @@ export class ParserContext {
     content?.forEach((t: T, index) =>
       this.context.set(Ref.mixWithIndex(prefix, index), t)
     )
-  }
-
-  static createRefList(formerPrefix: string, ownHeader: string, eClass: string, contentLength: number,): Ref[] {
-    const prefix = Ref.computePrefix(formerPrefix, ownHeader);
-    return new Array(contentLength, 0).map((_, index) => new Ref(Ref.mixWithIndex(prefix, index), eClass))
   }
 
   // for changing eClass assignment (i.e. on subtypes)
