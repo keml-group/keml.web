@@ -3,7 +3,7 @@ import {Referencable} from "./referenceable";
 import {Conversation as ConversationJson, ConversationPartner as ConversationPartnerJson} from "../../sequence-diagram-models";
 import {Author} from "../author";
 import {ConversationPartner} from "../conversation-partner";
-import {InformationLink, Message, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "../msg-info";
+import {InformationLink, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "../msg-info";
 import {InformationLinkType} from "../../knowledge-models";
 
 /*
@@ -121,7 +121,7 @@ export class ParserContext {
     return new Array(contentLength, 0).map((_, index) => new Ref(Ref.mixWithIndex(prefix, index), eClass))
   }
 
-  // changing eClass assignment (i.e. on subtypes)
+  // for changing eClass assignment (i.e. on subtypes)
   static createRefList2(formerPrefix: string, ownHeader: string, eClasses: string[] = []): Ref[] {
     const prefix = Ref.computePrefix(formerPrefix, ownHeader);
     console.log(eClasses)
