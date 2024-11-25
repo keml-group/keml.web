@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  Conversation as ConversationJson,
-} from "../models/sequence-diagram-models";
+import {Conversation as ConversationJson} from "../models/sequence-diagram-models";
 import {Information} from "../models/keml/msg-info";
 import {Preknowledge} from "../models/keml/msg-info";
 import {NewInformation} from "../models/keml/msg-info";
@@ -10,7 +8,6 @@ import {Conversation} from "../models/keml/conversation";
 import {ConversationPartner} from "../models/keml/conversation-partner";
 import {Message} from "../models/keml/msg-info";
 import {ReceiveMessage} from "../models/keml/msg-info"
-import {ParserContext} from "../models/keml/parser/parser-context";
 import {JsonFixer} from "../models/keml/parser/json-fixer";
 
 @Injectable({
@@ -21,32 +18,14 @@ export class ModelIOService {
   constructor() { }
 
   loadKEML(json: string): Conversation {
-    let conv =  <ConversationJson>JSON.parse(json);
-    JsonFixer.prepareJsonInfoLinkSources(conv);
+    let convJson =  <ConversationJson>JSON.parse(json);
+    JsonFixer.prepareJsonInfoLinkSources(convJson);
 
-    let conv2 = Conversation.fromJSON(conv);
-    LayoutHelper.positionConversationPartners(conv2.conversationPartners)
-    LayoutHelper.positionInfos(conv2.author.preknowledge, conv2.author.messages);
-
-    return conv2;
-
-    /*
-    //resolve conv Partner refs
-    let convPartners = conv.conversationPartners;
-    conv.author.messages?.forEach(message => {
-      let ref = message.counterPart.$ref; //todo is correct because references are not correctly parsed now
-      message.counterPart = convPartners[this.resolveConversationPartnerReference(ref? ref : "")];
-    })
-    // todo resolve others
-    // cannot, throws bc of circular ref this.repairSourceOfNewInfo(conv.author.messages);
-
-    // now, the automatic conversion of the convP is included:
-    LayoutHelper.positionConversationPartners(conv.conversationPartners);
-    this.timeMessages(conv.author.messages);
+    let conv = Conversation.fromJSON(convJson);
+    LayoutHelper.positionConversationPartners(conv.conversationPartners)
     LayoutHelper.positionInfos(conv.author.preknowledge, conv.author.messages);
-    console.log(conv);
+
     return conv;
-    */
   }
 
   newKEML(): Conversation {
@@ -55,21 +34,6 @@ export class ModelIOService {
     LayoutHelper.positionConversationPartners(conv.conversationPartners)
 
     return conv;
-
-    /*const author: Author = {
-      name: 'Author',
-      xPosition: 0,
-      messages: [],
-      preknowledge: [],
-    }
-    const convP = [{name: 'LLM', xPosition: 1, messages: []}];
-    LayoutHelper.positionConversationPartners(convP);
-    return {
-      eClass: 'http://www.unikoblenz.de/keml#//Conversation',
-      title: 'New Conversation',
-      author: author,
-      conversationPartners: convP
-    }*/
   }
 
   saveKEML(conv: Conversation): string {
