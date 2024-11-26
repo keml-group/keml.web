@@ -62,7 +62,6 @@ export class InfoComponent {
   }
 
   openInfoDetails() {
-    console.log('openInfoDetails');
     this.openDetails.emit(this.info);
     /* todo: why is click not fired any more like below?
     if (!this.dragActive) {

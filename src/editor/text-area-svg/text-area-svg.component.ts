@@ -12,7 +12,7 @@ import {
   templateUrl: './text-area-svg.component.svg',
   styleUrl: './text-area-svg.component.css'
 })
-export class TextAreaSvgComponent implements OnChanges, AfterViewInit{
+export class TextAreaSvgComponent implements OnChanges {
   /*
   a fixed size svg. If the text exceeds the possible size, we will do a ... for now
    */
@@ -34,11 +34,6 @@ export class TextAreaSvgComponent implements OnChanges, AfterViewInit{
     this.distributeText();
   }
 
-  ngAfterViewInit() {
-    console.log('View there')
-    this.distributeText();
-  }
-
   distributeText(){
     let broken = this.text.split(' ')
     console.log(broken)
@@ -55,12 +50,13 @@ export class TextAreaSvgComponent implements OnChanges, AfterViewInit{
           box = this.computeBB(testRes)
           console.log(box)
           if (box.width <= this.w) { //go on with bigger width
-            console.log('Go on bigger')
+            console.log('Go on in same line')
             res = testRes
           } else {
             //start new line (if possible)
-            console.log('Start new if possible')
+            console.log('Start new if possible, current height is '+currentH)
             box = this.computeBB(word)
+            console.log('new box height would be ' + (box.height + currentH)+', allowed is '+this.h )
             if (box.height + currentH > this.h) { // no new line possible:
               console.log("No new line possible")
               this.distributedText[currentY] = res+'...' //todo could be too long
@@ -84,7 +80,7 @@ export class TextAreaSvgComponent implements OnChanges, AfterViewInit{
   }
 
   computeBB(words: string): DOMRect {
-    return new DOMRect(0,0, words.length*7.5,16)
+    return new DOMRect(0,0, words.length*7,20)
 
   }
 

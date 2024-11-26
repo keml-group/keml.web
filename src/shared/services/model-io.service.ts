@@ -184,7 +184,6 @@ export class ModelIOService {
   }
 
   private isInfoFromMessage(info: Information, msg: ReceiveMessage): boolean {
-    console.log(msg.generates)
     return msg.generates.indexOf(<NewInformation>info)>-1;
   }
 
