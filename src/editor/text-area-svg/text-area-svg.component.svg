@@ -1,0 +1,3 @@
+<svg:text #text [attr.x]="x" [attr.y]="y" [attr.width]="w" [attr.height]="h" dy="0" [attr.style]="">
+  <tspan dy="1.2em" [attr.x]="x" *ngFor="let line of distributedText">{{line}}</tspan>
+</svg:text>
