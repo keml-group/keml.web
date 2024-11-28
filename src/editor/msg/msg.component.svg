@@ -4,9 +4,6 @@
   <path d='M 20,0 L 10,5 L 20,10 L 18, 5 Z' fill="black" attr.transform="{{isSend() ? 'rotate(180 ' + (msg.counterPart.xPosition/2+10) + ' 5)' : 'rotate(0 0 0)' }}">
   </path>
   <rect x="0" y="-20" [attr.width]="msg.counterPart.xPosition +10" height="40" fill="transparent" (click)="openMessageDetails()"></rect>
-  <foreignObject height="40" attr.width="{{msg.counterPart.xPosition -35}}" x="25" y="-20">
-    <textarea id="msgT" type="text" [(ngModel)]="msg.content" cols="{{msg.counterPart.xPosition/10}}" style="height: auto;">
-    </textarea>
-  </foreignObject>
+  <g text-area-svg [text]="msg.content" [w]="msg.counterPart.xPosition -35" [h]="40" [x]="25" [y]="-20"></g>
   <g infoG *ngFor="let info of getInfos()" [info]="info" (openDetails)="openInfoDetails(info)"></g>
 </svg:g>
