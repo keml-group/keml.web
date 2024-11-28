@@ -34,6 +34,18 @@ export class TextAreaSvgComponent implements OnChanges {
     this.distributeText();
   }
 
+  handleClick() {
+    if(this.singleEdit) {
+      console.log("Clicked")
+      this.updateText('Helpercgckghkgvlzlzvlhvg kfcjgfxirdtlflzvluctkz')
+    }
+  }
+
+  updateText(text: string) {
+    this.text = text;
+    this.textChange.emit(text)
+  }
+
   distributeText(){
     let broken = this.text.split(' ')
     console.log(broken)
