@@ -27,6 +27,7 @@ export class TextAreaSvgComponent implements OnChanges {
   //only with singleEdit since that opens an overlay where one can change the text in place
 
   distributedText: string[] = []
+  isActive = false;
 
 
   ngOnChanges() {
@@ -36,14 +37,13 @@ export class TextAreaSvgComponent implements OnChanges {
 
   handleClick() {
     if(this.singleEdit) {
-      console.log("Clicked")
-      this.updateText('Helpercgckghkgvlzlzvlhvg kfcjgfxirdtlflzvluctkz')
+      this.isActive = true
     }
   }
 
-  updateText(text: string) {
-    this.text = text;
-    this.textChange.emit(text)
+  leaveTextInput() {
+    this.textChange.emit(this.text)
+    this.isActive = false;
   }
 
   distributeText(){
