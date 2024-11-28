@@ -80,8 +80,7 @@ export class TextAreaSvgComponent implements OnChanges {
   }
 
   computeBB(words: string): DOMRect {
-    return new DOMRect(0,0, words.length*7,20)
-
+    return new DOMRect(0,0, words.length*7.6,20)
   }
 
 }
