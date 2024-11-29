@@ -9,7 +9,7 @@
     <circle cx="5" cy="5" r="5" stroke="black" fill="none"></circle>
   </marker>
   <marker id='pointer' orient="auto" markerWidth='10' markerHeight='10' refX='5' refY='5'>
-    <path d='m 20,0 L 10,5 L 20,10 L 18, 5 Z' stroke="black" fill="black"></path>
+    <path d='m 0,0 L 10,5 L 0,10 L 2,5 Z' stroke="black" fill="black"></path>
   </marker>
 </svg:defs>
 
@@ -21,6 +21,6 @@
   </path>
   <path [attr.d]="'M '+x1+','+y1+' L '+x2+','+y2" stroke="black" marker-end='url(#supplement)'>
   </path>
-  <path [attr.d]="'M '+x1+','+y1+' L '+x2+','+y2" stroke="black" marker-end='url(#pointer)'>
+  <path [attr.d]="'M '+x2+','+y2+' L '+x1+','+y1" stroke="black" marker-end='url(#pointer)'>
   </path>
 </svg:g>
