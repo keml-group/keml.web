@@ -1,13 +1,5 @@
 import {Ref} from "./keml/parser/ref";
 
-//try out: new helper for message positioning
-export interface Position {
-  x: number;
-  y: number;
-  width: number;
-  heigt: number;
-}
-
 export interface Information {
   eClass: string;
   message: string;

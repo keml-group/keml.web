@@ -1,4 +1,4 @@
-import {Information, Preknowledge, NewInformation} from "./knowledge-models";
+import {Preknowledge, NewInformation} from "./knowledge-models";
 import {Ref} from "./keml/parser/ref";
 
 export interface Conversation {
