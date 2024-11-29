@@ -4,5 +4,4 @@
     <rect [attr.x]="w*0.1" y="0" [attr.width]="w*0.9" [attr.height]="h" [attr.fill]="computeTextColor()"></rect>
     <g text-area-svg [text]="info.message" [x]="w*0.1" [y]="0" [w]="w*0.9" [h]="h"></g>
   </g>
-  <g arrow-svg [style]=""></g>
 </svg:g>

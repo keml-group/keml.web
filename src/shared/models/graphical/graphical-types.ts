@@ -3,7 +3,7 @@ export interface Position {
   x: number;
   y: number;
   width: number;
-  heigt: number;
+  height: number;
 }
 
 export enum ArrowHead {

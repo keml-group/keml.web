@@ -20,8 +20,7 @@ export class ArrowSvgComponent implements OnInit{
   y2: number = 55;
 
   ngOnInit() {
-    console.log(this.start)
-    //this.computePositions()
+    this.computePositions()
   }
 
   computePositions() {
@@ -31,6 +30,5 @@ export class ArrowSvgComponent implements OnInit{
     this.y2 = this.end.y;
   }
 
-
-
+  protected readonly ArrowHead = ArrowHead;
 }
