@@ -1,15 +1,15 @@
 <svg:defs>
   <marker id='attack' orient="auto" markerWidth='10' markerHeight='10' refX='5' refY='5'>
-    <path d='m0,0 L10,10 L5,5 L0,10 L10,0' stroke="red" fill="none"></path>
+    <path d='M0,0 L10,10 L5,5 L0,10 L10,0' stroke="red" fill="none"></path>
   </marker>
   <marker id='support' orient="auto" markerWidth='10' markerHeight='10' refX='5' refY='5'>
-    <path d="m0,5 L10,0 Z L10,5 Z L10,10 Z" stroke="green" fill="none"></path>
+    <path d="M0,5 L10,0 Z L10,5 Z L10,10 Z" stroke="green" fill="none"></path>
   </marker>
   <marker id='supplement' orient="auto" markerWidth='10' markerHeight='10' refX='5' refY='5'>
     <circle cx="5" cy="5" r="5" stroke="black" fill="none"></circle>
   </marker>
   <marker id='pointer' orient="auto" markerWidth='10' markerHeight='10' refX='5' refY='5'>
-    <path d='m 0,0 L 10,5 L 0,10 L 2,5 Z' stroke="black" fill="black"></path>
+    <path d='M0,0 L10,5 L0,10 L2,5 Z' stroke="black" fill="black"></path>
   </marker>
 </svg:defs>
 
@@ -20,6 +20,6 @@
   </path>
   <path [attr.d]="'M '+x1+','+y1+' L '+x2+','+y2" stroke="black" marker-end='url(#supplement)' *ngIf="endType==ArrowHead.SUPPLEMENT">
   </path>
-  <path [attr.d]="'M '+x2+','+y2+' L '+x1+','+y1" stroke="black" marker-end='url(#pointer)' *ngIf="endType==ArrowHead.POINTER">
+  <path [attr.d]="'M '+x1+','+y1+' L '+x2+','+y2" stroke="black" marker-end='url(#pointer)' *ngIf="endType==ArrowHead.POINTER">
   </path>
 </svg:g>
