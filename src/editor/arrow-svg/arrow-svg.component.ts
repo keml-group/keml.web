@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ArrowHead, Position} from "../../shared/models/graphical/graphical-types";
+import {ArrowHead, BoundingBox} from "../../shared/models/graphical/graphical-types";
 
 @Component({
   selector: '[arrow-svg]',
@@ -7,10 +7,10 @@ import {ArrowHead, Position} from "../../shared/models/graphical/graphical-types
   styleUrl: './arrow-svg.component.css'
 })
 export class ArrowSvgComponent implements OnInit{
-  @Input() start!: Position;
-  @Input() end!: Position;
+  @Input() start!: BoundingBox;
+  @Input() end!: BoundingBox;
   @Input() endType: ArrowHead = ArrowHead.POINTER;
-  @Input() breaks: Position[] = [];
+  @Input() breaks: BoundingBox[] = [];
   @Input() text?: string;
   @Input() style?: CSSStyleDeclaration;
 

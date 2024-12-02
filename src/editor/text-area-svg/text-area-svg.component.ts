@@ -1,11 +1,11 @@
 import {
-  AfterViewInit,
   Component,
   EventEmitter,
   Input,
   OnChanges,
   Output,
 } from '@angular/core';
+import {BoundingBox} from "../../shared/models/graphical/graphical-types";
 
 @Component({
   selector: '[text-area-svg]',
@@ -27,7 +27,7 @@ export class TextAreaSvgComponent implements OnChanges {
   //only with singleEdit since that opens an overlay where one can change the text in place
 
   distributedText: string[] = []
-  isActive = false;
+  isActive: boolean = false;
 
 
   ngOnChanges() {
@@ -91,8 +91,13 @@ export class TextAreaSvgComponent implements OnChanges {
     } else this.distributedText = [];
   }
 
-  computeBB(words: string): DOMRect {
-    return new DOMRect(0,0, words.length*7.6,20)
+  computeBB(words: string): BoundingBox {
+    return {
+      x: 0,
+      y: 0,
+      width: words.length*7.6,
+      height: 20,
+    }
   }
 
 }

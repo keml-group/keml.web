@@ -1,5 +1,5 @@
 //try out: new helper for message positioning
-export interface Position {
+export interface BoundingBox {
   x: number;
   y: number;
   width: number;
