@@ -38,18 +38,18 @@ export class InfoComponent {
     this.dragActive = true;
     this.dragStartX = event.clientX;
     this.dragStartY = event.clientY;
-    console.log(this.info.x)
-    console.log(this.info.y)
+    console.log(this.info.position.x)
+    console.log(this.info.position.y)
   }
 
   drag(event: MouseEvent) {
     if (this.dragActive) {
       event.preventDefault();
       var dragX = event.clientX;
-      this.info.x+= (dragX - this.dragStartX);
+      this.info.position.x+= (dragX - this.dragStartX);
       this.dragStartX = dragX;
       var dragY = event.clientY;
-      this.info.y+= (dragY - this.dragStartY);
+      this.info.position.y+= (dragY - this.dragStartY);
       this.dragStartY = dragY;
     }
   }

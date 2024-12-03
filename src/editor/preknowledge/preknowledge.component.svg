@@ -1,4 +1,4 @@
-<svg:g [attr.transform]="'translate('+ (-400+info.x) + ', ' + info.y +')'" (mousedown)="startDrag($event)" (mousemove)="drag($event)" (mouseup)="endDrag($event)" (mouseleave)="endDrag($event)" (click)="openInfoDetails()">
+<svg:g [attr.transform]="'translate('+ (-400+info.position.x) + ', ' + info.position.y +')'" (mousedown)="startDrag($event)" (mousemove)="drag($event)" (mouseup)="endDrag($event)" (mouseleave)="endDrag($event)" (click)="openInfoDetails()">
   <g is-instr [attr.transform]="'translate(0, -'+ 0.9*w/8 +')'" [info]="info" [w]="w*0.1" [h]="h+0.9*w/8"></g>
   <g database [attr.transform]="'translate('+(w*0.1)+','+ -(0.9*(w/8+w/6)) +')'" [w]="w*0.9" [h]="h" [fill]="computeTextColor()"></g>
   <g text-area-svg [text]="info.message" [x]="w*0.1" [y]="0" [w]="w*0.9" [h]="h"></g>

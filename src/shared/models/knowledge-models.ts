@@ -1,4 +1,5 @@
 import {Ref} from "./keml/parser/ref";
+import {BoundingBox} from "./graphical/bounding-box";
 
 export interface Information {
   eClass: string;
@@ -12,8 +13,7 @@ export interface Information {
 
   isUsedOn: Ref[];
   repeatedBy: Ref[];
-  x: number;
-  y: number;
+  position?: BoundingBox;
 }
 
 export interface Preknowledge extends Information {

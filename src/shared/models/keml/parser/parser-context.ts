@@ -37,7 +37,7 @@ export class ParserContext {
 
     const preknowledgeFun: (path: string) => Preknowledge = (path: string) => {
       let ref = new Ref(path, Preknowledge.eClass)
-      return new Preknowledge(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
+      return new Preknowledge(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
         ref, this)
     }
     this.constructorPointers.set(Preknowledge.eClass, preknowledgeFun)
@@ -46,7 +46,7 @@ export class ParserContext {
       let ref = new Ref(path, NewInformation.eClass)
       //todo not nice source
       let dummySource = new ReceiveMessage(new ConversationPartner(), 0)
-      return new NewInformation(dummySource, '', undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, ref, this)
+      return new NewInformation(dummySource, '', undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, ref, this)
     }
     this.constructorPointers.set(NewInformation.eClass, newInfoFun)
 

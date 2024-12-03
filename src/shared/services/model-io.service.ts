@@ -9,6 +9,7 @@ import {ConversationPartner} from "../models/keml/conversation-partner";
 import {Message} from "../models/keml/msg-info";
 import {ReceiveMessage} from "../models/keml/msg-info"
 import {JsonFixer} from "../models/keml/parser/json-fixer";
+import {BoundingBox} from "../models/graphical/bounding-box";
 
 @Injectable({
   providedIn: 'root'
@@ -191,8 +192,7 @@ export class ModelIOService {
     const preknowledge: Preknowledge = new Preknowledge(
       "New preknowledge",
       false,
-      0,
-      0,
+      new BoundingBox(),
       0.5,
       0.5,
       [],
@@ -209,8 +209,7 @@ export class ModelIOService {
       causeMsg,
       'New Information',
       false,
-      0,
-      0,
+      new BoundingBox(),
       0.5,
       0.5,
       [],

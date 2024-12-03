@@ -10,6 +10,7 @@ import {Ref} from "./parser/ref";
 import {ParserContext} from "./parser/parser-context";
 import {Referencable} from "./parser/referenceable";
 import {JsonFixer} from "./parser/json-fixer";
+import {BoundingBox} from "../graphical/bounding-box";
 
 export abstract class Message extends Referencable {
   protected readonly eClass: string = '';
@@ -249,8 +250,7 @@ export abstract class Information extends Referencable {
   eClass = '';
   message: string;
   isInstruction: boolean;
-  x: number = 0;
-  y: number = 0;
+  position: BoundingBox;
   initialTrust: number;
   currentTrust: number;
 
@@ -262,7 +262,7 @@ export abstract class Information extends Referencable {
   repeatedBy: ReceiveMessage[];
 
 
-  protected constructor(message: string, isInstruction: boolean = false,  x: number = 0, y: number = 0,
+  protected constructor(message: string, isInstruction: boolean = false, position?: BoundingBox,
                         initialTrust: number = 0.5, currentTrust: number = 0.5,
                         causes: InformationLink[] = [], targetedBy: InformationLink[] = [],
                         isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
@@ -274,8 +274,7 @@ export abstract class Information extends Referencable {
       let json: InformationJson = jsonOpt ? jsonOpt : parserContext.getJsonFromTree(ref!.$ref)
       this.message = json.message;
       this.isInstruction = json.isInstruction;
-      this.x = json.x;
-      this.y = json.y;
+      this.position = json.position? json.position : new BoundingBox();
       this.initialTrust = json.initialTrust;
       this.currentTrust = json.currentTrust;
       //todo actually, causes should exist on the json, however, it is missing and we hence set it manually:
@@ -287,8 +286,7 @@ export abstract class Information extends Referencable {
     } else {
       this.message = message;
       this.isInstruction = isInstruction;
-      this.x = x;
-      this.y = y;
+      this.position = position? position: new BoundingBox();
       this.initialTrust = initialTrust;
       this.currentTrust = currentTrust;
       this.causes = causes;
@@ -312,8 +310,7 @@ export abstract class Information extends Referencable {
       message: this.message,
       repeatedBy:  Referencable.listToRefs(this.repeatedBy),
       targetedBy:  Referencable.listToRefs(this.targetedBy),
-      x: this.x,
-      y: this.y
+      position: this.position,
     }
   }
 }
@@ -323,13 +320,13 @@ export class NewInformation extends Information {
   source: ReceiveMessage;
 
   constructor(source: ReceiveMessage,
-              message: string, isInstruction: boolean = false,  x: number = 0, y: number = 0,
+              message: string, isInstruction: boolean = false,  position?: BoundingBox,
               initialTrust: number = 0.5, currentTrust: number = 0.5,
               causes: InformationLink[] = [], targetedBy: InformationLink[] = [],
               isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
               ref?: Ref, parserContext?: ParserContext, jsonOpt?: NewInformationJson
   ) {
-    super(message, isInstruction, x, y,
+    super(message, isInstruction, position,
       initialTrust, currentTrust,
       causes, targetedBy,
       isUsedOn, repeatedBy,
@@ -353,8 +350,7 @@ export class NewInformation extends Information {
       this.source,
       'Copy of '+this.message,
       this.isInstruction,
-      this.x,  //todo use layout helper?
-      this.y,  //todo use layout helper?
+      this.position,  //todo use layout helper?
       this.initialTrust,
       this.currentTrust,
       //todo none of these are currently set (they are bidirectional)
@@ -372,12 +368,12 @@ export class Preknowledge extends Information {
 
   static readonly eClass: string = 'http://www.unikoblenz.de/keml#//PreKnowledge';
 
-  constructor(message: string = 'Preknowledge', isInstruction: boolean = false,  x: number = 0, y: number = 0,
+  constructor(message: string = 'Preknowledge', isInstruction: boolean = false,  position?: BoundingBox,
               initialTrust: number = 0.5, currentTrust: number = 0.5,
               causes: InformationLink[] = [], targetedBy: InformationLink[] = [],
               isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
               ref?: Ref, parserContext?: ParserContext, jsonOpt?: PreknowledgeJson) {
-    super(message, isInstruction, x, y,
+    super(message, isInstruction, position,
       initialTrust, currentTrust,
       causes, targetedBy,
       isUsedOn, repeatedBy,
@@ -389,8 +385,7 @@ export class Preknowledge extends Information {
     return new Preknowledge(
       'Copy of '+this.message,
       this.isInstruction,
-      this.x,  //todo use layout helper?
-      this.y,  //todo use layout helper?
+      this.position,  //todo use layout helper?
       this.initialTrust,
       this.currentTrust,
       //todo none of these are currently set (they are bidirectional)
