@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {ArrowHead} from "../../shared/models/graphical/arrow-heads";
 import {BoundingBox} from "../../shared/models/graphical/bounding-box";
 
@@ -7,7 +7,7 @@ import {BoundingBox} from "../../shared/models/graphical/bounding-box";
   templateUrl: './arrow-svg.component.svg',
   styleUrl: './arrow-svg.component.css'
 })
-export class ArrowSvgComponent implements OnInit{
+export class ArrowSvgComponent implements OnInit, OnChanges {
   @Input() start!: BoundingBox;
   @Input() end!: BoundingBox;
   @Input() endType: ArrowHead = ArrowHead.POINTER;
@@ -21,6 +21,10 @@ export class ArrowSvgComponent implements OnInit{
   y2: number = 55;
 
   ngOnInit() {
+    this.computePositions()
+  }
+
+  ngOnChanges() {
     this.computePositions()
   }
 
