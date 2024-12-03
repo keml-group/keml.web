@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ArrowHead, BoundingBox} from "../../shared/models/graphical/graphical-types";
+import {ArrowHead} from "../../shared/models/graphical/arrow-heads";
+import {BoundingBox} from "../../shared/models/graphical/bounding-box";
 
 @Component({
   selector: '[arrow-svg]',

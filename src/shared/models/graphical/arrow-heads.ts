@@ -1,11 +1,3 @@
-//try out: new helper for message positioning
-export interface BoundingBox {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
 export enum ArrowHead {
   POINTER,
   ATTACK,
