@@ -53,7 +53,7 @@ export class TextAreaSvgComponent implements OnChanges {
       let res = broken[0]
       let box = this.computeBB(res)
       let currentY = 0;
-      let currentH = box.height;
+      let currentH = box.h;
       if (currentH <= this.h) {
         for (let i=1; i<broken.length; i++) {
           let word = broken[i]
@@ -61,15 +61,15 @@ export class TextAreaSvgComponent implements OnChanges {
           let testRes = res + ' ' + word
           box = this.computeBB(testRes)
           console.log(box)
-          if (box.width <= this.w) { //go on with bigger width
+          if (box.w <= this.w) { //go on with bigger width
             console.log('Go on in same line')
             res = testRes
           } else {
             //start new line (if possible)
             console.log('Start new if possible, current height is '+currentH)
             box = this.computeBB(word)
-            console.log('new box height would be ' + (box.height + currentH)+', allowed is '+this.h )
-            if (box.height + currentH > this.h) { // no new line possible:
+            console.log('new box height would be ' + (box.h + currentH)+', allowed is '+this.h )
+            if (box.h + currentH > this.h) { // no new line possible:
               console.log("No new line possible")
               this.distributedText[currentY] = res+'...' //todo could be too long
               return;
@@ -77,7 +77,7 @@ export class TextAreaSvgComponent implements OnChanges {
               console.log("Start new line")
               this.distributedText[currentY] = res;
               currentY++;
-              currentH +=box.height;
+              currentH +=box.h;
               res = word;
             }
           }
@@ -95,8 +95,8 @@ export class TextAreaSvgComponent implements OnChanges {
     return {
       x: 0,
       y: 0,
-      width: words.length*7.6,
-      height: 20,
+      w: words.length*7.6,
+      h: 20,
     }
   }
 
