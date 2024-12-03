@@ -37,10 +37,12 @@ export class LayoutHelper {
     for (let msg of messages) {
       //const infos = (msg as ReceiveMessage).generates;
       (msg as ReceiveMessage)?.generates?.forEach(r => {
-        r.position.x = -400;
-        r.position.y = 0;
-        r.position.w = 200;
-        r.position.h = 50;
+        if(r.position.w < 7) {
+          r.position.x = -400;
+          r.position.y = 0;
+          r.position.w = 200;
+          r.position.h = 50;
+        }
       })
     }
   }
@@ -50,21 +52,17 @@ export class LayoutHelper {
     this.initializeInfoPos(msgs);
 
     pre.forEach(p => {
-      console.log(p.isUsedOn.map(send => send.timing))
-      const timing = Math.min(...p.isUsedOn.map(send => send.timing));
-      console.log(timing);
-      p.position.x=0;
-      p.position.y=LayoutHelper.computeMessageY(timing);
-      p.position.w = 200;
-      p.position.h = 50;
+      if (p.position.w < 7 ) {
+        const timing = Math.min(...p.isUsedOn.map(send => send.timing));
+        p.position.x=0;
+        p.position.y=LayoutHelper.computeMessageY(timing);
+        p.position.w = 200;
+        p.position.h = 50;
+      }
     })
     pre.sort((a, b) => {
       return a.position.y - b.position.y
     })
-    console.log(pre);
-    // use map to organize preknowledge? Or just pointer? Maybe easier
   }
-
-
 
 }

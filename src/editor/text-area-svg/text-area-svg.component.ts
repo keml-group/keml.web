@@ -46,8 +46,8 @@ export class TextAreaSvgComponent implements OnChanges {
   }
 
   distributeText(){
-    let broken = this.text.split(' ')
-    if (broken.length>=1) {
+    let broken = this.text?.split(' ')
+    if (broken?.length>=1) {
       let res = broken[0]
       let box = this.computeBB(res)
       let currentY = 0;
