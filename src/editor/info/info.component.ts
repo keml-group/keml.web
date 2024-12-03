@@ -11,10 +11,6 @@ export class InfoComponent {
   @Input() info!: Information;
   @Output() openDetails = new EventEmitter<Information>();
 
-  //todo: into info?
-  w=200
-  h=50
-
   dragActive = false;
   dragStartX: number = 0;
   dragStartY: number = 0;
@@ -38,18 +34,18 @@ export class InfoComponent {
     this.dragActive = true;
     this.dragStartX = event.clientX;
     this.dragStartY = event.clientY;
-    console.log(this.info.x)
-    console.log(this.info.y)
+    console.log(this.info.position.x)
+    console.log(this.info.position.y)
   }
 
   drag(event: MouseEvent) {
     if (this.dragActive) {
       event.preventDefault();
-      var dragX = event.clientX;
-      this.info.x+= (dragX - this.dragStartX);
+      const dragX = event.clientX;
+      this.info.position.x+= (dragX - this.dragStartX);
       this.dragStartX = dragX;
-      var dragY = event.clientY;
-      this.info.y+= (dragY - this.dragStartY);
+      const dragY = event.clientY;
+      this.info.position.y+= (dragY - this.dragStartY);
       this.dragStartY = dragY;
     }
   }
@@ -62,7 +58,6 @@ export class InfoComponent {
   }
 
   openInfoDetails() {
-    console.log('openInfoDetails');
     this.openDetails.emit(this.info);
     /* todo: why is click not fired any more like below?
     if (!this.dragActive) {

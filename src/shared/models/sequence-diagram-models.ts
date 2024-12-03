@@ -1,4 +1,4 @@
-import {Information, Preknowledge, NewInformation} from "./knowledge-models";
+import {Preknowledge, NewInformation} from "./knowledge-models";
 import {Ref} from "./keml/parser/ref";
 
 export interface Conversation {
@@ -11,6 +11,7 @@ export interface Conversation {
 interface LifeLine {
   name: string;
   xPosition: number; //int todo
+  eClass: string;
 }
 
 export interface ConversationPartner extends LifeLine {
@@ -27,16 +28,17 @@ export interface Message {
   content: string;
   originalContent?: string;
   timing: number;
-  counterPart: Ref<ConversationPartner>;
+  counterPart: Ref;
 }
 
 export interface SendMessage extends Message {
-  uses?: Ref<Information>[];
+  uses?: Ref[];
 }
 
 export interface ReceiveMessage extends Message {
   generates: (NewInformation)[];
-  repeats?: (Ref<Information>)[];
+  repeats?: (Ref)[];
+  isInterrupted: boolean;
 }
 
 

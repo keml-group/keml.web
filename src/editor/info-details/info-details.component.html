@@ -14,12 +14,12 @@
   <div class="row">
     <div class="column">
       <span>x:</span>
-      <input type="number" name="x" min="-500" [attr.max]="400-200" [(ngModel)]="info.x">
+      <input type="number" name="x" min="-500" [attr.max]="400-200" [(ngModel)]="info.position.x">
     </div>
 
     <div class="column">
       <span>y:</span>
-      <input type="number" name="y" min="0" [attr.max]="1000" [(ngModel)]="info.y">
+      <input type="number" name="y" min="0" [attr.max]="1000" [(ngModel)]="info.position.y">
     </div>
   </div>
 

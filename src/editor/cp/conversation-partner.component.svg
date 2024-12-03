@@ -1,9 +1,8 @@
 <svg:g attr.transform="translate({{conversationPartner.xPosition}})">
-  <rect x="-18.9" y=40.25 width="40" height="75" fill="transparent" (click)="openCpDetails()"></rect>
-  <g person [w]="40" [h]="70" [attr.transform]="'translate(-20,'+ 30 +')'"></g>
-  <foreignObject height="25" width="150" x="-25" y="125">
-    <input id="title" type="text" [(ngModel)]="conversationPartner.name" >
-  </foreignObject>
+  <g pointer-events="bounding-box" (click)="openCpDetails()">
+    <g person [w]="40" [h]="70" [attr.transform]="'translate(-20,'+ 30 +')'"></g>
+    <g text-area-svg [text]="conversationPartner.name" [w]="150" [h]="25" [x]="-25" [y]="110"></g>
+  </g>
   <line x1="0" x2="0" y1="150" y2="2000" stroke="black" stroke-width="0.5pt" stroke-dasharray="10,10"></line>
 </svg:g>
 

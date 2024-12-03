@@ -1,13 +1,5 @@
-import {ReceiveMessage, SendMessage} from "./sequence-diagram-models";
 import {Ref} from "./keml/parser/ref";
-
-//try out: new helper for message positioning
-export interface Position {
-  x: number;
-  y: number;
-  width: number;
-  heigt: number;
-}
+import {BoundingBox} from "./graphical/bounding-box";
 
 export interface Information {
   eClass: string;
@@ -17,12 +9,11 @@ export interface Information {
   currentTrust: number;
 
   causes: InformationLink[];
-  targetedBy: Ref<InformationLink>[];
+  targetedBy: Ref[];
 
-  isUsedOn: Ref<SendMessage>[];
-  repeatedBy: Ref<ReceiveMessage>[];
-  x: number;
-  y: number;
+  isUsedOn: Ref[];
+  repeatedBy: Ref[];
+  position?: BoundingBox;
 }
 
 export interface Preknowledge extends Information {
@@ -30,14 +21,15 @@ export interface Preknowledge extends Information {
 }
 
 export interface NewInformation extends Information {
-  source: ReceiveMessage; //backwards but main
+  source: Ref;//ReceiveMessage; //backwards but main
 }
 
 export interface InformationLink {
+  eClass: string;
   linkText?: string;
   type: InformationLinkType;
-  source: Information; //backwards but main
-  target: Ref<Information>;
+  source: Ref; //backwards but main
+  target: Ref;
 }
 
 export enum InformationLinkType {

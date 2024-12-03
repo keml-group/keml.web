@@ -50,7 +50,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   }
 
   saveKeml() {
-    const jsonString = JSON.stringify(this.conversation);
+    const jsonString = this.modelIOService.saveKEML(this.conversation);
     const contentBlob = new Blob([jsonString], {type: 'application/json'});
     this.ioService.saveFile(contentBlob, 'keml.json');
   }
@@ -58,8 +58,6 @@ export class EditorComponent implements OnInit, AfterViewInit {
   //todo: handling of foreign objects leads to errors, will need self-written method
   saveSVG() {
     const svgContent = this.svg.nativeElement;
-    console.log(svgContent);
-    console.log(svgContent.outerHTML);
     if(svgContent) {
       const contentBlob = new Blob([svgContent.outerHTML], {type: 'image/svg+xml'});
       this.ioService.saveFile(contentBlob, 'conversation.svg');

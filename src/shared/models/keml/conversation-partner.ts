@@ -1,13 +1,29 @@
 import {LifeLine} from "./life-line";
 import {ConversationPartner as ConversationPartnerJson} from "../sequence-diagram-models"
+import {ParserContext} from "./parser/parser-context";
+import {Ref} from "./parser/ref";
 
 export class ConversationPartner extends LifeLine {
 
-    constructor(name: string = 'NewPartner', xPosition: number = 0) {
-      super(name, xPosition);
+    static readonly eClass = 'http://www.unikoblenz.de/keml#//ConversationPartner';
+
+    constructor(name: string = 'NewPartner', xPosition?: number, ref?: Ref, parserContext?: ParserContext) {
+      if(parserContext) {
+        let cpJson: ConversationPartnerJson = parserContext.getJsonFromTree(ref!.$ref)
+        super(cpJson.name, cpJson.xPosition)
+        this.ref = ref!
+        parserContext.put(this)
+      } else {
+        super(name, xPosition);
+        this.ref = new Ref('', ConversationPartner.eClass)
+      }
     }
 
-    static fromJSON(cp: ConversationPartnerJson): ConversationPartner {
-      return new ConversationPartner(cp.name, cp.xPosition);
+    toJson(): ConversationPartnerJson {
+      return {
+        eClass: ConversationPartner.eClass,
+        name: this.name,
+        xPosition: this.xPosition,
+      }
     }
 }

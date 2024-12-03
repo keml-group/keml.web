@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  Conversation as ConversationJson,
-} from "../models/sequence-diagram-models";
+import {Conversation as ConversationJson} from "../models/sequence-diagram-models";
 import {Information} from "../models/keml/msg-info";
 import {Preknowledge} from "../models/keml/msg-info";
 import {NewInformation} from "../models/keml/msg-info";
@@ -10,6 +8,8 @@ import {Conversation} from "../models/keml/conversation";
 import {ConversationPartner} from "../models/keml/conversation-partner";
 import {Message} from "../models/keml/msg-info";
 import {ReceiveMessage} from "../models/keml/msg-info"
+import {JsonFixer} from "../models/keml/parser/json-fixer";
+import {BoundingBox} from "../models/graphical/bounding-box";
 
 @Injectable({
   providedIn: 'root'
@@ -19,29 +19,14 @@ export class ModelIOService {
   constructor() { }
 
   loadKEML(json: string): Conversation {
-    let conv =  <ConversationJson>JSON.parse(json);
+    let convJson =  <ConversationJson>JSON.parse(json);
+    JsonFixer.prepareJsonInfoLinkSources(convJson);
 
-    let conv2 = Conversation.fromJSON(conv);
-    LayoutHelper.positionConversationPartners(conv2.conversationPartners)
-    return conv2;
-
-    /*
-    //resolve conv Partner refs
-    let convPartners = conv.conversationPartners;
-    conv.author.messages?.forEach(message => {
-      let ref = message.counterPart.$ref; //todo is correct because references are not correctly parsed now
-      message.counterPart = convPartners[this.resolveConversationPartnerReference(ref? ref : "")];
-    })
-    // todo resolve others
-    // cannot, throws bc of circular ref this.repairSourceOfNewInfo(conv.author.messages);
-
-    // now, the automatic conversion of the convP is included:
-    LayoutHelper.positionConversationPartners(conv.conversationPartners);
-    this.timeMessages(conv.author.messages);
+    let conv = Conversation.fromJSON(convJson);
+    LayoutHelper.positionConversationPartners(conv.conversationPartners)
     LayoutHelper.positionInfos(conv.author.preknowledge, conv.author.messages);
-    console.log(conv);
+
     return conv;
-    */
   }
 
   newKEML(): Conversation {
@@ -50,28 +35,18 @@ export class ModelIOService {
     LayoutHelper.positionConversationPartners(conv.conversationPartners)
 
     return conv;
+  }
 
-    /*const author: Author = {
-      name: 'Author',
-      xPosition: 0,
-      messages: [],
-      preknowledge: [],
-    }
-    const convP = [{name: 'LLM', xPosition: 1, messages: []}];
-    LayoutHelper.positionConversationPartners(convP);
-    return {
-      eClass: 'http://www.unikoblenz.de/keml#//Conversation',
-      title: 'New Conversation',
-      author: author,
-      conversationPartners: convP
-    }*/
+  saveKEML(conv: Conversation): string {
+    let convJson = conv.toJson()
+    return JSON.stringify(convJson);
   }
 
   addNewConversationPartner(cps: ConversationPartner[]) {
-    const cp: ConversationPartner = {
-      name: 'New Partner',
-      xPosition: LayoutHelper.nextConversationPartnerPosition(cps[cps.length-1]?.xPosition), //todo
-    }
+    const cp: ConversationPartner = new ConversationPartner(
+      'New Partner',
+      LayoutHelper.nextConversationPartnerPosition(cps[cps.length-1]?.xPosition), //todo
+    );
     cps.push(cp);
   }
 
@@ -111,10 +86,10 @@ export class ModelIOService {
 
   duplicateConversationPartner(cp: ConversationPartner, cps: ConversationPartner[]): ConversationPartner {
     const pos = cps.indexOf(cp);
-    const newCp: ConversationPartner = {
-      name: 'Duplicate of '+ cp.name,
-      xPosition: 0, //todo how would we later compute a good position?
-    }
+    const newCp: ConversationPartner = new ConversationPartner(
+      'Duplicate of '+ cp.name,
+      0 //todo how would we later compute a good position?
+    )
     cps.splice(pos+1, 0, newCp);
     LayoutHelper.positionConversationPartners(cps); // complete re-positioning
     return newCp;
@@ -184,19 +159,7 @@ export class ModelIOService {
   }
 
   duplicateInfo(info: Information, infos: Information[]): Information {
-    const newInfo: Information = {
-      causes: info.causes,
-      currentTrust: info.currentTrust,
-      eClass: info.eClass,
-      initialTrust: info.initialTrust,
-      isInstruction: info.isInstruction,
-      isUsedOn: info.isUsedOn,
-      message: 'Copy of ' + info.message,
-      repeatedBy: info.repeatedBy,
-      targetedBy: info.targetedBy,
-      x: info.x, //todo use layout helper?
-      y: info.y //todo use layout helper?
-    }
+    const newInfo = info.duplicate()
     infos.push(newInfo); //todo position right after current info?
     return newInfo;
   }
@@ -222,43 +185,38 @@ export class ModelIOService {
   }
 
   private isInfoFromMessage(info: Information, msg: ReceiveMessage): boolean {
-    console.log(msg.generates)
     return msg.generates.indexOf(<NewInformation>info)>-1;
   }
 
   addNewPreknowledge(pres: Preknowledge[]): Preknowledge {
-    const preknowledge: Preknowledge = {
-      causes: [],
-      currentTrust: 0.5,
-      eClass: "http://www.unikoblenz.de/keml#//PreKnowledge",
-      initialTrust: 0.5,
-      isInstruction: false,
-      isUsedOn: [],
-      message: "New preknowledge",
-      repeatedBy: [],
-      targetedBy: [],
-      x: 0,
-      y: 0
-    };
+    const preknowledge: Preknowledge = new Preknowledge(
+      "New preknowledge",
+      false,
+      new BoundingBox(),
+      0.5,
+      0.5,
+      [],
+      [],
+      [],
+      [],
+    );
     pres.push(preknowledge);
     return preknowledge;
   }
 
   addNewNewInfo(causeMsg: ReceiveMessage): NewInformation {
-    const newInfo: NewInformation = {
-      causes: [],
-      currentTrust: 0.5,
-      eClass: "http://www.unikoblenz.de/keml#//NewInformation",
-      initialTrust: 0.5,
-      isInstruction: false,
-      isUsedOn: [],
-      message: "New Information",
-      repeatedBy: [],
-      source: causeMsg,
-      targetedBy: [],
-      x: 0,
-      y: 0
-    }
+    const newInfo: NewInformation = new NewInformation(
+      causeMsg,
+      'New Information',
+      false,
+      new BoundingBox(),
+      0.5,
+      0.5,
+      [],
+      [],
+      [],
+      [],
+    );
     causeMsg.generates.push(newInfo);
     return newInfo;
   }

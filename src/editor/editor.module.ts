@@ -15,10 +15,13 @@ import {ConversationPartnerDetailsComponent} from "./cp-details/cp-details.compo
 import {InfoDetailsComponent} from "./info-details/info-details.component";
 import {IsInstrSvgComponent} from "./is-instr-svg/is-instr-svg.component";
 import {PreknowledgeComponent} from "./preknowledge/preknowledge.component";
+import {TextAreaSvgComponent} from "./text-area-svg/text-area-svg.component";
+import {ArrowSvgComponent} from "./arrow-svg/arrow-svg.component";
 
 
 @NgModule({
   declarations: [
+    ArrowSvgComponent,
     EditorComponent,
     ConversationPartnerComponent,
     ConversationPartnerDetailsComponent,
@@ -31,6 +34,7 @@ import {PreknowledgeComponent} from "./preknowledge/preknowledge.component";
     InfoComponent,
     InfoDetailsComponent,
     PreknowledgeComponent,
+    TextAreaSvgComponent,
   ],
   imports: [
     CommonModule,
