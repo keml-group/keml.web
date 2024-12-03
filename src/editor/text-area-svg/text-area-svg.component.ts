@@ -31,7 +31,6 @@ export class TextAreaSvgComponent implements OnChanges {
 
 
   ngOnChanges() {
-    console.log("Change")
     this.distributeText();
   }
 
@@ -48,7 +47,6 @@ export class TextAreaSvgComponent implements OnChanges {
 
   distributeText(){
     let broken = this.text.split(' ')
-    console.log(broken)
     if (broken.length>=1) {
       let res = broken[0]
       let box = this.computeBB(res)
@@ -57,24 +55,17 @@ export class TextAreaSvgComponent implements OnChanges {
       if (currentH <= this.h) {
         for (let i=1; i<broken.length; i++) {
           let word = broken[i]
-          console.log(i + ': ' + word)
           let testRes = res + ' ' + word
           box = this.computeBB(testRes)
-          console.log(box)
           if (box.w <= this.w) { //go on with bigger width
-            console.log('Go on in same line')
             res = testRes
           } else {
             //start new line (if possible)
-            console.log('Start new if possible, current height is '+currentH)
             box = this.computeBB(word)
-            console.log('new box height would be ' + (box.h + currentH)+', allowed is '+this.h )
             if (box.h + currentH > this.h) { // no new line possible:
-              console.log("No new line possible")
               this.distributedText[currentY] = res+'...' //todo could be too long
               return;
             } else {
-              console.log("Start new line")
               this.distributedText[currentY] = res;
               currentY++;
               currentH +=box.h;
@@ -82,7 +73,6 @@ export class TextAreaSvgComponent implements OnChanges {
             }
           }
         }
-        console.log('Reached with '+res)
         this.distributedText[currentY] = res;
       } else {
         console.error('Text area too low for text ' + this.text)
