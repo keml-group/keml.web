@@ -38,7 +38,7 @@ export class LayoutHelper {
       //const infos = (msg as ReceiveMessage).generates;
       (msg as ReceiveMessage)?.generates?.forEach(r => {
         if(r.position.w < 7) {
-          r.position.x = -400;
+          r.position.x = -600;
           r.position.y = 0;
           r.position.w = 200;
           r.position.h = 50;
@@ -54,7 +54,7 @@ export class LayoutHelper {
     pre.forEach(p => {
       if (p.position.w < 7 ) {
         const timing = Math.min(...p.isUsedOn.map(send => send.timing));
-        p.position.x=0;
+        p.position.x=-300;
         p.position.y=LayoutHelper.computeMessageY(timing);
         p.position.w = 200;
         p.position.h = 50;
