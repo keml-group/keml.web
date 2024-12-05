@@ -17,6 +17,7 @@ import {IsInstrSvgComponent} from "./is-instr-svg/is-instr-svg.component";
 import {PreknowledgeComponent} from "./preknowledge/preknowledge.component";
 import {TextAreaSvgComponent} from "./text-area-svg/text-area-svg.component";
 import {ArrowSvgComponent} from "./arrow-svg/arrow-svg.component";
+import {NewInfoComponent} from "./new-info/new-info.component";
 
 
 @NgModule({
@@ -33,6 +34,7 @@ import {ArrowSvgComponent} from "./arrow-svg/arrow-svg.component";
     IsInstrSvgComponent,
     InfoComponent,
     InfoDetailsComponent,
+    NewInfoComponent,
     PreknowledgeComponent,
     TextAreaSvgComponent,
   ],
