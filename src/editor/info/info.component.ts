@@ -12,6 +12,7 @@ export class InfoComponent {
   @Output() openDetails = new EventEmitter<Information>();
 
   dragActive = false;
+  wasReallyDragged = false;
   dragStartX: number = 0;
   dragStartY: number = 0;
 
@@ -40,6 +41,7 @@ export class InfoComponent {
 
   drag(event: MouseEvent) {
     if (this.dragActive) {
+      this.wasReallyDragged = true;
       event.preventDefault();
       const dragX = event.clientX;
       this.info.position.x+= (dragX - this.dragStartX);
@@ -58,12 +60,11 @@ export class InfoComponent {
   }
 
   openInfoDetails() {
-    this.openDetails.emit(this.info);
-    /* todo: why is click not fired any more like below?
-    if (!this.dragActive) {
-      console.log('click');
+    if (this.wasReallyDragged) {
+      this.wasReallyDragged = false;
+    } else {
       this.openDetails.emit(this.info);
-    }*/
+    }
   }
 
 }
