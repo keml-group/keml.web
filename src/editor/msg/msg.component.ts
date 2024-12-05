@@ -3,7 +3,7 @@ import {Message} from "../../shared/models/keml/msg-info";
 import {ReceiveMessage} from "../../shared/models/keml/msg-info";
 import {Information} from "../../shared/models/keml/msg-info";
 import {NewInformation} from "../../shared/models/keml/msg-info";
-import {LayoutHelper} from "../../shared/layout-helper";
+import {LayoutHelper} from "../../shared/utility/layout-helper";
 
 @Component({
   selector: '[msgG]',

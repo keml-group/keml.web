@@ -3,7 +3,7 @@ import {Conversation as ConversationJson} from "../models/sequence-diagram-model
 import {Information} from "../models/keml/msg-info";
 import {Preknowledge} from "../models/keml/msg-info";
 import {NewInformation} from "../models/keml/msg-info";
-import {LayoutHelper} from "../layout-helper";
+import {LayoutHelper} from "../utility/layout-helper";
 import {Conversation} from "../models/keml/conversation";
 import {ConversationPartner} from "../models/keml/conversation-partner";
 import {Message} from "../models/keml/msg-info";
