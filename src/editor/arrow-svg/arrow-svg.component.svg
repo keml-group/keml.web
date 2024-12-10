@@ -14,12 +14,12 @@
 </svg:defs>
 
 <svg:g>
-  <path [attr.d]="'M '+x1+','+y1+' L '+x2+','+y2" stroke="black" marker-end='url(#pointer)' *ngIf="endType==ArrowHead.POINTER">
+  <path [attr.d]="'M '+x1+','+y1+' L '+x2+','+y2" stroke="black" marker-end='url(#pointer)' style="{{style}}" *ngIf="endType==ArrowHead.POINTER">
   </path>
-  <path [attr.d]="'M '+x1+','+y1+' L '+x2+','+y2" stroke="black" marker-end='url(#supplement)' *ngIf="endType==ArrowHead.SUPPLEMENT">
+  <path [attr.d]="'M '+x1+','+y1+' L '+x2+','+y2" stroke="black" marker-end='url(#supplement)' style="{{style}}" *ngIf="endType==ArrowHead.SUPPLEMENT">
   </path>
-  <path [attr.d]="'M '+x1+','+y1+' L '+x2+','+y2" stroke="red" marker-end='url(#attack)' *ngIf="endType==ArrowHead.ATTACK">
+  <path [attr.d]="'M '+x1+','+y1+' L '+x2+','+y2" stroke="red" marker-end='url(#attack)' style="{{style}}" *ngIf="endType==ArrowHead.ATTACK">
   </path>
-  <path [attr.d]="'M '+x1+','+y1+' L '+x2+','+y2" stroke="green" marker-end='url(#support)' *ngIf="endType==ArrowHead.SUPPORT">
+  <path [attr.d]="'M '+x1+','+y1+' L '+x2+','+y2" stroke="green" marker-end='url(#support)' style="{{style}}" *ngIf="endType==ArrowHead.SUPPORT">
   </path>
 </svg:g>

@@ -14,7 +14,7 @@ export class ArrowSvgComponent implements OnInit, OnChanges {
   @Input() endType: ArrowHead = ArrowHead.POINTER;
   @Input() breaks: BoundingBox[] = [];
   @Input() text?: string;
-  @Input() style?: CSSStyleDeclaration;
+  @Input() style?: string;
 
   x1: number = 0;
   y1: number = 0;
