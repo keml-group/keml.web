@@ -4,5 +4,6 @@
     <rect [attr.x]="info.position.w*0.1" y="0" [attr.width]="info.position.w*0.9" [attr.height]="info.position.h" [attr.fill]="computeTextColor()"></rect>
     <g text-area-svg [text]="info.message" [x]="info.position.w*0.1" [y]="0" [w]="info.position.w*0.9" [h]="info.position.h"></g>
     <g arrow-svg  [start]="{x: -info.position.x, y: -info.position.y, w: 10, h:10}" [end]="{x: 0, y: 0, w: info.position.w, h: info.position.h}"></g>
+    <g arrow-svg *ngFor="let link of info.causes" [start]="{x: 0, y: 0, w: info.position.w, h: info.position.h}" [end]="link.target.position" [arrowType]="link.type"></g>
   </g>
 </svg:g>

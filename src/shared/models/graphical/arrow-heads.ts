@@ -1,3 +1,5 @@
+import {InformationLinkType} from "../knowledge-models";
+
 export enum ArrowHead {
   POINTER,
   ATTACK,
@@ -16,3 +18,12 @@ export class ColorFromArrowHead {
     }
   }
 }
+
+export enum CustomArrowType {
+  STANDARD = 'STANDARD',
+  DASHED = 'DASHED',
+  INTERRUPTION = 'INTERRUPTION',
+}
+
+export const ArrowType = {...InformationLinkType, ...CustomArrowType};
+export type ArrowType = InformationLinkType | CustomArrowType;

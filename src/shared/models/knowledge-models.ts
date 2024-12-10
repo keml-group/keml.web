@@ -33,9 +33,9 @@ export interface InformationLink {
 }
 
 export enum InformationLinkType {
-  STRONG_ATTACK,
-  ATTACK,
-  SUPPLEMENT,
-  SUPPORT,
-  STRONG_SUPPORT
+  STRONG_ATTACK = 'STRONG_ATTACK',
+  ATTACK = 'ATTACK',
+  SUPPLEMENT = 'SUPPLEMENT',
+  SUPPORT = 'SUPPORT',
+  STRONG_SUPPORT = 'STRONG_SUPPORT',
 }
