@@ -3,6 +3,7 @@ import {Message, NewInformation, Preknowledge, ReceiveMessage} from "../msg-info
 import {Ref} from "./ref";
 import {Conversation as ConversationJson, ReceiveMessage as ReceiveMessageJson} from '../../sequence-diagram-models'
 import {Conversation} from "../conversation";
+import {InformationLinkType} from "../../knowledge-models";
 
 export class JsonFixer {
 
@@ -15,6 +16,27 @@ export class JsonFixer {
     if (relevant.startsWith(Author.preknowledgePrefix))
       return Preknowledge.eClass
     else return NewInformation.eClass
+  }
+
+  //since Supplement is =0 on the original KEML enum, it is not exported into the json
+  static addMissingSupplementType(conv: ConversationJson) {
+    conv.author.preknowledge?.forEach(pre => {
+      pre.causes?.forEach(cause => {
+        if (!cause.type) {
+          cause.type = InformationLinkType.SUPPLEMENT
+        }
+      })
+    })
+    let receives = (conv.author.messages?.filter(r => !Message.isSend(r.eClass)) as ReceiveMessageJson[])
+    receives?.forEach(rec => {
+      rec.generates?.forEach(g => {
+        g.causes?.forEach(cause => {
+          if (!cause.type) {
+            cause.type = InformationLinkType.SUPPLEMENT
+          }
+        })
+      })
+    })
   }
 
   /* idea:

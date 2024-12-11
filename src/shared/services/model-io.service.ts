@@ -21,6 +21,7 @@ export class ModelIOService {
   loadKEML(json: string): Conversation {
     let convJson =  <ConversationJson>JSON.parse(json);
     JsonFixer.prepareJsonInfoLinkSources(convJson);
+    JsonFixer.addMissingSupplementType(convJson);
 
     let conv = Conversation.fromJSON(convJson);
     LayoutHelper.positionConversationPartners(conv.conversationPartners)
