@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {ArrowHead, ArrowType, CustomArrowType} from "../../shared/models/graphical/arrow-heads";
+import {ArrowHead, ArrowType} from "../../shared/models/graphical/arrow-heads";
 import {BoundingBox} from "../../shared/models/graphical/bounding-box";
 import {PathLayouter} from "../../shared/utility/path-layouter";
 
@@ -35,7 +35,7 @@ export class ArrowSvgComponent implements OnInit, OnChanges {
     this.pickConfiguration()
   }
 
-  pickConfiguration() {
+  private pickConfiguration() {
     this.switchDashed()
     switch (this.arrowType) {
       case ArrowType.ATTACK:
@@ -82,7 +82,7 @@ export class ArrowSvgComponent implements OnInit, OnChanges {
     }
   }
 
-  computePositions() {
+  private computePositions() {
     let res = PathLayouter.bestPoints(this.start, this.end);
     this.x1 = res[0].x;
     this.y1 = res[0].y;
