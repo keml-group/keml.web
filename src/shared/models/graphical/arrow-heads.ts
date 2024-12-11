@@ -1,10 +1,10 @@
 import {InformationLinkType} from "../knowledge-models";
 
 export enum ArrowHead {
-  POINTER,
-  ATTACK,
-  SUPPORT,
-  SUPPLEMENT,
+  POINTER ='POINTER',
+  ATTACK = 'ATTACK',
+  SUPPORT = 'SUPPORT',
+  SUPPLEMENT = 'SUPPLEMENT',
 }
 
 export class ColorFromArrowHead {
