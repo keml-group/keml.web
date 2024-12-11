@@ -13,7 +13,12 @@
   </marker>
 </svg:defs>
 
-<svg:g>
-  <path [attr.d]="'M '+x1+','+y1+' L '+x2+','+y2" [attr.stroke]="color" [attr.stroke-dasharray]="dashed" [attr.marker-end]='"url(#"+endType+")"' style="{{style}}">
+<svg:g #arrow>
+  <path [attr.id]="id+'-path'" [attr.d]="'M '+x1+','+y1+' L '+x2+','+y2" [attr.stroke]="color" [attr.stroke-dasharray]="dashed" [attr.marker-end]='"url(#"+endType+")"' style="{{style}}">
   </path>
+  <text *ngIf="text">
+    <textPath [attr.href]="'#'+id+'-path'">
+      {{text}}
+    </textPath>
+  </text>
 </svg:g>

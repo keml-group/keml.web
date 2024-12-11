@@ -1,14 +1,15 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
 import {ArrowHead, ArrowType} from "../../shared/models/graphical/arrow-heads";
 import {BoundingBox} from "../../shared/models/graphical/bounding-box";
 import {PathLayouter} from "../../shared/utility/path-layouter";
+import {v4 as uuidv4} from "uuid";
 
 @Component({
   selector: '[arrow-svg]',
   templateUrl: './arrow-svg.component.svg',
   styleUrl: './arrow-svg.component.css'
 })
-export class ArrowSvgComponent implements OnInit, OnChanges {
+export class ArrowSvgComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() start!: BoundingBox;
   @Input() end!: BoundingBox;
   @Input() arrowType: ArrowType = ArrowType.STANDARD;
@@ -21,13 +22,24 @@ export class ArrowSvgComponent implements OnInit, OnChanges {
   x2: number = 55;
   y2: number = 55;
 
+  id = uuidv4();
+
   endType: ArrowHead = ArrowHead.POINTER;
   color: string = 'black';
   dashed = [0];
 
+  @ViewChild('arrow') node!: ElementRef<SVGGraphicsElement>;
+
   ngOnInit() {
     this.computePositions()
     this.pickConfiguration()
+  }
+
+  ngAfterViewInit() {
+    console.log(this.node.nativeElement.getBBox())
+    //console.log(this.node.nativeElement.getScreenCTM())
+    console.log(this.node.nativeElement.getCTM())
+    console.log(this.node.nativeElement.getBoundingClientRect())
   }
 
   ngOnChanges() {
@@ -42,26 +54,22 @@ export class ArrowSvgComponent implements OnInit, OnChanges {
       case ArrowType.STRONG_ATTACK: {
         this.endType = ArrowHead.ATTACK;
         this.color = 'red';
-        console.log("Attack")
         break;
       }
       case ArrowType.SUPPORT:
       case ArrowType.STRONG_SUPPORT: {
         this.endType = ArrowHead.SUPPORT;
         this.color = 'green';
-        console.log('Support')
         break;
       }
       case ArrowType.SUPPLEMENT: {
         this.endType = ArrowHead.SUPPLEMENT;
         this.color = 'black';
-        console.log('Supplement')
         break;
       }
       default: {
         this.endType = ArrowHead.POINTER;
         this.color = 'black';
-        console.log('default')
         break;
       }
     }
@@ -89,6 +97,5 @@ export class ArrowSvgComponent implements OnInit, OnChanges {
     this.x2 = res[1].x;
     this.y2 = res[1].y;
   }
-
   protected readonly ArrowHead = ArrowHead;
 }
