@@ -4,6 +4,8 @@ import {BoundingBox} from "../../shared/models/graphical/bounding-box";
 import {PathLayouter} from "../../shared/utility/path-layouter";
 import {v4 as uuidv4} from "uuid";
 import {PositionHelper} from "../../shared/models/graphical/position-helper";
+import {SVGAccessService} from "../../shared/services/svg-access.service";
+import {Point} from "@angular/cdk/drag-drop";
 
 @Component({
   selector: '[arrow-svg]',
@@ -33,18 +35,17 @@ export class ArrowSvgComponent implements OnInit, OnChanges, AfterViewInit {
 
   @ViewChild('arrow') node!: ElementRef<SVGGraphicsElement>;
 
+  constructor(
+    private svgAccessService: SVGAccessService
+  ) {
+  }
+
   ngOnInit() {
     this.computePositions()
     this.pickConfiguration()
   }
 
-  ngAfterViewInit() {
-    console.log(this.node.nativeElement.getBBox())
-    //console.log(this.node.nativeElement.getScreenCTM())
-    console.log(this.node.nativeElement.getCTM())
-    console.log(this.node.nativeElement.getBoundingClientRect())
-    console.log(PositionHelper.absolutePosition(this.node.nativeElement))
-  }
+  ngAfterViewInit() {}
 
   ngOnChanges() {
     if (!this.startId) {
@@ -56,7 +57,19 @@ export class ArrowSvgComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   private computePositionsByIds() {
-    //Todo
+    let start: SVGGraphicsElement | undefined = this.svgAccessService.getElemById(this.startId!)
+    let end: SVGGraphicsElement | undefined = this.svgAccessService.getElemById(this.endId!)
+    if (start && end) {
+      let startAbs = PositionHelper.absolutePosition(start!)
+      let endAbs = PositionHelper.absolutePosition(end!)
+      console.log(startAbs)
+      console.log(endAbs)
+      let res = PathLayouter.bestPoints(startAbs, endAbs);
+      console.log('abs: (' + res[0] + ', ' + res[1] + ');')
+      this.applyBestPoints(res)
+    } else {
+      console.log('No elems yet')
+    }
   }
 
   private pickConfiguration() {
@@ -104,6 +117,10 @@ export class ArrowSvgComponent implements OnInit, OnChanges, AfterViewInit {
 
   private computePositions() {
     let res = PathLayouter.bestPoints(this.start, this.end);
+    this.applyBestPoints(res)
+  }
+
+  private applyBestPoints(res: Point[]) {
     this.x1 = res[0].x;
     this.y1 = res[0].y;
     this.x2 = res[1].x;

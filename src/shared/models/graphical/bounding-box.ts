@@ -10,4 +10,8 @@ export class BoundingBox {
     this.w = width;
     this.h = height;
   }
+
+  toString(): string {
+    return '(' + this.x + ', ' + this.y +', ' + this.w + ', ' + this.h + ')';
+  }
 }
