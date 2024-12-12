@@ -3,6 +3,7 @@ import {ArrowHead, ArrowType} from "../../shared/models/graphical/arrow-heads";
 import {BoundingBox} from "../../shared/models/graphical/bounding-box";
 import {PathLayouter} from "../../shared/utility/path-layouter";
 import {v4 as uuidv4} from "uuid";
+import {PositionHelper} from "../../shared/models/graphical/position-helper";
 
 @Component({
   selector: '[arrow-svg]',
@@ -16,6 +17,8 @@ export class ArrowSvgComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() breaks: BoundingBox[] = [];
   @Input() text?: string;
   @Input() style?: string;
+  @Input() startId?: string;
+  @Input() endId?: string;
 
   x1: number = 0;
   y1: number = 0;
@@ -40,11 +43,20 @@ export class ArrowSvgComponent implements OnInit, OnChanges, AfterViewInit {
     //console.log(this.node.nativeElement.getScreenCTM())
     console.log(this.node.nativeElement.getCTM())
     console.log(this.node.nativeElement.getBoundingClientRect())
+    console.log(PositionHelper.absolutePosition(this.node.nativeElement))
   }
 
   ngOnChanges() {
-    this.computePositions()
+    if (!this.startId) {
+      this.computePositions()
+    } else {
+      this.computePositionsByIds()
+    }
     this.pickConfiguration()
+  }
+
+  private computePositionsByIds() {
+    //Todo
   }
 
   private pickConfiguration() {
@@ -97,5 +109,6 @@ export class ArrowSvgComponent implements OnInit, OnChanges, AfterViewInit {
     this.x2 = res[1].x;
     this.y2 = res[1].y;
   }
+
   protected readonly ArrowHead = ArrowHead;
 }
