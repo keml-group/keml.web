@@ -1,4 +1,13 @@
-import {AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {ArrowHead, ArrowType} from "../../shared/models/graphical/arrow-heads";
 import {BoundingBox} from "../../shared/models/graphical/bounding-box";
 import {PathLayouter} from "../../shared/utility/path-layouter";
@@ -34,12 +43,13 @@ export class ArrowSvgComponent implements OnInit, OnChanges, AfterViewInit {
   dashed = [0];
 
   initialized = false;
+  positioned= false;
 
   @ViewChild('arrow') node!: ElementRef<SVGGraphicsElement>;
 
   constructor(
-    private svgAccessService: SVGAccessService
-  ) {
+    private svgAccessService: SVGAccessService,
+    private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -60,15 +70,19 @@ export class ArrowSvgComponent implements OnInit, OnChanges, AfterViewInit {
       this.computePositionsByIds()
     }
     this.pickConfiguration()
+    this.positioned = true;
+    this.cdr.detectChanges();
   }
 
   ngOnChanges() {
-    if (!this.startId) {
-      this.computePositions()
-    } else {
-      this.computePositionsByIds()
+    if(this.positioned) {
+      if (!this.startId) {
+        this.computePositions()
+      } else {
+        this.computePositionsByIds()
+      }
+      this.pickConfiguration()
     }
-    this.pickConfiguration()
   }
 
   private computePositionsByIds() {
