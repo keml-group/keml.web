@@ -8,17 +8,9 @@ export class PathLayouter {
     //since we only deal with bounding boxes, all relevant lines are parallel/orthogonal
 
     let xPoints = this.getPointsInOneDimension(p1.x, p1.w, p2.x, p2.w)
-    console.log(p1)
-    console.log(p2)
-    console.log(xPoints)
     let yPoints = this.getPointsInOneDimension(p1.y, p1.h, p2.y, p2.h)
-    console.log(yPoints)
     let result1: Point = {x: xPoints[0], y: yPoints[0]}
     let result2: Point = {x: xPoints[1], y: yPoints[1]}
-
-    console.log(result1)
-    console.log(result2)
-
     return [result1, result2];
   }
 

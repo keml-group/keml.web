@@ -24,14 +24,16 @@ export class ArrowSvgComponent implements OnInit, OnChanges, AfterViewInit {
 
   x1: number = 0;
   y1: number = 0;
-  x2: number = 55;
-  y2: number = 55;
+  x2: number = 5;
+  y2: number = 5;
 
   id = uuidv4();
 
   endType: ArrowHead = ArrowHead.POINTER;
   color: string = 'black';
   dashed = [0];
+
+  initialized = false;
 
   @ViewChild('arrow') node!: ElementRef<SVGGraphicsElement>;
 
@@ -41,11 +43,24 @@ export class ArrowSvgComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnInit() {
-    this.computePositions()
-    this.pickConfiguration()
+    /*if (!this.startId) {
+      this.computePositions()
+    } else {
+      this.computePositionsByIds()
+    }
+    this.pickConfiguration()*/
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    this.initialized = true;
+    console.log("Init done, start is "+this.startId)
+    if (!this.startId) {
+      this.computePositions()
+    } else {
+      this.computePositionsByIds()
+    }
+    this.pickConfiguration()
+  }
 
   ngOnChanges() {
     if (!this.startId) {
@@ -62,11 +77,18 @@ export class ArrowSvgComponent implements OnInit, OnChanges, AfterViewInit {
     if (start && end) {
       let startAbs = PositionHelper.absolutePosition(start!)
       let endAbs = PositionHelper.absolutePosition(end!)
-      console.log(startAbs)
-      console.log(endAbs)
+      console.log('pos of start '+ this.startId + ' is ' + startAbs)
+      console.log('pos of end '+ this.endId + ' is ' + endAbs)
       let res = PathLayouter.bestPoints(startAbs, endAbs);
-      console.log('abs: (' + res[0] + ', ' + res[1] + ');')
+      console.log('pos of best points are: (' + res[0].x + ', ' + res[0].y + ') and ('+ res[1].x + ', ' + res[1].y + ')')
       this.applyBestPoints(res)
+      if (this.node?.nativeElement){
+        let el = this.node.nativeElement as SVGGraphicsElement
+        PositionHelper.makeRelativeToElem(res[0], el)
+        PositionHelper.makeRelativeToElem(res[1], el)
+        this.applyBestPoints(res)
+      } else
+        console.log('No native element yet')
     } else {
       console.log('No elems yet')
     }
