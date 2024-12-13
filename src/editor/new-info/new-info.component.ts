@@ -3,6 +3,7 @@ import {InfoComponent} from "../info/info.component";
 import {NewInformation} from "../../shared/models/keml/msg-info";
 import {PositionHelper} from "../../shared/models/graphical/position-helper";
 import {SVGAccessService} from "../../shared/services/svg-access.service";
+import {ArrowType} from "../../shared/models/graphical/arrow-heads";
 
 @Component({
   selector: '[newInfoG]',
@@ -23,7 +24,7 @@ export class NewInfoComponent extends InfoComponent implements AfterViewInit {
     console.log('My name is '+this.info.gId+':')
     console.log('my absolute position is '+PositionHelper.absolutePosition(this.me.nativeElement).toString())
     console.log('my absolute position by id is '+PositionHelper.absolutePosition(this.service.getElemById(this.info.gId+'-main')!).toString())
-
   }
 
+  protected readonly ArrowType = ArrowType;
 }
