@@ -6,5 +6,5 @@
   </g>
   <g arrow-svg [attr.transform]="'translate('+ (info.position.x) + ', ' + info.position.y +')'" [start]="{x: -info.position.x, y: -info.position.y, w: 10, h:10}" [end]="{x: 0, y: 0, w: info.position.w, h: info.position.h}"></g>
   <g arrow-svg *ngFor="let msg of info.isUsedOn" [start]="{x: -info.position.x, y: -info.position.y, w: 10, h:10}" [end]="{x: 0, y: 0, w: info.position.w, h: info.position.h}" [arrowType]="ArrowType.STANDARD" [startId]="info.gId+'-main'" [endId]="msg.gId+'-left'"></g>
-  <g arrow-svg *ngFor="let link of info.causes" [start]="{x: 0, y: 0, w: info.position.w, h: info.position.h}" [end]="link.target.position" [arrowType]="link.type" [text]="link.linkText" [startId]="info.gId+'-main'" [endId]="link.target.gId+'-main'"></g>
+  <g infoLinkG *ngFor="let link of info.causes" [infoLink]="link"></g>
 </svg:g>
