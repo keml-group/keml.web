@@ -18,6 +18,8 @@ import {PreknowledgeComponent} from "./preknowledge/preknowledge.component";
 import {TextAreaSvgComponent} from "./text-area-svg/text-area-svg.component";
 import {ArrowSvgComponent} from "./arrow-svg/arrow-svg.component";
 import {NewInfoComponent} from "./new-info/new-info.component";
+import {InformationLinkComponent} from "./information-link/information-link.component";
+import {InformationLinkDetailsComponent} from "./information-link-details/information-link-details.component";
 
 
 @NgModule({
@@ -35,6 +37,8 @@ import {NewInfoComponent} from "./new-info/new-info.component";
     InfoComponent,
     InfoDetailsComponent,
     NewInfoComponent,
+    InformationLinkComponent,
+    InformationLinkDetailsComponent,
     PreknowledgeComponent,
     TextAreaSvgComponent,
   ],
