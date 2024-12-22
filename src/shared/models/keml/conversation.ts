@@ -1,6 +1,6 @@
 import {Author} from "./author";
 import {ConversationPartner} from "./conversation-partner";
-import {ConversationJson} from "../sequence-diagram-models";
+import {ConversationJson} from "../json/sequence-diagram-models";
 import {ParserContext} from "./parser/parser-context";
 import {Ref} from "./parser/ref";
 import {Referencable} from "./parser/referenceable";

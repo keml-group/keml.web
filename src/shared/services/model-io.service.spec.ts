@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ModelIOService } from './model-io.service';
-import {ConversationJson, ConversationPartnerJson} from "../models/sequence-diagram-models";
+import {ConversationJson, ConversationPartnerJson} from "../models/json/sequence-diagram-models";
 
 describe('ModelIOService', () => {
   let service: ModelIOService;

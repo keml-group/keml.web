@@ -1,5 +1,5 @@
-import {Ref} from "./keml/parser/ref";
-import {BoundingBox} from "./graphical/bounding-box";
+import {Ref} from "../keml/parser/ref";
+import {BoundingBox} from "../graphical/bounding-box";
 
 export interface InformationJson {
   eClass: string;
