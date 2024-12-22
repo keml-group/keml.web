@@ -3,6 +3,7 @@
 */
 import {ConversationPartner} from '../models/keml/conversation-partner';
 import {Message, ReceiveMessage, Preknowledge} from "../models/keml/msg-info";
+import {BoundingBox} from "../models/graphical/bounding-box";
 
 export class LayoutHelper {
   // distance to first partner should be bigger than distance in between:
@@ -38,13 +39,18 @@ export class LayoutHelper {
       //const infos = (msg as ReceiveMessage).generates;
       (msg as ReceiveMessage)?.generates?.forEach(r => {
         if(r.position.w < 7) {
-          r.position.x = -600;
-          r.position.y = 0;
-          r.position.w = 200;
-          r.position.h = 50;
+          r.position = this.bbForNewInfo()
         }
       })
     }
+  }
+
+  static bbForNewInfo(): BoundingBox {
+    return new BoundingBox(-600, 0, 200, 50)
+  }
+
+  static bbForPreknowledge(y: number): BoundingBox {
+    return new BoundingBox(-300, y, 200, 50)
   }
 
   static positionInfos(pre: Preknowledge[], msgs: Message[]): void {
@@ -54,10 +60,7 @@ export class LayoutHelper {
     pre.forEach(p => {
       if (p.position.w < 7 ) {
         const timing = Math.min(...p.isUsedOn.map(send => send.timing));
-        p.position.x=-300;
-        p.position.y=LayoutHelper.computeMessageY(timing);
-        p.position.w = 200;
-        p.position.h = 50;
+        p.position = this.bbForPreknowledge(LayoutHelper.computeMessageY(timing))
       }
     })
     pre.sort((a, b) => {

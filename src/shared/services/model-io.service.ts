@@ -193,7 +193,7 @@ export class ModelIOService {
     const preknowledge: Preknowledge = new Preknowledge(
       "New preknowledge",
       false,
-      new BoundingBox(),
+      LayoutHelper.bbForPreknowledge(0),
       0.5,
       0.5,
       [],
@@ -210,7 +210,7 @@ export class ModelIOService {
       causeMsg,
       'New Information',
       false,
-      new BoundingBox(),
+      LayoutHelper.bbForNewInfo(),
       0.5,
       0.5,
       [],
