@@ -1,8 +1,10 @@
 import {Ref} from "./ref";
+import { v4 as uuidv4 } from 'uuid';
 
 export abstract class Referencable {
 
   protected ref?: Ref;
+  gId: string;
 
   /* todo two open points:
       1) we could enforce eClass already here and use it instead if deferring that to the constructor,
@@ -14,6 +16,7 @@ export abstract class Referencable {
 
   protected constructor(ref?: Ref) {
     this.ref = ref;
+    this.gId = uuidv4();
   }
 
   public getRef(): Ref {

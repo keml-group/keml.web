@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Information} from "../../shared/models/keml/msg-info";
+import {Preknowledge} from "../../shared/models/keml/msg-info";
 import {InfoComponent} from "../info/info.component";
 
 @Component({
@@ -8,7 +8,7 @@ import {InfoComponent} from "../info/info.component";
   styleUrl: './preknowledge.component.css'
 })
 export class PreknowledgeComponent extends InfoComponent {
-  @Input() override info!: Information;
+  @Input() override info!: Preknowledge;
   //@Output() openDetails = new EventEmitter<Information>();
 
 

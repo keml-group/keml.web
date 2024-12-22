@@ -1,0 +1,3 @@
+<svg:g arrow-svg [start]="infoLink.source.position" [end]="infoLink.target.position" [arrowType]="infoLink.type" [text]="infoLink.linkText" [startId]="infoLink.source.gId+'-main'" [endId]="infoLink.target.gId+'-main'">
+</svg:g>
+

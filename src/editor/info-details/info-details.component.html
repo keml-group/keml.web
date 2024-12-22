@@ -1,8 +1,8 @@
-<h2>Information Details</h2>
+<h2 style="align-self: center">Information Details</h2>
 
 <div class="info-form">
   <label class="form-label">Text</label>
-  <textarea type="text" [(ngModel)]="info.message"></textarea>
+  <textarea type="text" style="height: 5rem; width: 15rem" [(ngModel)]="info.message"></textarea>
 
   <label class="form-label">Is Instruction</label>
   <svg width="40" height="60">
@@ -22,9 +22,6 @@
       <input type="number" name="y" min="0" [attr.max]="1000" [(ngModel)]="info.position.y">
     </div>
   </div>
-
-  <label class="form-label">Source Message</label>
-  <ng-container></ng-container>
 
 </div>
 

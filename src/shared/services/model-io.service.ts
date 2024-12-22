@@ -3,7 +3,7 @@ import {Conversation as ConversationJson} from "../models/sequence-diagram-model
 import {Information} from "../models/keml/msg-info";
 import {Preknowledge} from "../models/keml/msg-info";
 import {NewInformation} from "../models/keml/msg-info";
-import {LayoutHelper} from "../layout-helper";
+import {LayoutHelper} from "../utility/layout-helper";
 import {Conversation} from "../models/keml/conversation";
 import {ConversationPartner} from "../models/keml/conversation-partner";
 import {Message} from "../models/keml/msg-info";
@@ -21,6 +21,7 @@ export class ModelIOService {
   loadKEML(json: string): Conversation {
     let convJson =  <ConversationJson>JSON.parse(json);
     JsonFixer.prepareJsonInfoLinkSources(convJson);
+    JsonFixer.addMissingSupplementType(convJson);
 
     let conv = Conversation.fromJSON(convJson);
     LayoutHelper.positionConversationPartners(conv.conversationPartners)
@@ -192,7 +193,7 @@ export class ModelIOService {
     const preknowledge: Preknowledge = new Preknowledge(
       "New preknowledge",
       false,
-      new BoundingBox(),
+      LayoutHelper.bbForPreknowledge(0),
       0.5,
       0.5,
       [],
@@ -209,7 +210,7 @@ export class ModelIOService {
       causeMsg,
       'New Information',
       false,
-      new BoundingBox(),
+      LayoutHelper.bbForNewInfo(),
       0.5,
       0.5,
       [],
