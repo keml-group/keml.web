@@ -1,7 +1,7 @@
 import {Author} from "../author";
 import {Message, NewInformation, Preknowledge, ReceiveMessage} from "../msg-info";
 import {Ref} from "./ref";
-import {Conversation as ConversationJson, ReceiveMessage as ReceiveMessageJson} from '../../sequence-diagram-models'
+import {ConversationJson, ReceiveMessageJson,} from '../../sequence-diagram-models'
 import {Conversation} from "../conversation";
 import {InformationLinkType} from "../../knowledge-models";
 

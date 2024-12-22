@@ -1,6 +1,6 @@
 import {LifeLine} from "./life-line";
 import {Message} from "./msg-info";
-import {Author as AuthorJson} from "../sequence-diagram-models"
+import {AuthorJson} from "../sequence-diagram-models"
 import {Preknowledge} from "./msg-info";
 import {ParserContext} from "./parser/parser-context";
 import {Ref} from "./parser/ref";

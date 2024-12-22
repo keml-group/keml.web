@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ModelIOService } from './model-io.service';
-import {Conversation, ConversationPartner} from "../models/sequence-diagram-models";
+import {ConversationJson, ConversationPartnerJson} from "../models/sequence-diagram-models";
 
 describe('ModelIOService', () => {
   let service: ModelIOService;
@@ -26,9 +26,9 @@ describe('ModelIOService', () => {
       "     \"name\" : \"Other\"\n" +
       "     }" +
       " ]\n";
-    let cp0: ConversationPartner = {name: "LLM", xPosition:300};
-    let cp1: ConversationPartner = {name: "Other", xPosition:450};
-    let convPartners: ConversationPartner[] = [cp0, cp1];
+    let cp0: ConversationPartnerJson = {name: "LLM", xPosition:300};
+    let cp1: ConversationPartnerJson = {name: "Other", xPosition:450};
+    let convPartners: ConversationPartnerJson[] = [cp0, cp1];
 
     let info1aJson = " {\n" +
       "         \"message\" : \"info1a\",\n" +
@@ -91,7 +91,7 @@ describe('ModelIOService', () => {
       "   },\n" +
       convPartnersJson +
       "}";
-    let conv: Conversation = service.loadKEML(text);
+    let conv: ConversationJson = service.loadKEML(text);
     expect(conv).toBeDefined();
     expect(conv.title).toEqual("Test-Conv");
     expect(conv.conversationPartners?.at(0)?.name).toEqual("LLM");

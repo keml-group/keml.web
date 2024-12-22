@@ -1,6 +1,6 @@
 import {Ref} from "./ref";
 import {Referencable} from "./referenceable";
-import {Conversation as ConversationJson, ConversationPartner as ConversationPartnerJson} from "../../sequence-diagram-models";
+import {ConversationJson} from "../../sequence-diagram-models";
 import {Author} from "../author";
 import {ConversationPartner} from "../conversation-partner";
 import {InformationLink, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "../msg-info";

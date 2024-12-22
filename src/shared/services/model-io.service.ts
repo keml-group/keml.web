@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
-import {Conversation as ConversationJson} from "../models/sequence-diagram-models";
-import {Information} from "../models/keml/msg-info";
-import {Preknowledge} from "../models/keml/msg-info";
-import {NewInformation} from "../models/keml/msg-info";
-import {LayoutHelper} from "../utility/layout-helper";
+import {ConversationJson} from "../models/sequence-diagram-models";
+import {Information, Preknowledge, NewInformation,} from "../models/keml/msg-info";
 import {Conversation} from "../models/keml/conversation";
 import {ConversationPartner} from "../models/keml/conversation-partner";
 import {Message} from "../models/keml/msg-info";
 import {ReceiveMessage} from "../models/keml/msg-info"
 import {JsonFixer} from "../models/keml/parser/json-fixer";
-import {BoundingBox} from "../models/graphical/bounding-box";
+import {LayoutHelper} from "../utility/layout-helper";
 
 @Injectable({
   providedIn: 'root'

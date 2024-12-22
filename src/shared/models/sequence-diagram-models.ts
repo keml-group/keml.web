@@ -1,29 +1,29 @@
 import {PreknowledgeJson, NewInformationJson} from "./knowledge-models";
 import {Ref} from "./keml/parser/ref";
 
-export interface Conversation {
+export interface ConversationJson {
   eClass: string;
   title: string;
-  author: Author;
-  conversationPartners: (ConversationPartner)[];
+  author: AuthorJson;
+  conversationPartners: (ConversationPartnerJson)[];
 }
 
-interface LifeLine {
+interface LifeLineJson {
   name: string;
   xPosition: number; //int todo
   eClass: string;
 }
 
-export interface ConversationPartner extends LifeLine {
+export interface ConversationPartnerJson extends LifeLineJson {
   color?: number; // todo
   $ref?: string; //only for parsing, not clean
 }
 
-export interface Author extends LifeLine {
-  messages: Message[];
+export interface AuthorJson extends LifeLineJson {
+  messages: MessageJson[];
   preknowledge: PreknowledgeJson[];
 }
-export interface Message {
+export interface MessageJson {
   eClass: string;
   content: string;
   originalContent?: string;
@@ -31,11 +31,11 @@ export interface Message {
   counterPart: Ref;
 }
 
-export interface SendMessage extends Message {
+export interface SendMessageJson extends MessageJson {
   uses?: Ref[];
 }
 
-export interface ReceiveMessage extends Message {
+export interface ReceiveMessageJson extends MessageJson {
   generates: (NewInformationJson)[];
   repeats?: (Ref)[];
   isInterrupted: boolean;

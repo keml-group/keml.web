@@ -1,7 +1,10 @@
 import {ConversationPartner} from "./conversation-partner";
 
-import {Message as MessageJson} from "../sequence-diagram-models";
-import {ReceiveMessage as ReceiveMessageJson, SendMessage as SendMessageJson} from "../sequence-diagram-models";
+import {
+  MessageJson,
+  ReceiveMessageJson,
+  SendMessageJson,
+} from "../sequence-diagram-models";
 import {
   InformationJson,
   PreknowledgeJson,
