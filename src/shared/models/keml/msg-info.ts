@@ -2,10 +2,13 @@ import {ConversationPartner} from "./conversation-partner";
 
 import {Message as MessageJson} from "../sequence-diagram-models";
 import {ReceiveMessage as ReceiveMessageJson, SendMessage as SendMessageJson} from "../sequence-diagram-models";
-import {Information as InformationJson} from "../knowledge-models";
-import {NewInformation as NewInformationJson} from "../knowledge-models";
-import {Preknowledge as PreknowledgeJson} from "../knowledge-models";
-import {InformationLinkType, InformationLink as InformationLinkJson} from "../knowledge-models";
+import {
+  InformationJson,
+  PreknowledgeJson,
+  NewInformationJson,
+  InformationLinkType,
+  InformationLinkJson,
+} from "../knowledge-models";
 import {Ref} from "./parser/ref";
 import {ParserContext} from "./parser/parser-context";
 import {Referencable} from "./parser/referenceable";

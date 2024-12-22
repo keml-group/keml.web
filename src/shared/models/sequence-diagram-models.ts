@@ -1,4 +1,4 @@
-import {Preknowledge, NewInformation} from "./knowledge-models";
+import {PreknowledgeJson, NewInformationJson} from "./knowledge-models";
 import {Ref} from "./keml/parser/ref";
 
 export interface Conversation {
@@ -21,7 +21,7 @@ export interface ConversationPartner extends LifeLine {
 
 export interface Author extends LifeLine {
   messages: Message[];
-  preknowledge: Preknowledge[];
+  preknowledge: PreknowledgeJson[];
 }
 export interface Message {
   eClass: string;
@@ -36,7 +36,7 @@ export interface SendMessage extends Message {
 }
 
 export interface ReceiveMessage extends Message {
-  generates: (NewInformation)[];
+  generates: (NewInformationJson)[];
   repeats?: (Ref)[];
   isInterrupted: boolean;
 }
