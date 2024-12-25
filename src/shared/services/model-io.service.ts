@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {ConversationJson} from "../models/json/sequence-diagram-models";
+import {ConversationJson} from "../models/keml/json/sequence-diagram-models";
 import {Information, Preknowledge, NewInformation,} from "../models/keml/msg-info";
 import {Conversation} from "../models/keml/conversation";
 import {ConversationPartner} from "../models/keml/conversation-partner";

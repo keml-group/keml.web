@@ -4,14 +4,14 @@ import {
   MessageJson,
   ReceiveMessageJson,
   SendMessageJson,
-} from "../json/sequence-diagram-models";
+} from "./json/sequence-diagram-models";
 import {
   InformationJson,
   PreknowledgeJson,
   NewInformationJson,
   InformationLinkType,
   InformationLinkJson,
-} from "../json/knowledge-models";
+} from "./json/knowledge-models";
 import {Ref} from "./parser/ref";
 import {ParserContext} from "./parser/parser-context";
 import {Referencable} from "./parser/referenceable";
