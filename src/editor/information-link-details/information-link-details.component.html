@@ -10,7 +10,9 @@
   <info-choice></info-choice>
 
   <label class="form-label">Type</label>
-  <label>Todo</label>
+  <select [(ngModel)]="infoLink.type">
+    <option *ngFor="let type of Object.values(InformationLinkType)" [ngValue]="type">{{type}}</option>
+  </select>
 
   <label class="form-label">Text</label>
   <textarea type="text" [(ngModel)]="infoLink.linkText"></textarea>

@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import {Information, InformationLink, Preknowledge} from "../../shared/models/keml/msg-info";
 import {MatDialogRef} from "@angular/material/dialog";
 import {ModelIOService} from "../../shared/services/model-io.service";
+import {InformationLinkType} from "../../shared/models/keml/json/knowledge-models";
 
 @Component({
   selector: 'app-information-link-details',
@@ -35,4 +36,6 @@ export class InformationLinkDetailsComponent {
   }
 
 
+  protected readonly InformationLinkType = InformationLinkType;
+  protected readonly Object = Object;
 }
