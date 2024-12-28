@@ -29,11 +29,8 @@ export class InformationLinkDetailsComponent {
   }
 
   duplicateMe(): void {
-    /* todo const newInfo = this.modelIOService.duplicateInfo(this.info, this.infos);
-    if (newInfo) {
-      this.dialogRef.close();
-      this.openOtherDetails.emit(newInfo);
-    }*/
+    this.modelIOService.duplicateLink(this.infoLink);
+    // todo open details
   }
 
 
