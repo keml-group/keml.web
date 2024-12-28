@@ -1,4 +1,4 @@
-import {InformationLinkType} from "../json/knowledge-models";
+import {InformationLinkType} from "../keml/json/knowledge-models";
 
 export enum ArrowHead {
   POINTER ='POINTER',

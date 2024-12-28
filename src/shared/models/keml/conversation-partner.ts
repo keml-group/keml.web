@@ -1,5 +1,5 @@
 import {LifeLine} from "./life-line";
-import {ConversationPartnerJson} from "../json/sequence-diagram-models"
+import {ConversationPartnerJson} from "./json/sequence-diagram-models"
 import {ParserContext} from "./parser/parser-context";
 import {Ref} from "./parser/ref";
 

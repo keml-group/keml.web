@@ -1,10 +1,10 @@
 import {Ref} from "./ref";
 import {Referencable} from "./referenceable";
-import {ConversationJson} from "../../json/sequence-diagram-models";
+import {ConversationJson} from "../json/sequence-diagram-models";
 import {Author} from "../author";
 import {ConversationPartner} from "../conversation-partner";
 import {InformationLink, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "../msg-info";
-import {InformationLinkType} from "../../json/knowledge-models";
+import {InformationLinkType} from "../json/knowledge-models";
 
 /*
 idea:
@@ -37,7 +37,7 @@ export class ParserContext {
 
     const preknowledgeFun: (path: string) => Preknowledge = (path: string) => {
       let ref = new Ref(path, Preknowledge.eClass)
-      return new Preknowledge(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
+      return new Preknowledge(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
         ref, this)
     }
     this.constructorPointers.set(Preknowledge.eClass, preknowledgeFun)
@@ -46,7 +46,7 @@ export class ParserContext {
       let ref = new Ref(path, NewInformation.eClass)
       //todo not nice source
       let dummySource = new ReceiveMessage(new ConversationPartner(), 0)
-      return new NewInformation(dummySource, '', undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, ref, this)
+      return new NewInformation(dummySource, '', undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, ref, this)
     }
     this.constructorPointers.set(NewInformation.eClass, newInfoFun)
 

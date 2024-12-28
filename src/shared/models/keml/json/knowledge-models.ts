@@ -1,5 +1,5 @@
-import {Ref} from "../keml/parser/ref";
-import {BoundingBox} from "../graphical/bounding-box";
+import {Ref} from "../parser/ref";
+import {BoundingBox} from "../../graphical/bounding-box";
 
 export interface InformationJson {
   eClass: string;
@@ -7,6 +7,8 @@ export interface InformationJson {
   isInstruction: boolean;
   initialTrust: number;
   currentTrust: number;
+  feltTrustImmediately: number;
+  feltTrustAfterwards: number;
 
   causes: InformationLinkJson[];
   targetedBy: Ref[];
