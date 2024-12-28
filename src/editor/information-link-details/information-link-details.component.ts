@@ -24,7 +24,7 @@ export class InformationLinkDetailsComponent {
   }
 
   deleteMe() {
-    //todo this.modelIOService.deleteInfo(this.info, this.infos);
+    this.modelIOService.deleteLink(this.infoLink);
     this.dialogRef.close();
   }
 

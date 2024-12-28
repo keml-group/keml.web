@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {ConversationJson} from "../models/keml/json/sequence-diagram-models";
-import {Information, Preknowledge, NewInformation,} from "../models/keml/msg-info";
+import {Information, Preknowledge, NewInformation, InformationLink,} from "../models/keml/msg-info";
 import {Conversation} from "../models/keml/conversation";
 import {ConversationPartner} from "../models/keml/conversation-partner";
 import {Message} from "../models/keml/msg-info";
@@ -229,6 +229,17 @@ export class ModelIOService {
       return receives[0];
     } else {
       return null;
+    }
+  }
+
+  deleteLink(link: InformationLink) {
+    const srcIndex = link.source.causes.indexOf(link)
+    if (srcIndex > -1) {
+      link.source.causes.splice(srcIndex, 1);
+    }
+    const targetIndex = link.target.targetedBy.indexOf(link);
+    if (targetIndex > -1) {
+      link.target.targetedBy.splice(targetIndex, 1);
     }
   }
 
