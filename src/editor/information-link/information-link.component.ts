@@ -1,6 +1,9 @@
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {InformationLink} from "../../shared/models/keml/msg-info";
 import {InfoComponent} from "../info/info.component";
+import {ConversationPartnerDetailsComponent} from "../cp-details/cp-details.component";
+import {MatDialog} from "@angular/material/dialog";
+import {InformationLinkDetailsComponent} from "../information-link-details/information-link-details.component";
 
 @Component({
   selector: '[infoLinkG]',
@@ -13,6 +16,10 @@ export class InformationLinkComponent implements OnInit, OnChanges {
   startRef?: InfoComponent
   endRef?: InfoComponent
 
+  constructor(
+    private dialog: MatDialog,
+  ) {}
+
   ngOnInit(): void {
     this.getStartRef()
     this.getEndRef()
@@ -23,7 +30,17 @@ export class InformationLinkComponent implements OnInit, OnChanges {
     this.getEndRef()
   }
 
-  getStartRef() {
+  openDetails() {
+    const dialogRef = this.dialog.open(
+      InformationLinkDetailsComponent,
+      {width: '40%', height: '80%'}
+    )
+    dialogRef.componentInstance.infoLink = this.infoLink;
+    dialogRef.componentInstance.newInfos = [];
+    dialogRef.componentInstance.preknowledges = [];
+  }
+
+  private getStartRef() {
     if(!this.startRef){
       this.startRef = (
         document.getElementById(this.infoLink.source.gId+"-main") as unknown as InfoComponent
@@ -32,7 +49,7 @@ export class InformationLinkComponent implements OnInit, OnChanges {
     console.log(this.startRef)
   }
 
-  getEndRef() {
+  private getEndRef() {
     if(!this.endRef){
       this.endRef = (
         document.getElementById(this.infoLink.target.gId+"-main") as unknown as InfoComponent
