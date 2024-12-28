@@ -141,11 +141,11 @@ export class ArrowSvgComponent implements OnInit, OnChanges, AfterViewInit {
       case ArrowType.DASHED:
       case ArrowType.SUPPORT:
       case ArrowType.ATTACK: {
-        this.dashed[0] = 5
+        this.dashed = [5]
         break;
       }
       default: {
-        this.dashed[0] = 0
+        this.dashed = [0]
         break;
       }
     }
