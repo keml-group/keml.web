@@ -30,7 +30,8 @@ export class InformationLinkDetailsComponent {
 
   duplicateMe(): void {
     this.modelIOService.duplicateLink(this.infoLink);
-    // todo open details
+    this.dialogRef.close();
+    // todo open duplicate details (?)
   }
 
 
