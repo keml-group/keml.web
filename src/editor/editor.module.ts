@@ -20,6 +20,7 @@ import {ArrowSvgComponent} from "./arrow-svg/arrow-svg.component";
 import {NewInfoComponent} from "./new-info/new-info.component";
 import {InformationLinkComponent} from "./information-link/information-link.component";
 import {InformationLinkDetailsComponent} from "./information-link-details/information-link-details.component";
+import {InfoChoiceComponent} from "./info-choice/info-choice.component";
 
 
 @NgModule({
@@ -34,6 +35,7 @@ import {InformationLinkDetailsComponent} from "./information-link-details/inform
     MsgComponent,
     MsgDetailsComponent,
     IsInstrSvgComponent,
+    InfoChoiceComponent,
     InfoComponent,
     InfoDetailsComponent,
     NewInfoComponent,
