@@ -34,6 +34,7 @@ export class InfoChoiceComponent {
   choose(info: Information) {
     this.info = info;
     this.infoChange.emit(info);
+    this.dialog.closeAll()
   }
 
 }
