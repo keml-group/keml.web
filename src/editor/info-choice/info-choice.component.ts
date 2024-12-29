@@ -1,6 +1,7 @@
-import {Component, EventEmitter, Input, Output, TemplateRef, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Output, TemplateRef, ViewChild} from '@angular/core';
 import {Information, Preknowledge, ReceiveMessage} from "../../shared/models/keml/msg-info";
 import {MatDialog} from "@angular/material/dialog";
+import {ModelIOService} from "../../shared/services/model-io.service";
 
 @Component({
   selector: 'info-choice',
@@ -11,11 +12,17 @@ export class InfoChoiceComponent {
 
   constructor(
     private dialog: MatDialog,
-  ) {}
+    public modelIOService: ModelIOService,
+  ) {
+    this.receives = this.modelIOService.getReceives()
+    this.preknowledges = this.modelIOService.conversation.author.preknowledge;
+    console.log(this.receives);
+    console.log(this.preknowledges);
+  }
 
   //graphical component to pick an info, hence it needs all messages and all preknowledge as input:
-  @Input() preknowledges!: Preknowledge[];
-  @Input() receives!: ReceiveMessage[];
+  preknowledges: Preknowledge[];
+  receives!: ReceiveMessage[];
 
   @Output() choice = new EventEmitter<Information>();
 

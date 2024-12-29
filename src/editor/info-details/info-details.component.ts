@@ -16,7 +16,7 @@ export class InfoDetailsComponent {
   constructor(
     public dialogRef: MatDialogRef<InfoDetailsComponent>,
     public modelIOService: ModelIOService,
-  ) { }
+  ) {}
 
   closeMe() {
     this.dialogRef.close();

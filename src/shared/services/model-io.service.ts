@@ -13,7 +13,13 @@ import {LayoutHelper} from "../utility/layout-helper";
 })
 export class ModelIOService {
 
-  constructor() { }
+  conversation!: Conversation;
+
+  constructor() {
+    console.log("ModelIOService constructed");
+    this.newKEML();
+    console.log(this.conversation)
+  }
 
   loadKEML(json: string): Conversation {
     let convJson =  <ConversationJson>JSON.parse(json);
@@ -24,6 +30,8 @@ export class ModelIOService {
     LayoutHelper.positionConversationPartners(conv.conversationPartners)
     LayoutHelper.positionInfos(conv.author.preknowledge, conv.author.messages);
 
+    this.conversation = conv;
+    console.log(this.conversation)
     return conv;
   }
 
@@ -31,7 +39,8 @@ export class ModelIOService {
 
     const conv = new Conversation();
     LayoutHelper.positionConversationPartners(conv.conversationPartners)
-
+    this.conversation = conv;
+    console.log(this.conversation)
     return conv;
   }
 
@@ -180,6 +189,10 @@ export class ModelIOService {
   filterReceives(msgs: Message[]): ReceiveMessage[] {
     return msgs.filter(msg => !msg.isSend())
       .map(msg => msg as ReceiveMessage)
+  }
+
+  getReceives() {
+    return this.filterReceives(this.conversation.author.messages);
   }
 
   private isInfoFromMessage(info: Information, msg: ReceiveMessage): boolean {
