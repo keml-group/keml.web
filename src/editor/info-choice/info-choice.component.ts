@@ -10,8 +10,12 @@ import {ModelIOService} from "../../shared/services/model-io.service";
 })
 export class InfoChoiceComponent {
 
+  @ViewChild('chooseinfo') modalRef!: TemplateRef<any>;
   @Input() info!: Information;
   @Output() infoChange = new EventEmitter<Information>();
+  //graphical component to pick an info, hence it needs all messages and all preknowledge as input:
+  preknowledges: Preknowledge[];
+  receives: ReceiveMessage[];
 
   constructor(
     private dialog: MatDialog,
@@ -22,13 +26,6 @@ export class InfoChoiceComponent {
     console.log(this.receives);
     console.log(this.preknowledges);
   }
-
-  //graphical component to pick an info, hence it needs all messages and all preknowledge as input:
-  preknowledges: Preknowledge[];
-  receives!: ReceiveMessage[];
-
-
-  @ViewChild('chooseinfo') modalRef!: TemplateRef<any>;
 
   openChoice() {
     this.dialog.open(this.modalRef,{})
