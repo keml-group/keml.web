@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import {Information, InformationLink, Preknowledge} from "../../shared/models/keml/msg-info";
 import {MatDialogRef} from "@angular/material/dialog";
 import {ModelIOService} from "../../shared/services/model-io.service";
+import {InformationLinkType} from "../../shared/models/keml/json/knowledge-models";
 
 @Component({
   selector: 'app-information-link-details',
@@ -24,17 +25,17 @@ export class InformationLinkDetailsComponent {
   }
 
   deleteMe() {
-    //todo this.modelIOService.deleteInfo(this.info, this.infos);
+    this.modelIOService.deleteLink(this.infoLink);
     this.dialogRef.close();
   }
 
   duplicateMe(): void {
-    /* todo const newInfo = this.modelIOService.duplicateInfo(this.info, this.infos);
-    if (newInfo) {
-      this.dialogRef.close();
-      this.openOtherDetails.emit(newInfo);
-    }*/
+    this.modelIOService.duplicateLink(this.infoLink);
+    this.dialogRef.close();
+    // todo open duplicate details (?)
   }
 
 
+  protected readonly InformationLinkType = InformationLinkType;
+  protected readonly Object = Object;
 }

@@ -13,8 +13,7 @@ import {InfoDetailsComponent} from "./info-details/info-details.component";
 @Component({
   selector: 'keml-editor',
   templateUrl: './editor.component.html',
-  styleUrl: './editor.component.css',
-  providers: [ModelIOService, IoService]
+  styleUrl: './editor.component.css'
 })
 export class EditorComponent implements OnInit, AfterViewInit {
 

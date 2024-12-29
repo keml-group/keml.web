@@ -9,7 +9,7 @@ import {NewInformation} from "../../shared/models/keml/msg-info";
 })
 export class InfoComponent {
   @Input() info!: Information;
-  @Output() openDetails = new EventEmitter<Information>();
+  @Output() chooseInfo = new EventEmitter<Information>();
 
   dragActive = false;
   wasReallyDragged = false;
@@ -59,11 +59,12 @@ export class InfoComponent {
     event.preventDefault();
   }
 
-  openInfoDetails() {
+  clickInfo(event: MouseEvent) {
     if (this.wasReallyDragged) {
       this.wasReallyDragged = false;
     } else {
-      this.openDetails.emit(this.info);
+      this.chooseInfo.emit(this.info);
+      event.preventDefault();
     }
   }
 

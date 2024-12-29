@@ -1,5 +1,5 @@
 <svg:g>
-  <g #me [attr.id]="info.gId+'-main'" [attr.transform]="'translate('+ (info.position.x) + ', ' + info.position.y +')'" (mousedown)="startDrag($event)" (mousemove)="drag($event)" (mouseup)="endDrag($event)" (mouseleave)="endDrag($event)" (click)="openInfoDetails()">
+  <g #me [attr.id]="info.gId+'-main'" [attr.transform]="'translate('+ (info.position.x) + ', ' + info.position.y +')'" (mousedown)="startDrag($event)" (mousemove)="drag($event)" (mouseup)="endDrag($event)" (mouseleave)="endDrag($event)" (click)="clickInfo($event)">
     <g is-instr [info]="info" [w]="info.position.w*0.1" [h]="info.position.h"></g>
     <rect [attr.x]="info.position.w*0.1" y="0" [attr.width]="info.position.w*0.9" [attr.height]="info.position.h" [attr.fill]="computeTextColor()"></rect>
     <g text-area-svg [text]="info.message" [x]="info.position.w*0.1" [y]="0" [w]="info.position.w*0.9" [h]="info.position.h"></g>

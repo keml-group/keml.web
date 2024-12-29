@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {ConversationJson} from "../models/keml/json/sequence-diagram-models";
-import {Information, Preknowledge, NewInformation,} from "../models/keml/msg-info";
+import {Information, Preknowledge, NewInformation, InformationLink,} from "../models/keml/msg-info";
 import {Conversation} from "../models/keml/conversation";
 import {ConversationPartner} from "../models/keml/conversation-partner";
 import {Message} from "../models/keml/msg-info";
@@ -13,7 +13,13 @@ import {LayoutHelper} from "../utility/layout-helper";
 })
 export class ModelIOService {
 
-  constructor() { }
+  conversation!: Conversation;
+
+  constructor() {
+    console.log("ModelIOService constructed");
+    this.newKEML();
+    console.log(this.conversation)
+  }
 
   loadKEML(json: string): Conversation {
     let convJson =  <ConversationJson>JSON.parse(json);
@@ -24,6 +30,8 @@ export class ModelIOService {
     LayoutHelper.positionConversationPartners(conv.conversationPartners)
     LayoutHelper.positionInfos(conv.author.preknowledge, conv.author.messages);
 
+    this.conversation = conv;
+    console.log(this.conversation)
     return conv;
   }
 
@@ -31,7 +39,8 @@ export class ModelIOService {
 
     const conv = new Conversation();
     LayoutHelper.positionConversationPartners(conv.conversationPartners)
-
+    this.conversation = conv;
+    console.log(this.conversation)
     return conv;
   }
 
@@ -182,6 +191,10 @@ export class ModelIOService {
       .map(msg => msg as ReceiveMessage)
   }
 
+  getReceives() {
+    return this.filterReceives(this.conversation.author.messages);
+  }
+
   private isInfoFromMessage(info: Information, msg: ReceiveMessage): boolean {
     return msg.generates.indexOf(<NewInformation>info)>-1;
   }
@@ -230,6 +243,23 @@ export class ModelIOService {
     } else {
       return null;
     }
+  }
+
+  deleteLink(link: InformationLink) {
+    const srcIndex = link.source.causes.indexOf(link)
+    if (srcIndex > -1) {
+      link.source.causes.splice(srcIndex, 1);
+    }
+    const targetIndex = link.target.targetedBy.indexOf(link);
+    if (targetIndex > -1) {
+      link.target.targetedBy.splice(targetIndex, 1);
+    }
+  }
+
+  duplicateLink(link: InformationLink) {
+    const newLink = new InformationLink(link.source, link.target, link.type, link.linkText)
+    link.source.causes.splice(link.source.causes.indexOf(link),0, newLink);
+    link.target.targetedBy.splice(link.target.targetedBy.indexOf(link), 0, newLink);
   }
 
 }

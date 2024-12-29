@@ -13,7 +13,7 @@ import {LayoutHelper} from "../../shared/utility/layout-helper";
 export class MsgComponent {
   @Input() msg!: Message;
   @Output() openDetails: EventEmitter<Message> = new EventEmitter();
-  @Output() openInfo = new EventEmitter<Information>();
+  @Output() chooseInfo = new EventEmitter<Information>();
 
   constructor() { }
 
@@ -37,7 +37,7 @@ export class MsgComponent {
     this.openDetails.emit(this.msg);
   }
 
-  openInfoDetails(info: Information) {
-    this.openInfo.emit(info);
+  clickInfo(info: Information) {
+    this.chooseInfo.emit(info);
   }
 }
