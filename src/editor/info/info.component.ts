@@ -59,11 +59,12 @@ export class InfoComponent {
     event.preventDefault();
   }
 
-  openInfoDetails() {
+  openInfoDetails(event: MouseEvent) {
     if (this.wasReallyDragged) {
       this.wasReallyDragged = false;
     } else {
       this.openDetails.emit(this.info);
+      event.preventDefault();
     }
   }
 
