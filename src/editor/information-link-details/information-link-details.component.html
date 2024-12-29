@@ -3,11 +3,11 @@
 <div class="info-form">
 
   <label class="form-label">Source</label>
-  <info-choice></info-choice>
+  <info-choice [(info)]="infoLink.source"></info-choice>
 
 
   <label class="form-label">Target</label>
-  <info-choice></info-choice>
+  <info-choice [(info)]="infoLink.target"></info-choice>
 
   <label class="form-label">Type</label>
   <select [(ngModel)]="infoLink.type">

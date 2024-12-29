@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output, TemplateRef, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, Output, TemplateRef, ViewChild} from '@angular/core';
 import {Information, Preknowledge, ReceiveMessage} from "../../shared/models/keml/msg-info";
 import {MatDialog} from "@angular/material/dialog";
 import {ModelIOService} from "../../shared/services/model-io.service";
@@ -9,6 +9,9 @@ import {ModelIOService} from "../../shared/services/model-io.service";
   styleUrl: './info-choice.component.css'
 })
 export class InfoChoiceComponent {
+
+  @Input() info!: Information;
+  @Output() infoChange = new EventEmitter<Information>();
 
   constructor(
     private dialog: MatDialog,
@@ -24,7 +27,6 @@ export class InfoChoiceComponent {
   preknowledges: Preknowledge[];
   receives!: ReceiveMessage[];
 
-  @Output() choice = new EventEmitter<Information>();
 
   @ViewChild('chooseinfo') modalRef!: TemplateRef<any>;
 
@@ -33,7 +35,8 @@ export class InfoChoiceComponent {
   }
 
   choose(info: Information) {
-    this.choice.emit(info);
+    this.info = info;
+    this.infoChange.emit(info);
   }
 
 }
