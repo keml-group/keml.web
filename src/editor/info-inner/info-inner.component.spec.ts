@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NewInfoInnerComponent } from './new-info-inner.component';
+import { InfoInnerComponent } from './info-inner.component';
 
 describe('NewInfoInnerComponent', () => {
-  let component: NewInfoInnerComponent;
-  let fixture: ComponentFixture<NewInfoInnerComponent>;
+  let component: InfoInnerComponent;
+  let fixture: ComponentFixture<InfoInnerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NewInfoInnerComponent]
+      imports: [InfoInnerComponent]
     })
     .compileComponents();
-    
-    fixture = TestBed.createComponent(NewInfoInnerComponent);
+
+    fixture = TestBed.createComponent(InfoInnerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

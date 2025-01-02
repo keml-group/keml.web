@@ -3,11 +3,11 @@ import {Information, NewInformation} from "../../shared/models/keml/msg-info";
 
 @Component({
   selector: '[info-inner]',
-  templateUrl: './new-info-inner.component.svg',
-  styleUrl: './new-info-inner.component.css'
+  templateUrl: './info-inner.component.svg',
+  styleUrl: './info-inner.component.css'
 })
 // todo we cannot use it on new info currently, it leads to bounding box errors on arrows
-export class NewInfoInnerComponent implements OnInit, OnChanges {
+export class InfoInnerComponent implements OnInit, OnChanges {
 
   @Input() info!: Information
   isNew = true;
