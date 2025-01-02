@@ -18,6 +18,10 @@ export class InfoDetailsComponent {
     public modelIOService: ModelIOService,
   ) {}
 
+  createInfoLink() {
+
+  }
+
   closeMe() {
     this.dialogRef.close();
   }
