@@ -21,6 +21,7 @@ import {NewInfoComponent} from "./new-info/new-info.component";
 import {InformationLinkComponent} from "./information-link/information-link.component";
 import {InformationLinkDetailsComponent} from "./information-link-details/information-link-details.component";
 import {InfoChoiceComponent} from "./info-choice/info-choice.component";
+import {NewInfoInnerComponent} from "./new-info-inner/new-info-inner.component";
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import {InfoChoiceComponent} from "./info-choice/info-choice.component";
     InfoComponent,
     InfoDetailsComponent,
     NewInfoComponent,
+    NewInfoInnerComponent,
     InformationLinkComponent,
     InformationLinkDetailsComponent,
     PreknowledgeComponent,
