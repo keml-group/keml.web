@@ -1,12 +1,18 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {ConversationJson} from "../models/keml/json/sequence-diagram-models";
-import {Information, Preknowledge, NewInformation, InformationLink,} from "../models/keml/msg-info";
+import {
+  Information,
+  InformationLink,
+  Message,
+  NewInformation,
+  Preknowledge,
+  ReceiveMessage,
+} from "../models/keml/msg-info";
 import {Conversation} from "../models/keml/conversation";
 import {ConversationPartner} from "../models/keml/conversation-partner";
-import {Message} from "../models/keml/msg-info";
-import {ReceiveMessage} from "../models/keml/msg-info"
 import {JsonFixer} from "../models/keml/parser/json-fixer";
 import {LayoutHelper} from "../utility/layout-helper";
+import {InformationLinkType} from "../models/keml/json/knowledge-models";
 
 @Injectable({
   providedIn: 'root'
@@ -243,6 +249,16 @@ export class ModelIOService {
     } else {
       return null;
     }
+  }
+
+  createLink(src: Information, target: Information, type: InformationLinkType = InformationLinkType.SUPPLEMENT, text: string = 'New InfoLink'): InformationLink {
+    let link: InformationLink = new InformationLink(
+      src,
+      target,
+      type,
+      text
+    );
+    return link;
   }
 
   deleteLink(link: InformationLink) {
