@@ -44,7 +44,7 @@ export class InformationLinkDetailsComponent {
   //only for create view
   createMe(): void {
     if (this.src && this.target && this.type) {
-      this.modelIOService.createLink(this.src, this.target, this.type, this.text)
+      this.modelIOService.addInformationLink(this.src, this.target, this.type, this.text)
       this.dialogRef.close();
     }
   }

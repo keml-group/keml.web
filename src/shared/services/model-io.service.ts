@@ -251,14 +251,13 @@ export class ModelIOService {
     }
   }
 
-  createLink(src: Information, target: Information, type: InformationLinkType = InformationLinkType.SUPPLEMENT, text: string = 'New InfoLink'): InformationLink {
-    let link: InformationLink = new InformationLink(
+  addInformationLink(src: Information, target: Information, type: InformationLinkType = InformationLinkType.SUPPLEMENT, text?: string): InformationLink {
+    return new InformationLink(
       src,
       target,
       type,
       text
     );
-    return link;
   }
 
   deleteLink(link: InformationLink) {
