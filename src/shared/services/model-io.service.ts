@@ -52,6 +52,10 @@ export class ModelIOService {
     return JSON.stringify(convJson);
   }
 
+  getConversationPartners(): ConversationPartner[] {
+    return this.conversation.conversationPartners;
+  }
+
   addNewConversationPartner(cps: ConversationPartner[]) {
     const cp: ConversationPartner = new ConversationPartner(
       'New Partner',

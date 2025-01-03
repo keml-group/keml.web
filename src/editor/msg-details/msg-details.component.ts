@@ -11,13 +11,16 @@ import {ModelIOService} from "../../shared/services/model-io.service";
 })
 export class MsgDetailsComponent {
   @Input() msg!: Message;
-  @Input() cps!: ConversationPartner[];
-  @Output() openOtherDetails = new EventEmitter<Message>();
+  @Output() openOtherDetails: EventEmitter<Message> = new EventEmitter<Message>();
+
+  cps: ConversationPartner[];
 
   constructor(
     public dialogRef: MatDialogRef<MsgDetailsComponent>,
     public modelIOService: ModelIOService,
-  ) { }
+  ) {
+    this.cps = this.modelIOService.getConversationPartners();
+  }
 
   closeMe(): void {
     this.dialogRef.close();

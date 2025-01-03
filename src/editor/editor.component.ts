@@ -86,13 +86,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
       {width: '40%', height: '80%'}
     );
     dialogRef.componentInstance.msg = msg;
-    dialogRef.componentInstance.cps = this.conversation.conversationPartners;
     dialogRef.componentInstance.openOtherDetails.subscribe(m => this.openMessageDetails(m))
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        // do something
-      }
-    });
   }
 
   addMessage(isSend: boolean) {
