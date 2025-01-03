@@ -16,7 +16,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
 
   constructor(
     public detailsService: DetailsService,
-    private modelIOService: ModelIOService,
+    public modelIOService: ModelIOService,
     private ioService: IoService,
   ) {
     this.conversation = this.modelIOService.newKEML();

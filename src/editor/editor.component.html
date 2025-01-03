@@ -42,7 +42,7 @@
             <g database [w]="32" [h]="10" [fill]="'white'" [stroke]="'orange'" [strokewidth]="1.5"></g>
           </svg>
         </button>
-        <button class="tool-button" title="Add new information" (click)="addNewInfo()">
+        <button class="tool-button" title="Add new information" (click)="addNewInfo()" [disabled]="modelIOService.disableAddNewNewInfo()">
           !
         </button>
         <button class="tool-button" title="Add information link" (click)="detailsService.openLinkCreationDialog()">

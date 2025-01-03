@@ -238,7 +238,7 @@ export class ModelIOService {
 
   disableAddNewNewInfo(): boolean {
     const rec = this.getFirstReceive();
-    return !!rec;
+    return !rec;
   }
 
   addNewNewInfo(causeMsg: ReceiveMessage): NewInformation {
