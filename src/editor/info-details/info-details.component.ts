@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, Input,} from '@angular/core';
 import {Information} from "../../shared/models/keml/msg-info";
 import {MatDialogRef} from "@angular/material/dialog";
 import {ModelIOService} from "../../shared/services/model-io.service";
@@ -11,7 +11,6 @@ import {DetailsService} from "../details/service/details.service";
 })
 export class InfoDetailsComponent {
   @Input() info!: Information;
-  @Output() openOtherDetails = new EventEmitter<Information>();
 
   constructor(
     public modelIOService: ModelIOService,
@@ -32,7 +31,7 @@ export class InfoDetailsComponent {
     const newInfo = this.modelIOService.duplicateInfo(this.info);
     if (newInfo) {
       this.dialogRef.close();
-      this.openOtherDetails.emit(newInfo);
+      this.detailsService.openInfoDetails(newInfo)
     }
   }
 

@@ -2,9 +2,6 @@ import {AfterViewInit, Component, ElementRef, OnInit, ViewChild,} from '@angular
 import {ModelIOService} from "../shared/services/model-io.service";
 import {IoService} from "../shared/services/io.service";
 import {Conversation} from "../shared/models/keml/conversation";
-import {MatDialog} from "@angular/material/dialog";
-import {Information} from "../shared/models/keml/msg-info";
-import {InfoDetailsComponent} from "./info-details/info-details.component";
 import {DetailsService} from "./details/service/details.service";
 
 @Component({
@@ -21,7 +18,6 @@ export class EditorComponent implements OnInit, AfterViewInit {
     public detailsService: DetailsService,
     private modelIOService: ModelIOService,
     private ioService: IoService,
-    private dialog: MatDialog,
   ) {
     this.conversation = this.modelIOService.newKEML();
   }
@@ -75,20 +71,11 @@ export class EditorComponent implements OnInit, AfterViewInit {
     }
   }
 
-  openInfoDetails(info: Information) {
-    const dialogRef = this.dialog.open(
-      InfoDetailsComponent,
-      {width: '40%', height: '80%'}
-    );
-    dialogRef.componentInstance.info = info;
-    dialogRef.componentInstance.openOtherDetails.subscribe(i => this.openInfoDetails(i))
-  }
-
   addNewInfo() {
     const rec = this.modelIOService.getFirstReceive(this.conversation.author.messages);
     if (rec) {
       const newInfo = this.modelIOService.addNewNewInfo(rec)
-      this.openInfoDetails(newInfo);
+      this.detailsService.openInfoDetails(newInfo);
     } else {
       console.error('No receive messages found');
     }
@@ -96,7 +83,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
 
   addPreknowledge() {
     const pre = this.modelIOService.addNewPreknowledge(this.conversation.author.preknowledge);
-    this.openInfoDetails(pre);
+    this.detailsService.openInfoDetails(pre);
   }
 
 }
