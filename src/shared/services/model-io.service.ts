@@ -52,6 +52,8 @@ export class ModelIOService {
     return JSON.stringify(convJson);
   }
 
+  //************ Conversation Partners *****************
+
   getConversationPartners(): ConversationPartner[] {
     return this.conversation.conversationPartners;
   }
@@ -116,6 +118,8 @@ export class ModelIOService {
     return newCp;
   }
 
+  //************* Messages ********************
+
   private msgPosFitsTiming(msg: Message): boolean {
     const msgs = this.conversation.author.messages
     if (msgs.indexOf(msg) != msg.timing) {
@@ -176,6 +180,26 @@ export class ModelIOService {
     return newMsg;
   }
 
+  filterReceives(msgs: Message[]): ReceiveMessage[] {
+    return msgs.filter(msg => !msg.isSend())
+      .map(msg => msg as ReceiveMessage)
+  }
+
+  getReceives() {
+    return this.filterReceives(this.conversation.author.messages);
+  }
+
+  getFirstReceive(msgs: Message[]): ReceiveMessage | null {
+    const receives = this.filterReceives(msgs);
+    if (receives.length > 0) {
+      return receives[0];
+    } else {
+      return null;
+    }
+  }
+
+  //************** Infos ************************
+
   deleteInfo(info: Information) {
     const infos = this.getRightInfoList(info)
     const pos = infos.indexOf(info);
@@ -200,15 +224,6 @@ export class ModelIOService {
     } else {
       return this.conversation.author.preknowledge
     }
-  }
-
-  filterReceives(msgs: Message[]): ReceiveMessage[] {
-    return msgs.filter(msg => !msg.isSend())
-      .map(msg => msg as ReceiveMessage)
-  }
-
-  getReceives() {
-    return this.filterReceives(this.conversation.author.messages);
   }
 
   addNewPreknowledge(pres: Preknowledge[]): Preknowledge {
@@ -248,14 +263,6 @@ export class ModelIOService {
     return newInfo;
   }
 
-  getFirstReceive(msgs: Message[]): ReceiveMessage | null {
-    const receives = this.filterReceives(msgs);
-    if (receives.length > 0) {
-      return receives[0];
-    } else {
-      return null;
-    }
-  }
 
   addInformationLink(src: Information, target: Information, type: InformationLinkType = InformationLinkType.SUPPLEMENT, text?: string): InformationLink {
     return new InformationLink(
