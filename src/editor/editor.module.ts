@@ -10,7 +10,7 @@ import {AuthorComponent} from "./author/author.component";
 import {MsgComponent} from "./msg/msg.component";
 import {InfoComponent} from "./info/info.component";
 import {DatabaseSvgComponent} from "./database-svg/database-svg.component";
-import {MsgDetailsComponent} from "./msg-details/msg-details.component";
+import {MsgDetailsComponent} from "./details/msg-details/msg-details.component";
 import {ConversationPartnerDetailsComponent} from "./cp-details/cp-details.component";
 import {InfoDetailsComponent} from "./info-details/info-details.component";
 import {IsInstrSvgComponent} from "./is-instr-svg/is-instr-svg.component";
@@ -19,7 +19,7 @@ import {TextAreaSvgComponent} from "./text-area-svg/text-area-svg.component";
 import {ArrowSvgComponent} from "./arrow-svg/arrow-svg.component";
 import {NewInfoComponent} from "./new-info/new-info.component";
 import {InformationLinkComponent} from "./information-link/information-link.component";
-import {InformationLinkDetailsComponent} from "./information-link-details/information-link-details.component";
+import {InformationLinkDetailsComponent} from "./details/information-link-details/information-link-details.component";
 import {InfoChoiceComponent} from "./info-choice/info-choice.component";
 import {InfoInnerComponent} from "./info-inner/info-inner.component";
 

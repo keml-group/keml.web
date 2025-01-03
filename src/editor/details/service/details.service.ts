@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import {Message} from "../models/keml/msg-info";
-import {MsgDetailsComponent} from "../../editor/msg-details/msg-details.component";
+import {Message} from "../../../shared/models/keml/msg-info";
+import {MsgDetailsComponent} from "../msg-details/msg-details.component";
 import {MatDialog} from "@angular/material/dialog";
 import {
   InformationLinkDetailsComponent
-} from "../../editor/information-link-details/information-link-details.component";
+} from "../information-link-details/information-link-details.component";
 
 @Injectable({
   providedIn: 'root'

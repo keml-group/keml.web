@@ -7,7 +7,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {ConversationPartnerDetailsComponent} from "./cp-details/cp-details.component";
 import {Information} from "../shared/models/keml/msg-info";
 import {InfoDetailsComponent} from "./info-details/info-details.component";
-import {DetailsService} from "../shared/services/details.service";
+import {DetailsService} from "./details/service/details.service";
 
 @Component({
   selector: 'keml-editor',

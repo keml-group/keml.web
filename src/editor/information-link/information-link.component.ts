@@ -2,7 +2,7 @@ import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {InformationLink} from "../../shared/models/keml/msg-info";
 import {InfoComponent} from "../info/info.component";
 import {MatDialog} from "@angular/material/dialog";
-import {InformationLinkDetailsComponent} from "../information-link-details/information-link-details.component";
+import {InformationLinkDetailsComponent} from "../details/information-link-details/information-link-details.component";
 
 @Component({
   selector: '[infoLinkG]',
