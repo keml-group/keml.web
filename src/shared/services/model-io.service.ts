@@ -56,7 +56,8 @@ export class ModelIOService {
     return this.conversation.conversationPartners;
   }
 
-  addNewConversationPartner(cps: ConversationPartner[]) {
+  addNewConversationPartner() {
+    const cps = this.conversation.conversationPartners;
     const cp: ConversationPartner = new ConversationPartner(
       'New Partner',
       LayoutHelper.nextConversationPartnerPosition(cps[cps.length-1]?.xPosition), //todo
@@ -64,41 +65,46 @@ export class ModelIOService {
     cps.push(cp);
   }
 
-  disableMoveConversationPartnerRight(cp: ConversationPartner, cps: ConversationPartner[]): boolean {
+  disableMoveConversationPartnerRight(cp: ConversationPartner): boolean {
+    const cps = this.conversation.conversationPartners;
     const pos = cps.indexOf(cp);
     return pos == -1 || pos+1 >= cps.length;
   }
 
-  moveConversationPartnerRight(cp: ConversationPartner, cps: ConversationPartner[]) {
+  moveConversationPartnerRight(cp: ConversationPartner) {
+    const cps = this.conversation.conversationPartners;
     const pos = cps.indexOf(cp);
-    if (!this.disableMoveConversationPartnerRight(cp, cps)) {
+    if (!this.disableMoveConversationPartnerRight(cp)) {
       cps[pos] = cps[pos+1];
       cps[pos + 1] = cp;
       LayoutHelper.positionConversationPartners(cps);
     }
   }
 
-  disableMoveConversationPartnerLeft(cp: ConversationPartner, cps: ConversationPartner[]): boolean {
-    const pos = cps.indexOf(cp);
+  disableMoveConversationPartnerLeft(cp: ConversationPartner): boolean {
+    const pos = this.conversation.conversationPartners.indexOf(cp);
     return pos <= 0;
   }
 
-  moveConversationPartnerLeft(cp: ConversationPartner, cps: ConversationPartner[]) {
+  moveConversationPartnerLeft(cp: ConversationPartner) {
+    const cps = this.conversation.conversationPartners;
     const pos = cps.indexOf(cp);
-    if (!this.disableMoveConversationPartnerLeft(cp, cps)) {
+    if (!this.disableMoveConversationPartnerLeft(cp)) {
       cps[pos] = cps[pos-1];
       cps[pos-1] = cp;
       LayoutHelper.positionConversationPartners(cps);
     }
   }
 
-  deleteConversationPartner(cp: ConversationPartner, cps: ConversationPartner[]) {
-    //todo allow if last?
+  deleteConversationPartner(cp: ConversationPartner) {
+    const cps = this.conversation.conversationPartners;
+    //todo allow delete if last?
     const pos = cps.indexOf(cp);
     cps.splice(pos, 1);
   }
 
-  duplicateConversationPartner(cp: ConversationPartner, cps: ConversationPartner[]): ConversationPartner {
+  duplicateConversationPartner(cp: ConversationPartner): ConversationPartner {
+    const cps = this.conversation.conversationPartners;
     const pos = cps.indexOf(cp);
     const newCp: ConversationPartner = new ConversationPartner(
       'Duplicate of '+ cp.name,

@@ -64,7 +64,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   }
 
   addConversationPartner() {
-    this.modelIOService.addNewConversationPartner(this.conversation.conversationPartners);
+    this.modelIOService.addNewConversationPartner();
   }
 
   openConversationPartnerDetails(cp: ConversationPartner) {
@@ -73,7 +73,6 @@ export class EditorComponent implements OnInit, AfterViewInit {
       {width: '40%', height: '80%'}
     )
     dialogRef.componentInstance.cp = cp;
-    dialogRef.componentInstance.cps = this.conversation.conversationPartners;
     dialogRef.componentInstance.openOtherDetails.subscribe(c => {
       this.openConversationPartnerDetails(c);
     })
