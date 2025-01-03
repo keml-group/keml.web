@@ -5,6 +5,8 @@ import {MatDialog} from "@angular/material/dialog";
 import {
   InformationLinkDetailsComponent
 } from "../information-link-details/information-link-details.component";
+import {ConversationPartner} from "../../../shared/models/keml/conversation-partner";
+import {ConversationPartnerDetailsComponent} from "../../cp-details/cp-details.component";
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +24,14 @@ export class DetailsService {
     );
     dialogRef.componentInstance.msg = msg;
     dialogRef.componentInstance.openOtherDetails.subscribe(m => this.openMessageDetails(m))
+  }
+
+  openConversationPartnerDetails(cp: ConversationPartner) {
+    const dialogRef = this.dialog.open(
+      ConversationPartnerDetailsComponent,
+      {width: '40%', height: '80%'}
+    )
+    dialogRef.componentInstance.cp = cp;
   }
 
   openLinkCreationDialog() {

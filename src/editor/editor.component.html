@@ -54,7 +54,7 @@
           <g transform="translate(750,0)">
             <g text-area-svg [(text)]="conversation.title" [singleEdit]="true" [w]="600" [h]="25" [x]="0" [y]="0"></g>
             <g authorG [author]="conversation.author"></g>
-            <g cp *ngFor="let convP of conversation.conversationPartners" [conversationPartner]="convP" (openDetails)="openConversationPartnerDetails(convP)"></g>
+            <g cp *ngFor="let convP of conversation.conversationPartners" [conversationPartner]="convP" (openDetails)="detailsService.openConversationPartnerDetails(convP)"></g>
             <g msgG *ngFor="let m of conversation.author.messages" [msg]="m" (openDetails)="detailsService.openMessageDetails(m)" (chooseInfo)="openInfoDetails($event)"></g>
             <g preknowG *ngFor="let pre of conversation.author.preknowledge" [info]="pre" (chooseInfo)="openInfoDetails(pre)"></g>
           </g>

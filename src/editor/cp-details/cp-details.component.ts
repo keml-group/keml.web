@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
 import {ConversationPartner} from "../../shared/models/keml/conversation-partner";
-import {Message} from "../../shared/models/keml/msg-info";
 import {ModelIOService} from "../../shared/services/model-io.service";
+import {DetailsService} from "../details/service/details.service";
 
 @Component({
   selector: 'cp-details',
@@ -11,13 +11,12 @@ import {ModelIOService} from "../../shared/services/model-io.service";
 })
 export class ConversationPartnerDetailsComponent {
   @Input() cp!: ConversationPartner;
-  @Input() msgs!: Message[];
-  @Output() openOtherDetails = new EventEmitter<ConversationPartner>();
   cps: ConversationPartner[];
 
   constructor(
     public dialogRef: MatDialogRef<ConversationPartnerDetailsComponent>,
     public modelIOService: ModelIOService,
+    private detailsService: DetailsService,
   ) {
     this.cps = modelIOService.getConversationPartners();
   }
@@ -51,7 +50,7 @@ export class ConversationPartnerDetailsComponent {
     const newCp = this.modelIOService.duplicateConversationPartner(this.cp);
     if (newCp) {
       this.dialogRef.close();
-      this.openOtherDetails.emit(newCp);
+      this.detailsService.openConversationPartnerDetails(newCp);
     }
   }
 

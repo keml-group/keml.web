@@ -67,17 +67,6 @@ export class EditorComponent implements OnInit, AfterViewInit {
     this.modelIOService.addNewConversationPartner();
   }
 
-  openConversationPartnerDetails(cp: ConversationPartner) {
-    const dialogRef = this.dialog.open(
-      ConversationPartnerDetailsComponent,
-      {width: '40%', height: '80%'}
-    )
-    dialogRef.componentInstance.cp = cp;
-    dialogRef.componentInstance.openOtherDetails.subscribe(c => {
-      this.openConversationPartnerDetails(c);
-    })
-  }
-
   addMessage(isSend: boolean) {
     if (this.conversation.conversationPartners.length > 0) {
       const cp = this.conversation.conversationPartners[0];
