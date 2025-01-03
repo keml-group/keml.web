@@ -11,7 +11,6 @@ import {ModelIOService} from "../../shared/services/model-io.service";
 })
 export class MsgDetailsComponent {
   @Input() msg!: Message;
-  @Input() msgs!: Message[];
   @Input() cps!: ConversationPartner[];
   @Output() openOtherDetails = new EventEmitter<Message>();
 
@@ -21,12 +20,11 @@ export class MsgDetailsComponent {
   ) { }
 
   closeMe(): void {
-    console.log(this.msg.timing);
     this.dialogRef.close();
   }
 
   moveUp() {
-    this.modelIOService.moveMessageUp(this.msg, this.msgs);
+    this.modelIOService.moveMessageUp(this.msg);
   }
 
   disableMoveUp(): boolean {
@@ -34,20 +32,20 @@ export class MsgDetailsComponent {
   }
 
   moveDown() {
-    this.modelIOService.moveMessageDown(this.msg, this.msgs);
+    this.modelIOService.moveMessageDown(this.msg);
   }
 
   disableMoveDown(): boolean {
-    return this.modelIOService.disableMoveDown(this.msg, this.msgs)
+    return this.modelIOService.disableMoveDown(this.msg)
   }
 
   deleteMe() {
-    this.modelIOService.deleteMessage(this.msg, this.msgs);
+    this.modelIOService.deleteMessage(this.msg);
     this.dialogRef.close();
   }
 
   duplicateMe(): void {
-    const newM = this.modelIOService.duplicateMessage(this.msg, this.msgs);
+    const newM = this.modelIOService.duplicateMessage(this.msg);
     if (newM) {
       this.dialogRef.close();
       this.openOtherDetails.emit(newM);

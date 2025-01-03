@@ -24,7 +24,6 @@ export class ModelIOService {
   constructor() {
     console.log("ModelIOService constructed");
     this.newKEML();
-    console.log(this.conversation)
   }
 
   loadKEML(json: string): Conversation {
@@ -42,11 +41,9 @@ export class ModelIOService {
   }
 
   newKEML(): Conversation {
-
     const conv = new Conversation();
     LayoutHelper.positionConversationPartners(conv.conversationPartners)
     this.conversation = conv;
-    console.log(this.conversation)
     return conv;
   }
 
@@ -108,7 +105,8 @@ export class ModelIOService {
     return newCp;
   }
 
-  private msgPosFitsTiming(msg: Message, msgs: Message[]): boolean {
+  private msgPosFitsTiming(msg: Message): boolean {
+    const msgs = this.conversation.author.messages
     if (msgs.indexOf(msg) != msg.timing) {
       console.error('Position and msg timing do not fit for ' + msg );
       return false;
@@ -116,34 +114,35 @@ export class ModelIOService {
     return true;
   }
 
-  moveMessageUp(msg: Message, msgs: Message[]) {
+  moveMessageUp(msg: Message) {
+    const msgs = this.conversation.author.messages
     //actually, timing should be equal to the index - can we rely on it?
     msgs[msg.timing] = msgs[msg.timing-1];
     msgs[msg.timing].timing++;
     msgs[msg.timing-1] = msg;
     msg.timing--;
-    // todo propagate change to infos
   }
 
   disableMoveUp(msg: Message): boolean {
     return msg.timing<=0;
   }
 
-  moveMessageDown(msg: Message, msgs: Message[]) {
+  moveMessageDown(msg: Message) {
+    const msgs = this.conversation.author.messages
     //actually, timing should be equal to the index - can we rely on it?
     msgs[msg.timing] = msgs[msg.timing+1];
     msgs[msg.timing].timing-=1;
     msgs[msg.timing+1] = msg;
     msg.timing+=1;
-    // todo propagate change to infos (move them?)
   }
 
-  disableMoveDown(msg: Message, msgs: Message[]): boolean {
-    return msg.timing>=msgs.length-1;
+  disableMoveDown(msg: Message): boolean {
+    return msg.timing>=this.conversation.author.messages.length-1;
   }
 
-  deleteMessage(msg: Message, msgs: Message[]) {
-    if (this.msgPosFitsTiming(msg, msgs)) {
+  deleteMessage(msg: Message) {
+    const msgs = this.conversation.author.messages
+    if (this.msgPosFitsTiming(msg)) {
       msgs.splice(msg.timing, 1);
       // adapt later messages:
       //todo also adapt infos
@@ -153,11 +152,13 @@ export class ModelIOService {
     }
   }
 
-  duplicateMessage(msg: Message, msgs: Message[]): Message | null {
+  duplicateMessage(msg: Message): Message | null {
+    const msgs = this.conversation.author.messages
     return Message.duplicateMessage(msg, msgs)
   }
 
-  addNewMessage(counterPart: ConversationPartner, isSend: boolean, msgs: Message[]): Message {
+  addNewMessage(counterPart: ConversationPartner, isSend: boolean): Message {
+    const msgs = this.conversation.author.messages
     const content = isSend ? 'New send content' : 'New receive content';
     const newMsg: Message = Message.newMessage(isSend, counterPart, msgs.length, content)
     msgs.push(newMsg);

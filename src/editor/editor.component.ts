@@ -86,7 +86,6 @@ export class EditorComponent implements OnInit, AfterViewInit {
       {width: '40%', height: '80%'}
     );
     dialogRef.componentInstance.msg = msg;
-    dialogRef.componentInstance.msgs = this.conversation.author.messages;
     dialogRef.componentInstance.cps = this.conversation.conversationPartners;
     dialogRef.componentInstance.openOtherDetails.subscribe(m => this.openMessageDetails(m))
     dialogRef.afterClosed().subscribe(result => {
@@ -99,7 +98,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   addMessage(isSend: boolean) {
     if (this.conversation.conversationPartners.length > 0) {
       const cp = this.conversation.conversationPartners[0];
-      const msg = this.modelIOService.addNewMessage(cp, isSend, this.conversation.author.messages);
+      const msg = this.modelIOService.addNewMessage(cp, isSend);
       this.openMessageDetails(msg);
     } else {
       console.error('No conversation partners found');
