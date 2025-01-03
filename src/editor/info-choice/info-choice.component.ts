@@ -26,7 +26,8 @@ export class InfoChoiceComponent {
     this.preknowledges = this.modelIOService.conversation.author.preknowledge;
   }
 
-  openChoice() {
+  openChoice(event: Event) {
+    event.stopPropagation();
     this.dialogRef = this.dialog.open(this.modalRef,{})
   }
 
