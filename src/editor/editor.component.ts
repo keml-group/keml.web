@@ -2,9 +2,7 @@ import {AfterViewInit, Component, ElementRef, OnInit, ViewChild,} from '@angular
 import {ModelIOService} from "../shared/services/model-io.service";
 import {IoService} from "../shared/services/io.service";
 import {Conversation} from "../shared/models/keml/conversation";
-import {ConversationPartner} from "../shared/models/keml/conversation-partner";
 import {MatDialog} from "@angular/material/dialog";
-import {ConversationPartnerDetailsComponent} from "./details/cp-details/cp-details.component";
 import {Information} from "../shared/models/keml/msg-info";
 import {InfoDetailsComponent} from "./info-details/info-details.component";
 import {DetailsService} from "./details/service/details.service";
@@ -83,7 +81,6 @@ export class EditorComponent implements OnInit, AfterViewInit {
       {width: '40%', height: '80%'}
     );
     dialogRef.componentInstance.info = info;
-    dialogRef.componentInstance.infos = this.modelIOService.findInfoList(info, this.conversation.author.preknowledge, this.conversation.author.messages); // todo
     dialogRef.componentInstance.openOtherDetails.subscribe(i => this.openInfoDetails(i))
   }
 

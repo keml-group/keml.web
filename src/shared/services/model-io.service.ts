@@ -175,32 +175,30 @@ export class ModelIOService {
     return newMsg;
   }
 
-  deleteInfo(info: Information, infos: Information[]) {
+  deleteInfo(info: Information) {
+    const infos = this.getRightInfoList(info)
     const pos = infos.indexOf(info);
     if (pos > -1) {
       infos.splice(pos, 1);
+    } else {
+      console.error('info '+info+' was not correctly linked')
     }
   }
 
-  duplicateInfo(info: Information, infos: Information[]): Information {
+  duplicateInfo(info: Information): Information {
+    const infos = this.getRightInfoList(info)
     const newInfo = info.duplicate()
     infos.push(newInfo); //todo position right after current info?
     return newInfo;
   }
 
-  findInfoList(info: Information, pre: Preknowledge[], msgs: Message[]): Information[] {
-    let pos = pre.indexOf(info);
-    if (pos > -1) {
-      return pre;
+  private getRightInfoList(info: Information): Information[] {
+    let maybeSource = (info as NewInformation).source
+    if (maybeSource) {
+      return maybeSource.generates;
     } else {
-      const receives = this.filterReceives(msgs);
-      for (let i = 0; i <= receives.length - 1; i++) {
-        if (this.isInfoFromMessage(info, receives[i])) {
-            return receives[i].generates;
-        }
-      }
+      return this.conversation.author.preknowledge
     }
-    return [];
   }
 
   filterReceives(msgs: Message[]): ReceiveMessage[] {
@@ -210,10 +208,6 @@ export class ModelIOService {
 
   getReceives() {
     return this.filterReceives(this.conversation.author.messages);
-  }
-
-  private isInfoFromMessage(info: Information, msg: ReceiveMessage): boolean {
-    return msg.generates.indexOf(<NewInformation>info)>-1;
   }
 
   addNewPreknowledge(pres: Preknowledge[]): Preknowledge {

@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Information} from "../../shared/models/keml/msg-info";
 import {MatDialogRef} from "@angular/material/dialog";
 import {ModelIOService} from "../../shared/services/model-io.service";
+import {DetailsService} from "../details/service/details.service";
 
 @Component({
   selector: 'info-details',
@@ -10,12 +11,12 @@ import {ModelIOService} from "../../shared/services/model-io.service";
 })
 export class InfoDetailsComponent {
   @Input() info!: Information;
-  @Input() infos!: Information[];
   @Output() openOtherDetails = new EventEmitter<Information>();
 
   constructor(
-    public dialogRef: MatDialogRef<InfoDetailsComponent>,
     public modelIOService: ModelIOService,
+    private dialogRef: MatDialogRef<InfoDetailsComponent>,
+    private detailsService: DetailsService,
   ) {}
 
   closeMe() {
@@ -23,12 +24,12 @@ export class InfoDetailsComponent {
   }
 
   deleteMe() {
-    this.modelIOService.deleteInfo(this.info, this.infos);
+    this.modelIOService.deleteInfo(this.info);
     this.dialogRef.close();
   }
 
   duplicateMe(): void {
-    const newInfo = this.modelIOService.duplicateInfo(this.info, this.infos);
+    const newInfo = this.modelIOService.duplicateInfo(this.info);
     if (newInfo) {
       this.dialogRef.close();
       this.openOtherDetails.emit(newInfo);
