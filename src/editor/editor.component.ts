@@ -3,13 +3,11 @@ import {ModelIOService} from "../shared/services/model-io.service";
 import {IoService} from "../shared/services/io.service";
 import {Conversation} from "../shared/models/keml/conversation";
 import {ConversationPartner} from "../shared/models/keml/conversation-partner";
-import {Message} from "../shared/models/keml/msg-info";
-import {MsgDetailsComponent} from "./msg-details/msg-details.component";
 import {MatDialog} from "@angular/material/dialog";
 import {ConversationPartnerDetailsComponent} from "./cp-details/cp-details.component";
 import {Information} from "../shared/models/keml/msg-info";
 import {InfoDetailsComponent} from "./info-details/info-details.component";
-import {InformationLinkDetailsComponent} from "./information-link-details/information-link-details.component";
+import {DetailsService} from "../shared/services/details.service";
 
 @Component({
   selector: 'keml-editor',
@@ -22,6 +20,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   conversation: Conversation;
 
   constructor(
+    public detailsService: DetailsService,
     private modelIOService: ModelIOService,
     private ioService: IoService,
     private dialog: MatDialog,
@@ -80,20 +79,11 @@ export class EditorComponent implements OnInit, AfterViewInit {
     })
   }
 
-  openMessageDetails(msg: Message) {
-    const dialogRef = this.dialog.open(
-      MsgDetailsComponent,
-      {width: '40%', height: '80%'}
-    );
-    dialogRef.componentInstance.msg = msg;
-    dialogRef.componentInstance.openOtherDetails.subscribe(m => this.openMessageDetails(m))
-  }
-
   addMessage(isSend: boolean) {
     if (this.conversation.conversationPartners.length > 0) {
       const cp = this.conversation.conversationPartners[0];
       const msg = this.modelIOService.addNewMessage(cp, isSend);
-      this.openMessageDetails(msg);
+      this.detailsService.openMessageDetails(msg);
     } else {
       console.error('No conversation partners found');
     }
@@ -123,10 +113,5 @@ export class EditorComponent implements OnInit, AfterViewInit {
     const pre = this.modelIOService.addNewPreknowledge(this.conversation.author.preknowledge);
     this.openInfoDetails(pre);
   }
-
-  openLinkCreationDialog() {
-    this.dialog.open(InformationLinkDetailsComponent, {width: '40%', height: '80%'});
-  }
-
 
 }
