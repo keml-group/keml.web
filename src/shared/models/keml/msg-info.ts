@@ -1,5 +1,4 @@
 import {ConversationPartner} from "./conversation-partner";
-
 import {
   MessageJson,
   ReceiveMessageJson,
@@ -75,37 +74,6 @@ export abstract class Message extends Referencable {
     } else {
       return new ReceiveMessage(counterPart, timing, content, originalContent)
     }
-  }
-
-  static newFromContext(ref: Ref, json: MessageJson, parserContext: ParserContext): any {
-    let dummyCp = new ConversationPartner() //todo not nice
-    if(Message.isSend(json.eClass)) {
-      return new SendMessage(dummyCp, 0, undefined, undefined, undefined,
-        ref, parserContext, (json as SendMessageJson)
-        )
-    } else {
-      return new ReceiveMessage(dummyCp, 0, undefined, undefined, undefined, undefined, undefined,
-        ref, parserContext, (json as ReceiveMessageJson)
-      )
-    }
-  }
-
-  static fromJSON(msg: MessageJson, context: ParserContext): Message {
-    //deal with unexpected undefined for timing 0:
-    let timing = msg.timing;
-    if (!timing) {
-      timing = 0;
-    }
-    let counterPart: ConversationPartner = context.get(msg.counterPart.$ref);
-    let msgC =  Message.newMessage(this.isSend(msg.eClass), counterPart, timing, msg.content, msg.originalContent)
-    if (!msgC.isSend()) {
-      let receive = msgC as ReceiveMessage
-      let infos = (msg as ReceiveMessageJson).generates
-      let generated: NewInformation[] = infos?.map(info => NewInformation.fromJson(info, receive))
-      context.putList('todo', 'generates', generated)
-      receive.addGenerates(generated)
-    }
-    return msgC
   }
 
   private static msgPosFitsTiming(msg: Message, msgs: Message[]): boolean {
@@ -353,10 +321,6 @@ export class NewInformation extends Information {
     } else {
       this.source = source;
     }
-  }
-
-  static fromJson(newInfo: NewInformationJson, source: ReceiveMessage): NewInformation {
-    return new NewInformation(source, newInfo.message, newInfo.isInstruction)
   }
 
   override duplicate(): NewInformation {
