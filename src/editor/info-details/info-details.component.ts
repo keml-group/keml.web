@@ -1,8 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Information, Preknowledge} from "../../shared/models/keml/msg-info";
-import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {Information} from "../../shared/models/keml/msg-info";
+import {MatDialogRef} from "@angular/material/dialog";
 import {ModelIOService} from "../../shared/services/model-io.service";
-import {InfoChoiceComponent} from "../info-choice/info-choice.component";
 
 @Component({
   selector: 'info-details',
@@ -16,17 +15,8 @@ export class InfoDetailsComponent {
 
   constructor(
     public dialogRef: MatDialogRef<InfoDetailsComponent>,
-    public subDialog: MatDialog,
     public modelIOService: ModelIOService,
   ) {}
-
-  createInfoLink() {
-    const dialogRef = this.subDialog.open(InfoChoiceComponent,{width: '40%', height: '80%'});
-    dialogRef.componentInstance.infoChange.subscribe(target => {
-      this.modelIOService.createLink(this.info, target)
-      // todo open link details?
-    })
-  }
 
   closeMe() {
     this.dialogRef.close();

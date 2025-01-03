@@ -1,6 +1,6 @@
 <h2>Information Link Details</h2>
 
-<div class="info-form">
+<div class="info-form" *ngIf="infoLink">
 
   <label class="form-label">Source</label>
   <info-choice [(info)]="infoLink.source"></info-choice>
@@ -17,10 +17,9 @@
   <label class="form-label">Text</label>
   <textarea type="text" [(ngModel)]="infoLink.linkText"></textarea>
 
-
 </div>
 
-<div class="row">
+<div class="row" *ngIf="infoLink">
   <button class="tool-button-text" (click)="closeMe()">
     <mat-icon aria-hidden="false" fontIcon="check"></mat-icon>
     Ok
@@ -35,4 +34,33 @@
   </button>
 </div>
 
+<div class="info-form" *ngIf="!infoLink">
+  <!-- todo add errors and handling, maybe mat-form fields-->
+
+  <label class="form-label">Source</label>
+  <info-choice [(info)]="src"></info-choice>
+
+  <label class="form-label">Target</label>
+  <info-choice [(info)]="target"></info-choice>
+
+  <label class="form-label">Type</label>
+  <select [(ngModel)]="type">
+    <option *ngFor="let type of Object.values(InformationLinkType)" [ngValue]="type">{{type}}</option>
+  </select>
+
+  <label class="form-label">Text</label>
+  <textarea type="text" [(ngModel)]="text"></textarea>
+
+</div>
+
+<div class="row" *ngIf="!infoLink">
+  <button class="tool-button-text" (click)="closeMe()">
+    <mat-icon aria-hidden="false" fontIcon="clear"></mat-icon>
+    Close
+  </button>
+  <button class="tool-button-text" (click)="createMe()" [disabled]="!(this.src && this.target && this.type)">
+    <mat-icon aria-hidden="false" fontIcon="add"></mat-icon>
+    Create
+  </button>
+</div>
 

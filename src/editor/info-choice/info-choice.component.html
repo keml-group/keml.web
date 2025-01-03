@@ -1,6 +1,9 @@
-<svg width="200" height="80">
+<svg width="200" height="80" *ngIf="info">
   <g info-inner [info]="info">
   </g>
+</svg>
+<svg width="200" height="80" *ngIf="!info">
+  <rect width="200" height="80" fill="orange"></rect>
 </svg>
 <button (click)="openChoice()">
   Choose

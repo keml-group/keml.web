@@ -11,7 +11,7 @@ import {ModelIOService} from "../../shared/services/model-io.service";
 export class InfoChoiceComponent {
 
   @ViewChild('chooseinfo') modalRef!: TemplateRef<any>;
-  @Input() info!: Information;
+  @Input() info?: Information;
   @Output() infoChange = new EventEmitter<Information>();
   //graphical component to pick an info, hence it needs all messages and all preknowledge as input:
   preknowledges: Preknowledge[];
