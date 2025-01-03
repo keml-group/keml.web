@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
-import {ConversationPartner} from "../../shared/models/keml/conversation-partner";
-import {ModelIOService} from "../../shared/services/model-io.service";
-import {DetailsService} from "../details/service/details.service";
+import {ConversationPartner} from "../../../shared/models/keml/conversation-partner";
+import {ModelIOService} from "../../../shared/services/model-io.service";
+import {DetailsService} from "../service/details.service";
 
 @Component({
   selector: 'cp-details',

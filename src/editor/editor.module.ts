@@ -11,7 +11,7 @@ import {MsgComponent} from "./msg/msg.component";
 import {InfoComponent} from "./info/info.component";
 import {DatabaseSvgComponent} from "./database-svg/database-svg.component";
 import {MsgDetailsComponent} from "./details/msg-details/msg-details.component";
-import {ConversationPartnerDetailsComponent} from "./cp-details/cp-details.component";
+import {ConversationPartnerDetailsComponent} from "./details/cp-details/cp-details.component";
 import {InfoDetailsComponent} from "./info-details/info-details.component";
 import {IsInstrSvgComponent} from "./is-instr-svg/is-instr-svg.component";
 import {PreknowledgeComponent} from "./preknowledge/preknowledge.component";

@@ -6,7 +6,7 @@ import {
   InformationLinkDetailsComponent
 } from "../information-link-details/information-link-details.component";
 import {ConversationPartner} from "../../../shared/models/keml/conversation-partner";
-import {ConversationPartnerDetailsComponent} from "../../cp-details/cp-details.component";
+import {ConversationPartnerDetailsComponent} from "../cp-details/cp-details.component";
 
 @Injectable({
   providedIn: 'root'
