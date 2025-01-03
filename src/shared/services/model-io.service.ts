@@ -171,6 +171,10 @@ export class ModelIOService {
     return newMsg;
   }
 
+  disableAddNewMessage(): boolean {
+    return this.conversation.conversationPartners.length <= 0;
+  }
+
   getReceives() {
     return this.conversation.author.messages.filter(msg => !msg.isSend())
       .map(msg => msg as ReceiveMessage)
