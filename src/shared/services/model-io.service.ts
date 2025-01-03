@@ -56,13 +56,14 @@ export class ModelIOService {
     return this.conversation.conversationPartners;
   }
 
-  addNewConversationPartner() {
+  addNewConversationPartner(): ConversationPartner {
     const cps = this.conversation.conversationPartners;
     const cp: ConversationPartner = new ConversationPartner(
       'New Partner',
       LayoutHelper.nextConversationPartnerPosition(cps[cps.length-1]?.xPosition), //todo
     );
     cps.push(cp);
+    return cp;
   }
 
   disableMoveConversationPartnerRight(cp: ConversationPartner): boolean {

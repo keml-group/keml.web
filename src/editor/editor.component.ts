@@ -58,7 +58,8 @@ export class EditorComponent implements OnInit, AfterViewInit {
   }
 
   addConversationPartner() {
-    this.modelIOService.addNewConversationPartner();
+    const cp = this.modelIOService.addNewConversationPartner();
+    this.detailsService.openConversationPartnerDetails(cp)
   }
 
   addMessage(isSend: boolean) {
