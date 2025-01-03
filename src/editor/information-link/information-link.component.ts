@@ -1,7 +1,6 @@
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {InformationLink} from "../../shared/models/keml/msg-info";
 import {InfoComponent} from "../info/info.component";
-import {ConversationPartnerDetailsComponent} from "../cp-details/cp-details.component";
 import {MatDialog} from "@angular/material/dialog";
 import {InformationLinkDetailsComponent} from "../information-link-details/information-link-details.component";
 
@@ -36,8 +35,6 @@ export class InformationLinkComponent implements OnInit, OnChanges {
       {width: '40%', height: '80%'}
     )
     dialogRef.componentInstance.infoLink = this.infoLink;
-    dialogRef.componentInstance.newInfos = [];
-    dialogRef.componentInstance.preknowledges = [];
   }
 
   private getStartRef() {

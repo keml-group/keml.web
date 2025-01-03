@@ -9,6 +9,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {ConversationPartnerDetailsComponent} from "./cp-details/cp-details.component";
 import {Information} from "../shared/models/keml/msg-info";
 import {InfoDetailsComponent} from "./info-details/info-details.component";
+import {InformationLinkDetailsComponent} from "./information-link-details/information-link-details.component";
 
 @Component({
   selector: 'keml-editor',
@@ -129,5 +130,10 @@ export class EditorComponent implements OnInit, AfterViewInit {
     const pre = this.modelIOService.addNewPreknowledge(this.conversation.author.preknowledge);
     this.openInfoDetails(pre);
   }
+
+  openLinkCreationDialog() {
+    this.dialog.open(InformationLinkDetailsComponent, {width: '40%', height: '80%'});
+  }
+
 
 }
