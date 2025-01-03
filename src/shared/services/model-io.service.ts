@@ -120,15 +120,6 @@ export class ModelIOService {
 
   //************* Messages ********************
 
-  private msgPosFitsTiming(msg: Message): boolean {
-    const msgs = this.conversation.author.messages
-    if (msgs.indexOf(msg) != msg.timing) {
-      console.error('Position and msg timing do not fit for ' + msg );
-      return false;
-    }
-    return true;
-  }
-
   moveMessageUp(msg: Message) {
     const msgs = this.conversation.author.messages
     //actually, timing should be equal to the index - can we rely on it?
@@ -180,22 +171,23 @@ export class ModelIOService {
     return newMsg;
   }
 
-  filterReceives(msgs: Message[]): ReceiveMessage[] {
-    return msgs.filter(msg => !msg.isSend())
+  getReceives() {
+    return this.conversation.author.messages.filter(msg => !msg.isSend())
       .map(msg => msg as ReceiveMessage)
   }
 
-  getReceives() {
-    return this.filterReceives(this.conversation.author.messages);
+  getFirstReceive(): ReceiveMessage | undefined {
+    const msgs = this.conversation.author.messages;
+    return (msgs.find(m => !m.isSend()) as ReceiveMessage)
   }
 
-  getFirstReceive(msgs: Message[]): ReceiveMessage | null {
-    const receives = this.filterReceives(msgs);
-    if (receives.length > 0) {
-      return receives[0];
-    } else {
-      return null;
+  private msgPosFitsTiming(msg: Message): boolean {
+    const msgs = this.conversation.author.messages
+    if (msgs.indexOf(msg) != msg.timing) {
+      console.error('Position and msg timing do not fit for ' + msg );
+      return false;
     }
+    return true;
   }
 
   //************** Infos ************************
@@ -242,6 +234,11 @@ export class ModelIOService {
     );
     pres.push(preknowledge);
     return preknowledge;
+  }
+
+  disableAddNewNewInfo(): boolean {
+    const rec = this.getFirstReceive();
+    return !!rec;
   }
 
   addNewNewInfo(causeMsg: ReceiveMessage): NewInformation {

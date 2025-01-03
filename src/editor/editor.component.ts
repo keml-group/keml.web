@@ -73,7 +73,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   }
 
   addNewInfo() {
-    const rec = this.modelIOService.getFirstReceive(this.conversation.author.messages);
+    const rec = this.modelIOService.getFirstReceive();
     if (rec) {
       const newInfo = this.modelIOService.addNewNewInfo(rec)
       this.detailsService.openInfoDetails(newInfo);
