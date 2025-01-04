@@ -5,7 +5,7 @@ import {
   OnChanges,
   Output,
 } from '@angular/core';
-import {BoundingBox} from "../../shared/models/graphical/bounding-box";
+import {BoundingBox} from "../../../shared/models/graphical/bounding-box";
 
 @Component({
   selector: '[text-area-svg]',

@@ -8,12 +8,12 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import {ArrowHead, ArrowType} from "../../shared/models/graphical/arrow-heads";
-import {BoundingBox} from "../../shared/models/graphical/bounding-box";
-import {PathLayouter} from "../../shared/utility/path-layouter";
+import {ArrowHead, ArrowType} from "../../../shared/models/graphical/arrow-heads";
+import {BoundingBox} from "../../../shared/models/graphical/bounding-box";
+import {PathLayouter} from "../../../shared/utility/path-layouter";
 import {v4 as uuidv4} from "uuid";
-import {PositionHelper} from "../../shared/models/graphical/position-helper";
-import {SVGAccessService} from "../../shared/services/svg-access.service";
+import {PositionHelper} from "../../../shared/models/graphical/position-helper";
+import {SVGAccessService} from "../../../shared/services/svg-access.service";
 import {Point} from "@angular/cdk/drag-drop";
 
 @Component({

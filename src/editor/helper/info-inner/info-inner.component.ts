@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {Information, NewInformation} from "../../shared/models/keml/msg-info";
+import {Information, NewInformation} from "../../../shared/models/keml/msg-info";
 
 @Component({
   selector: '[info-inner]',

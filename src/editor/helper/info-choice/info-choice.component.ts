@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output, TemplateRef, ViewChild} from '@angular/core';
-import {Information, Preknowledge, ReceiveMessage} from "../../shared/models/keml/msg-info";
+import {Information, Preknowledge, ReceiveMessage} from "../../../shared/models/keml/msg-info";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {ModelIOService} from "../../shared/services/model-io.service";
+import {ModelIOService} from "../../../shared/services/model-io.service";
 
 @Component({
   selector: 'info-choice',
