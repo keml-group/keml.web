@@ -228,7 +228,7 @@ export class ModelIOService {
     }
   }
 
-  addNewPreknowledge(pres: Preknowledge[]): Preknowledge {
+  addNewPreknowledge(): Preknowledge {
     const preknowledge: Preknowledge = new Preknowledge(
       "New preknowledge",
       false,
@@ -242,7 +242,7 @@ export class ModelIOService {
       [],
       [],
     );
-    pres.push(preknowledge);
+    this.conversation.author.preknowledge.push(preknowledge);
     return preknowledge;
   }
 
@@ -270,6 +270,7 @@ export class ModelIOService {
     return newInfo;
   }
 
+  //***************** information links ********************
 
   addInformationLink(src: Information, target: Information, type: InformationLinkType = InformationLinkType.SUPPLEMENT, text?: string): InformationLink {
     return new InformationLink(

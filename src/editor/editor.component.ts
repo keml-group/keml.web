@@ -79,7 +79,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   }
 
   addPreknowledge() {
-    const pre = this.modelIOService.addNewPreknowledge(this.conversation.author.preknowledge);
+    const pre = this.modelIOService.addNewPreknowledge();
     this.detailsService.openInfoDetails(pre);
   }
 
