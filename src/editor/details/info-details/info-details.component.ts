@@ -1,8 +1,8 @@
 import {Component, Input,} from '@angular/core';
-import {Information} from "../../shared/models/keml/msg-info";
+import {Information} from "../../../shared/models/keml/msg-info";
 import {MatDialogRef} from "@angular/material/dialog";
-import {ModelIOService} from "../../shared/services/model-io.service";
-import {DetailsService} from "../details/service/details.service";
+import {ModelIOService} from "../../../shared/services/model-io.service";
+import {DetailsService} from "../service/details.service";
 
 @Component({
   selector: 'info-details',
