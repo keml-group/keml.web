@@ -24,7 +24,6 @@ export class ModelIOService {
   constructor() {
     console.log("ModelIOService constructed");
     this.newKEML();
-    console.log(this.conversation)
   }
 
   loadKEML(json: string): Conversation {
@@ -42,11 +41,9 @@ export class ModelIOService {
   }
 
   newKEML(): Conversation {
-
     const conv = new Conversation();
     LayoutHelper.positionConversationPartners(conv.conversationPartners)
     this.conversation = conv;
-    console.log(this.conversation)
     return conv;
   }
 
@@ -55,49 +52,62 @@ export class ModelIOService {
     return JSON.stringify(convJson);
   }
 
-  addNewConversationPartner(cps: ConversationPartner[]) {
+  //************ Conversation Partners *****************
+
+  getConversationPartners(): ConversationPartner[] {
+    return this.conversation.conversationPartners;
+  }
+
+  addNewConversationPartner(): ConversationPartner {
+    const cps = this.conversation.conversationPartners;
     const cp: ConversationPartner = new ConversationPartner(
       'New Partner',
       LayoutHelper.nextConversationPartnerPosition(cps[cps.length-1]?.xPosition), //todo
     );
     cps.push(cp);
+    return cp;
   }
 
-  disableMoveConversationPartnerRight(cp: ConversationPartner, cps: ConversationPartner[]): boolean {
+  disableMoveConversationPartnerRight(cp: ConversationPartner): boolean {
+    const cps = this.conversation.conversationPartners;
     const pos = cps.indexOf(cp);
     return pos == -1 || pos+1 >= cps.length;
   }
 
-  moveConversationPartnerRight(cp: ConversationPartner, cps: ConversationPartner[]) {
+  moveConversationPartnerRight(cp: ConversationPartner) {
+    const cps = this.conversation.conversationPartners;
     const pos = cps.indexOf(cp);
-    if (!this.disableMoveConversationPartnerRight(cp, cps)) {
+    if (!this.disableMoveConversationPartnerRight(cp)) {
       cps[pos] = cps[pos+1];
       cps[pos + 1] = cp;
       LayoutHelper.positionConversationPartners(cps);
     }
   }
 
-  disableMoveConversationPartnerLeft(cp: ConversationPartner, cps: ConversationPartner[]): boolean {
-    const pos = cps.indexOf(cp);
+  disableMoveConversationPartnerLeft(cp: ConversationPartner): boolean {
+    const pos = this.conversation.conversationPartners.indexOf(cp);
     return pos <= 0;
   }
 
-  moveConversationPartnerLeft(cp: ConversationPartner, cps: ConversationPartner[]) {
+  moveConversationPartnerLeft(cp: ConversationPartner) {
+    const cps = this.conversation.conversationPartners;
     const pos = cps.indexOf(cp);
-    if (!this.disableMoveConversationPartnerLeft(cp, cps)) {
+    if (!this.disableMoveConversationPartnerLeft(cp)) {
       cps[pos] = cps[pos-1];
       cps[pos-1] = cp;
       LayoutHelper.positionConversationPartners(cps);
     }
   }
 
-  deleteConversationPartner(cp: ConversationPartner, cps: ConversationPartner[]) {
-    //todo allow if last?
+  deleteConversationPartner(cp: ConversationPartner) {
+    const cps = this.conversation.conversationPartners;
+    //todo allow delete if last?
     const pos = cps.indexOf(cp);
     cps.splice(pos, 1);
   }
 
-  duplicateConversationPartner(cp: ConversationPartner, cps: ConversationPartner[]): ConversationPartner {
+  duplicateConversationPartner(cp: ConversationPartner): ConversationPartner {
+    const cps = this.conversation.conversationPartners;
     const pos = cps.indexOf(cp);
     const newCp: ConversationPartner = new ConversationPartner(
       'Duplicate of '+ cp.name,
@@ -108,42 +118,37 @@ export class ModelIOService {
     return newCp;
   }
 
-  private msgPosFitsTiming(msg: Message, msgs: Message[]): boolean {
-    if (msgs.indexOf(msg) != msg.timing) {
-      console.error('Position and msg timing do not fit for ' + msg );
-      return false;
-    }
-    return true;
-  }
+  //************* Messages ********************
 
-  moveMessageUp(msg: Message, msgs: Message[]) {
+  moveMessageUp(msg: Message) {
+    const msgs = this.conversation.author.messages
     //actually, timing should be equal to the index - can we rely on it?
     msgs[msg.timing] = msgs[msg.timing-1];
     msgs[msg.timing].timing++;
     msgs[msg.timing-1] = msg;
     msg.timing--;
-    // todo propagate change to infos
   }
 
   disableMoveUp(msg: Message): boolean {
     return msg.timing<=0;
   }
 
-  moveMessageDown(msg: Message, msgs: Message[]) {
+  moveMessageDown(msg: Message) {
+    const msgs = this.conversation.author.messages
     //actually, timing should be equal to the index - can we rely on it?
     msgs[msg.timing] = msgs[msg.timing+1];
     msgs[msg.timing].timing-=1;
     msgs[msg.timing+1] = msg;
     msg.timing+=1;
-    // todo propagate change to infos (move them?)
   }
 
-  disableMoveDown(msg: Message, msgs: Message[]): boolean {
-    return msg.timing>=msgs.length-1;
+  disableMoveDown(msg: Message): boolean {
+    return msg.timing>=this.conversation.author.messages.length-1;
   }
 
-  deleteMessage(msg: Message, msgs: Message[]) {
-    if (this.msgPosFitsTiming(msg, msgs)) {
+  deleteMessage(msg: Message) {
+    const msgs = this.conversation.author.messages
+    if (this.msgPosFitsTiming(msg)) {
       msgs.splice(msg.timing, 1);
       // adapt later messages:
       //todo also adapt infos
@@ -153,59 +158,77 @@ export class ModelIOService {
     }
   }
 
-  duplicateMessage(msg: Message, msgs: Message[]): Message | null {
+  duplicateMessage(msg: Message): Message | null {
+    const msgs = this.conversation.author.messages
     return Message.duplicateMessage(msg, msgs)
   }
 
-  addNewMessage(counterPart: ConversationPartner, isSend: boolean, msgs: Message[]): Message {
-    const content = isSend ? 'New send content' : 'New receive content';
-    const newMsg: Message = Message.newMessage(isSend, counterPart, msgs.length, content)
-    msgs.push(newMsg);
-    return newMsg;
-  }
-
-  deleteInfo(info: Information, infos: Information[]) {
-    const pos = infos.indexOf(info);
-    if (pos > -1) {
-      infos.splice(pos, 1);
+  addNewMessage(isSend: boolean, counterPart?: ConversationPartner): Message | undefined {
+    if (this.conversation.conversationPartners.length > 0) {
+      const cp = counterPart ? counterPart : this.conversation.conversationPartners[0];
+      const content = isSend ? 'New send content' : 'New receive content';
+      const msgs = this.conversation.author.messages
+      const newMsg: Message = Message.newMessage(isSend, cp, msgs.length, content)
+      msgs.push(newMsg);
+      return newMsg;
+    } else {
+      console.error('No conversation partners found');
+      return undefined;
     }
   }
 
-  duplicateInfo(info: Information, infos: Information[]): Information {
+  disableAddNewMessage(): boolean {
+    return this.conversation.conversationPartners.length <= 0;
+  }
+
+  getReceives() {
+    return this.conversation.author.messages.filter(msg => !msg.isSend())
+      .map(msg => msg as ReceiveMessage)
+  }
+
+  getFirstReceive(): ReceiveMessage | undefined {
+    const msgs = this.conversation.author.messages;
+    return (msgs.find(m => !m.isSend()) as ReceiveMessage)
+  }
+
+  private msgPosFitsTiming(msg: Message): boolean {
+    const msgs = this.conversation.author.messages
+    if (msgs.indexOf(msg) != msg.timing) {
+      console.error('Position and msg timing do not fit for ' + msg );
+      return false;
+    }
+    return true;
+  }
+
+  //************** Infos ************************
+
+  deleteInfo(info: Information) {
+    const infos = this.getRightInfoList(info)
+    const pos = infos.indexOf(info);
+    if (pos > -1) {
+      infos.splice(pos, 1);
+    } else {
+      console.error('info '+info+' was not correctly linked')
+    }
+  }
+
+  duplicateInfo(info: Information): Information {
+    const infos = this.getRightInfoList(info)
     const newInfo = info.duplicate()
     infos.push(newInfo); //todo position right after current info?
     return newInfo;
   }
 
-  findInfoList(info: Information, pre: Preknowledge[], msgs: Message[]): Information[] {
-    let pos = pre.indexOf(info);
-    if (pos > -1) {
-      return pre;
+  private getRightInfoList(info: Information): Information[] {
+    let maybeSource = (info as NewInformation).source
+    if (maybeSource) {
+      return maybeSource.generates;
     } else {
-      const receives = this.filterReceives(msgs);
-      for (let i = 0; i <= receives.length - 1; i++) {
-        if (this.isInfoFromMessage(info, receives[i])) {
-            return receives[i].generates;
-        }
-      }
+      return this.conversation.author.preknowledge
     }
-    return [];
   }
 
-  filterReceives(msgs: Message[]): ReceiveMessage[] {
-    return msgs.filter(msg => !msg.isSend())
-      .map(msg => msg as ReceiveMessage)
-  }
-
-  getReceives() {
-    return this.filterReceives(this.conversation.author.messages);
-  }
-
-  private isInfoFromMessage(info: Information, msg: ReceiveMessage): boolean {
-    return msg.generates.indexOf(<NewInformation>info)>-1;
-  }
-
-  addNewPreknowledge(pres: Preknowledge[]): Preknowledge {
+  addNewPreknowledge(): Preknowledge {
     const preknowledge: Preknowledge = new Preknowledge(
       "New preknowledge",
       false,
@@ -219,36 +242,57 @@ export class ModelIOService {
       [],
       [],
     );
-    pres.push(preknowledge);
+    this.conversation.author.preknowledge.push(preknowledge);
     return preknowledge;
   }
 
-  addNewNewInfo(causeMsg: ReceiveMessage): NewInformation {
-    const newInfo: NewInformation = new NewInformation(
-      causeMsg,
-      'New Information',
-      false,
-      LayoutHelper.bbForNewInfo(),
-      0.5,
-      0.5,
-      0.5,
-      0.5,
-      [],
-      [],
-      [],
-      [],
-    );
-    causeMsg.generates.push(newInfo);
-    return newInfo;
+  disableAddNewNewInfo(): boolean {
+    const rec = this.getFirstReceive();
+    return !rec;
   }
 
-  getFirstReceive(msgs: Message[]): ReceiveMessage | null {
-    const receives = this.filterReceives(msgs);
-    if (receives.length > 0) {
-      return receives[0];
+  addNewNewInfo(causeMsg?: ReceiveMessage): NewInformation | undefined {
+    let source = causeMsg? causeMsg : this.getFirstReceive()
+    if (source) {
+      const newInfo: NewInformation = new NewInformation(
+        source,
+        'New Information',
+        false,
+        LayoutHelper.bbForNewInfo(),
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        [],
+        [],
+        [],
+        [],
+      );
+      source.generates.push(newInfo);
+      return newInfo;
     } else {
-      return null;
+      console.error('No receive messages found');
+      return undefined;
     }
+  }
+
+  //***************** information links ********************
+
+  disableLinkCreation() {
+    let size = this.conversation.author.preknowledge.length;
+    if (size >=2)
+      return false;
+    else {
+      for (let msg of this.conversation.author.messages) {
+        let news = (msg as ReceiveMessage).generates
+        if (news) {
+          size += news.length
+          if (size >=2)
+            return false;
+        }
+      }
+    }
+    return true;
   }
 
   addInformationLink(src: Information, target: Information, type: InformationLinkType = InformationLinkType.SUPPLEMENT, text?: string): InformationLink {
