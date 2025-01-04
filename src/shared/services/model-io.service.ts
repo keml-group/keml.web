@@ -163,12 +163,18 @@ export class ModelIOService {
     return Message.duplicateMessage(msg, msgs)
   }
 
-  addNewMessage(counterPart: ConversationPartner, isSend: boolean): Message {
-    const msgs = this.conversation.author.messages
-    const content = isSend ? 'New send content' : 'New receive content';
-    const newMsg: Message = Message.newMessage(isSend, counterPart, msgs.length, content)
-    msgs.push(newMsg);
-    return newMsg;
+  addNewMessage(isSend: boolean, counterPart?: ConversationPartner): Message | undefined {
+    if (this.conversation.conversationPartners.length > 0) {
+      const cp = counterPart ? counterPart : this.conversation.conversationPartners[0];
+      const content = isSend ? 'New send content' : 'New receive content';
+      const msgs = this.conversation.author.messages
+      const newMsg: Message = Message.newMessage(isSend, cp, msgs.length, content)
+      msgs.push(newMsg);
+      return newMsg;
+    } else {
+      console.error('No conversation partners found');
+      return undefined;
+    }
   }
 
   disableAddNewMessage(): boolean {
