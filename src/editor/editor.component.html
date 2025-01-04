@@ -45,7 +45,7 @@
         <button class="tool-button" title="Add new information" (click)="addNewInfo()" [disabled]="modelIOService.disableAddNewNewInfo()">
           !
         </button>
-        <button class="tool-button" title="Add information link" (click)="detailsService.openLinkCreationDialog()">
+        <button class="tool-button" title="Add information link" (click)="detailsService.openLinkCreationDialog()" [disabled]="modelIOService.disableLinkCreation()">
           Link
         </button>
       </div>

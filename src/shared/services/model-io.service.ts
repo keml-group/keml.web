@@ -278,6 +278,23 @@ export class ModelIOService {
 
   //***************** information links ********************
 
+  disableLinkCreation() {
+    let size = this.conversation.author.preknowledge.length;
+    if (size >=2)
+      return false;
+    else {
+      for (let msg of this.conversation.author.messages) {
+        let news = (msg as ReceiveMessage).generates
+        if (news) {
+          size += news.length
+          if (size >=2)
+            return false;
+        }
+      }
+    }
+    return true;
+  }
+
   addInformationLink(src: Information, target: Information, type: InformationLinkType = InformationLinkType.SUPPLEMENT, text?: string): InformationLink {
     return new InformationLink(
       src,
