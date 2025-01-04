@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild,} from '@angular/core';
+import {Component, ElementRef, ViewChild,} from '@angular/core';
 import {ModelIOService} from "../shared/services/model-io.service";
 import {IoService} from "../shared/services/io.service";
 import {Conversation} from "../shared/models/keml/conversation";
@@ -9,7 +9,7 @@ import {DetailsService} from "./details/service/details.service";
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.css'
 })
-export class EditorComponent implements OnInit, AfterViewInit {
+export class EditorComponent {
 
   @ViewChild("svg") svg!: ElementRef<SVGElement>;
   conversation: Conversation;
@@ -20,11 +20,6 @@ export class EditorComponent implements OnInit, AfterViewInit {
     private ioService: IoService,
   ) {
     this.conversation = this.modelIOService.newKEML();
-  }
-
-  ngOnInit(): void {}
-
-  ngAfterViewInit(): void {
   }
 
   newConversation(): void {
@@ -69,13 +64,9 @@ export class EditorComponent implements OnInit, AfterViewInit {
   }
 
   addNewInfo() {
-    const rec = this.modelIOService.getFirstReceive();
-    if (rec) {
-      const newInfo = this.modelIOService.addNewNewInfo(rec)
+    const newInfo = this.modelIOService.addNewNewInfo()
+    if (newInfo)
       this.detailsService.openInfoDetails(newInfo);
-    } else {
-      console.error('No receive messages found');
-    }
   }
 
   addPreknowledge() {

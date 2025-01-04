@@ -251,23 +251,29 @@ export class ModelIOService {
     return !rec;
   }
 
-  addNewNewInfo(causeMsg: ReceiveMessage): NewInformation {
-    const newInfo: NewInformation = new NewInformation(
-      causeMsg,
-      'New Information',
-      false,
-      LayoutHelper.bbForNewInfo(),
-      0.5,
-      0.5,
-      0.5,
-      0.5,
-      [],
-      [],
-      [],
-      [],
-    );
-    causeMsg.generates.push(newInfo);
-    return newInfo;
+  addNewNewInfo(causeMsg?: ReceiveMessage): NewInformation | undefined {
+    let source = causeMsg? causeMsg : this.getFirstReceive()
+    if (source) {
+      const newInfo: NewInformation = new NewInformation(
+        source,
+        'New Information',
+        false,
+        LayoutHelper.bbForNewInfo(),
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        [],
+        [],
+        [],
+        [],
+      );
+      source.generates.push(newInfo);
+      return newInfo;
+    } else {
+      console.error('No receive messages found');
+      return undefined;
+    }
   }
 
   //***************** information links ********************
