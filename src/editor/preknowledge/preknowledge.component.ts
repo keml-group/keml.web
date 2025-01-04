@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {Preknowledge} from "../../shared/models/keml/msg-info";
 import {InfoComponent} from "../info/info.component";
+import {ArrowType} from "../../shared/models/graphical/arrow-heads";
 
 @Component({
   selector: '[preknowG]',
@@ -17,4 +18,5 @@ export class PreknowledgeComponent extends InfoComponent {
     return '#ffff99'
   }
 
+  protected readonly ArrowType = ArrowType;
 }
