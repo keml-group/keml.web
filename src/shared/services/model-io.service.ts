@@ -223,6 +223,19 @@ export class ModelIOService {
       console.log('No repetition allowed')
     }
   }
+
+  deleteRepetition(rec: ReceiveMessage, info: Information) {
+    const recIndex = rec.repeats.findIndex(el => el == info)
+    if (recIndex > -1) {
+      rec.repeats.splice(recIndex, 1)
+      const infoIndex = info.repeatedBy.indexOf(rec)
+      if (infoIndex > -1) {
+        info.repeatedBy.splice(infoIndex, 1)
+      } else {
+        console.error('Inconsistency in data')
+      }
+    }
+  }
   //************** Infos ************************
 
   deleteInfo(info: Information) {

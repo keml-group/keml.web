@@ -43,13 +43,15 @@
   <div class="row" *ngIf="receiveMsg">
     <div class="column">
       <info-choice (infoChange)="repeatAnInfo($event)" [showInfo]="false">
-
       </info-choice>
     </div>
     <div class="column">
-      <svg width="200" height="80" *ngFor="let info of receiveMsg.repeats" (click)="detailsService.openInfoDetails(info)">
-        <g info-inner [info]="info">
+      <svg width="200" height="100" *ngFor="let info of receiveMsg.repeats">
+        <g info-inner [info]="info"  (click)="detailsService.openInfoDetails(info)">
         </g>
+        <foreignObject height="20" width="20" x="100" y="80" (click)="modelIOService.deleteRepetition(receiveMsg, info)">
+          <mat-icon fontIcon="delete" style="color: orange" [matTooltip]="'Delete repetition'"></mat-icon>
+        </foreignObject>
       </svg>
     </div>
   </div>

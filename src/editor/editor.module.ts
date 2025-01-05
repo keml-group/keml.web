@@ -24,6 +24,7 @@ import {InfoChoiceComponent} from "./helper/info-choice/info-choice.component";
 import {InfoInnerComponent} from "./helper/info-inner/info-inner.component";
 import {MsgChoiceComponent} from "./helper/msg-choice/msg-choice.component";
 import {MsgInnerComponent} from "./helper/msg-inner/msg-inner.component";
+import {MatTooltip} from "@angular/material/tooltip";
 
 
 @NgModule({
@@ -54,6 +55,7 @@ import {MsgInnerComponent} from "./helper/msg-inner/msg-inner.component";
     CommonModule,
     MatToolbar,
     MatIcon,
+    MatTooltip,
     FormsModule, //for two-way-binding
   ],
   exports: [EditorComponent]
