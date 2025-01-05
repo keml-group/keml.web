@@ -12,7 +12,7 @@ import {LayoutHelper} from "../../shared/utility/layout-helper";
 })
 export class MsgComponent {
   @Input() msg!: Message;
-  @Output() openDetails: EventEmitter<Message> = new EventEmitter();
+  @Output() chooseMsg: EventEmitter<Message> = new EventEmitter();
   @Output() chooseInfo = new EventEmitter<Information>();
 
   constructor() { }
@@ -33,8 +33,8 @@ export class MsgComponent {
     }
   }
 
-  openMessageDetails() {
-    this.openDetails.emit(this.msg);
+  clickMsg() {
+    this.chooseMsg.emit(this.msg);
   }
 
   clickInfo(info: Information) {
