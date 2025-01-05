@@ -1,10 +1,10 @@
-<svg width="200" height="80" *ngIf="info" (click)="openChoice($event)">
-  <g info-inner [info]="info">
+<svg width="200" height="80" (click)="openChoice($event)">
+  <g *ngIf="info" info-inner [info]="info">
   </g>
-</svg>
-<svg width="200" height="80" *ngIf="!info" (click)="openChoice($event)">
-  <rect width="200" height="80" fill="orange"></rect>
-  <text x="20" y="35" color="black">No information chosen</text>
+  <g *ngIf="!info">
+    <rect width="200" height="80" fill="orange"></rect>
+    <text x="20" y="35" color="black">No information chosen</text>
+  </g>
 </svg>
 
 
