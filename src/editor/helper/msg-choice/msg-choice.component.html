@@ -1,11 +1,11 @@
-<svg width="200" height="80" (click)="openChoice($event)">
+<svg width="350" height="60" (click)="openChoice($event)">
   <g *ngIf="!sendMsg && !receiveMsg">
-    <rect width="200" height="80" fill="orange"></rect>
+    <rect width="350" height="60" fill="orange"></rect>
     <text x="20" y="35" color="black">No msg chosen</text>
   </g>
-  <g *ngIf="sendMsg" msg-inner [msg]="sendMsg">
+  <g *ngIf="sendMsg" msg-inner [msg]="sendMsg" [lengthOpt]="320" transform="translate(0,30)">
   </g>
-  <g *ngIf="receiveMsg" msg-inner [msg]="receiveMsg">
+  <g *ngIf="receiveMsg" msg-inner [msg]="receiveMsg" [lengthOpt]="320" transform="translate(0,30)">
   </g>
 </svg>
 

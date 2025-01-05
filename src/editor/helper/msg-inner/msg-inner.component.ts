@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {Message} from "../../../shared/models/keml/msg-info";
 
 @Component({
@@ -6,8 +6,18 @@ import {Message} from "../../../shared/models/keml/msg-info";
   templateUrl: './msg-inner.component.svg',
   styleUrl: './msg-inner.component.css'
 })
-export class MsgInnerComponent {
+export class MsgInnerComponent implements OnInit, OnChanges {
   @Input() msg!: Message;
-  @Input() length?: number = 50;
+  @Input() lengthOpt?: number;
+
+  length!: number;
+
+  ngOnInit() {
+    this.length = this.lengthOpt ? this.lengthOpt : this.msg.counterPart.xPosition;
+  }
+
+  ngOnChanges(_: SimpleChanges) {
+    this.length = this.lengthOpt ? this.lengthOpt : this.msg.counterPart.xPosition;
+  }
 
 }
