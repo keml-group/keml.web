@@ -4,8 +4,8 @@ import {ModelIOService} from "../../../shared/services/model-io.service";
 import {Message, ReceiveMessage, SendMessage} from "../../../shared/models/keml/msg-info";
 
 @Component({
-  selector: 'app-msg-choice',
-  templateUrl: './msg-choice.component.svg',
+  selector: 'msg-choice',
+  templateUrl: './msg-choice.component.html',
   styleUrl: './msg-choice.component.css'
 })
 export class MsgChoiceComponent {
