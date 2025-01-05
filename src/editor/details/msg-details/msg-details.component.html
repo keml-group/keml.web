@@ -25,10 +25,19 @@
   </div>
 
   <label *ngIf="receiveMsg" class="form-label">Generated information</label>
-  <button *ngIf="receiveMsg" class="tool-button-text" (click)="addNewInfo()">
-    Create info
-  </button>
-
+  <div class="row" *ngIf="receiveMsg">
+    <div class="column">
+      <button class="tool-button-text" (click)="addNewInfo()">
+        Create info
+      </button>
+    </div>
+    <div class="column">
+      <svg width="200" height="80" *ngFor="let info of receiveMsg.generates" (click)="detailsService.openInfoDetails(info)">
+        <g info-inner [info]="info">
+        </g>
+      </svg>
+    </div>
+  </div>
 </div>
 
 <div class="row">

@@ -21,7 +21,7 @@ export class MsgDetailsComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<MsgDetailsComponent>,
     public modelIOService: ModelIOService,
-    private detailsService: DetailsService,
+    public detailsService: DetailsService,
   ) {
     this.cps = this.modelIOService.getConversationPartners();
   }
