@@ -24,7 +24,10 @@
     <input type="text" [(ngModel)]="msg.timing"/>
   </div>
 
-  <label class="form-label">Generated information</label>
+  <label *ngIf="receiveMsg" class="form-label">Generated information</label>
+  <button *ngIf="receiveMsg" class="tool-button-text" (click)="addNewInfo()">
+    Create info
+  </button>
 
 </div>
 
