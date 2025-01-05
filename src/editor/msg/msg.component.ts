@@ -21,12 +21,8 @@ export class MsgComponent {
     return LayoutHelper.computeMessageY(this.msg.timing);
   }
 
-  isSend(): boolean {
-    return this.msg.isSend()
-  }
-
   getInfos(): NewInformation[] {
-    if (this.isSend())
+    if (this.msg.isSend())
       return [];
     else {
       return (this.msg as ReceiveMessage).generates

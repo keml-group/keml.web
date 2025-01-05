@@ -1,8 +1,8 @@
 <svg:g attr.transform="translate(-5,{{computeY()}})">
   <g pointer-events="bounding-box" (click)="clickMsg()">
     <rect [attr.id]="msg+'-left'" width="10" height="10"  x="0" y="0" fill="grey"></rect>
-    <g arrow-svg *ngIf="isSend()" [start]="{x: 0, y: 0, w: 10, h: 10}" [end]="{x: msg.counterPart.xPosition+5, y: 0, w: 10, h: 10}"></g>
-    <g arrow-svg *ngIf="!isSend()" [end]="{x: 0, y: 0, w: 10, h: 10}" [start]="{x: msg.counterPart.xPosition+5, y: 0, w: 10, h: 10}"></g>
+    <g arrow-svg *ngIf="msg.isSend()" [start]="{x: 0, y: 0, w: 10, h: 10}" [end]="{x: msg.counterPart.xPosition+5, y: 0, w: 10, h: 10}"></g>
+    <g arrow-svg *ngIf="!msg.isSend()" [end]="{x: 0, y: 0, w: 10, h: 10}" [start]="{x: msg.counterPart.xPosition+5, y: 0, w: 10, h: 10}"></g>
     <g text-area-svg [text]="msg.content" [w]="msg.counterPart.xPosition -35" [h]="40" [x]="25" [y]="-20"></g>
   </g>
   <g newInfoG *ngFor="let info of getInfos()" [info]="info" (chooseInfo)="clickInfo(info)"></g>

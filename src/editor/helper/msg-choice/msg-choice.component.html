@@ -3,9 +3,9 @@
     <rect width="200" height="80" fill="orange"></rect>
     <text x="20" y="35" color="black">No msg chosen</text>
   </g>
-  <g *ngIf="sendMsg" msgG [msg]="sendMsg">
+  <g *ngIf="sendMsg" msg-inner [msg]="sendMsg">
   </g>
-  <g *ngIf="receiveMsg" msgG [msg]="receiveMsg">
+  <g *ngIf="receiveMsg" msg-inner [msg]="receiveMsg">
   </g>
 </svg>
 
