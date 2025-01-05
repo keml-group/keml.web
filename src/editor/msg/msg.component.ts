@@ -12,6 +12,7 @@ import {LayoutHelper} from "../../shared/utility/layout-helper";
 })
 export class MsgComponent {
   @Input() msg!: Message;
+  @Input() showInfos = true;
   @Output() chooseMsg: EventEmitter<Message> = new EventEmitter();
   @Output() chooseInfo = new EventEmitter<Information>();
 

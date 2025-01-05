@@ -10,17 +10,22 @@
   <g person *ngIf="sendMsg || receiveMsg" [w]="20" [h]="30" transform="translate(320)"></g>
   <g text-area-svg *ngIf="receiveMsg" [text]="receiveMsg.counterPart.name" [w]="50" [h]="25" [x]="320" [y]="30"></g>
   <g text-area-svg *ngIf="sendMsg" [text]="sendMsg.counterPart.name" [w]="50" [h]="25" [x]="320" [y]="30"></g>
-
 </svg>
 
 
 <ng-template #choosemsg>
   <div style="width: 1500px; height: 1000px; overflow: auto;">
-    <svg *ngIf="!isSend" id="svg" style="border: 1px solid black;" width="750" height="2000" overflow="scroll">
-      <g msgG *ngFor="let m of receives" [msg]="m" (chooseMsg)="chooseReceive($event)"></g>
-    </svg>
-    <svg *ngIf="isSend" id="svg" style="border: 1px solid black;" width="750" height="2000" overflow="scroll">
-      <g msgG *ngFor="let m of sends" [msg]="m" (chooseMsg)="chooseSend($event)"></g>
+    <svg id="svg" width="750" height="2000" overflow="scroll">
+      <g transform="translate(150,0)">
+        <g authorG [author]="author"></g>
+        <g cp *ngFor="let convP of cps" [conversationPartner]="convP"></g>
+        <g *ngIf="!isSend">
+          <g msgG *ngFor="let m of receives" [msg]="m" [showInfos]="false" (chooseMsg)="chooseReceive($event)"></g>
+        </g>
+        <g *ngIf="isSend">
+          <g msgG *ngFor="let m of sends" [msg]="m" [showInfos]="false" (chooseMsg)="chooseSend($event)"></g>
+        </g>
+      </g>
     </svg>
   </div>
 </ng-template>

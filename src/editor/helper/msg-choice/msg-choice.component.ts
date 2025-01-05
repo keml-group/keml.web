@@ -2,6 +2,8 @@ import {Component, EventEmitter, Input, Output, TemplateRef, ViewChild} from '@a
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {ModelIOService} from "../../../shared/services/model-io.service";
 import {Message, ReceiveMessage, SendMessage} from "../../../shared/models/keml/msg-info";
+import {ConversationPartner} from "../../../shared/models/keml/conversation-partner";
+import {Author} from "../../../shared/models/keml/author";
 
 @Component({
   selector: 'msg-choice',
@@ -19,6 +21,8 @@ export class MsgChoiceComponent {
 
   sends: SendMessage[] = [];
   receives: ReceiveMessage[] = [];
+  cps: ConversationPartner[] = [];
+  author: Author;
   dialogRef?: MatDialogRef<any>;
 
   constructor(
@@ -27,6 +31,8 @@ export class MsgChoiceComponent {
   ) {
     this.sends = this.modelIOService.getSends();
     this.receives = this.modelIOService.getReceives()
+    this.author = this.modelIOService.getAuthor();
+    this.cps = this.modelIOService.getConversationPartners()
   }
 
   openChoice(event: Event) {

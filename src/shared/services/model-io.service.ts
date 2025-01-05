@@ -13,6 +13,7 @@ import {ConversationPartner} from "../models/keml/conversation-partner";
 import {JsonFixer} from "../models/keml/parser/json-fixer";
 import {LayoutHelper} from "../utility/layout-helper";
 import {InformationLinkType} from "../models/keml/json/knowledge-models";
+import {Author} from "../models/keml/author";
 
 @Injectable({
   providedIn: 'root'
@@ -50,6 +51,10 @@ export class ModelIOService {
   saveKEML(conv: Conversation): string {
     let convJson = conv.toJson()
     return JSON.stringify(convJson);
+  }
+
+  getAuthor(): Author {
+    return this.conversation.author;
   }
 
   //************ Conversation Partners *****************
