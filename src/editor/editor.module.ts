@@ -22,6 +22,7 @@ import {InformationLinkComponent} from "./information-link/information-link.comp
 import {InformationLinkDetailsComponent} from "./details/information-link-details/information-link-details.component";
 import {InfoChoiceComponent} from "./helper/info-choice/info-choice.component";
 import {InfoInnerComponent} from "./helper/info-inner/info-inner.component";
+import {MsgChoiceComponent} from "./helper/msg-choice/msg-choice.component";
 
 
 @NgModule({
@@ -35,6 +36,7 @@ import {InfoInnerComponent} from "./helper/info-inner/info-inner.component";
     AuthorComponent,
     MsgComponent,
     MsgDetailsComponent,
+    MsgChoiceComponent,
     IsInstrSvgComponent,
     InfoChoiceComponent,
     InfoComponent,

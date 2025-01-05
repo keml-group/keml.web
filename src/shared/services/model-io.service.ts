@@ -6,7 +6,7 @@ import {
   Message,
   NewInformation,
   Preknowledge,
-  ReceiveMessage,
+  ReceiveMessage, SendMessage,
 } from "../models/keml/msg-info";
 import {Conversation} from "../models/keml/conversation";
 import {ConversationPartner} from "../models/keml/conversation-partner";
@@ -189,6 +189,11 @@ export class ModelIOService {
   getFirstReceive(): ReceiveMessage | undefined {
     const msgs = this.conversation.author.messages;
     return (msgs.find(m => !m.isSend()) as ReceiveMessage)
+  }
+
+  getSends(): SendMessage[] {
+    return this.conversation.author.messages.filter(msg => msg.isSend())
+      .map(msg => msg as SendMessage)
   }
 
   private msgPosFitsTiming(msg: Message): boolean {

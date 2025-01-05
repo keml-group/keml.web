@@ -1,0 +1,14 @@
+<button (click)="openChoice($event)">
+  Choose
+</button>
+
+<ng-template #choosemsg>
+  <div style="width: 1500px; height: 1000px; overflow: auto;">
+    <svg *ngIf="!isSend" id="svg" style="border: 1px solid black;" width="750" height="2000" overflow="scroll">
+      <g msgG *ngFor="let m of receives" [msg]="m" (openDetails)="chooseReceive($event)"></g>
+    </svg>
+    <svg *ngIf="isSend" id="svg" style="border: 1px solid black;" width="750" height="2000" overflow="scroll">
+      <g msgG *ngFor="let m of sends" [msg]="m" (openDetails)="chooseSend($event)"></g>
+    </svg>
+  </div>
+</ng-template>
