@@ -151,7 +151,7 @@ export class ReceiveMessage extends Message {
   static override readonly eClass: string = 'http://www.unikoblenz.de/keml#//ReceiveMessage'
   static readonly generatesPrefix: string = 'generates';
   generates: NewInformation[] = [];
-  repeats: NewInformation[] = [];
+  repeats: Information[] = [];
   isInterrupted: boolean = false;
 
   constructor(
@@ -160,7 +160,7 @@ export class ReceiveMessage extends Message {
     content?: string,
     originalContent?: string,
     generates: NewInformation[] = [],
-    repeats: NewInformation[] = [],
+    repeats: Information[] = [],
     isInterrupted: boolean = false,
     ref?: Ref, parserContext?: ParserContext, jsonOpt?: ReceiveMessageJson,
   ) {

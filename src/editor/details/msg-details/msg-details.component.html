@@ -38,6 +38,21 @@
       </svg>
     </div>
   </div>
+
+  <label *ngIf="receiveMsg" class="form-label">Repeated information</label>
+  <div class="row" *ngIf="receiveMsg">
+    <div class="column">
+      <info-choice (infoChange)="repeatAnInfo($event)">
+
+      </info-choice>
+    </div>
+    <div class="column">
+      <svg width="200" height="80" *ngFor="let info of receiveMsg.repeats" (click)="detailsService.openInfoDetails(info)">
+        <g info-inner [info]="info">
+        </g>
+      </svg>
+    </div>
+  </div>
 </div>
 
 <div class="row">

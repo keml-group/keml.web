@@ -210,6 +210,19 @@ export class ModelIOService {
     return true;
   }
 
+  addRepetition(rec: ReceiveMessage, info: Information) {
+    //only add the repetition if it connects to an earlier info (either preknowledge or older new info
+    const msgTime = rec.timing
+    const infoTime = (info as NewInformation).source?.timing
+    if (!infoTime || infoTime < msgTime ) {
+      if(! rec.repeats.find(el => el == info)) {
+        rec.repeats.push(info)
+        info.repeatedBy.push(rec)
+      }
+    } else {
+      console.log('No repetition allowed')
+    }
+  }
   //************** Infos ************************
 
   deleteInfo(info: Information) {

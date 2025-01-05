@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
-import {Message, ReceiveMessage, SendMessage} from "../../../shared/models/keml/msg-info";
+import {Information, Message, ReceiveMessage, SendMessage} from "../../../shared/models/keml/msg-info";
 import {ConversationPartner} from "../../../shared/models/keml/conversation-partner";
 import {ModelIOService} from "../../../shared/services/model-io.service";
 import {DetailsService} from "../service/details.service";
@@ -72,6 +72,12 @@ export class MsgDetailsComponent implements OnInit {
       const newInfo = this.modelIOService.addNewNewInfo(this.receiveMsg)
       if (newInfo)
         this.detailsService.openInfoDetails(newInfo);
+    }
+  }
+
+  repeatAnInfo(info: Information) {
+    if (this.receiveMsg) {
+      this.modelIOService.addRepetition(this.receiveMsg, info)
     }
   }
 
