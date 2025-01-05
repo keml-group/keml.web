@@ -1,11 +1,16 @@
-<svg width="350" height="60" (click)="openChoice($event)">
-  <g *ngIf="!sendMsg && !receiveMsg">
-    <rect width="350" height="60" fill="orange"></rect>
-    <text x="20" y="35" color="black">No msg chosen</text>
-  </g>
-  <g *ngIf="sendMsg || receiveMsg" msg-overview [msg]="sendMsg? sendMsg : receiveMsg!">
-  </g>
-</svg>
+<div *ngIf="showMsg">
+  <svg width="350" height="60" (click)="openChoice($event)">
+    <g *ngIf="!sendMsg && !receiveMsg">
+      <rect width="350" height="60" fill="orange"></rect>
+      <text x="20" y="35" color="black">No msg chosen</text>
+    </g>
+    <g *ngIf="sendMsg || receiveMsg" msg-overview [msg]="sendMsg? sendMsg : receiveMsg!">
+    </g>
+  </svg>
+</div>
+<button *ngIf="!showMsg" (click)="openChoice($event)">
+  Choose message
+</button>
 
 
 <ng-template #choosemsg>

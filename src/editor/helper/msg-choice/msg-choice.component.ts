@@ -13,6 +13,7 @@ import {Author} from "../../../shared/models/keml/author";
 export class MsgChoiceComponent {
 
   @ViewChild('choosemsg') modalRef!: TemplateRef<any>;
+  @Input() showMsg = true;
   @Input() isSend = false;
   @Input() sendMsg?: SendMessage;
   @Output() sendMsgChange = new EventEmitter<SendMessage>();
