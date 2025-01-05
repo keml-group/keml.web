@@ -1,4 +1,7 @@
-<svg width="200" height="80" (click)="openChoice($event)">
+<svg width="200" height="80"
+     (click)="openChoice($event)"
+     *ngIf="showInfo"
+>
   <g *ngIf="info" info-inner [info]="info">
   </g>
   <g *ngIf="!info">
@@ -6,6 +9,13 @@
     <text x="20" y="35" color="black">No information chosen</text>
   </g>
 </svg>
+
+<button
+  (click)="openChoice($event)"
+  *ngIf="!showInfo"
+>
+  Choose info
+</button>
 
 
 <ng-template #chooseinfo>

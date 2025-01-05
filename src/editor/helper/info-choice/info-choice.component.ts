@@ -14,6 +14,7 @@ export class InfoChoiceComponent {
   @Input() info?: Information;
   @Output() infoChange = new EventEmitter<Information>();
   //graphical component to pick an info, hence it needs all messages and all preknowledge as input:
+  @Input() showInfo = true;
   preknowledges: Preknowledge[];
   receives: ReceiveMessage[];
   dialogRef?: MatDialogRef<any>;
