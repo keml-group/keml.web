@@ -7,5 +7,6 @@
   </g>
   <g *ngIf="showInfos">
     <g newInfoG *ngFor="let info of getInfos()" [info]="info" (chooseInfo)="clickInfo(info)"></g>
+    <g arrow-svg *ngFor="let info of receiveMsg?.repeats" [startId]="msg.gId+'-left'" [endId]="info.gId+'-main'" [arrowType]="ArrowType.DASHED"></g>
   </g>
 </svg:g>
