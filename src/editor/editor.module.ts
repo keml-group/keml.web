@@ -25,6 +25,7 @@ import {InfoInnerComponent} from "./helper/info-inner/info-inner.component";
 import {MsgChoiceComponent} from "./helper/msg-choice/msg-choice.component";
 import {MsgInnerComponent} from "./helper/msg-inner/msg-inner.component";
 import {MatTooltip} from "@angular/material/tooltip";
+import {MsgOverviewComponent} from "./helper/msg-overview/msg-overview.component";
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import {MatTooltip} from "@angular/material/tooltip";
     MsgDetailsComponent,
     MsgChoiceComponent,
     MsgInnerComponent,
+    MsgOverviewComponent,
     IsInstrSvgComponent,
     InfoChoiceComponent,
     InfoComponent,

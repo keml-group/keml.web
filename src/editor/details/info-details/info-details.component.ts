@@ -16,7 +16,7 @@ export class InfoDetailsComponent implements OnInit {
   constructor(
     public modelIOService: ModelIOService,
     private dialogRef: MatDialogRef<InfoDetailsComponent>,
-    private detailsService: DetailsService,
+    public detailsService: DetailsService,
   ) {}
 
   ngOnInit() {

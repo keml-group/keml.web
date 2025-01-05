@@ -3,13 +3,8 @@
     <rect width="350" height="60" fill="orange"></rect>
     <text x="20" y="35" color="black">No msg chosen</text>
   </g>
-  <g *ngIf="sendMsg" msg-inner [msg]="sendMsg" [lengthOpt]="320" transform="translate(0,30)">
+  <g *ngIf="sendMsg || receiveMsg" msg-overview [msg]="sendMsg? sendMsg : receiveMsg!">
   </g>
-  <g *ngIf="receiveMsg" msg-inner [msg]="receiveMsg" [lengthOpt]="320" transform="translate(0,30)">
-  </g>
-  <g person *ngIf="sendMsg || receiveMsg" [w]="20" [h]="30" transform="translate(320)"></g>
-  <g text-area-svg *ngIf="receiveMsg" [text]="receiveMsg.counterPart.name" [w]="50" [h]="25" [x]="320" [y]="30"></g>
-  <g text-area-svg *ngIf="sendMsg" [text]="sendMsg.counterPart.name" [w]="50" [h]="25" [x]="320" [y]="30"></g>
 </svg>
 
 
