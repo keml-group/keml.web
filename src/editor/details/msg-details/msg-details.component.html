@@ -24,8 +24,54 @@
     <input type="text" [(ngModel)]="msg.timing"/>
   </div>
 
-  <label class="form-label">Generated information</label>
+  <label *ngIf="receiveMsg" class="form-label">Generated information</label>
+  <div class="row" *ngIf="receiveMsg">
+    <div class="column">
+      <button class="tool-button-text" (click)="addNewInfo()">
+        Create info
+      </button>
+    </div>
+    <div class="column">
+      <svg width="200" height="80" *ngFor="let info of receiveMsg.generates" (click)="detailsService.openInfoDetails(info)">
+        <g info-inner [info]="info">
+        </g>
+      </svg>
+    </div>
+  </div>
 
+  <label *ngIf="receiveMsg" class="form-label">Repeated information</label>
+  <div class="row" *ngIf="receiveMsg">
+    <div class="column">
+      <info-choice (infoChange)="repeatAnInfo($event)" [showInfo]="false">
+      </info-choice>
+    </div>
+    <div class="column">
+      <svg width="200" height="100" *ngFor="let info of receiveMsg.repeats">
+        <g info-inner [info]="info"  (click)="detailsService.openInfoDetails(info)">
+        </g>
+        <foreignObject height="20" width="20" x="100" y="80" (click)="modelIOService.deleteRepetition(receiveMsg, info)">
+          <mat-icon fontIcon="delete" style="color: orange" [matTooltip]="'Delete repetition'"></mat-icon>
+        </foreignObject>
+      </svg>
+    </div>
+  </div>
+
+  <label *ngIf="sendMsg" class="form-label">Used information</label>
+  <div class="row" *ngIf="sendMsg">
+    <div class="column">
+      <info-choice (infoChange)="modelIOService.addUsage(sendMsg, $event)" [showInfo]="false">
+      </info-choice>
+    </div>
+    <div class="column">
+      <svg width="200" height="100" *ngFor="let info of sendMsg.uses">
+        <g info-inner [info]="info"  (click)="detailsService.openInfoDetails(info)">
+        </g>
+        <foreignObject height="20" width="20" x="100" y="80" (click)="modelIOService.deleteUsage(sendMsg, info)">
+          <mat-icon fontIcon="delete" style="color: orange" [matTooltip]="'Delete usage'"></mat-icon>
+        </foreignObject>
+      </svg>
+    </div>
+  </div>
 </div>
 
 <div class="row">

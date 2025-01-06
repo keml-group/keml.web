@@ -1,8 +1,7 @@
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {InformationLink} from "../../shared/models/keml/msg-info";
 import {InfoComponent} from "../info/info.component";
-import {MatDialog} from "@angular/material/dialog";
-import {InformationLinkDetailsComponent} from "../details/information-link-details/information-link-details.component";
+import {DetailsService} from "../details/service/details.service";
 
 @Component({
   selector: '[infoLinkG]',
@@ -16,7 +15,7 @@ export class InformationLinkComponent implements OnInit, OnChanges {
   endRef?: InfoComponent
 
   constructor(
-    private dialog: MatDialog,
+    private detailsService: DetailsService,
   ) {}
 
   ngOnInit(): void {
@@ -30,11 +29,7 @@ export class InformationLinkComponent implements OnInit, OnChanges {
   }
 
   openDetails() {
-    const dialogRef = this.dialog.open(
-      InformationLinkDetailsComponent,
-      {width: '40%', height: '80%'}
-    )
-    dialogRef.componentInstance.infoLink = this.infoLink;
+    this.detailsService.openLinkDetails(this.infoLink)
   }
 
   private getStartRef() {

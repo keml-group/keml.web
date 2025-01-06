@@ -1,25 +1,37 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
-import {Message} from "../../../shared/models/keml/msg-info";
+import {Information, Message, ReceiveMessage, SendMessage} from "../../../shared/models/keml/msg-info";
 import {ConversationPartner} from "../../../shared/models/keml/conversation-partner";
 import {ModelIOService} from "../../../shared/services/model-io.service";
+import {DetailsService} from "../service/details.service";
 
 @Component({
   selector: 'msg-details',
   templateUrl: './msg-details.component.html',
   styleUrl: './msg-details.component.css'
 })
-export class MsgDetailsComponent {
+export class MsgDetailsComponent implements OnInit {
   @Input() msg!: Message;
   @Output() openOtherDetails: EventEmitter<Message> = new EventEmitter<Message>();
 
   cps: ConversationPartner[];
+  sendMsg?: SendMessage;
+  receiveMsg?: ReceiveMessage;
 
   constructor(
     public dialogRef: MatDialogRef<MsgDetailsComponent>,
     public modelIOService: ModelIOService,
+    public detailsService: DetailsService,
   ) {
     this.cps = this.modelIOService.getConversationPartners();
+  }
+
+  ngOnInit() {
+    if (this.msg.isSend()) {
+      this.sendMsg = (this.msg as SendMessage)
+    } else {
+      this.receiveMsg = (this.msg as ReceiveMessage)
+    }
   }
 
   closeMe(): void {
@@ -52,6 +64,20 @@ export class MsgDetailsComponent {
     if (newM) {
       this.dialogRef.close();
       this.openOtherDetails.emit(newM);
+    }
+  }
+
+  addNewInfo() {
+    if (this.receiveMsg) {
+      const newInfo = this.modelIOService.addNewNewInfo(this.receiveMsg)
+      if (newInfo)
+        this.detailsService.openInfoDetails(newInfo);
+    }
+  }
+
+  repeatAnInfo(info: Information) {
+    if (this.receiveMsg) {
+      this.modelIOService.addRepetition(this.receiveMsg, info)
     }
   }
 

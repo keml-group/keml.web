@@ -1,0 +1,31 @@
+<div *ngIf="showMsg">
+  <svg width="350" height="60" (click)="openChoice($event)">
+    <g *ngIf="!sendMsg && !receiveMsg">
+      <rect width="350" height="60" fill="orange"></rect>
+      <text x="20" y="35" color="black">No msg chosen</text>
+    </g>
+    <g *ngIf="sendMsg || receiveMsg" msg-overview [msg]="sendMsg? sendMsg : receiveMsg!">
+    </g>
+  </svg>
+</div>
+<button *ngIf="!showMsg" (click)="openChoice($event)">
+  Choose message
+</button>
+
+
+<ng-template #choosemsg>
+  <div style="width: 1500px; height: 1000px; overflow: auto;">
+    <svg id="svg" width="750" height="2000" overflow="scroll">
+      <g transform="translate(150,0)">
+        <g authorG [author]="author"></g>
+        <g cp *ngFor="let convP of cps" [conversationPartner]="convP"></g>
+        <g *ngIf="!isSend">
+          <g msgG *ngFor="let m of receives" [msg]="m" [showInfos]="false" (chooseMsg)="chooseReceive($event)"></g>
+        </g>
+        <g *ngIf="isSend">
+          <g msgG *ngFor="let m of sends" [msg]="m" [showInfos]="false" (chooseMsg)="chooseSend($event)"></g>
+        </g>
+      </g>
+    </svg>
+  </div>
+</ng-template>

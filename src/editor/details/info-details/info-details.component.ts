@@ -1,5 +1,5 @@
-import {Component, Input,} from '@angular/core';
-import {Information} from "../../../shared/models/keml/msg-info";
+import {Component, Input, OnInit,} from '@angular/core';
+import {Information, NewInformation} from "../../../shared/models/keml/msg-info";
 import {MatDialogRef} from "@angular/material/dialog";
 import {ModelIOService} from "../../../shared/services/model-io.service";
 import {DetailsService} from "../service/details.service";
@@ -9,14 +9,23 @@ import {DetailsService} from "../service/details.service";
   templateUrl: './info-details.component.html',
   styleUrl: './info-details.component.css'
 })
-export class InfoDetailsComponent {
+export class InfoDetailsComponent implements OnInit {
   @Input() info!: Information;
+  newInfo?: NewInformation;
 
   constructor(
     public modelIOService: ModelIOService,
     private dialogRef: MatDialogRef<InfoDetailsComponent>,
-    private detailsService: DetailsService,
+    public detailsService: DetailsService,
   ) {}
+
+  ngOnInit() {
+    let newInfo: NewInformation = (this.info as NewInformation)
+    if(newInfo.source) {
+      this.newInfo = newInfo
+    }
+    console.log(this.newInfo)
+  }
 
   closeMe() {
     this.dialogRef.close();

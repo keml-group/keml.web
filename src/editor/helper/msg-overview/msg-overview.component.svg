@@ -1,0 +1,6 @@
+<svg:g>
+  <g msg-inner [msg]="msg" [lengthOpt]="320" transform="translate(0,30)">
+  </g>
+  <g person [w]="20" [h]="30" transform="translate(320)"></g>
+  <g text-area-svg [text]="msg.counterPart.name" [w]="50" [h]="25" [x]="320" [y]="30"></g>
+</svg:g>

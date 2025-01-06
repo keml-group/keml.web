@@ -22,6 +22,10 @@ import {InformationLinkComponent} from "./information-link/information-link.comp
 import {InformationLinkDetailsComponent} from "./details/information-link-details/information-link-details.component";
 import {InfoChoiceComponent} from "./helper/info-choice/info-choice.component";
 import {InfoInnerComponent} from "./helper/info-inner/info-inner.component";
+import {MsgChoiceComponent} from "./helper/msg-choice/msg-choice.component";
+import {MsgInnerComponent} from "./helper/msg-inner/msg-inner.component";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MsgOverviewComponent} from "./helper/msg-overview/msg-overview.component";
 
 
 @NgModule({
@@ -35,6 +39,9 @@ import {InfoInnerComponent} from "./helper/info-inner/info-inner.component";
     AuthorComponent,
     MsgComponent,
     MsgDetailsComponent,
+    MsgChoiceComponent,
+    MsgInnerComponent,
+    MsgOverviewComponent,
     IsInstrSvgComponent,
     InfoChoiceComponent,
     InfoComponent,
@@ -50,6 +57,7 @@ import {InfoInnerComponent} from "./helper/info-inner/info-inner.component";
     CommonModule,
     MatToolbar,
     MatIcon,
+    MatTooltip,
     FormsModule, //for two-way-binding
   ],
   exports: [EditorComponent]

@@ -6,13 +6,14 @@ import {
   Message,
   NewInformation,
   Preknowledge,
-  ReceiveMessage,
+  ReceiveMessage, SendMessage,
 } from "../models/keml/msg-info";
 import {Conversation} from "../models/keml/conversation";
 import {ConversationPartner} from "../models/keml/conversation-partner";
 import {JsonFixer} from "../models/keml/parser/json-fixer";
 import {LayoutHelper} from "../utility/layout-helper";
 import {InformationLinkType} from "../models/keml/json/knowledge-models";
+import {Author} from "../models/keml/author";
 
 @Injectable({
   providedIn: 'root'
@@ -50,6 +51,10 @@ export class ModelIOService {
   saveKEML(conv: Conversation): string {
     let convJson = conv.toJson()
     return JSON.stringify(convJson);
+  }
+
+  getAuthor(): Author {
+    return this.conversation.author;
   }
 
   //************ Conversation Partners *****************
@@ -191,6 +196,11 @@ export class ModelIOService {
     return (msgs.find(m => !m.isSend()) as ReceiveMessage)
   }
 
+  getSends(): SendMessage[] {
+    return this.conversation.author.messages.filter(msg => msg.isSend())
+      .map(msg => msg as SendMessage)
+  }
+
   private msgPosFitsTiming(msg: Message): boolean {
     const msgs = this.conversation.author.messages
     if (msgs.indexOf(msg) != msg.timing) {
@@ -200,6 +210,58 @@ export class ModelIOService {
     return true;
   }
 
+  addRepetition(rec: ReceiveMessage, info: Information) {
+    //only add the repetition if it connects to an earlier info (either preknowledge or older new info
+    const msgTime = rec.timing
+    const infoTime = (info as NewInformation).source?.timing
+    if (!infoTime || infoTime < msgTime ) {
+      if(! rec.repeats.find(el => el == info)) {
+        rec.repeats.push(info)
+        info.repeatedBy.push(rec)
+      }
+    } else {
+      console.log('No repetition allowed')
+    }
+  }
+
+  deleteRepetition(rec: ReceiveMessage, info: Information) {
+    const recIndex = rec.repeats.indexOf(info)
+    if (recIndex > -1) {
+      rec.repeats.splice(recIndex, 1)
+      const infoIndex = info.repeatedBy.indexOf(rec)
+      if (infoIndex > -1) {
+        info.repeatedBy.splice(infoIndex, 1)
+      } else {
+        console.error('Inconsistency in data')
+      }
+    }
+  }
+
+  addUsage(send: SendMessage, info: Information) {
+    const infoInd = send.uses.indexOf(info)
+    if (infoInd > -1) {
+      console.log('Usage already exists')
+    } else {
+      send.uses.push(info)
+    }
+    const msgInd = info.isUsedOn.indexOf(send)
+    if (msgInd > -1) {
+      console.log('Used on already exists')
+    } else {
+      info.isUsedOn.push(send)
+    }
+  }
+
+  deleteUsage(send: SendMessage, info: Information) {
+    const infoInd = send.uses.indexOf(info)
+    if(infoInd> -1) {
+      send.uses.splice(infoInd, 1)
+    }
+    const msgInd = info.isUsedOn.indexOf(send)
+    if (msgInd > -1) {
+      info.isUsedOn.splice(msgInd, 1)
+    }
+  }
   //************** Infos ************************
 
   deleteInfo(info: Information) {
