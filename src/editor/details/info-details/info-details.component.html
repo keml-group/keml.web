@@ -79,6 +79,23 @@
     </div>
   </div>
 
+  <label class="form-label" >Used On</label>
+  <div class="row">
+    <div class="column">
+      <msg-choice [isSend]="true" [showMsg]="false" (sendMsgChange)="modelIOService.addUsage($event, info)">
+      </msg-choice>
+    </div>
+    <div class="column">
+      <svg width="350" height="80" *ngFor="let msg of info.isUsedOn">
+        <g msg-overview [msg]="msg" (click)="detailsService.openMessageDetails(msg)">
+        </g>
+        <foreignObject height="20" width="20" x="100" y="60" (click)="modelIOService.deleteUsage(msg, info)">
+          <mat-icon fontIcon="delete" style="color: orange" [matTooltip]="'Delete usage'"></mat-icon>
+        </foreignObject>
+      </svg>
+    </div>
+  </div>
+
 </div>
 
 <div class="row">
