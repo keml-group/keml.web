@@ -41,6 +41,24 @@
   <label class="form-label" *ngIf="newInfo">Source</label>
   <msg-choice *ngIf="newInfo" [(receiveMsg)]="newInfo.source"></msg-choice>
 
+  <label class="form-label" >Information Links</label>
+  <div class="row">
+    <div class="column">
+      <button (click)="detailsService.openLinkCreationDialog(info)">
+        Create Link
+      </button>
+    </div>
+    <div class="column">
+      <svg width="200" height="100" *ngFor="let link of info.causes">
+        <g info-inner [info]="link.target"  (click)="detailsService.openLinkDetails(link)">
+        </g>
+        <foreignObject height="20" width="20" x="100" y="80" (click)="modelIOService.deleteLink(link)">
+          <mat-icon fontIcon="delete" style="color: orange" [matTooltip]="'Delete link'"></mat-icon>
+        </foreignObject>
+      </svg>
+    </div>
+  </div>
+
   <label class="form-label" >Repeated By</label>
   <div class="row">
     <div class="column">
