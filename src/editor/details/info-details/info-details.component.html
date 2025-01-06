@@ -72,7 +72,7 @@
       <svg width="350" height="80" *ngFor="let msg of info.repeatedBy">
         <g msg-overview [msg]="msg" (click)="detailsService.openMessageDetails(msg)">
         </g>
-        <foreignObject height="20" width="20" x="100" y="80" (click)="modelIOService.deleteRepetition(msg, info)">
+        <foreignObject height="20" width="20" x="100" y="60" (click)="modelIOService.deleteRepetition(msg, info)">
           <mat-icon fontIcon="delete" style="color: orange" [matTooltip]="'Delete repetition'"></mat-icon>
         </foreignObject>
       </svg>
