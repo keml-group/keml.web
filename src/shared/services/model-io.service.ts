@@ -225,7 +225,7 @@ export class ModelIOService {
   }
 
   deleteRepetition(rec: ReceiveMessage, info: Information) {
-    const recIndex = rec.repeats.findIndex(el => el == info)
+    const recIndex = rec.repeats.indexOf(info)
     if (recIndex > -1) {
       rec.repeats.splice(recIndex, 1)
       const infoIndex = info.repeatedBy.indexOf(rec)
@@ -234,6 +234,32 @@ export class ModelIOService {
       } else {
         console.error('Inconsistency in data')
       }
+    }
+  }
+
+  addUsage(send: SendMessage, info: Information) {
+    const infoInd = send.uses.indexOf(info)
+    if (infoInd > -1) {
+      console.log('Usage already exists')
+    } else {
+      send.uses.push(info)
+    }
+    const msgInd = info.isUsedOn.indexOf(send)
+    if (msgInd > -1) {
+      console.log('Used on already exists')
+    } else {
+      info.isUsedOn.push(send)
+    }
+  }
+
+  deleteUsage(send: SendMessage, info: Information) {
+    const infoInd = send.uses.indexOf(info)
+    if(infoInd> -1) {
+      send.uses.splice(infoInd, 1)
+    }
+    const msgInd = info.isUsedOn.indexOf(send)
+    if (msgInd > -1) {
+      info.isUsedOn.splice(msgInd, 1)
     }
   }
   //************** Infos ************************
