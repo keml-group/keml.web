@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Information} from "../../shared/models/keml/msg-info";
 import {NewInformation} from "../../shared/models/keml/msg-info";
+import {SVGAccessService} from "../../shared/services/svg-access.service";
 
 @Component({
   selector: '[infoG]',
@@ -15,6 +16,13 @@ export class InfoComponent {
   wasReallyDragged = false;
   dragStartX: number = 0;
   dragStartY: number = 0;
+
+  constructor(
+    protected svgAccessService: SVGAccessService
+  ) {
+
+  }
+
 
   // todo later use color here, then this is main method
   getConvPartnerName(): string {
@@ -49,6 +57,7 @@ export class InfoComponent {
       const dragY = event.clientY;
       this.info.position.y+= (dragY - this.dragStartY);
       this.dragStartY = dragY;
+      this.svgAccessService.notifyPositionChange(this.info.gId)
     }
   }
 

@@ -14,6 +14,7 @@ export class SVGAccessService {
 
   notifyPositionChange(id: string) {
     this.positionChange.next(id);
+    console.log(id)
   }
 
   listenToPositionChange(): Observable<string> {

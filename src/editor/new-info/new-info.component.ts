@@ -15,15 +15,14 @@ export class NewInfoComponent extends InfoComponent implements AfterViewInit {
 
   @ViewChild("me") me!: ElementRef<SVGGraphicsElement>;
 
-
-  constructor(private service: SVGAccessService){
-    super();
+  constructor(protected override svgAccessService: SVGAccessService){
+    super(svgAccessService);
   }
 
   ngAfterViewInit(): void {
     console.log('My name is '+this.info.gId+':')
     console.log('my absolute position is '+PositionHelper.absolutePosition(this.me.nativeElement).toString())
-    console.log('my absolute position by id is '+PositionHelper.absolutePosition(this.service.getElemById(this.info.gId+'-main')!).toString())
+    console.log('my absolute position by id is '+PositionHelper.absolutePosition(this.svgAccessService.getElemById(this.info.gId+'-main')!).toString())
   }
 
   protected readonly ArrowType = ArrowType;

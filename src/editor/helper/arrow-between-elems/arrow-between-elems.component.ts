@@ -52,6 +52,7 @@ export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit, OnChan
     console.log("Init done, start is "+this.startId)
     this.positioned = true;
     this.computePositionsByIds()
+    this.cdr.detectChanges()
   }
 
   ngOnChanges(_: SimpleChanges) {
