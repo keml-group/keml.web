@@ -1,8 +1,10 @@
-<svg:g arrow-svg
+<svg:g #arrow>
+  <g arrow-svg *ngIf="positioned"
        [start]="start!"
        [end]="end!"
        [arrowType]="arrowType"
        [breaks]="breaks"
        [text]="text"
-       [style]="style"
+       [style]="style">
+  </g>
 ></svg:g>
