@@ -19,12 +19,17 @@ import {SVGAccessService} from "../../../shared/services/svg-access.service";
 })
 export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit, OnChanges {
 
-  @Input() startId!: string;
-  @Input() endId!: string;
+  @Input() startGID!: string;
+  @Input() startSuffix!: string;
+  @Input() endGID!: string;
+  @Input() endSuffix!: string;
   @Input() arrowType: ArrowType = ArrowType.STANDARD;
   @Input() breaks: BoundingBox[] = [];
   @Input() text?: string;
   @Input() style?: string;
+
+  startId!: string;
+  endId!: string;
 
   start?: BoundingBox;
   end?: BoundingBox;
@@ -39,10 +44,13 @@ export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit, OnChan
   }
 
   ngOnInit() {
+    this.startId = this.startGID+this.startSuffix;
+    this.endId = this.endGID+this.endSuffix;
   }
 
   ngAfterViewInit() {
     console.log("Init done, start is "+this.startId)
+    this.positioned = true;
     this.computePositionsByIds()
   }
 

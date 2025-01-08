@@ -1,3 +1,10 @@
-<svg:g arrowElems [arrowType]="infoLink.type" [text]="infoLink.linkText" [startId]="infoLink.source.gId+'-main'" [endId]="infoLink.target.gId+'-main'" (click)="openDetails()">
+<svg:g arrowElems
+       [arrowType]="infoLink.type"
+       [text]="infoLink.linkText"
+       [startGID]="infoLink.source.gId"
+       [startSuffix]="'-main'"
+       [endGID]="infoLink.target.gId"
+       [endSuffix]="'-main'"
+       (click)="openDetails()">
 </svg:g>
 
