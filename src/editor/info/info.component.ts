@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Information} from "../../shared/models/keml/msg-info";
 import {NewInformation} from "../../shared/models/keml/msg-info";
 import {SVGAccessService} from "../../shared/services/svg-access.service";
@@ -8,7 +8,7 @@ import {SVGAccessService} from "../../shared/services/svg-access.service";
   templateUrl: './info.component.svg',
   styleUrl: './info.component.css'
 })
-export class InfoComponent {
+export class InfoComponent implements AfterViewInit {
   @Input() info!: Information;
   @Output() chooseInfo = new EventEmitter<Information>();
 
@@ -19,10 +19,11 @@ export class InfoComponent {
 
   constructor(
     protected svgAccessService: SVGAccessService
-  ) {
+  ) {}
 
+  ngAfterViewInit() {
+    this.svgAccessService.notifyPositionChange(this.info.gId)
   }
-
 
   // todo later use color here, then this is main method
   getConvPartnerName(): string {

@@ -60,6 +60,7 @@ export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit, OnChan
     this.changeNotifier.subscribe(nextString => {
       if (nextString == this.startGID || nextString == this.endGID) {
         this.computePositionsByIds()
+        this.cdr.detectChanges()
       }
     })
   }
