@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import {BoundingBox} from "../../../shared/models/graphical/bounding-box";
 import {ArrowType} from "../../../shared/models/graphical/arrow-heads";
-import {PositionHelper} from "../../../shared/models/graphical/position-helper";
 import {SVGAccessService} from "../../../shared/services/svg-access.service";
 
 @Component({
@@ -20,14 +19,12 @@ import {SVGAccessService} from "../../../shared/services/svg-access.service";
 })
 export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit, OnChanges {
 
-  //@Input() startBox?: BoundingBox;
-  //@Input() endBox?: BoundingBox;
+  @Input() startId!: string;
+  @Input() endId!: string;
   @Input() arrowType: ArrowType = ArrowType.STANDARD;
   @Input() breaks: BoundingBox[] = [];
   @Input() text?: string;
   @Input() style?: string;
-  @Input() startId?: string;
-  @Input() endId?: string;
 
   start?: BoundingBox;
   end?: BoundingBox;
@@ -49,31 +46,24 @@ export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit, OnChan
     this.computePositionsByIds()
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(_: SimpleChanges) {
     if(this.positioned) {
       this.computePositionsByIds()
     }
   }
 
   private computePositionsByIds() {
-    let startElem: SVGGraphicsElement | undefined = this.svgAccessService.getElemById(this.startId!)
-    let endElem: SVGGraphicsElement | undefined = this.svgAccessService.getElemById(this.endId!)
-    if (startElem && endElem) {
-      let startAbs = PositionHelper.absolutePosition(startElem!)
-      let endAbs = PositionHelper.absolutePosition(endElem!)
-      console.log('pos of start '+ this.startId + ' is ' + startAbs)
-      console.log('pos of end '+ this.endId + ' is ' + endAbs)
-      if (this.node?.nativeElement){
-        let el = this.node.nativeElement as SVGGraphicsElement
-        PositionHelper.makeRelativeToElem(startAbs, el)
-        PositionHelper.makeRelativeToElem(endAbs, el)
-        this.start = startAbs
-        this.end = endAbs
-      } else
-        console.log('No native element yet')
-    } else {
-      console.log('No elems yet')
-    }
+    if (this.node?.nativeElement){
+      let rel = this.node.nativeElement as SVGGraphicsElement
+      let startOpt = this.svgAccessService.getRelativePosition(this.startId, rel)
+      if (startOpt) {
+        this.start = startOpt
+      }
+      let endOpt = this.svgAccessService.getRelativePosition(this.endId, rel)
+      if (endOpt) {
+        this.end = endOpt
+      }
+    } else console.log('No native element yet')
   }
 
 }
