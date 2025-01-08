@@ -3,9 +3,7 @@ import {
   ChangeDetectorRef,
   Component, ElementRef,
   Input,
-  OnChanges,
   OnInit,
-  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import {BoundingBox} from "../../../shared/models/graphical/bounding-box";
@@ -18,7 +16,7 @@ import {Observable} from "rxjs";
   templateUrl: './arrow-between-elems.component.svg',
   styleUrl: './arrow-between-elems.component.css'
 })
-export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit, OnChanges {
+export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit {
 
   @Input() startGID!: string;
   @Input() startSuffix!: string;
@@ -62,12 +60,6 @@ export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit, OnChan
         this.cdr.detectChanges()
       }
     })
-  }
-
-  ngOnChanges(_: SimpleChanges) {
-    if(this.positioned) {
-      this.computePositionsByIds()
-    }
   }
 
   private computePositionsByIds() {
