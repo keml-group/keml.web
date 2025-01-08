@@ -1,1 +1,8 @@
-<p>arrow-between-elems works!</p>
+<svg:g arrow-svg
+       [start]="start"
+       [end]="end"
+       [arrowType]="arrowType"
+       [breaks]="breaks"
+       [text]="text"
+       [style]="style"
+></svg:g>
