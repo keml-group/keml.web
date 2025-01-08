@@ -11,6 +11,7 @@ import {
 import {BoundingBox} from "../../../shared/models/graphical/bounding-box";
 import {ArrowType} from "../../../shared/models/graphical/arrow-heads";
 import {SVGAccessService} from "../../../shared/services/svg-access.service";
+import {Observable} from "rxjs";
 
 @Component({
   selector: '[arrowElems]',
@@ -37,10 +38,13 @@ export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit, OnChan
   positioned= false;
   @ViewChild('arrow') node!: ElementRef<SVGGraphicsElement>;
 
+  changeNotifier: Observable<string>;
+
   //idea: compute the two input positions as relative to the current elem
   constructor(
     private svgAccessService: SVGAccessService,
     private cdr: ChangeDetectorRef) {
+    this.changeNotifier = this.svgAccessService.listenToPositionChange()
   }
 
   ngOnInit() {
@@ -53,6 +57,11 @@ export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit, OnChan
     this.positioned = true;
     this.computePositionsByIds()
     this.cdr.detectChanges()
+    this.changeNotifier.subscribe(nextString => {
+      if (nextString == this.startGID || nextString == this.endGID) {
+        this.computePositionsByIds()
+      }
+    })
   }
 
   ngOnChanges(_: SimpleChanges) {
