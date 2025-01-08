@@ -10,6 +10,6 @@
     <g database [attr.transform]="'translate('+(info.position.w*0.1)+','+ -(0.9*(info.position.w/8+info.position.w/6)) +')'" [w]="info.position.w*0.9" [h]="info.position.h" [fill]="computeTextColor()"></g>
     <g text-area-svg [text]="info.message" [x]="info.position.w*0.1" [y]="0" [w]="info.position.w*0.9" [h]="info.position.h"></g>
   </g>
-  <g arrow-svg *ngFor="let msg of info.isUsedOn" [start]="{x: -info.position.x, y: -info.position.y, w: 10, h:10}" [end]="{x: 0, y: 0, w: info.position.w, h: info.position.h}" [arrowType]="ArrowType.STANDARD" [startId]="info.gId+'-main'" [endId]="msg.gId+'-left'"></g>
+  <g arrowElems *ngFor="let msg of info.isUsedOn" [arrowType]="ArrowType.STANDARD" [startId]="info.gId+'-main'" [endId]="msg.gId+'-left'"></g>
   <g infoLinkG *ngFor="let link of info.causes" [infoLink]="link"></g>
 </svg:g>

@@ -1,6 +1,6 @@
 <svg:g arrow-svg
-       [start]="start"
-       [end]="end"
+       [start]="start!"
+       [end]="end!"
        [arrowType]="arrowType"
        [breaks]="breaks"
        [text]="text"
