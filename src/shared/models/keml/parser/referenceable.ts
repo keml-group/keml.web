@@ -55,4 +55,17 @@ export abstract class Referencable {
       return []
   }
 
+  destruct() {
+    console.log('Destruct '+this.ref)
+    this.singleChildren.forEach(child => {
+      child.destruct()
+    })
+    this.listChildren.forEach(list => {
+      list.forEach((ref: Referencable) => {
+        ref.destruct()
+      })
+      list.splice(0, list.length)
+    })
+  }
+
 }

@@ -76,14 +76,6 @@ export abstract class Message extends Referencable {
     }
   }
 
-  private static msgPosFitsTiming(msg: Message, msgs: Message[]): boolean {
-    if (msgs.indexOf(msg) != msg.timing) {
-      console.error('Position and msg timing do not fit for ' + msg );
-      return false;
-    }
-    return true;
-  }
-
 }
 
 export class SendMessage extends Message {
@@ -124,6 +116,17 @@ export class SendMessage extends Message {
     let res = (<SendMessageJson>super.toJson());
     res.uses = this.uses.map(u => u.getRef())
     return res;
+  }
+
+  override destruct() {
+    console.log('Destruct SendMessage');
+    this.uses.forEach(info => {
+      let index = info.isUsedOn.indexOf(this)
+      if(index > -1){
+        info.isUsedOn.splice(index, 1)
+      }
+    })
+    super.destruct()
   }
 
 }
@@ -196,6 +199,17 @@ export class ReceiveMessage extends Message {
     res.generates = this.generates.map(g => g.toJson())
     res.repeats = this.repeats.map(r => r.getRef())
     return res;
+  }
+
+  override destruct() {
+    console.log('Destruct ReceiveMessage');
+    this.repeats.forEach(info => {
+      let index = info.repeatedBy.indexOf(this)
+      if(index > -1){
+        info.repeatedBy.splice(index, 1)
+      }
+    })
+    super.destruct()
   }
 
 }
@@ -277,6 +291,28 @@ export abstract class Information extends Referencable {
       position: this.position,
     }
   }
+
+  override destruct() {
+    this.repeatedBy.forEach((rec: ReceiveMessage) => {
+      const index = rec.repeats.indexOf(this)
+      if (index > -1) {
+        rec.repeats.splice(index, 1)
+      }
+    })
+    this.isUsedOn.forEach((send: SendMessage) => {
+      const index = send.uses.indexOf(this)
+      if (index > -1) {
+        console.log('Remove usage')
+        send.uses.splice(index, 1)
+      }
+    })
+    this.targetedBy.forEach((link: InformationLink) => {
+      console.log('targeted by '+link.getRef())
+      link.destruct()
+    })
+    this.targetedBy.splice(0, this.targetedBy.length)
+    super.destruct();
+  }
 }
 
 export class NewInformation extends Information {
@@ -323,6 +359,14 @@ export class NewInformation extends Information {
     let res = (<NewInformationJson>super.toJson());
     res.source = this.source.getRef()
     return res;
+  }
+
+  override destruct() {
+    let index = this.source.generates.indexOf(this)
+    if(index > -1) {
+      this.source.generates.splice(index, 1)
+    }
+    super.destruct();
   }
 }
 
@@ -400,6 +444,18 @@ export class InformationLink extends Referencable {
       type: this.type,
       linkText: this.linkText,
     }
+  }
+
+  override destruct() {
+    const sourceIndex = this.source.causes.indexOf(this)
+    if (sourceIndex != -1) {
+      this.source.causes.splice(sourceIndex, 1)
+    }
+    const targetIndex = this.target.targetedBy.indexOf(this)
+    if (targetIndex != -1) {
+      this.target.causes.splice(targetIndex, 1)
+    }
+    super.destruct();
   }
 
 }

@@ -111,7 +111,15 @@ export class ModelIOService {
     const cps = this.conversation.conversationPartners;
     //todo allow delete if last?
     const pos = cps.indexOf(cp);
+    cp.destruct()
+    this.deleteMsgsWithCP(cp)
     cps.splice(pos, 1);
+  }
+
+  deleteMsgsWithCP(cp: ConversationPartner) {
+    this.conversation.author.messages.filter(m => m.counterPart == cp).forEach(m => {
+      this.deleteMessage(m)
+    })
   }
 
   duplicateConversationPartner(cp: ConversationPartner): ConversationPartner {
@@ -161,6 +169,7 @@ export class ModelIOService {
   deleteMessage(msg: Message) {
     const msgs = this.conversation.author.messages
     if (this.msgPosFitsTiming(msg)) {
+      msg.destruct()
       msgs.splice(msg.timing, 1);
       // adapt later messages:
       //todo also adapt infos
@@ -292,6 +301,7 @@ export class ModelIOService {
     const pos = infos.indexOf(info);
     if (pos > -1) {
       infos.splice(pos, 1);
+      info.destruct()
     } else {
       console.error('info '+info+' was not correctly linked')
     }
@@ -390,14 +400,15 @@ export class ModelIOService {
   }
 
   deleteLink(link: InformationLink) {
-    const srcIndex = link.source.causes.indexOf(link)
+    link.destruct()
+    /*const srcIndex = link.source.causes.indexOf(link)
     if (srcIndex > -1) {
       link.source.causes.splice(srcIndex, 1);
     }
     const targetIndex = link.target.targetedBy.indexOf(link);
     if (targetIndex > -1) {
       link.target.targetedBy.splice(targetIndex, 1);
-    }
+    }*/
   }
 
   duplicateLink(link: InformationLink) {
