@@ -2,21 +2,21 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component, ElementRef,
-  Input,
+  Input, OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
 import {BoundingBox} from "../../../shared/models/graphical/bounding-box";
 import {ArrowType} from "../../../shared/models/graphical/arrow-heads";
 import {SVGAccessService} from "../../../shared/services/svg-access.service";
-import {Observable} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 
 @Component({
   selector: '[arrowElems]',
   templateUrl: './arrow-between-elems.component.svg',
   styleUrl: './arrow-between-elems.component.css'
 })
-export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit {
+export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() startGID!: string;
   @Input() startSuffix!: string;
@@ -37,23 +37,24 @@ export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit {
   @ViewChild('arrow') node!: ElementRef<SVGGraphicsElement>;
 
   changeNotifier: Observable<string>;
+  changeSubscription: Subscription;
 
   //idea: compute the two input positions as relative to the current elem
   constructor(
     private svgAccessService: SVGAccessService,
     private cdr: ChangeDetectorRef) {
     this.changeNotifier = this.svgAccessService.listenToPositionChange()
-  }
-
-  ngOnInit() {
-    this.startId = this.startGID+this.startSuffix;
-    this.endId = this.endGID+this.endSuffix;
-    this.changeNotifier.subscribe(nextString => {
+    this.changeSubscription = this.changeNotifier.subscribe(nextString => {
       if (nextString == this.startGID || nextString == this.endGID) {
         this.computePositionsByIds()
         this.cdr.detectChanges()
       }
     })
+  }
+
+  ngOnInit() {
+    this.startId = this.startGID+this.startSuffix;
+    this.endId = this.endGID+this.endSuffix;
   }
 
   ngAfterViewInit() {
@@ -74,6 +75,10 @@ export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit {
         this.end = endOpt
       }
     } else console.log('No native element yet')
+  }
+
+  ngOnDestroy() {
+    this.changeSubscription.unsubscribe();
   }
 
 }
