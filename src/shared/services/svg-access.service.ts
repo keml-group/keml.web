@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {BoundingBox} from "../models/graphical/bounding-box";
 import {PositionHelper} from "../models/graphical/position-helper";
 import {BehaviorSubject, Observable} from "rxjs";
-import {Information, Message, ReceiveMessage, SendMessage} from "../models/keml/msg-info";
+import {Message, ReceiveMessage, SendMessage} from "../models/keml/msg-info";
 
 @Injectable({
   providedIn: 'root'

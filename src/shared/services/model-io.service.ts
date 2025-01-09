@@ -168,15 +168,14 @@ export class ModelIOService {
 
   deleteMessage(msg: Message) {
     const msgs = this.conversation.author.messages
-    if (this.msgPosFitsTiming(msg)) {
-      msg.destruct()
-      msgs.splice(msg.timing, 1);
-      // adapt later messages:
+    let index = msgs.indexOf(msg);
+    msg.destruct()
+    msgs.splice(index, 1);
+    // adapt later messages:
       //todo also adapt infos
-      for(let i = msg.timing; i < msgs.length; i++) {
-        msgs[i].timing--;
-        this.svgAccessService.notifyPositionChangeMessage(msgs[i])
-      }
+    for(let i = msg.timing; i < msgs.length; i++) {
+      msgs[i].timing--;
+      this.svgAccessService.notifyPositionChangeMessage(msgs[i])
     }
   }
 

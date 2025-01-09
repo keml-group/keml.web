@@ -119,7 +119,6 @@ export class SendMessage extends Message {
   }
 
   override destruct() {
-    console.log('Destruct SendMessage');
     this.uses.forEach(info => {
       let index = info.isUsedOn.indexOf(this)
       if(index > -1){
@@ -202,12 +201,14 @@ export class ReceiveMessage extends Message {
   }
 
   override destruct() {
-    console.log('Destruct ReceiveMessage');
     this.repeats.forEach(info => {
       let index = info.repeatedBy.indexOf(this)
       if(index > -1){
         info.repeatedBy.splice(index, 1)
       }
+    })
+    this.generates.forEach(info => {
+      info.destruct()
     })
     super.destruct()
   }
