@@ -10,6 +10,5 @@
     <g database [attr.transform]="'translate('+(info.position.w*0.1)+','+ -(0.9*(info.position.w/8+info.position.w/6)) +')'" [w]="info.position.w*0.9" [h]="info.position.h" [fill]="computeTextColor()"></g>
     <g text-area-svg [text]="info.message" [x]="info.position.w*0.1" [y]="0" [w]="info.position.w*0.9" [h]="info.position.h"></g>
   </g>
-  <g arrowElems *ngFor="let msg of info.isUsedOn" [arrowType]="ArrowType.STANDARD" [startGID]="info.gId" [startSuffix]="'-main'" [endGID]="msg.gId" [endSuffix]="'-left'"></g>
   <g infoLinkG *ngFor="let link of info.causes" [infoLink]="link"></g>
 </svg:g>
