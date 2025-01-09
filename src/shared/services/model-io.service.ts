@@ -128,30 +128,15 @@ export class ModelIOService {
 
   //************* Messages ********************
 
-  notifyAboutPosChange(msg: Message) {
-    this.svgAccessService.notifyPositionChange(msg.gId)
-    let rec = (msg as ReceiveMessage)
-    rec.generates?.forEach( i => {
-      this.svgAccessService.notifyPositionChange(i.gId)
-    })
-    rec.repeats?.forEach( i => {
-      this.svgAccessService.notifyPositionChange(i.gId)
-    })
-    let send = (msg as SendMessage)
-    send.uses?.forEach( i => {
-      this.svgAccessService.notifyPositionChange(i.gId)
-    })
-  }
-
   moveMessageUp(msg: Message) {
     const msgs = this.conversation.author.messages
     //actually, timing should be equal to the index - can we rely on it?
     msgs[msg.timing] = msgs[msg.timing-1];
     msgs[msg.timing].timing++;
-    this.notifyAboutPosChange( msgs[msg.timing] )
+    this.svgAccessService.notifyPositionChangeMessage( msgs[msg.timing] )
     msgs[msg.timing-1] = msg;
     msg.timing--;
-    this.notifyAboutPosChange( msg)
+    this.svgAccessService.notifyPositionChangeMessage( msg)
   }
 
   disableMoveUp(msg: Message): boolean {
@@ -163,10 +148,10 @@ export class ModelIOService {
     //actually, timing should be equal to the index - can we rely on it?
     msgs[msg.timing] = msgs[msg.timing+1];
     msgs[msg.timing].timing-=1;
-    this.notifyAboutPosChange(msgs[msg.timing])
+    this.svgAccessService.notifyPositionChangeMessage(msgs[msg.timing])
     msgs[msg.timing+1] = msg;
     msg.timing+=1;
-    this.notifyAboutPosChange(msg)
+    this.svgAccessService.notifyPositionChangeMessage(msg)
   }
 
   disableMoveDown(msg: Message): boolean {
@@ -181,7 +166,7 @@ export class ModelIOService {
       //todo also adapt infos
       for(let i = msg.timing; i < msgs.length; i++) {
         msgs[i].timing--;
-        this.notifyAboutPosChange(msgs[i])
+        this.svgAccessService.notifyPositionChangeMessage(msgs[i])
       }
     }
   }
@@ -202,7 +187,7 @@ export class ModelIOService {
     //todo also adapt infos
     for(let i = msg.timing +1; i < msgs.length; i++) {
       msgs[i].timing++;
-      this.notifyAboutPosChange(msgs[i])
+      this.svgAccessService.notifyPositionChangeMessage(msgs[i])
     }
   }
 

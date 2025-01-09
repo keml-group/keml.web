@@ -12,6 +12,7 @@ import {SVGAccessService} from "../../shared/services/svg-access.service";
   styleUrl: './msg.component.css'
 })
 export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
+  @Input() msgTiming!: number; //extra input to be used to detect changes
   @Input() msg!: Message;
   @Input() showInfos = true;
   @Output() chooseMsg: EventEmitter<Message> = new EventEmitter();
