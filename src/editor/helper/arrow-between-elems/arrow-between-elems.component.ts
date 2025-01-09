@@ -2,8 +2,8 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component, ElementRef,
-  Input, OnDestroy,
-  OnInit,
+  Input, OnChanges, OnDestroy,
+  OnInit, SimpleChanges,
   ViewChild
 } from '@angular/core';
 import {BoundingBox} from "../../../shared/models/graphical/bounding-box";
@@ -16,7 +16,7 @@ import {Observable, Subscription} from "rxjs";
   templateUrl: './arrow-between-elems.component.svg',
   styleUrl: './arrow-between-elems.component.css'
 })
-export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
 
   @Input() startGID!: string;
   @Input() startSuffix!: string;
@@ -55,6 +55,13 @@ export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit, OnDest
   ngOnInit() {
     this.startId = this.startGID+this.startSuffix;
     this.endId = this.endGID+this.endSuffix;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.startId = this.startGID+this.startSuffix;
+    this.endId = this.endGID+this.endSuffix;
+    this.computePositionsByIds()
+    this.cdr.detectChanges()
   }
 
   ngAfterViewInit() {
