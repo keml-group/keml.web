@@ -16,6 +16,7 @@ import {ParserContext} from "./parser/parser-context";
 import {Referencable} from "./parser/referenceable";
 import {JsonFixer} from "./parser/json-fixer";
 import {BoundingBox} from "../graphical/bounding-box";
+import {GeneralHelper} from "../../utility/general-helper";
 
 export abstract class Message extends Referencable {
   protected readonly eClass: string = '';
@@ -120,10 +121,7 @@ export class SendMessage extends Message {
 
   override destruct() {
     this.uses.forEach(info => {
-      let index = info.isUsedOn.indexOf(this)
-      if(index > -1){
-        info.isUsedOn.splice(index, 1)
-      }
+      GeneralHelper.removeFromList(this, info.isUsedOn)
     })
     super.destruct()
   }
@@ -184,12 +182,7 @@ export class ReceiveMessage extends Message {
   }
 
   private removeFromGenerates(info: NewInformation): boolean {
-    let pos = this.generates.findIndex(i => i == info)
-    if (pos != -1) {
-      this.generates.splice(pos, 1)
-      return true;
-    }
-    return false;
+    return GeneralHelper.removeFromList(info, this.generates)
   }
 
   override toJson(): ReceiveMessageJson {
@@ -201,10 +194,7 @@ export class ReceiveMessage extends Message {
 
   override destruct() {
     this.repeats.forEach(info => {
-      let index = info.repeatedBy.indexOf(this)
-      if(index > -1){
-        info.repeatedBy.splice(index, 1)
-      }
+      GeneralHelper.removeFromList(this, info.repeatedBy)
     })
     this.generates.forEach(info => {
       info.destruct()
@@ -294,16 +284,10 @@ export abstract class Information extends Referencable {
 
   override destruct() {
     this.repeatedBy.forEach((rec: ReceiveMessage) => {
-      const index = rec.repeats.indexOf(this)
-      if (index > -1) {
-        rec.repeats.splice(index, 1)
-      }
+      GeneralHelper.removeFromList(this, rec.repeats)
     })
     this.isUsedOn.forEach((send: SendMessage) => {
-      const index = send.uses.indexOf(this)
-      if (index > -1) {
-        send.uses.splice(index, 1)
-      }
+      GeneralHelper.removeFromList(this, send.uses)
     })
     this.targetedBy.forEach((link: InformationLink) => {
       link.destruct()
@@ -360,10 +344,7 @@ export class NewInformation extends Information {
   }
 
   override destruct() {
-    let index = this.source.generates.indexOf(this)
-    if(index > -1) {
-      this.source.generates.splice(index, 1)
-    }
+    GeneralHelper.removeFromList(this, this.source.generates)
     super.destruct();
   }
 }
@@ -445,14 +426,8 @@ export class InformationLink extends Referencable {
   }
 
   override destruct() {
-    const sourceIndex = this.source.causes.indexOf(this)
-    if (sourceIndex != -1) {
-      this.source.causes.splice(sourceIndex, 1)
-    }
-    const targetIndex = this.target.targetedBy.indexOf(this)
-    if (targetIndex != -1) {
-      this.target.causes.splice(targetIndex, 1)
-    }
+    GeneralHelper.removeFromList(this, this.source.causes)
+    GeneralHelper.removeFromList(this, this.target.targetedBy)
     super.destruct();
   }
 
