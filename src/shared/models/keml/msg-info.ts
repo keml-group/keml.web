@@ -280,6 +280,7 @@ export abstract class Information extends Referencable {
       GeneralHelper.removeFromList(this, send.uses)
     })
     this.targetedBy.forEach((link: InformationLink) => {
+      console.log('Destroying link '+link.getRef())
       link.destruct()
     })
     this.targetedBy.splice(0, this.targetedBy.length)
@@ -427,8 +428,8 @@ export class InformationLink extends Referencable {
 
   override destruct() {
     GeneralHelper.removeFromList(this, this.source.causes)
-    GeneralHelper.removeFromList(this, this.target.targetedBy)
-    super.destruct();
+    //GeneralHelper.removeFromList(this, this.target.targetedBy)
+    //super.destruct();
   }
 
 }
