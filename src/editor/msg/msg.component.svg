@@ -1,4 +1,4 @@
-<svg:g attr.transform="translate(-5,{{computeY()}})">
+<svg:g [attr.transform]="'translate(-5, '+msgY+')'">
   <g msg-inner
      [msg]="msg"
      pointer-events="bounding-box" (click)="clickMsg()">

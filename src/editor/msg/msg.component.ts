@@ -21,6 +21,8 @@ export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
   receiveMsg?: ReceiveMessage;
   sendMsg?: SendMessage;
 
+  msgY: number = 0;
+
   constructor(private svgAccessService: SVGAccessService) { }
 
   ngOnInit() {
@@ -29,6 +31,7 @@ export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
     } else {
       this.receiveMsg = (this.msg as ReceiveMessage)
     }
+    this.msgY = this.computeY()
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -38,6 +41,7 @@ export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
     } else {
       this.receiveMsg = (this.msg as ReceiveMessage)
     }
+    this.msgY = this.computeY()
     this.svgAccessService.notifyPositionChange(this.msg.gId)
   }
 
@@ -46,7 +50,7 @@ export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   computeY(): number {
-    return LayoutHelper.computeMessageY(this.msg.timing);
+    return LayoutHelper.computeMessageY(this.msgTiming);
   }
 
   clickMsg() {
