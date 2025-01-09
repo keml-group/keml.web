@@ -4,7 +4,7 @@
      pointer-events="bounding-box" (click)="clickMsg()">
   </g>
   <g *ngIf="showInfos">
-    <g newInfoG *ngFor="let info of getInfos()" [info]="info" (chooseInfo)="clickInfo(info)"></g>
+    <g newInfoG *ngFor="let info of receiveMsg?.generates" [info]="info" (chooseInfo)="clickInfo(info)"></g>
     <g arrowElems *ngFor="let info of receiveMsg?.repeats" [startGID]="msg.gId" [startSuffix]="'-left'" [endGID]="info.gId" [endSuffix]="'-main'" [arrowType]="ArrowType.DASHED"></g>
   </g>
 </svg:g>

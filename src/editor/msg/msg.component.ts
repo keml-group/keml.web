@@ -2,7 +2,6 @@ import {AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output
 import {Message, SendMessage} from "../../shared/models/keml/msg-info";
 import {ReceiveMessage} from "../../shared/models/keml/msg-info";
 import {Information} from "../../shared/models/keml/msg-info";
-import {NewInformation} from "../../shared/models/keml/msg-info";
 import {LayoutHelper} from "../../shared/utility/layout-helper";
 import {ArrowType} from "../../shared/models/graphical/arrow-heads";
 import {SVGAccessService} from "../../shared/services/svg-access.service";
@@ -47,14 +46,6 @@ export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
 
   computeY(): number {
     return LayoutHelper.computeMessageY(this.msg.timing);
-  }
-
-  getInfos(): NewInformation[] {
-    if (this.msg.isSend())
-      return [];
-    else {
-      return (this.msg as ReceiveMessage).generates
-    }
   }
 
   clickMsg() {
