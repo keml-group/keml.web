@@ -1,4 +1,4 @@
-<svg:g [attr.transform]="'translate('+ info.position.x + ', ' + info.position.y +')'">
+<svg:g [attr.id]="info.gId" [attr.transform]="'translate('+ info.position.x + ', ' + info.position.y +')'">
   <g #me [attr.id]="info.gId+'-main'"
      (mousedown)="startDrag($event)"
      (mousemove)="drag($event)"
