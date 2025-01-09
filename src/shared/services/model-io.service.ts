@@ -246,7 +246,7 @@ export class ModelIOService {
     const msgTime = rec.timing
     const infoTime = (info as NewInformation).source?.timing
     if (!infoTime || infoTime < msgTime ) {
-      if(! rec.repeats.find(el => el == info)) {
+      if(! rec.repeats.indexOf(info)) {
         rec.repeats.push(info)
         info.repeatedBy.push(rec)
       }
