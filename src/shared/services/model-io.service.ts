@@ -15,6 +15,7 @@ import {LayoutHelper} from "../utility/layout-helper";
 import {InformationLinkType} from "../models/keml/json/knowledge-models";
 import {Author} from "../models/keml/author";
 import {SVGAccessService} from "./svg-access.service";
+import {GeneralHelper} from "../utility/general-helper";
 
 @Injectable({
   providedIn: 'root'
@@ -108,12 +109,9 @@ export class ModelIOService {
   }
 
   deleteConversationPartner(cp: ConversationPartner) {
-    const cps = this.conversation.conversationPartners;
-    //todo allow delete if last?
-    const pos = cps.indexOf(cp);
     cp.destruct()
     this.deleteMsgsWithCP(cp)
-    cps.splice(pos, 1);
+    GeneralHelper.removeFromList(cp, this.conversation.conversationPartners)
   }
 
   deleteMsgsWithCP(cp: ConversationPartner) {
@@ -168,9 +166,8 @@ export class ModelIOService {
 
   deleteMessage(msg: Message) {
     const msgs = this.conversation.author.messages
-    let index = msgs.indexOf(msg);
     msg.destruct()
-    msgs.splice(index, 1);
+    GeneralHelper.removeFromList(msg, msgs)
     // adapt later messages:
       //todo also adapt infos
     for(let i = msg.timing; i < msgs.length; i++) {
@@ -256,16 +253,8 @@ export class ModelIOService {
   }
 
   deleteRepetition(rec: ReceiveMessage, info: Information) {
-    const recIndex = rec.repeats.indexOf(info)
-    if (recIndex > -1) {
-      rec.repeats.splice(recIndex, 1)
-      const infoIndex = info.repeatedBy.indexOf(rec)
-      if (infoIndex > -1) {
-        info.repeatedBy.splice(infoIndex, 1)
-      } else {
-        console.error('Inconsistency in data')
-      }
-    }
+    GeneralHelper.removeFromList(info, rec.repeats)
+    GeneralHelper.removeFromList(rec, info.repeatedBy)
   }
 
   addUsage(send: SendMessage, info: Information) {
@@ -284,26 +273,15 @@ export class ModelIOService {
   }
 
   deleteUsage(send: SendMessage, info: Information) {
-    const infoInd = send.uses.indexOf(info)
-    if(infoInd> -1) {
-      send.uses.splice(infoInd, 1)
-    }
-    const msgInd = info.isUsedOn.indexOf(send)
-    if (msgInd > -1) {
-      info.isUsedOn.splice(msgInd, 1)
-    }
+    GeneralHelper.removeFromList(info, send.uses)
+    GeneralHelper.removeFromList(send, info.isUsedOn)
   }
   //************** Infos ************************
 
   deleteInfo(info: Information) {
     const infos = this.getRightInfoList(info)
-    const pos = infos.indexOf(info);
-    if (pos > -1) {
-      infos.splice(pos, 1);
-      info.destruct()
-    } else {
-      console.error('info '+info+' was not correctly linked')
-    }
+    info.destruct()
+    GeneralHelper.removeFromList(info, infos)
   }
 
   duplicateInfo(info: Information): Information {
@@ -400,14 +378,6 @@ export class ModelIOService {
 
   deleteLink(link: InformationLink) {
     link.destruct()
-    /*const srcIndex = link.source.causes.indexOf(link)
-    if (srcIndex > -1) {
-      link.source.causes.splice(srcIndex, 1);
-    }
-    const targetIndex = link.target.targetedBy.indexOf(link);
-    if (targetIndex > -1) {
-      link.target.targetedBy.splice(targetIndex, 1);
-    }*/
   }
 
   duplicateLink(link: InformationLink) {
