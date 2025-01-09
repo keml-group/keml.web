@@ -49,7 +49,7 @@ export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit, OnChan
         setTimeout(() => {
           this.computePositionsByIds()
           this.cdr.detectChanges()
-        }, 100)
+        }, 50)
       }
     })
   }

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Message, SendMessage} from "../../shared/models/keml/msg-info";
 import {ReceiveMessage} from "../../shared/models/keml/msg-info";
 import {Information} from "../../shared/models/keml/msg-info";
@@ -12,7 +12,7 @@ import {SVGAccessService} from "../../shared/services/svg-access.service";
   templateUrl: './msg.component.svg',
   styleUrl: './msg.component.css'
 })
-export class MsgComponent implements OnInit, AfterViewInit {
+export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() msg!: Message;
   @Input() showInfos = true;
   @Output() chooseMsg: EventEmitter<Message> = new EventEmitter();
@@ -29,6 +29,16 @@ export class MsgComponent implements OnInit, AfterViewInit {
     } else {
       this.receiveMsg = (this.msg as ReceiveMessage)
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log('Change '+this.msg.gId)
+    if (this.msg.isSend()) {
+      this.sendMsg = (this.msg as SendMessage)
+    } else {
+      this.receiveMsg = (this.msg as ReceiveMessage)
+    }
+    this.svgAccessService.notifyPositionChange(this.msg.gId)
   }
 
   ngAfterViewInit() {
