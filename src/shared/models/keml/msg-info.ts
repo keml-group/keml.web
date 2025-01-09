@@ -157,7 +157,6 @@ export class ReceiveMessage extends Message {
     );
     if (parserContext) {
       let json: ReceiveMessageJson = jsonOpt ? jsonOpt : parserContext.getJsonFromTree(ref!.$ref)
-      console.log(json)
       let generatesRefs = ParserContext.createRefList2(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates?.map(g => g.eClass? g.eClass: NewInformation.eClass))
       this.generates = generatesRefs.map(g => parserContext.getOrCreate(g))
       let reps = json.repeats?.map(r => parserContext.getOrCreate<NewInformation>(r))
@@ -303,12 +302,10 @@ export abstract class Information extends Referencable {
     this.isUsedOn.forEach((send: SendMessage) => {
       const index = send.uses.indexOf(this)
       if (index > -1) {
-        console.log('Remove usage')
         send.uses.splice(index, 1)
       }
     })
     this.targetedBy.forEach((link: InformationLink) => {
-      console.log('targeted by '+link.getRef())
       link.destruct()
     })
     this.targetedBy.splice(0, this.targetedBy.length)
