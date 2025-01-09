@@ -84,24 +84,6 @@ export abstract class Message extends Referencable {
     return true;
   }
 
-  static duplicateMessage(msg: Message, msgs: Message[]): Message | null {
-    if (this.msgPosFitsTiming(msg, msgs)) {
-      let duplicate = Message.newMessage(msg.isSend(), msg.counterPart, msg.timing+1, 'Duplicate of '+ msg.content, msg.originalContent);
-      this.insertMsgInPos(duplicate, msgs)
-      return duplicate;
-    }
-    return null
-  }
-
-  static insertMsgInPos(msg: Message, msgs: Message[]): void {
-    msgs.splice(msg.timing, 0, msg);
-    // adapt later messages:
-    //todo also adapt infos
-    for(let i = msg.timing +1; i < msgs.length; i++) {
-      msgs[i].timing++;
-    }
-  }
-
 }
 
 export class SendMessage extends Message {

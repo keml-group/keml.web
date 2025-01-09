@@ -48,18 +48,18 @@ export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.startId = this.startGID+this.startSuffix;
     this.endId = this.endGID+this.endSuffix;
-  }
-
-  ngAfterViewInit() {
-    this.positioned = true;
-    this.computePositionsByIds()
-    this.cdr.detectChanges()
     this.changeNotifier.subscribe(nextString => {
       if (nextString == this.startGID || nextString == this.endGID) {
         this.computePositionsByIds()
         this.cdr.detectChanges()
       }
     })
+  }
+
+  ngAfterViewInit() {
+    this.positioned = true;
+    this.computePositionsByIds()
+    this.cdr.detectChanges()
   }
 
   private computePositionsByIds() {
