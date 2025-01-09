@@ -1,17 +1,18 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Message, SendMessage} from "../../shared/models/keml/msg-info";
 import {ReceiveMessage} from "../../shared/models/keml/msg-info";
 import {Information} from "../../shared/models/keml/msg-info";
-import {NewInformation} from "../../shared/models/keml/msg-info";
 import {LayoutHelper} from "../../shared/utility/layout-helper";
 import {ArrowType} from "../../shared/models/graphical/arrow-heads";
+import {SVGAccessService} from "../../shared/services/svg-access.service";
 
 @Component({
   selector: '[msgG]',
   templateUrl: './msg.component.svg',
   styleUrl: './msg.component.css'
 })
-export class MsgComponent implements OnInit{
+export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
+  @Input() msgTiming!: number; //extra input to be used to detect changes
   @Input() msg!: Message;
   @Input() showInfos = true;
   @Output() chooseMsg: EventEmitter<Message> = new EventEmitter();
@@ -20,7 +21,9 @@ export class MsgComponent implements OnInit{
   receiveMsg?: ReceiveMessage;
   sendMsg?: SendMessage;
 
-  constructor() { }
+  msgY: number = 0;
+
+  constructor(private svgAccessService: SVGAccessService) { }
 
   ngOnInit() {
     if (this.msg.isSend()) {
@@ -28,18 +31,26 @@ export class MsgComponent implements OnInit{
     } else {
       this.receiveMsg = (this.msg as ReceiveMessage)
     }
+    this.msgY = this.computeY()
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log('Change '+this.msg.gId)
+    if (this.msg.isSend()) {
+      this.sendMsg = (this.msg as SendMessage)
+    } else {
+      this.receiveMsg = (this.msg as ReceiveMessage)
+    }
+    this.msgY = this.computeY()
+    this.svgAccessService.notifyPositionChange(this.msg.gId)
+  }
+
+  ngAfterViewInit() {
+    this.svgAccessService.notifyPositionChange(this.msg.gId)
   }
 
   computeY(): number {
-    return LayoutHelper.computeMessageY(this.msg.timing);
-  }
-
-  getInfos(): NewInformation[] {
-    if (this.msg.isSend())
-      return [];
-    else {
-      return (this.msg as ReceiveMessage).generates
-    }
+    return LayoutHelper.computeMessageY(this.msgTiming);
   }
 
   clickMsg() {

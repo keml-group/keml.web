@@ -20,10 +20,10 @@
         <g authorG [author]="author"></g>
         <g cp *ngFor="let convP of cps" [conversationPartner]="convP"></g>
         <g *ngIf="!isSend">
-          <g msgG *ngFor="let m of receives" [msg]="m" [showInfos]="false" (chooseMsg)="chooseReceive($event)"></g>
+          <g msgG *ngFor="let m of receives" [msg]="m" [msgTiming]="m.timing" [showInfos]="false" (chooseMsg)="chooseReceive($event)"></g>
         </g>
         <g *ngIf="isSend">
-          <g msgG *ngFor="let m of sends" [msg]="m" [showInfos]="false" (chooseMsg)="chooseSend($event)"></g>
+          <g msgG *ngFor="let m of sends" [msg]="m" [msgTiming]="m.timing" [showInfos]="false" (chooseMsg)="chooseSend($event)"></g>
         </g>
       </g>
     </svg>

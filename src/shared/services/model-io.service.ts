@@ -14,6 +14,7 @@ import {JsonFixer} from "../models/keml/parser/json-fixer";
 import {LayoutHelper} from "../utility/layout-helper";
 import {InformationLinkType} from "../models/keml/json/knowledge-models";
 import {Author} from "../models/keml/author";
+import {SVGAccessService} from "./svg-access.service";
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,9 @@ export class ModelIOService {
 
   conversation!: Conversation;
 
-  constructor() {
+  constructor(
+    private svgAccessService: SVGAccessService,
+  ) {
     console.log("ModelIOService constructed");
     this.newKEML();
   }
@@ -130,8 +133,10 @@ export class ModelIOService {
     //actually, timing should be equal to the index - can we rely on it?
     msgs[msg.timing] = msgs[msg.timing-1];
     msgs[msg.timing].timing++;
+    this.svgAccessService.notifyPositionChangeMessage( msgs[msg.timing] )
     msgs[msg.timing-1] = msg;
     msg.timing--;
+    this.svgAccessService.notifyPositionChangeMessage( msg)
   }
 
   disableMoveUp(msg: Message): boolean {
@@ -143,8 +148,10 @@ export class ModelIOService {
     //actually, timing should be equal to the index - can we rely on it?
     msgs[msg.timing] = msgs[msg.timing+1];
     msgs[msg.timing].timing-=1;
+    this.svgAccessService.notifyPositionChangeMessage(msgs[msg.timing])
     msgs[msg.timing+1] = msg;
     msg.timing+=1;
+    this.svgAccessService.notifyPositionChangeMessage(msg)
   }
 
   disableMoveDown(msg: Message): boolean {
@@ -159,13 +166,29 @@ export class ModelIOService {
       //todo also adapt infos
       for(let i = msg.timing; i < msgs.length; i++) {
         msgs[i].timing--;
+        this.svgAccessService.notifyPositionChangeMessage(msgs[i])
       }
     }
   }
 
-  duplicateMessage(msg: Message): Message | null {
+  duplicateMessage(msg: Message): Message | undefined {
+    if (this.msgPosFitsTiming(msg)) {
+      let duplicate = Message.newMessage(msg.isSend(), msg.counterPart, msg.timing+1, 'Duplicate of '+ msg.content, msg.originalContent);
+      this.insertMsgInPos(duplicate)
+      return duplicate
+    }
+    return undefined
+  }
+
+  private insertMsgInPos(msg: Message) {
     const msgs = this.conversation.author.messages
-    return Message.duplicateMessage(msg, msgs)
+    msgs.splice(msg.timing, 0, msg);
+    // adapt later messages:
+    //todo also adapt infos
+    for(let i = msg.timing +1; i < msgs.length; i++) {
+      msgs[i].timing++;
+      this.svgAccessService.notifyPositionChangeMessage(msgs[i])
+    }
   }
 
   addNewMessage(isSend: boolean, counterPart?: ConversationPartner): Message | undefined {
