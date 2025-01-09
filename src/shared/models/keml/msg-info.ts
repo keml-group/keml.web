@@ -169,20 +169,10 @@ export class ReceiveMessage extends Message {
     this.listChildren.set(ReceiveMessage.generatesPrefix, this.generates)
   }
 
-  // does both directions (source and generates)
   addGenerates(generated: NewInformation[]) {
     generated?.forEach(info => {
-      if(info.source != this) {
-        info.source?.removeFromGenerates(info)
-        info.source = this;
-      }
-      if (this.generates.findIndex(i => i == info)==-1)//todo can duplicates exist
-        this.generates.push(info)
+      info.setSource(this)
     })
-  }
-
-  private removeFromGenerates(info: NewInformation): boolean {
-    return GeneralHelper.removeFromList(info, this.generates)
   }
 
   override toJson(): ReceiveMessageJson {
@@ -335,6 +325,16 @@ export class NewInformation extends Information {
       this.feltTrustAfterwards,
       //todo none of these are currently set (they are bidirectional)
     );
+  }
+
+  // does both directions (source and generates)
+  setSource(rec: ReceiveMessage) {
+    if (this.source != rec) {
+      GeneralHelper.removeFromList(this, this.source.generates)
+      this.source = rec
+      if(rec.generates.indexOf(this ) == -1)
+        rec.generates.push(this)
+    }
   }
 
   override toJson(): NewInformationJson {
