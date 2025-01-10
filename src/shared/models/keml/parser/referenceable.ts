@@ -56,7 +56,6 @@ export abstract class Referencable {
   }
 
   destruct() {
-    console.log('Destruct '+this.ref)
     this.singleChildren.forEach(child => {
       child.destruct()
     })
