@@ -24,7 +24,6 @@ export class InfoDetailsComponent implements OnInit {
     if(newInfo.source) {
       this.newInfo = newInfo
     }
-    console.log(this.newInfo)
   }
 
   closeMe() {

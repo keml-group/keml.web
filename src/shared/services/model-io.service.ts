@@ -15,6 +15,7 @@ import {LayoutHelper} from "../utility/layout-helper";
 import {InformationLinkType} from "../models/keml/json/knowledge-models";
 import {Author} from "../models/keml/author";
 import {SVGAccessService} from "./svg-access.service";
+import {GeneralHelper} from "../utility/general-helper";
 
 @Injectable({
   providedIn: 'root'
@@ -108,10 +109,15 @@ export class ModelIOService {
   }
 
   deleteConversationPartner(cp: ConversationPartner) {
-    const cps = this.conversation.conversationPartners;
-    //todo allow delete if last?
-    const pos = cps.indexOf(cp);
-    cps.splice(pos, 1);
+    cp.destruct()
+    this.deleteMsgsWithCP(cp)
+    GeneralHelper.removeFromList(cp, this.conversation.conversationPartners)
+  }
+
+  deleteMsgsWithCP(cp: ConversationPartner) {
+    this.conversation.author.messages.filter(m => m.counterPart == cp).forEach(m => {
+      this.deleteMessage(m)
+    })
   }
 
   duplicateConversationPartner(cp: ConversationPartner): ConversationPartner {
@@ -160,14 +166,13 @@ export class ModelIOService {
 
   deleteMessage(msg: Message) {
     const msgs = this.conversation.author.messages
-    if (this.msgPosFitsTiming(msg)) {
-      msgs.splice(msg.timing, 1);
-      // adapt later messages:
+    msg.destruct()
+    GeneralHelper.removeFromList(msg, msgs)
+    // adapt later messages:
       //todo also adapt infos
-      for(let i = msg.timing; i < msgs.length; i++) {
-        msgs[i].timing--;
-        this.svgAccessService.notifyPositionChangeMessage(msgs[i])
-      }
+    for(let i = msg.timing; i < msgs.length; i++) {
+      msgs[i].timing--;
+      this.svgAccessService.notifyPositionChangeMessage(msgs[i])
     }
   }
 
@@ -238,7 +243,7 @@ export class ModelIOService {
     const msgTime = rec.timing
     const infoTime = (info as NewInformation).source?.timing
     if (!infoTime || infoTime < msgTime ) {
-      if(! rec.repeats.find(el => el == info)) {
+      if(! rec.repeats.indexOf(info)) {
         rec.repeats.push(info)
         info.repeatedBy.push(rec)
       }
@@ -248,16 +253,8 @@ export class ModelIOService {
   }
 
   deleteRepetition(rec: ReceiveMessage, info: Information) {
-    const recIndex = rec.repeats.indexOf(info)
-    if (recIndex > -1) {
-      rec.repeats.splice(recIndex, 1)
-      const infoIndex = info.repeatedBy.indexOf(rec)
-      if (infoIndex > -1) {
-        info.repeatedBy.splice(infoIndex, 1)
-      } else {
-        console.error('Inconsistency in data')
-      }
-    }
+    GeneralHelper.removeFromList(info, rec.repeats)
+    GeneralHelper.removeFromList(rec, info.repeatedBy)
   }
 
   addUsage(send: SendMessage, info: Information) {
@@ -276,25 +273,15 @@ export class ModelIOService {
   }
 
   deleteUsage(send: SendMessage, info: Information) {
-    const infoInd = send.uses.indexOf(info)
-    if(infoInd> -1) {
-      send.uses.splice(infoInd, 1)
-    }
-    const msgInd = info.isUsedOn.indexOf(send)
-    if (msgInd > -1) {
-      info.isUsedOn.splice(msgInd, 1)
-    }
+    GeneralHelper.removeFromList(info, send.uses)
+    GeneralHelper.removeFromList(send, info.isUsedOn)
   }
   //************** Infos ************************
 
   deleteInfo(info: Information) {
     const infos = this.getRightInfoList(info)
-    const pos = infos.indexOf(info);
-    if (pos > -1) {
-      infos.splice(pos, 1);
-    } else {
-      console.error('info '+info+' was not correctly linked')
-    }
+    info.destruct()
+    GeneralHelper.removeFromList(info, infos)
   }
 
   duplicateInfo(info: Information): Information {
@@ -390,14 +377,7 @@ export class ModelIOService {
   }
 
   deleteLink(link: InformationLink) {
-    const srcIndex = link.source.causes.indexOf(link)
-    if (srcIndex > -1) {
-      link.source.causes.splice(srcIndex, 1);
-    }
-    const targetIndex = link.target.targetedBy.indexOf(link);
-    if (targetIndex > -1) {
-      link.target.targetedBy.splice(targetIndex, 1);
-    }
+    link.destruct()
   }
 
   duplicateLink(link: InformationLink) {

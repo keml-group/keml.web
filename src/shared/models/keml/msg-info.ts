@@ -16,6 +16,7 @@ import {ParserContext} from "./parser/parser-context";
 import {Referencable} from "./parser/referenceable";
 import {JsonFixer} from "./parser/json-fixer";
 import {BoundingBox} from "../graphical/bounding-box";
+import {GeneralHelper} from "../../utility/general-helper";
 
 export abstract class Message extends Referencable {
   protected readonly eClass: string = '';
@@ -76,14 +77,6 @@ export abstract class Message extends Referencable {
     }
   }
 
-  private static msgPosFitsTiming(msg: Message, msgs: Message[]): boolean {
-    if (msgs.indexOf(msg) != msg.timing) {
-      console.error('Position and msg timing do not fit for ' + msg );
-      return false;
-    }
-    return true;
-  }
-
 }
 
 export class SendMessage extends Message {
@@ -126,6 +119,13 @@ export class SendMessage extends Message {
     return res;
   }
 
+  override destruct() {
+    this.uses.forEach(info => {
+      GeneralHelper.removeFromList(this, info.isUsedOn)
+    })
+    super.destruct()
+  }
+
 }
 
 export class ReceiveMessage extends Message {
@@ -155,7 +155,6 @@ export class ReceiveMessage extends Message {
     );
     if (parserContext) {
       let json: ReceiveMessageJson = jsonOpt ? jsonOpt : parserContext.getJsonFromTree(ref!.$ref)
-      console.log(json)
       let generatesRefs = ParserContext.createRefList2(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates?.map(g => g.eClass? g.eClass: NewInformation.eClass))
       this.generates = generatesRefs.map(g => parserContext.getOrCreate(g))
       let reps = json.repeats?.map(r => parserContext.getOrCreate<NewInformation>(r))
@@ -170,25 +169,10 @@ export class ReceiveMessage extends Message {
     this.listChildren.set(ReceiveMessage.generatesPrefix, this.generates)
   }
 
-  // does both directions (source and generates)
   addGenerates(generated: NewInformation[]) {
     generated?.forEach(info => {
-      if(info.source != this) {
-        info.source?.removeFromGenerates(info)
-        info.source = this;
-      }
-      if (this.generates.findIndex(i => i == info)==-1)//todo can duplicates exist
-        this.generates.push(info)
+      info.setSource(this)
     })
-  }
-
-  private removeFromGenerates(info: NewInformation): boolean {
-    let pos = this.generates.findIndex(i => i == info)
-    if (pos != -1) {
-      this.generates.splice(pos, 1)
-      return true;
-    }
-    return false;
   }
 
   override toJson(): ReceiveMessageJson {
@@ -196,6 +180,16 @@ export class ReceiveMessage extends Message {
     res.generates = this.generates.map(g => g.toJson())
     res.repeats = this.repeats.map(r => r.getRef())
     return res;
+  }
+
+  override destruct() {
+    this.repeats.forEach(info => {
+      GeneralHelper.removeFromList(this, info.repeatedBy)
+    })
+    this.generates.forEach(info => {
+      info.destruct()
+    })
+    super.destruct()
   }
 
 }
@@ -277,6 +271,21 @@ export abstract class Information extends Referencable {
       position: this.position,
     }
   }
+
+  override destruct() {
+    this.repeatedBy.forEach((rec: ReceiveMessage) => {
+      GeneralHelper.removeFromList(this, rec.repeats)
+    })
+    this.isUsedOn.forEach((send: SendMessage) => {
+      GeneralHelper.removeFromList(this, send.uses)
+    })
+    this.targetedBy.forEach((link: InformationLink) => {
+      console.log('Destroying link '+link.getRef())
+      link.destruct()
+    })
+    this.targetedBy.splice(0, this.targetedBy.length)
+    super.destruct();
+  }
 }
 
 export class NewInformation extends Information {
@@ -319,10 +328,25 @@ export class NewInformation extends Information {
     );
   }
 
+  // does both directions (source and generates)
+  setSource(rec: ReceiveMessage) {
+    if (this.source != rec) {
+      GeneralHelper.removeFromList(this, this.source.generates)
+      this.source = rec
+      if(rec.generates.indexOf(this ) == -1)
+        rec.generates.push(this)
+    }
+  }
+
   override toJson(): NewInformationJson {
     let res = (<NewInformationJson>super.toJson());
     res.source = this.source.getRef()
     return res;
+  }
+
+  override destruct() {
+    GeneralHelper.removeFromList(this, this.source.generates)
+    super.destruct();
   }
 }
 
@@ -400,6 +424,12 @@ export class InformationLink extends Referencable {
       type: this.type,
       linkText: this.linkText,
     }
+  }
+
+  override destruct() {
+    GeneralHelper.removeFromList(this, this.source.causes)
+    //GeneralHelper.removeFromList(this, this.target.targetedBy)
+    //super.destruct();
   }
 
 }
