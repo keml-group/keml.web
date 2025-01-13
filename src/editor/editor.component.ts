@@ -35,6 +35,7 @@ export class EditorComponent {
     this.ioService.loadStringFromFile(event).then(txt => {
       let msgs = ChatGptConv2LlmMessages.parseConversation(txt)
       console.log(msgs);
+      this.conversation = this.modelIOService.convFromLlmMessages(msgs)
     })
   }
 

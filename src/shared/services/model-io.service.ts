@@ -16,6 +16,7 @@ import {InformationLinkType} from "../models/keml/json/knowledge-models";
 import {Author} from "../models/keml/author";
 import {SVGAccessService} from "./svg-access.service";
 import {GeneralHelper} from "../utility/general-helper";
+import {LLMMessage} from "../models/llm/llmmessage";
 
 @Injectable({
   providedIn: 'root'
@@ -50,6 +51,26 @@ export class ModelIOService {
     LayoutHelper.positionConversationPartners(conv.conversationPartners)
     this.conversation = conv;
     return conv;
+  }
+
+  convFromLlmMessages(llmMsgs: LLMMessage[]): Conversation {
+    let cp = new ConversationPartner('LLM')
+    const conv = new Conversation('From model', new Author(), [cp]);
+    LayoutHelper.positionConversationPartners(conv.conversationPartners)
+    for( let i=0; i < llmMsgs.length; i++) {
+      let msg = this.createMsg(llmMsgs[i], cp, i)
+      conv.author.messages.push(msg)
+    }
+    this.conversation = conv;
+    return conv;
+  }
+
+  private createMsg(llmMsg: LLMMessage,counterPart: ConversationPartner, index: number): Message {
+    return Message.newMessage(ModelIOService.isSend(llmMsg), counterPart, index, llmMsg.message, llmMsg.message)
+  }
+
+  private static isSend(llmMsg: LLMMessage): boolean {
+    return llmMsg.author != 'LLM'
   }
 
   saveKEML(conv: Conversation): string {
