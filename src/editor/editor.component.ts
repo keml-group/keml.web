@@ -3,6 +3,7 @@ import {ModelIOService} from "../shared/services/model-io.service";
 import {IoService} from "../shared/services/io.service";
 import {Conversation} from "../shared/models/keml/conversation";
 import {DetailsService} from "./details/service/details.service";
+import {ChatGptConv2LlmMessages} from "../shared/models/llm/chat-gpt-conv2-llm-messages";
 
 @Component({
   selector: 'keml-editor',
@@ -24,6 +25,18 @@ export class EditorComponent {
 
   newConversation(): void {
     this.conversation = this.modelIOService.newKEML();
+  }
+
+  newFromChatGpt(): void {
+    document.getElementById('openChatGptConv')?.click();
+  }
+
+  startWithMsgs(event: Event): void {
+    this.ioService.loadStringFromFile(event).then(txt => {
+      let msgs = ChatGptConv2LlmMessages.parseConversation(txt)
+      console.log(msgs);
+      this.conversation = this.modelIOService.convFromLlmMessages(msgs)
+    })
   }
 
   openKeml() {
