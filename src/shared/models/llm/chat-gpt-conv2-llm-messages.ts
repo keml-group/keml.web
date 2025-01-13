@@ -1,5 +1,5 @@
 import {LLMMessage, LLMMessageAuthorType} from "./llmmessage";
-import {ChatGptAuthor, ChatGptMessage, ChatGptMessageContent} from "./chat-gpt-message";
+import {ChatGptAuthor, ChatGptMessage} from "./chat-gpt-message";
 
 export class ChatGptConv2LlmMessages {
 
