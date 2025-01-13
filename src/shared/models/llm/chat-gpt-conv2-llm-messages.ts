@@ -1,5 +1,5 @@
 import {LLMMessage, LLMMessageAuthorType} from "./llmmessage";
-import {ChatGptAuthor, ChatGptMessage} from "./chat-gpt-message";
+import {ChatGptAuthor, ChatGptMessage, ChatGptMessageContent} from "./chat-gpt-message";
 
 export class ChatGptConv2LlmMessages {
 
@@ -13,18 +13,22 @@ export class ChatGptConv2LlmMessages {
     let currentId: string | undefined = startId;
     while (currentId !== undefined) {
       let node: any = mapping[currentId]
-      let msg: ChatGptMessage = JSON.parse(node['message'])
-      if (msg
-        && msg.content?.content_type == 'text'
-        && msg.content?.parts[0]?.length >0) {
-        res.push(
-          new LLMMessage(
-            this.parseAuthor(msg.content.author),
+      if (node){
+        currentId  = node['parent']
+        let msg: ChatGptMessage = node['message'] as ChatGptMessage;
+        if (msg
+          && msg.content
+          && msg.content.content_type == 'text'
+          && msg.content.parts?.length >0
+          && msg.content.parts[0]?.length >0) {
+          res.push(new LLMMessage(
+            this.parseAuthor(msg.author),
             msg.content.parts[0]
-          )
-        )
+          ))
+        }
+      } else {
+        currentId = undefined
       }
-      currentId  = node['parent']
     }
     return res.reverse();
   }

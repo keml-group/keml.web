@@ -1,12 +1,11 @@
 export interface ChatGptMessage {
+  author: ChatGptAuthor;
   content: ChatGptMessageContent;
 }
 
 export interface ChatGptMessageContent {
   content_type: string;
   parts: string[];
-  author: ChatGptAuthor;
-
 }
 
 export interface ChatGptAuthor {
