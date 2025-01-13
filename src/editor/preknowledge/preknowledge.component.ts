@@ -10,10 +10,4 @@ import {InfoComponent} from "../info/info.component";
 export class PreknowledgeComponent extends InfoComponent {
   @Input() override info!: Preknowledge;
 
-
-  // todo
-  override computeTextColor():string {
-    return '#ffff99'
-  }
-
 }
