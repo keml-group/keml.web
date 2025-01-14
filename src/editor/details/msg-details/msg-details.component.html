@@ -21,7 +21,7 @@
     <button class="tool-button" title="Move down" (click)="moveDown()" [disabled]="disableMoveDown()">
       <mat-icon aria-hidden="false" fontIcon="arrow_forward"></mat-icon>
     </button>
-    <input type="text" [(ngModel)]="msg.timing"/>
+    <input type="number" (change)="handleTimingChange()" [(ngModel)]="changedTiming" />
   </div>
 
   <label *ngIf="receiveMsg" class="form-label">Generated information</label>

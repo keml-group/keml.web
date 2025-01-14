@@ -18,6 +18,8 @@ export class MsgDetailsComponent implements OnInit {
   sendMsg?: SendMessage;
   receiveMsg?: ReceiveMessage;
 
+  changedTiming: number = 0;
+
   constructor(
     public dialogRef: MatDialogRef<MsgDetailsComponent>,
     public modelIOService: ModelIOService,
@@ -32,6 +34,7 @@ export class MsgDetailsComponent implements OnInit {
     } else {
       this.receiveMsg = (this.msg as ReceiveMessage)
     }
+    this.changedTiming = this.msg.timing
   }
 
   closeMe(): void {
@@ -52,6 +55,10 @@ export class MsgDetailsComponent implements OnInit {
 
   disableMoveDown(): boolean {
     return this.modelIOService.disableMoveDown(this.msg)
+  }
+
+  handleTimingChange() {
+    this.modelIOService.changeMessagePos(this.msg, this.changedTiming);
   }
 
   deleteMe() {
