@@ -191,11 +191,6 @@ export class ModelIOService {
     GeneralHelper.removeFromList(msg, msgs)
     // adapt later messages:
     this.moveMessagesUp(msg.timing, msgs.length)
-    /*
-    for(let i = msg.timing; i < msgs.length; i++) {
-      msgs[i].timing--;
-      this.svgAccessService.notifyPositionChangeMessage(msgs[i])
-    }*/
   }
 
   duplicateMessage(msg: Message): Message | undefined {
@@ -236,10 +231,8 @@ export class ModelIOService {
   }
 
   private moveMessagesUp(start: number, afterEnd: number) {
-    console.log('Move these msgs up: from '+start + ' to ' + afterEnd)
     const msgs = this.conversation.author.messages
     for(let i = start; i < afterEnd; i++) {
-      console.log(i)
       msgs[i].timing--;
       this.svgAccessService.notifyPositionChangeMessage(msgs[i])
       //todo also adapt infos?
