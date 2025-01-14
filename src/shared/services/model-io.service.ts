@@ -190,11 +190,7 @@ export class ModelIOService {
     msg.destruct()
     GeneralHelper.removeFromList(msg, msgs)
     // adapt later messages:
-      //todo also adapt infos
-    for(let i = msg.timing; i < msgs.length; i++) {
-      msgs[i].timing--;
-      this.svgAccessService.notifyPositionChangeMessage(msgs[i])
-    }
+    this.moveMessagesUp(msg.timing, msgs.length)
   }
 
   duplicateMessage(msg: Message): Message | undefined {
@@ -206,15 +202,48 @@ export class ModelIOService {
     return undefined
   }
 
+  changeMessagePos(msg: Message, newPos: number) {
+    const affectedMsgs = newPos -msg.timing
+    const msgs = this.conversation.author.messages
+    if (newPos >= msgs.length) {
+      let errormsg = 'Position should not be more than ' + msgs.length
+      console.error(errormsg)
+      throw errormsg;
+    }
+    if(affectedMsgs > 0) { // new pos is further down -> just move all msgs starting from msg timing+1 up until affectedMsgs reached
+      this.moveMessagesUp(msg.timing+1, newPos + 1)
+    } else {
+      // if neutral: noop, can get handled in any way with 0 affected msgs
+      // if negative: msg is further down, hence move all msgs starting from timing-1 one element down
+      this.moveMessagesDown( newPos, msg.timing)
+    }
+    msg.timing = newPos
+    this.svgAccessService.notifyPositionChangeMessage(msg)
+  }
+
+  private moveMessagesDown(start: number, afterEnd: number) {
+    const msgs = this.conversation.author.messages
+    for(let i = start; i < afterEnd; i++) {
+      msgs[i].timing++;
+      this.svgAccessService.notifyPositionChangeMessage(msgs[i])
+      //todo also adapt infos?
+    }
+  }
+
+  private moveMessagesUp(start: number, afterEnd: number) {
+    const msgs = this.conversation.author.messages
+    for(let i = start; i < afterEnd; i++) {
+      msgs[i].timing--;
+      this.svgAccessService.notifyPositionChangeMessage(msgs[i])
+      //todo also adapt infos?
+    }
+  }
+
   private insertMsgInPos(msg: Message) {
     const msgs = this.conversation.author.messages
     msgs.splice(msg.timing, 0, msg);
     // adapt later messages:
-    //todo also adapt infos
-    for(let i = msg.timing +1; i < msgs.length; i++) {
-      msgs[i].timing++;
-      this.svgAccessService.notifyPositionChangeMessage(msgs[i])
-    }
+    this.moveMessagesDown(msg.timing +1, msgs.length)
   }
 
   addNewMessage(isSend: boolean, counterPart?: ConversationPartner): Message | undefined {
