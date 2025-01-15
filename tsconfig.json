@@ -26,8 +26,9 @@
     "paths": {
       "@env/*": ["./environments/*"],
       "@app/*": ["./src/app/*"],
-    }
+    },
   },
+  "exclude" : ["src/**/*.spec.ts"],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
