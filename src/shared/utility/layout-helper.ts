@@ -15,6 +15,12 @@ export class LayoutHelper {
 
   static positionForNewPreknowledge: number = 50;
 
+  static infoBoxWidth: number = 200;
+  static infoBoxHeight: number = 50;
+  static preknowledgeX: number = -300;
+  static newInfoX: number = -600;
+  static distanceBetweenInfos: number = 10;
+
   /*
  positions the xPositions of the convPartners list.
  It currently assumes no meaningful xPosition but just fills this field
@@ -48,16 +54,31 @@ export class LayoutHelper {
   }
 
   static bbForNewInfo(index: number): BoundingBox {
-    return new BoundingBox(-600 -10*index, 10*index, 200, 50)
+    return new BoundingBox(
+      LayoutHelper.newInfoX - LayoutHelper.distanceBetweenInfos*index,
+      LayoutHelper.distanceBetweenInfos*index,
+      LayoutHelper.infoBoxWidth,
+      LayoutHelper.infoBoxHeight
+    )
   }
 
   static bbForInfoDuplication(info: Information): BoundingBox {
     let pos = info.position
-    return new BoundingBox(pos.x -10, pos.y+10, pos.w, pos.h)
+    return new BoundingBox(
+      pos.x - LayoutHelper.distanceBetweenInfos,
+      pos.y + LayoutHelper.distanceBetweenInfos,
+      pos.w,
+      pos.h
+    )
   }
 
   static bbForPreknowledge(y: number): BoundingBox {
-    return new BoundingBox(-300, y, 200, 50)
+    return new BoundingBox(
+      LayoutHelper.preknowledgeX,
+      y,
+      LayoutHelper.infoBoxWidth,
+      LayoutHelper.infoBoxHeight
+    )
   }
 
   static positionInfos(pre: Preknowledge[], msgs: Message[]): void {
