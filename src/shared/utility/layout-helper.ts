@@ -2,7 +2,7 @@
 * treats (0,0) as author position -> knowledge has a negative x, messages a positive x.
 */
 import {ConversationPartner} from '../models/keml/conversation-partner';
-import {Message, ReceiveMessage, Preknowledge} from "../models/keml/msg-info";
+import {Message, ReceiveMessage, Preknowledge, Information} from "../models/keml/msg-info";
 import {BoundingBox} from "../models/graphical/bounding-box";
 
 export class LayoutHelper {
@@ -47,6 +47,11 @@ export class LayoutHelper {
 
   static bbForNewInfo(index: number): BoundingBox {
     return new BoundingBox(-600 -10*index, 10*index, 200, 50)
+  }
+
+  static bbForInfoDuplication(info: Information): BoundingBox {
+    let pos = info.position
+    return new BoundingBox(pos.x -10, pos.y+10, pos.w, pos.h)
   }
 
   static bbForPreknowledge(y: number): BoundingBox {

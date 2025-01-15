@@ -337,6 +337,7 @@ export class ModelIOService {
   duplicateInfo(info: Information): Information {
     const infos = this.getRightInfoList(info)
     const newInfo = info.duplicate()
+    newInfo.position = LayoutHelper.bbForInfoDuplication(info)
     infos.push(newInfo); //todo position right after current info?
     return newInfo;
   }
