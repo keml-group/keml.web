@@ -1,8 +1,8 @@
-/* documents all layout specific choices (distances) so that we can work from taht on
+/* documents all layout specific choices (distances) so that we can work from that on
 * treats (0,0) as author position -> knowledge has a negative x, messages a positive x.
 */
 import {ConversationPartner} from '../models/keml/conversation-partner';
-import {Message, ReceiveMessage, Preknowledge} from "../models/keml/msg-info";
+import {Message, ReceiveMessage, Preknowledge, Information} from "../models/keml/msg-info";
 import {BoundingBox} from "../models/graphical/bounding-box";
 
 export class LayoutHelper {
@@ -12,6 +12,14 @@ export class LayoutHelper {
 
   static distanceToFirstMessage: number = 180;
   static distanceBetweenMessages: number = 60;
+
+  static positionForNewPreknowledge: number = 50;
+
+  static infoBoxWidth: number = 200;
+  static infoBoxHeight: number = 50;
+  static preknowledgeX: number = -300;
+  static newInfoX: number = -600;
+  static distanceBetweenInfos: number = 10;
 
   /*
  positions the xPositions of the convPartners list.
@@ -37,20 +45,40 @@ export class LayoutHelper {
   static initializeInfoPos(messages: Message[]) {
     for (let msg of messages) {
       //const infos = (msg as ReceiveMessage).generates;
-      (msg as ReceiveMessage)?.generates?.forEach(r => {
+      (msg as ReceiveMessage)?.generates?.forEach((r, index ) => {
         if(r.position.w < 7) {
-          r.position = this.bbForNewInfo()
+          r.position = this.bbForNewInfo(index)
         }
       })
     }
   }
 
-  static bbForNewInfo(): BoundingBox {
-    return new BoundingBox(-600, 0, 200, 50)
+  static bbForNewInfo(index: number): BoundingBox {
+    return new BoundingBox(
+      LayoutHelper.newInfoX - LayoutHelper.distanceBetweenInfos*index,
+      LayoutHelper.distanceBetweenInfos*index,
+      LayoutHelper.infoBoxWidth,
+      LayoutHelper.infoBoxHeight
+    )
+  }
+
+  static bbForInfoDuplication(info: Information): BoundingBox {
+    let pos = info.position
+    return new BoundingBox(
+      pos.x - LayoutHelper.distanceBetweenInfos,
+      pos.y + LayoutHelper.distanceBetweenInfos,
+      pos.w,
+      pos.h
+    )
   }
 
   static bbForPreknowledge(y: number): BoundingBox {
-    return new BoundingBox(-300, y, 200, 50)
+    return new BoundingBox(
+      LayoutHelper.preknowledgeX,
+      y,
+      LayoutHelper.infoBoxWidth,
+      LayoutHelper.infoBoxHeight
+    )
   }
 
   static positionInfos(pre: Preknowledge[], msgs: Message[]): void {

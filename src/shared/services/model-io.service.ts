@@ -337,6 +337,7 @@ export class ModelIOService {
   duplicateInfo(info: Information): Information {
     const infos = this.getRightInfoList(info)
     const newInfo = info.duplicate()
+    newInfo.position = LayoutHelper.bbForInfoDuplication(info)
     infos.push(newInfo); //todo position right after current info?
     return newInfo;
   }
@@ -354,7 +355,7 @@ export class ModelIOService {
     const preknowledge: Preknowledge = new Preknowledge(
       "New preknowledge",
       false,
-      LayoutHelper.bbForPreknowledge(0),
+      LayoutHelper.bbForPreknowledge(LayoutHelper.positionForNewPreknowledge),
       0.5,
       0.5,
       0.5,
@@ -380,7 +381,7 @@ export class ModelIOService {
         source,
         'New Information',
         false,
-        LayoutHelper.bbForNewInfo(),
+        LayoutHelper.bbForNewInfo(source.generates.length),
         0.5,
         0.5,
         0.5,
