@@ -37,16 +37,16 @@ export class LayoutHelper {
   static initializeInfoPos(messages: Message[]) {
     for (let msg of messages) {
       //const infos = (msg as ReceiveMessage).generates;
-      (msg as ReceiveMessage)?.generates?.forEach(r => {
+      (msg as ReceiveMessage)?.generates?.forEach((r, index ) => {
         if(r.position.w < 7) {
-          r.position = this.bbForNewInfo()
+          r.position = this.bbForNewInfo(index)
         }
       })
     }
   }
 
-  static bbForNewInfo(): BoundingBox {
-    return new BoundingBox(-600, 0, 200, 50)
+  static bbForNewInfo(index: number): BoundingBox {
+    return new BoundingBox(-600 -10*index, 10*index, 200, 50)
   }
 
   static bbForPreknowledge(y: number): BoundingBox {

@@ -380,7 +380,7 @@ export class ModelIOService {
         source,
         'New Information',
         false,
-        LayoutHelper.bbForNewInfo(),
+        LayoutHelper.bbForNewInfo(source.generates.length),
         0.5,
         0.5,
         0.5,
