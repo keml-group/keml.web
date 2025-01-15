@@ -355,7 +355,7 @@ export class ModelIOService {
     const preknowledge: Preknowledge = new Preknowledge(
       "New preknowledge",
       false,
-      LayoutHelper.bbForPreknowledge(0),
+      LayoutHelper.bbForPreknowledge(LayoutHelper.positionForNewPreknowledge),
       0.5,
       0.5,
       0.5,

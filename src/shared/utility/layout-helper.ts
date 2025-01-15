@@ -1,4 +1,4 @@
-/* documents all layout specific choices (distances) so that we can work from taht on
+/* documents all layout specific choices (distances) so that we can work from that on
 * treats (0,0) as author position -> knowledge has a negative x, messages a positive x.
 */
 import {ConversationPartner} from '../models/keml/conversation-partner';
@@ -12,6 +12,8 @@ export class LayoutHelper {
 
   static distanceToFirstMessage: number = 180;
   static distanceBetweenMessages: number = 60;
+
+  static positionForNewPreknowledge: number = 50;
 
   /*
  positions the xPositions of the convPartners list.
