@@ -1,5 +1,11 @@
 # KemlGraphical
 
+This project holds the source code of the [KEML web-editor](https://keml-group.github.io/web-editor/). While the editor is public, the sources currently remain private.
+
+A new version of the live web editor can be packaged with running 'ng run keml.graphical:package'. It will generate a browser only app version, that is then available under dist/docs and should be deployed to the web editor.
+
+
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.5.
 
 ## Development server
