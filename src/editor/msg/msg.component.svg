@@ -1,6 +1,7 @@
 <svg:g [attr.transform]="'translate(-5, '+msgY+')'">
   <g msg-inner
      [msg]="msg"
+     [lengthOpt]="msg.counterPart.xPosition"
      pointer-events="bounding-box" (click)="clickMsg()">
   </g>
   <g *ngIf="showInfos">
