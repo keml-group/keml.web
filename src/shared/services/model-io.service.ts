@@ -217,7 +217,9 @@ export class ModelIOService {
       // if negative: msg is further down, hence move all msgs starting from timing-1 one element down
       this.moveMessagesDown( newPos, msg.timing)
     }
+    msgs.splice(msg.timing, 1)
     msg.timing = newPos
+    msgs.splice(newPos, 0, msg)
     this.svgAccessService.notifyPositionChangeMessage(msg)
   }
 
