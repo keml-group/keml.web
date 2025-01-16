@@ -293,8 +293,10 @@ export class ModelIOService {
     const msgTime = rec.timing
     const infoTime = (info as NewInformation).source?.timing
     if (!infoTime || infoTime < msgTime ) {
-      if(! rec.repeats.indexOf(info)) {
+      if(rec.repeats.indexOf(info) == -1 ) {
         rec.repeats.push(info)
+      }
+      if(info.repeatedBy.indexOf(rec) == -1) {
         info.repeatedBy.push(rec)
       }
     } else {
