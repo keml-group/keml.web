@@ -43,6 +43,7 @@ export class MsgDetailsComponent implements OnInit {
 
   moveUp() {
     this.modelIOService.moveMessageUp(this.msg);
+    this.changedTiming = this.msg.timing
   }
 
   disableMoveUp(): boolean {
@@ -51,6 +52,7 @@ export class MsgDetailsComponent implements OnInit {
 
   moveDown() {
     this.modelIOService.moveMessageDown(this.msg);
+    this.changedTiming = this.msg.timing
   }
 
   disableMoveDown(): boolean {
