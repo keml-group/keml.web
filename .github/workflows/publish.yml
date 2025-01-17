@@ -44,5 +44,6 @@ jobs:
         git config --global user.name 'publish-bot'
         git config --global user.email 'publish-bot@keml-group.github.io'
         git add docs
-        git commit -m "[Bot] Update to ${{ github.sha }}"
+        RES = $(git commit -m "[Bot] Update to ${{ github.sha }}")
+        echo $RES
         git push
