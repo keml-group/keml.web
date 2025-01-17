@@ -44,6 +44,6 @@ jobs:
         git config --global user.name 'publish-bot'
         git config --global user.email 'publish-bot@keml-group.github.io'
         git add docs
-        RES=$(git commit -m "[Bot] Update to ${{ github.sha }}")
-        stringB="to publish your local commits) nothing to commit, working tree clean"
-        if [[ "$RES" == *"$stringB"* ]]; then git push; else echo "Nothing to push"; fi
+    - run: RES=$(git commit -m "[Bot] Update to ${{ github.sha }}")
+    - run: stringB="to publish your local commits) nothing to commit, working tree clean"
+    - run: if [[ "$RES" == *"$stringB"* ]]; then git push; else echo "Nothing to push"; fi
