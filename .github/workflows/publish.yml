@@ -38,13 +38,13 @@ jobs:
         ref: main
         path: webeditor
         token: ${{secrets.WEB_EDITOR_ACCESS}}
-    - run: cp -r ./dist/src ./webeditor/src
+    - run: cp -r ./dist/src ./webeditor/docs
     - name: Add and commit to main
       run: |
         cd webeditor
         git config --global user.name 'publish-bot'
         git config --global user.email 'publish-bot@keml-group.github.io'
-        git add src
+        git add docs
         git commit -m "[Bot] Update from main"
         git push
     - run: echo $( ls )
