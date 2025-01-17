@@ -36,6 +36,6 @@ jobs:
       with:
         repository: keml-group/web-editor
         ref: main
-        path: ../webeditor
+        path: webeditor
         token: ${{secrets.WEB_EDITOR_ACCESS}}
     - run: echo $(ls ..)
