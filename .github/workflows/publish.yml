@@ -34,4 +34,7 @@ jobs:
     # - run: npm test
     - run: npm exec ng run keml.graphical:package
     #now, minified version lies under dist/src
+    - run: echo $(ls)
+
+#************** interact with the web-editor repository *****************
 
