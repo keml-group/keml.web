@@ -30,6 +30,12 @@ jobs:
     - run: npm exec ng run keml.graphical:package
     #now, minified version lies under dist/src
     - run: echo $(cat ./dist/src/index.html)   #test that srcs are generated
-
 #************** interact with the web-editor repository *****************
-
+    - name: Set up Git repository to push
+      uses: actions/checkout@v4
+      with:
+        repository: keml-group/web-editor
+        ref: main
+        path: ../webeditor
+        token: ${{secrets.WEB_EDITOR_ACCESS}}
+    - run: echo $(ls ..)
