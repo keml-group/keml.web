@@ -38,4 +38,5 @@ jobs:
         ref: main
         path: webeditor
         token: ${{secrets.WEB_EDITOR_ACCESS}}
+    - run: cp -r ./dist/src ./webeditor/src
     - run: echo $(ls ./webeditor)
