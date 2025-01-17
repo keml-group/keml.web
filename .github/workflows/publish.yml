@@ -39,4 +39,12 @@ jobs:
         path: webeditor
         token: ${{secrets.WEB_EDITOR_ACCESS}}
     - run: cp -r ./dist/src ./webeditor/src
-    - run: echo $(ls ./webeditor)
+    - name: Add and commit to main
+      run: |
+        cd webeditor
+        git config --global user.name 'workflow-bot'
+        git config --global user.email 'publish-bot@keml-group.github.io
+        git add src
+        git commit -m "[Bot] Update from main"
+        git push
+    - run: echo $( ls )
