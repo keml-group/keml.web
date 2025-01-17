@@ -11,8 +11,6 @@ export class JsonFixer {
   static determineParentInfoClass(ref: string): string {
     let pathSegments = ref.split(Ref.pathDivider)
     let relevant = pathSegments[pathSegments.length-2]
-    console.log(ref)
-    console.log(relevant)
     if (relevant.startsWith(Author.preknowledgePrefix))
       return Preknowledge.eClass
     else return NewInformation.eClass
