@@ -45,5 +45,5 @@ jobs:
         git config --global user.email 'publish-bot@keml-group.github.io'
         git add docs
         RES = $(git commit -m "[Bot] Update to ${{ github.sha }}")
-        echo $RES
+        if [[ $RES == *"(use "git push" to publish your local commits) nothing to commit, working tree clean"* ]]; then echo "It's there!"; fi;
         git push
