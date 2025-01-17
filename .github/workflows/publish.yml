@@ -8,9 +8,9 @@ name: Publish to WebEditor
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "40-automate-deployment-to-web-editor" ] #main
   pull_request:
-    branches: [ "main" ]
+    branches: [ "40-automate-deployment-to-web-editor" ]
 
 jobs:
   build:
