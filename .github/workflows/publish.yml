@@ -43,9 +43,8 @@ jobs:
         cd webeditor
         git config --global user.name 'publish-bot'
         git config --global user.email 'publish-bot@keml-group.github.io'
-        echo $(git status)
-        git add docs
-    - run: RES=$(git commit -m "[Bot] Update to ${{ github.sha }}")
-    - run: COMP=$(git status)
-    - run: stringB="nothing to commit, working tree clean"
-    - run: if [[ "$COMP" == *"$stringB"* ]]; then git push; else echo "Nothing to push"; fi
+        RES=$(git status)
+        COMP="nothing to commit, working tree clean"
+        echo $RES
+        cho $COMP
+        if [[ "$COMP" == *"COMP"* ]]; then git add docs; git commit -m "[Bot] Update to ${{ github.sha }}"; git push; else echo "Nothing to push"; fi
