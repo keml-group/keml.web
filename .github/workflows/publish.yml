@@ -38,4 +38,4 @@ jobs:
         ref: main
         path: webeditor
         token: ${{secrets.WEB_EDITOR_ACCESS}}
-    - run: echo $(ls ..)
+    - run: echo $(ls ./webeditor)
