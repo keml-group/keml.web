@@ -8,9 +8,9 @@ name: Publish to WebEditor
 
 on:
   push:
-    branches: [ "40-automate-deployment-to-web-editor" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "40-automate-deployment-to-web-editor" ]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -45,6 +45,4 @@ jobs:
         git config --global user.email 'publish-bot@keml-group.github.io'
         RES=$(git status)
         COMP="nothing to commit, working tree clean"
-        echo $RES
-        echo $COMP
         if [[ "$RES" != *"$COMP"* ]]; then git add docs; git commit -m "[Bot] Update to ${{ github.sha }}"; git push; else echo "Nothing to push"; fi
