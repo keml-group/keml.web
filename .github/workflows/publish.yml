@@ -34,7 +34,7 @@ jobs:
     # - run: npm test
     - run: npm exec ng run keml.graphical:package
     #now, minified version lies under dist/src
-    - run: echo $(ls)
+    - run: echo $(cat ./dist/src/index.html)   #test that srcs are generated
 
 #************** interact with the web-editor repository *****************
 
