@@ -29,7 +29,6 @@ jobs:
     # - run: npm test
     - run: npm exec ng run keml.graphical:package
     #now, minified version lies under dist/src
-    - run: echo ${{ github.sha }}
 #************** interact with the web-editor repository *****************
     - name: Set up Git repository to push
       uses: actions/checkout@v4
@@ -45,6 +44,5 @@ jobs:
         git config --global user.name 'publish-bot'
         git config --global user.email 'publish-bot@keml-group.github.io'
         git add docs
-        git commit -m "[Bot] Update from main"
+        git commit -m "[Bot] Update to ${{ github.sha }}"
         git push
-    - run: echo $( ls )
