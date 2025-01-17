@@ -47,4 +47,4 @@ jobs:
         COMP="nothing to commit, working tree clean"
         echo $RES
         echo $COMP
-        if [[ "$COMP" != *"COMP"* ]]; then git add docs; git commit -m "[Bot] Update to ${{ github.sha }}"; git push; else echo "Nothing to push"; fi
+        if [[ "RES" != *"COMP"* ]]; then git add docs; git commit -m "[Bot] Update to ${{ github.sha }}"; git push; else echo "Nothing to push"; fi
