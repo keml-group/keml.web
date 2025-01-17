@@ -1,16 +1,16 @@
 #started from: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 # This workflow will do a clean installation of node dependencies, cache/restore them,
   #(not anymore: build the source code and run tests across different versions of node)
-# package the minified browser bundle under docs/src
+# package the minified browser bundle under dist/src
 # and then push it to the web-editor: commit and push to main, this will trigger the deployment to that repository's GItHubPages automatically
 
 name: Publish to WebEditor
 
 on:
   push:
-    branches: [ "40-automate-deployment-to-web-editor" ] #main
+    branches: [ "main" ]
   pull_request:
-    branches: [ "40-automate-deployment-to-web-editor" ]
+    branches: [ "main" ]
 
 jobs:
   build:
