@@ -42,8 +42,8 @@ jobs:
     - name: Add and commit to main
       run: |
         cd webeditor
-        git config --global user.name 'workflow-bot'
-        git config --global user.email 'publish-bot@keml-group.github.io
+        git config --global user.name 'publish-bot'
+        git config --global user.email 'publish-bot@keml-group.github.io'
         git add src
         git commit -m "[Bot] Update from main"
         git push
