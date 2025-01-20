@@ -1,10 +1,7 @@
 import {Ref} from "./ref";
 import {Referencable} from "./referenceable";
 import {ConversationJson} from "../json/sequence-diagram-models";
-import {Author} from "../author";
-import {ConversationPartner} from "../conversation-partner";
-import {InformationLink, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "../msg-info";
-import {InformationLinkType} from "../json/knowledge-models";
+import {ConstructorPointers} from "./constructor-pointers";
 
 /*
 idea:
@@ -14,60 +11,14 @@ idea:
 export class ParserContext {
 
   conv: ConversationJson;
-
-  constructorPointers: Map<string, (e:string) => Referencable > = new Map();
+  constructorPointers: ConstructorPointers;
 
   context: Map<string, any> = new Map<string, any>();
 
   constructor(conv: ConversationJson) {
     this.conv = conv;
 
-    //create function pointers (!arrow functions (!) to have parsercontext as this) for all existing types:
-    const authorFun: (path :string) => Author =  (path:string) => {
-      let ref = new Ref(path, Author.eClass)
-      return new Author( undefined, 0, [], [], ref, this)
-    }
-    this.constructorPointers.set(Author.eClass, authorFun)
-
-    const convPartnerFun: (path: string) => ConversationPartner = (path: string) => {
-      let ref = new Ref(path, ConversationPartner.eClass)
-      return new ConversationPartner(undefined, 0, ref, this)
-    }
-    this.constructorPointers.set(ConversationPartner.eClass, convPartnerFun)
-
-    const preknowledgeFun: (path: string) => Preknowledge = (path: string) => {
-      let ref = new Ref(path, Preknowledge.eClass)
-      return new Preknowledge(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
-        ref, this)
-    }
-    this.constructorPointers.set(Preknowledge.eClass, preknowledgeFun)
-
-    const newInfoFun: (path: string) => NewInformation = (path: string) => {
-      let ref = new Ref(path, NewInformation.eClass)
-      //todo not nice source
-      let dummySource = new ReceiveMessage(new ConversationPartner(), 0)
-      return new NewInformation(dummySource, '', undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, ref, this)
-    }
-    this.constructorPointers.set(NewInformation.eClass, newInfoFun)
-
-    const sendMessageFun: (path: string) => SendMessage = (path: string) => {
-      let ref: Ref = new Ref(path, SendMessage.eClass)
-      return new SendMessage(new ConversationPartner(), 0, undefined, undefined, undefined, ref, this)
-    }
-    this.constructorPointers.set(SendMessage.eClass, sendMessageFun)
-
-    const receiveMessageFun: (path: string) => ReceiveMessage = (path: string) => {
-      let ref: Ref = new Ref(path, ReceiveMessage.eClass)
-      return new ReceiveMessage(new ConversationPartner(), 0, undefined, undefined, undefined, undefined, undefined, ref, this)
-    }
-    this.constructorPointers.set(ReceiveMessage.eClass, receiveMessageFun)
-
-    const informationLinkFun: (path: string) => InformationLink = (path: string) => {
-      let ref: Ref = new Ref(path, InformationLink.eClass)
-      let dummyInfo = new Preknowledge()
-      return new InformationLink(dummyInfo, dummyInfo, InformationLinkType.SUPPLEMENT, undefined, ref, this)
-    }
-    this.constructorPointers.set(InformationLink.eClass, informationLinkFun)
+    this.constructorPointers = new ConstructorPointers(this)
   }
 
   getJsonFromTree<T>(path: string): T {
@@ -88,13 +39,7 @@ export class ParserContext {
       return res
     else {
       //get from constructor pointer....
-      let constrPointer: ((e: string) => Referencable) | undefined = this.constructorPointers.get(ref.eClass!)
-      if (constrPointer) {
-        let res = constrPointer(ref.$ref)
-        return (res as T);
-      } else {
-        throw(`Constructor pointer for ${ref} not set.`);
-      }
+      return this.constructorPointers.get<T>(ref)
     }
   }
 
@@ -114,7 +59,7 @@ export class ParserContext {
   }
 
   // for changing eClass assignment (i.e. on subtypes)
-  static createRefList2(formerPrefix: string, ownHeader: string, eClasses: string[] = []): Ref[] {
+  static createRefList(formerPrefix: string, ownHeader: string, eClasses: string[] = []): Ref[] {
     const prefix = Ref.computePrefix(formerPrefix, ownHeader);
     console.log(eClasses)
     return eClasses.map((eClass, index) => new Ref(Ref.mixWithIndex(prefix, index), eClass))

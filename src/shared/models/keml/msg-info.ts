@@ -155,7 +155,7 @@ export class ReceiveMessage extends Message {
     );
     if (parserContext) {
       let json: ReceiveMessageJson = jsonOpt ? jsonOpt : parserContext.getJsonFromTree(ref!.$ref)
-      let generatesRefs = ParserContext.createRefList2(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates?.map(g => g.eClass? g.eClass: NewInformation.eClass))
+      let generatesRefs = ParserContext.createRefList(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates?.map(g => g.eClass? g.eClass: NewInformation.eClass))
       this.generates = generatesRefs.map(g => parserContext.getOrCreate(g))
       let reps = json.repeats?.map(r => parserContext.getOrCreate<NewInformation>(r))
       this.repeats = reps ? reps : []
@@ -232,7 +232,7 @@ export abstract class Information extends Referencable {
       this.feltTrustImmediately = json.feltTrustImmediately;
       this.feltTrustAfterwards = json.feltTrustAfterwards;
       //todo actually, causes should exist on the json, however, it is missing and we hence set it manually:
-      let causesRefs = ParserContext.createRefList2(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass? c.eClass : InformationLink.eClass))
+      let causesRefs = ParserContext.createRefList(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass? c.eClass : InformationLink.eClass))
       this.causes = causesRefs.map(r => parserContext.getOrCreate<InformationLink>(r))
       this.targetedBy = json.targetedBy?.map(r =>  parserContext.getOrCreate(r))
       this.isUsedOn = json.isUsedOn?.map(r => parserContext.getOrCreate<SendMessage>(r))
