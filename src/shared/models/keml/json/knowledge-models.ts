@@ -7,8 +7,8 @@ export interface InformationJson {
   isInstruction: boolean;
   initialTrust: number;
   currentTrust: number;
-  feltTrustImmediately: number;
-  feltTrustAfterwards: number;
+  feltTrustImmediately: number | undefined;
+  feltTrustAfterwards: number | undefined;
 
   causes: InformationLinkJson[];
   targetedBy: Ref[];

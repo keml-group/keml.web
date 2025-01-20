@@ -37,8 +37,7 @@ export class ParserContext {
 
     const preknowledgeFun: (path: string) => Preknowledge = (path: string) => {
       let ref = new Ref(path, Preknowledge.eClass)
-      return new Preknowledge(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
-        ref, this)
+      return new Preknowledge(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, ref, this)
     }
     this.constructorPointers.set(Preknowledge.eClass, preknowledgeFun)
 
@@ -65,7 +64,7 @@ export class ParserContext {
     const informationLinkFun: (path: string) => InformationLink = (path: string) => {
       let ref: Ref = new Ref(path, InformationLink.eClass)
       let dummyInfo = new Preknowledge()
-      return new InformationLink(dummyInfo, dummyInfo, InformationLinkType.SUPPLEMENT, undefined, ref, this)
+        return new InformationLink(dummyInfo, dummyInfo, InformationLinkType.SUPPLEMENT, undefined, ref, this)
     }
     this.constructorPointers.set(InformationLink.eClass, informationLinkFun)
   }
