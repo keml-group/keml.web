@@ -8,7 +8,7 @@ idea:
   1) store any element with complete xPath, on lookup during construction you trigger the creation if the object does not exist yet
   2) after returning from all triggered creations, finish your own job ;)
  */
-export class ParserContext {
+export class Parser {
 
   private completeJSON: any;
   private constructorPointers: ConstructorPointers;

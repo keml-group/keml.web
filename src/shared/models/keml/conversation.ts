@@ -1,7 +1,7 @@
 import {Author} from "./author";
 import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson} from "./json/sequence-diagram-models";
-import {ParserContext} from "../parser/parser-context";
+import {Parser} from "../parser/parser";
 import {Ref} from "../parser/ref";
 import {Referencable} from "../parser/referenceable";
 
@@ -19,18 +19,18 @@ export class Conversation extends Referencable {
     title: string = 'New Conversation',
     author: Author = new Author(),
     conversationPartners: ConversationPartner[] = [],
-    parserContext?: ParserContext,
+    parser?: Parser,
   ) {
     super();
     this.ref = new Ref(Conversation.ownPath, this.eClass)
-    if (parserContext) {
-      let convJson: ConversationJson = parserContext?.getJsonFromTree(this.ref.$ref)
-      parserContext.put(this)
+    if (parser) {
+      let convJson: ConversationJson = parser?.getJsonFromTree(this.ref.$ref)
+      parser.put(this)
       this.title = convJson.title;
-      const authorRef = ParserContext.createSingleRef(Conversation.ownPath, Conversation.authorPrefix, Author.eClass)
-      this.author = parserContext.getOrCreate<Author>(authorRef);
-      const cpRefs: Ref[] = ParserContext.createRefList(Conversation.ownPath, Conversation.conversationPartnersPrefix, convJson.conversationPartners.map(_ => ConversationPartner.eClass))
-      this.conversationPartners = cpRefs.map( cp => parserContext.getOrCreate<ConversationPartner>(cp))
+      const authorRef = Parser.createSingleRef(Conversation.ownPath, Conversation.authorPrefix, Author.eClass)
+      this.author = parser.getOrCreate<Author>(authorRef);
+      const cpRefs: Ref[] = Parser.createRefList(Conversation.ownPath, Conversation.conversationPartnersPrefix, convJson.conversationPartners.map(_ => ConversationPartner.eClass))
+      this.conversationPartners = cpRefs.map( cp => parser.getOrCreate<ConversationPartner>(cp))
     } else {
       this.title = title;
       this.author = author;
@@ -53,7 +53,7 @@ export class Conversation extends Referencable {
   }
 
   static fromJSON (conv: ConversationJson): Conversation {
-    let context = new ParserContext(conv);
+    let context = new Parser(conv);
     return new Conversation(undefined, undefined, undefined, context)
 
     /*

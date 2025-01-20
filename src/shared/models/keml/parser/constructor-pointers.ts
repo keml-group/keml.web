@@ -4,14 +4,14 @@ import {Author} from "../author";
 import {ConversationPartner} from "../conversation-partner";
 import {InformationLink, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "../msg-info";
 import {InformationLinkType} from "../json/knowledge-models";
-import {ParserContext} from "../../parser/parser-context";
+import {Parser} from "../../parser/parser";
 
 
 export class ConstructorPointers {
 
   constructorPointers: Map<string, (e:string) => Referencable >;
 
-  constructor( parser: ParserContext) {
+  constructor( parser: Parser) {
     this.constructorPointers = new Map();
 
     //create function pointers (!arrow functions (!) to have parsercontext as this) for all existing types:
