@@ -11,9 +11,9 @@ import {
   InformationLinkType,
   InformationLinkJson,
 } from "./json/knowledge-models";
-import {Ref} from "./parser/ref";
-import {ParserContext} from "./parser/parser-context";
-import {Referencable} from "./parser/referenceable";
+import {Ref} from "../parser/ref";
+import {ParserContext} from "../parser/parser-context";
+import {Referencable} from "../parser/referenceable";
 import {JsonFixer} from "./parser/json-fixer";
 import {BoundingBox} from "../graphical/bounding-box";
 import {GeneralHelper} from "../../utility/general-helper";

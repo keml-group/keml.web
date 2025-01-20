@@ -1,7 +1,7 @@
 import {LifeLine} from "./life-line";
 import {ConversationPartnerJson} from "./json/sequence-diagram-models"
-import {ParserContext} from "./parser/parser-context";
-import {Ref} from "./parser/ref";
+import {ParserContext} from "../parser/parser-context";
+import {Ref} from "../parser/ref";
 
 export class ConversationPartner extends LifeLine {
 

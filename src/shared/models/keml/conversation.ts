@@ -1,9 +1,9 @@
 import {Author} from "./author";
 import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson} from "./json/sequence-diagram-models";
-import {ParserContext} from "./parser/parser-context";
-import {Ref} from "./parser/ref";
-import {Referencable} from "./parser/referenceable";
+import {ParserContext} from "../parser/parser-context";
+import {Ref} from "../parser/ref";
+import {Referencable} from "../parser/referenceable";
 
 
 export class Conversation extends Referencable {
@@ -24,11 +24,12 @@ export class Conversation extends Referencable {
     super();
     this.ref = new Ref(Conversation.ownPath, this.eClass)
     if (parserContext) {
+      let convJson: ConversationJson = parserContext?.getJsonFromTree(this.ref.$ref)
       parserContext.put(this)
-      this.title = parserContext.conv.title;
+      this.title = convJson.title;
       const authorRef = ParserContext.createSingleRef(Conversation.ownPath, Conversation.authorPrefix, Author.eClass)
       this.author = parserContext.getOrCreate<Author>(authorRef);
-      const cpRefs: Ref[] = ParserContext.createRefList(Conversation.ownPath, Conversation.conversationPartnersPrefix, parserContext.conv.conversationPartners.map(_ => ConversationPartner.eClass))
+      const cpRefs: Ref[] = ParserContext.createRefList(Conversation.ownPath, Conversation.conversationPartnersPrefix, convJson.conversationPartners.map(_ => ConversationPartner.eClass))
       this.conversationPartners = cpRefs.map( cp => parserContext.getOrCreate<ConversationPartner>(cp))
     } else {
       this.title = title;

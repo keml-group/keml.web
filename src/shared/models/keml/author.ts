@@ -2,8 +2,8 @@ import {LifeLine} from "./life-line";
 import {Message} from "./msg-info";
 import {AuthorJson} from "./json/sequence-diagram-models"
 import {Preknowledge} from "./msg-info";
-import {ParserContext} from "./parser/parser-context";
-import {Ref} from "./parser/ref";
+import {ParserContext} from "../parser/parser-context";
+import {Ref} from "../parser/ref";
 
 export class Author extends LifeLine{
   static readonly eClass = "http://www.unikoblenz.de/keml#//Author";

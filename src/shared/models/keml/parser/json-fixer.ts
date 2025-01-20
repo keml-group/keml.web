@@ -1,6 +1,6 @@
 import {Author} from "../author";
 import {Message, NewInformation, Preknowledge, ReceiveMessage} from "../msg-info";
-import {Ref} from "./ref";
+import {Ref} from "../../parser/ref";
 import {ConversationJson, ReceiveMessageJson,} from '../json/sequence-diagram-models'
 import {Conversation} from "../conversation";
 import {InformationLinkType} from "../json/knowledge-models";

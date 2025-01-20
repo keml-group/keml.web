@@ -1,10 +1,10 @@
-import  {Ref} from"./ref"
-import {Referencable} from "./referenceable";
+import  {Ref} from "../../parser/ref"
+import {Referencable} from "../../parser/referenceable";
 import {Author} from "../author";
 import {ConversationPartner} from "../conversation-partner";
 import {InformationLink, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "../msg-info";
 import {InformationLinkType} from "../json/knowledge-models";
-import {ParserContext} from "./parser-context";
+import {ParserContext} from "../../parser/parser-context";
 
 
 export class ConstructorPointers {

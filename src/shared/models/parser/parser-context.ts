@@ -1,7 +1,7 @@
 import {Ref} from "./ref";
 import {Referencable} from "./referenceable";
-import {ConversationJson} from "../json/sequence-diagram-models";
-import {ConstructorPointers} from "./constructor-pointers";
+import {ConversationJson} from "../keml/json/sequence-diagram-models";
+import {ConstructorPointers} from "../keml/parser/constructor-pointers";
 
 /*
 idea:
@@ -10,13 +10,13 @@ idea:
  */
 export class ParserContext {
 
-  conv: ConversationJson;
-  constructorPointers: ConstructorPointers;
+  private completeJSON: any;
+  private constructorPointers: ConstructorPointers;
 
-  context: Map<string, any> = new Map<string, any>();
+  private context: Map<string, any> = new Map<string, any>();
 
   constructor(conv: ConversationJson) {
-    this.conv = conv;
+    this.completeJSON = (conv as any);
 
     this.constructorPointers = new ConstructorPointers(this)
   }
@@ -25,7 +25,7 @@ export class ParserContext {
     //first replace index access (.) by normal path divider, since they are all finally [] accesses
     const accessPaths = path.replaceAll('.', Ref.pathDivider).split(Ref.pathDivider)
       //path.split( new RegExp('(/@|\\.)'), -1)
-    let res = (this.conv as any);
+    let res = this.completeJSON;
     for (let i = 1; i<accessPaths.length; i++) {
       res = res[(accessPaths[i])]
     }
