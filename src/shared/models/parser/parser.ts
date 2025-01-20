@@ -18,7 +18,7 @@ export class Parser {
   constructor(conv: ConversationJson) {
     this.completeJSON = (conv as any);
 
-    this.constructorPointers = new ConstructorPointers(this)
+    this.constructorPointers = new ConstructorPointers()
   }
 
   getJsonFromTree<T>(path: string): T {
@@ -39,7 +39,7 @@ export class Parser {
       return res
     else {
       //get from constructor pointer....
-      return this.constructorPointers.get<T>(ref)
+      return this.constructorPointers.get<T>(ref, this)
     }
   }
 
