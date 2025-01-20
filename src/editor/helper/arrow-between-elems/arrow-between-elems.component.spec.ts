@@ -8,10 +8,10 @@ describe('ArrowBetweenElemsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ArrowBetweenElemsComponent]
+      declarations: [ArrowBetweenElemsComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(ArrowBetweenElemsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

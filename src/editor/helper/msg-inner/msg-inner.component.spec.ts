@@ -8,10 +8,10 @@ describe('MsgInnerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MsgInnerComponent]
+      declarations: [MsgInnerComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(MsgInnerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

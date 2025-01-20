@@ -8,10 +8,10 @@ describe('ArrowSvgComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ArrowSvgComponent]
+      declarations: [ArrowSvgComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(ArrowSvgComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

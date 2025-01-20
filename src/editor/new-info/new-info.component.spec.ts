@@ -8,10 +8,10 @@ describe('NewInfoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NewInfoComponent]
+      declarations: [NewInfoComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(NewInfoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

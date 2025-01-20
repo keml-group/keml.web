@@ -8,10 +8,10 @@ describe('IsInstrSvgComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [IsInstrSvgComponent]
+      declarations: [IsInstrSvgComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(IsInstrSvgComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

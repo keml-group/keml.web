@@ -8,7 +8,7 @@ describe('NewInfoInnerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InfoInnerComponent]
+      declarations: [InfoInnerComponent]
     })
     .compileComponents();
 

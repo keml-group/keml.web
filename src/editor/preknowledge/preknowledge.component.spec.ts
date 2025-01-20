@@ -8,7 +8,7 @@ describe('PreknowledgeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PreknowledgeComponent]
+      declarations: [PreknowledgeComponent]
     })
     .compileComponents();
 

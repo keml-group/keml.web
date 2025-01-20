@@ -8,10 +8,10 @@ describe('TextAreaSvgComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TextAreaSvgComponent]
+      declarations: [TextAreaSvgComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(TextAreaSvgComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
