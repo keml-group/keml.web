@@ -20,7 +20,7 @@ export class Author extends LifeLine{
       this.ref = ref!
       parser.put(this)
       //compute and use refs for all tree children:
-      let preknowledgeRefs = Parser.createRefList(ref!.$ref, Author.preknowledgePrefix, authorJson.preknowledge.map(_ => Preknowledge.eClass))
+      let preknowledgeRefs = Parser.createRefList(ref!.$ref, Author.preknowledgePrefix, authorJson.preknowledge? authorJson.preknowledge.map(_ => Preknowledge.eClass): [])
       this.preknowledge = preknowledgeRefs.map(r => parser.getOrCreate<Preknowledge>(r));
       let messageRefs = Parser.createRefList(ref!.$ref, Author.messagesPrefix, authorJson.messages.map(r => r.eClass))
       this.messages = messageRefs.map(r => parser.getOrCreate<Message>(r));
