@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConversationPartnerDetailsComponent } from './cp-details.component';
+import {MatDialogRef} from "@angular/material/dialog";
+import {MatIcon} from "@angular/material/icon";
+import {ConversationPartner} from "../../../shared/models/keml/conversation-partner";
+import {NO_ERRORS_SCHEMA} from "@angular/core";
 
 describe('ConversationPartnerDetailsComponent', () => {
   let component: ConversationPartnerDetailsComponent;
@@ -8,12 +12,18 @@ describe('ConversationPartnerDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ConversationPartnerDetailsComponent]
+      declarations: [ConversationPartnerDetailsComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [
+        {provide: MatDialogRef, useValue: {}},
+      ],
+      imports: [MatIcon],
     })
     .compileComponents();
 
     fixture = TestBed.createComponent(ConversationPartnerDetailsComponent);
     component = fixture.componentInstance;
+    component.cp = new ConversationPartner('Cp')
     fixture.detectChanges();
   });
 
