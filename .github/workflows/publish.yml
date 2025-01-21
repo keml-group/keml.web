@@ -8,7 +8,7 @@ name: Publish to WebEditor
 
 on:
   push:
-    branches: [ "49-run-test-before-deploying" ]
+    branches: [ "main" ]
 
 jobs:
   build:
