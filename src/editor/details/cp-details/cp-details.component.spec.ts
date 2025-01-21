@@ -30,8 +30,4 @@ describe('ConversationPartnerDetailsComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should fail', () => {
-    expect(true).toBe(false)
-  })
 });
