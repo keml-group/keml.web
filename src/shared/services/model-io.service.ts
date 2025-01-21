@@ -356,19 +356,7 @@ export class ModelIOService {
   }
 
   addNewPreknowledge(): Preknowledge {
-    const preknowledge: Preknowledge = new Preknowledge(
-      "New preknowledge",
-      false,
-      LayoutHelper.bbForPreknowledge(LayoutHelper.positionForNewPreknowledge),
-      0.5,
-      0.5,
-      0.5,
-      0.5,
-      [],
-      [],
-      [],
-      [],
-    );
+    const preknowledge: Preknowledge = new Preknowledge("New preknowledge", false, LayoutHelper.bbForPreknowledge(LayoutHelper.positionForNewPreknowledge), [], [], [], [], 0.5, 0.5, 0.5, 0.5);
     this.conversation.author.preknowledge.push(preknowledge);
     return preknowledge;
   }
@@ -381,20 +369,7 @@ export class ModelIOService {
   addNewNewInfo(causeMsg?: ReceiveMessage): NewInformation | undefined {
     let source = causeMsg? causeMsg : this.getFirstReceive()
     if (source) {
-      const newInfo: NewInformation = new NewInformation(
-        source,
-        'New Information',
-        false,
-        LayoutHelper.bbForNewInfo(source.generates.length),
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        [],
-        [],
-        [],
-        [],
-      );
+      const newInfo: NewInformation = new NewInformation(source, 'New Information', false, LayoutHelper.bbForNewInfo(source.generates.length), [], [], [], [], 0.5, 0.5, 0.5, 0.5);
       source.generates.push(newInfo);
       return newInfo;
     } else {

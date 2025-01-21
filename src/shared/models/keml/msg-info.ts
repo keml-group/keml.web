@@ -203,8 +203,8 @@ export abstract class Information extends Referencable {
   position: BoundingBox;
   initialTrust: number;
   currentTrust: number;
-  feltTrustImmediately: number;
-  feltTrustAfterwards: number;
+  feltTrustImmediately: number | undefined;
+  feltTrustAfterwards: number | undefined;
 
   causes: InformationLink[];
   static readonly causesPrefix: string = 'causes'
@@ -215,11 +215,11 @@ export abstract class Information extends Referencable {
 
 
   protected constructor(message: string, isInstruction: boolean = false, position?: BoundingBox,
-                        initialTrust: number = 0.5, currentTrust: number = 0.5, feltTrustImmediately: number = 0.5, feltTrustAfterwards: number = 0.5,
-                        causes: InformationLink[] = [], targetedBy: InformationLink[] = [],
-                        isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
-                        ref?: Ref, parser?: Parser, jsonOpt?: InformationJson
-                        ) {
+              causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
+              initialTrust: number = 0.5, currentTrust: number = 0.5,
+              feltTrustImmediately?: number, feltTrustAfterwards?: number,
+              ref?: Ref, parser?: Parser, jsonOpt?: InformationJson
+  ) {
     super(ref);
     if (parser) {
       parser.put(this)
@@ -294,15 +294,13 @@ export class NewInformation extends Information {
 
   constructor(source: ReceiveMessage,
               message: string, isInstruction: boolean = false, position?: BoundingBox,
+              causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
               initialTrust: number = 0.5, currentTrust: number = 0.5, feltTrustImmediately: number = 0.5, feltTrustAfterwards: number = 0.5,
-              causes: InformationLink[] = [], targetedBy: InformationLink[] = [],
-              isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
               ref?: Ref, parser?: Parser, jsonOpt?: NewInformationJson
   ) {
     super(message, isInstruction, position,
+      [], [], [], [],
       initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards,
-      causes, targetedBy,
-      isUsedOn, repeatedBy,
       ref, parser, jsonOpt);
     if(parser) {
       let json: NewInformationJson = jsonOpt ? jsonOpt : parser.getJsonFromTree(ref!.$ref)
@@ -315,17 +313,7 @@ export class NewInformation extends Information {
   }
 
   override duplicate(): NewInformation {
-    return new NewInformation(
-      this.source,
-      'Copy of '+this.message,
-      this.isInstruction,
-      this.position,  //todo use layout helper?
-      this.initialTrust,
-      this.currentTrust,
-      this.feltTrustImmediately,
-      this.feltTrustAfterwards,
-      //todo none of these are currently set (they are bidirectional)
-    );
+    return new NewInformation(this.source, 'Copy of ' + this.message, this.isInstruction, this.position, [], [], [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
   }
 
   // does both directions (source and generates)
@@ -355,29 +343,15 @@ export class Preknowledge extends Information {
   static readonly eClass: string = 'http://www.unikoblenz.de/keml#//PreKnowledge';
 
   constructor(message: string = 'Preknowledge', isInstruction: boolean = false, position?: BoundingBox,
-              initialTrust: number = 0.5, currentTrust: number = 0.5, feltTrustImmediately: number = 0.5, feltTrustAfterwards: number = 0.5,
-              causes: InformationLink[] = [], targetedBy: InformationLink[] = [],
-              isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
+              causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
+              initialTrust: number = 0.5, currentTrust: number = 0.5,
+              feltTrustImmediately?: number, feltTrustAfterwards?: number,
               ref?: Ref, parser?: Parser, jsonOpt?: PreknowledgeJson) {
-    super(message, isInstruction, position,
-      initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards,
-      causes, targetedBy,
-      isUsedOn, repeatedBy,
-      ref, parser, jsonOpt,
-      );
+    super(message, isInstruction, position, causes, targetedBy, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, ref, parser, jsonOpt);
   }
 
   override duplicate(): Preknowledge {
-    return new Preknowledge(
-      'Copy of '+this.message,
-      this.isInstruction,
-      this.position,  //todo use layout helper?
-      this.initialTrust,
-      this.currentTrust,
-      this.feltTrustImmediately,
-      this.feltTrustAfterwards,
-      //todo none of these are currently set (they are bidirectional)
-    );
+    return new Preknowledge('Copy of ' + this.message, this.isInstruction, this.position, [], [], [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
   }
 
   override toJson(): PreknowledgeJson {
