@@ -2,8 +2,8 @@ import {LifeLine} from "./life-line";
 import {Message} from "./msg-info";
 import {AuthorJson} from "./json/sequence-diagram-models"
 import {Preknowledge} from "./msg-info";
-import {ParserContext} from "./parser/parser-context";
-import {Ref} from "./parser/ref";
+import {Parser} from "../parser/parser";
+import {Ref} from "../parser/ref";
 
 export class Author extends LifeLine{
   static readonly eClass = "http://www.unikoblenz.de/keml#//Author";
@@ -13,17 +13,17 @@ export class Author extends LifeLine{
   messages: Message[];
 
   constructor(name = 'Author', xPosition: number = 0, preknowledge: Preknowledge[] = [], messages: Message[] = [],
-              ref?: Ref, parserContext?: ParserContext) {
-    if (parserContext) {
-      let authorJson: AuthorJson = parserContext?.getJsonFromTree(ref!.$ref)
+              ref?: Ref, parser?: Parser) {
+    if (parser) {
+      let authorJson: AuthorJson = parser?.getJsonFromTree(ref!.$ref)
       super(authorJson.name, authorJson.xPosition)
       this.ref = ref!
-      parserContext.put(this)
+      parser.put(this)
       //compute and use refs for all tree children:
-      let preknowledgeRefs = ParserContext.createRefList2(ref!.$ref, Author.preknowledgePrefix, authorJson.preknowledge.map(_ => Preknowledge.eClass))
-      this.preknowledge = preknowledgeRefs.map(r => parserContext.getOrCreate<Preknowledge>(r));
-      let messageRefs = ParserContext.createRefList2(ref!.$ref, Author.messagesPrefix, authorJson.messages.map(r => r.eClass))
-      this.messages = messageRefs.map(r => parserContext.getOrCreate<Message>(r));
+      let preknowledgeRefs = Parser.createRefList(ref!.$ref, Author.preknowledgePrefix, authorJson.preknowledge? authorJson.preknowledge.map(_ => Preknowledge.eClass): [])
+      this.preknowledge = preknowledgeRefs.map(r => parser.getOrCreate<Preknowledge>(r));
+      let messageRefs = Parser.createRefList(ref!.$ref, Author.messagesPrefix, authorJson.messages.map(r => r.eClass))
+      this.messages = messageRefs.map(r => parser.getOrCreate<Message>(r));
     } else {
       super(name, xPosition);
       this.preknowledge = preknowledge;

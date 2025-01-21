@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PreknowledgeComponent } from './preknowledge.component';
+import {NO_ERRORS_SCHEMA} from "@angular/core";
+import {Preknowledge} from "../../shared/models/keml/msg-info";
 
 describe('PreknowledgeComponent', () => {
   let component: PreknowledgeComponent;
@@ -8,12 +10,14 @@ describe('PreknowledgeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PreknowledgeComponent]
+      declarations: [PreknowledgeComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     })
     .compileComponents();
 
     fixture = TestBed.createComponent(PreknowledgeComponent);
     component = fixture.componentInstance;
+    component.info = new Preknowledge()
     fixture.detectChanges();
   });
 

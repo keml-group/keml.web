@@ -34,8 +34,7 @@ export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
     this.msgY = this.computeY()
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    console.log('Change '+this.msg.gId)
+  ngOnChanges(_: SimpleChanges) {
     if (this.msg.isSend()) {
       this.sendMsg = (this.msg as SendMessage)
     } else {

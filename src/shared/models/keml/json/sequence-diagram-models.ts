@@ -1,5 +1,5 @@
 import {PreknowledgeJson, NewInformationJson} from "./knowledge-models";
-import {Ref} from "../parser/ref";
+import {Ref} from "../../parser/ref";
 
 export interface ConversationJson {
   eClass: string;

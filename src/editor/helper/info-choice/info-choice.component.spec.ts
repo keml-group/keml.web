@@ -8,10 +8,10 @@ describe('InfoChoiceComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InfoChoiceComponent]
+      declarations: [InfoChoiceComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(InfoChoiceComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

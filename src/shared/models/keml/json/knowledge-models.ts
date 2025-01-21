@@ -1,4 +1,4 @@
-import {Ref} from "../parser/ref";
+import {Ref} from "../../parser/ref";
 import {BoundingBox} from "../../graphical/bounding-box";
 
 export interface InformationJson {

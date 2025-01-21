@@ -1,4 +1,4 @@
-import {Referencable} from "./parser/referenceable";
+import {Referencable} from "../parser/referenceable";
 
 export abstract class LifeLine extends Referencable{
   name: string;

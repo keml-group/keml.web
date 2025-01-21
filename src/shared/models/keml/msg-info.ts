@@ -11,9 +11,9 @@ import {
   InformationLinkType,
   InformationLinkJson,
 } from "./json/knowledge-models";
-import {Ref} from "./parser/ref";
-import {ParserContext} from "./parser/parser-context";
-import {Referencable} from "./parser/referenceable";
+import {Ref} from "../parser/ref";
+import {Parser} from "../parser/parser";
+import {Referencable} from "../parser/referenceable";
 import {JsonFixer} from "./parser/json-fixer";
 import {BoundingBox} from "../graphical/bounding-box";
 import {GeneralHelper} from "../../utility/general-helper";
@@ -31,13 +31,13 @@ export abstract class Message extends Referencable {
     timing: number,
     content: string,
     originalContent?: string,
-    ref?: Ref, parserContext?: ParserContext, jsonOpt?: MessageJson,
+    ref?: Ref, parser?: Parser, jsonOpt?: MessageJson,
   ) {
     super(ref);
-    if(parserContext) {
-      parserContext.put(this)
-      let json: MessageJson = jsonOpt? jsonOpt: parserContext.getJsonFromTree(ref!.$ref);
-      this.counterPart = parserContext.getOrCreate(json.counterPart)
+    if(parser) {
+      parser.put(this)
+      let json: MessageJson = jsonOpt? jsonOpt: parser.getJsonFromTree(ref!.$ref);
+      this.counterPart = parser.getOrCreate(json.counterPart)
       this.timing = json.timing? json.timing : 0;
       this.content = json.content;
       this.originalContent = json.originalContent;
@@ -90,7 +90,7 @@ export class SendMessage extends Message {
     content: string = 'New send content',
     originalContent?: string,
     uses: Information[] = [],
-    ref?: Ref, parserContext?: ParserContext, jsonOpt?: SendMessageJson,
+    ref?: Ref, parser?: Parser, jsonOpt?: SendMessageJson,
   ) {
     let resRef = ref? ref : new Ref('')
     resRef.eClass = SendMessage.eClass
@@ -100,14 +100,14 @@ export class SendMessage extends Message {
       content,
       originalContent,
       resRef,
-      parserContext,
+      parser,
       jsonOpt
     );
-    if (parserContext) {
-      //parserContext.put(this) // already done in super
-      let json: SendMessageJson = jsonOpt ? jsonOpt : parserContext?.getJsonFromTree(ref!.$ref);
+    if (parser) {
+      //parser.put(this) // already done in super
+      let json: SendMessageJson = jsonOpt ? jsonOpt : parser?.getJsonFromTree(ref!.$ref);
       let uses = json.uses? json.uses : []
-      this.uses = uses.map(u => parserContext.getOrCreate(u))
+      this.uses = uses.map(u => parser.getOrCreate(u))
     } else {
       this.uses = uses
     }
@@ -144,20 +144,20 @@ export class ReceiveMessage extends Message {
     generates: NewInformation[] = [],
     repeats: Information[] = [],
     isInterrupted: boolean = false,
-    ref?: Ref, parserContext?: ParserContext, jsonOpt?: ReceiveMessageJson,
+    ref?: Ref, parser?: Parser, jsonOpt?: ReceiveMessageJson,
   ) {
     super(
       counterPart,
       timing,
       content? content: "New receive content",
       originalContent,
-      ref, parserContext, jsonOpt
+      ref, parser, jsonOpt
     );
-    if (parserContext) {
-      let json: ReceiveMessageJson = jsonOpt ? jsonOpt : parserContext.getJsonFromTree(ref!.$ref)
-      let generatesRefs = ParserContext.createRefList2(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates?.map(g => g.eClass? g.eClass: NewInformation.eClass))
-      this.generates = generatesRefs.map(g => parserContext.getOrCreate(g))
-      let reps = json.repeats?.map(r => parserContext.getOrCreate<NewInformation>(r))
+    if (parser) {
+      let json: ReceiveMessageJson = jsonOpt ? jsonOpt : parser.getJsonFromTree(ref!.$ref)
+      let generatesRefs = Parser.createRefList(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates?.map(g => g.eClass? g.eClass: NewInformation.eClass))
+      this.generates = generatesRefs.map(g => parser.getOrCreate(g))
+      let reps = json.repeats?.map(r => parser.getOrCreate<NewInformation>(r))
       this.repeats = reps ? reps : []
       this.isInterrupted = json.isInterrupted;
     } else {
@@ -218,12 +218,12 @@ export abstract class Information extends Referencable {
               causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
               initialTrust: number = 0.5, currentTrust: number = 0.5,
               feltTrustImmediately?: number, feltTrustAfterwards?: number,
-              ref?: Ref, parserContext?: ParserContext, jsonOpt?: InformationJson
+              ref?: Ref, parser?: Parser, jsonOpt?: InformationJson
   ) {
     super(ref);
-    if (parserContext) {
-      parserContext.put(this)
-      let json: InformationJson = jsonOpt ? jsonOpt : parserContext.getJsonFromTree(ref!.$ref)
+    if (parser) {
+      parser.put(this)
+      let json: InformationJson = jsonOpt ? jsonOpt : parser.getJsonFromTree(ref!.$ref)
       this.message = json.message;
       this.isInstruction = json.isInstruction;
       this.position = json.position? json.position : new BoundingBox();
@@ -232,11 +232,11 @@ export abstract class Information extends Referencable {
       this.feltTrustImmediately = json.feltTrustImmediately;
       this.feltTrustAfterwards = json.feltTrustAfterwards;
       //todo actually, causes should exist on the json, however, it is missing and we hence set it manually:
-      let causesRefs = ParserContext.createRefList2(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass? c.eClass : InformationLink.eClass))
-      this.causes = causesRefs.map(r => parserContext.getOrCreate<InformationLink>(r))
-      this.targetedBy = json.targetedBy?.map(r =>  parserContext.getOrCreate(r))
-      this.isUsedOn = json.isUsedOn?.map(r => parserContext.getOrCreate<SendMessage>(r))
-      this.repeatedBy = json.repeatedBy?.map(r => parserContext.getOrCreate<ReceiveMessage>(r))
+      let causesRefs = Parser.createRefList(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass? c.eClass : InformationLink.eClass))
+      this.causes = causesRefs.map(r => parser.getOrCreate<InformationLink>(r))
+      this.targetedBy = json.targetedBy?.map(r =>  parser.getOrCreate(r))
+      this.isUsedOn = json.isUsedOn?.map(r => parser.getOrCreate<SendMessage>(r))
+      this.repeatedBy = json.repeatedBy?.map(r => parser.getOrCreate<ReceiveMessage>(r))
     } else {
       this.message = message;
       this.isInstruction = isInstruction;
@@ -295,16 +295,18 @@ export class NewInformation extends Information {
   constructor(source: ReceiveMessage,
               message: string, isInstruction: boolean = false, position?: BoundingBox,
               causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
-              initialTrust: number = 0.5, currentTrust: number = 0.5,
-              feltTrustImmediately?: number, feltTrustAfterwards?: number,
-              ref?: Ref, parserContext?: ParserContext, jsonOpt?: NewInformationJson
+              initialTrust: number = 0.5, currentTrust: number = 0.5, feltTrustImmediately: number = 0.5, feltTrustAfterwards: number = 0.5,
+              ref?: Ref, parser?: Parser, jsonOpt?: NewInformationJson
   ) {
-    super(message, isInstruction, position, causes, targetedBy, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, ref, parserContext, jsonOpt);
-    if(parserContext) {
-      let json: NewInformationJson = jsonOpt ? jsonOpt : parserContext.getJsonFromTree(ref!.$ref)
+    super(message, isInstruction, position,
+      [], [], [], [],
+      initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards,
+      ref, parser, jsonOpt);
+    if(parser) {
+      let json: NewInformationJson = jsonOpt ? jsonOpt : parser.getJsonFromTree(ref!.$ref)
       //todo this works against a bug in the used json lib: it computes the necessary source if it is not present
       let src = json.source? json.source : new Ref(Ref.getParentAddress(ref!.$ref), ReceiveMessage.eClass)
-      this.source = parserContext.getOrCreate(src)
+      this.source = parser.getOrCreate(src)
     } else {
       this.source = source;
     }
@@ -344,8 +346,8 @@ export class Preknowledge extends Information {
               causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
               initialTrust: number = 0.5, currentTrust: number = 0.5,
               feltTrustImmediately?: number, feltTrustAfterwards?: number,
-              ref?: Ref, parserContext?: ParserContext, jsonOpt?: PreknowledgeJson) {
-    super(message, isInstruction, position, causes, targetedBy, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, ref, parserContext, jsonOpt);
+              ref?: Ref, parser?: Parser, jsonOpt?: PreknowledgeJson) {
+    super(message, isInstruction, position, causes, targetedBy, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, ref, parser, jsonOpt);
   }
 
   override duplicate(): Preknowledge {
@@ -366,16 +368,16 @@ export class InformationLink extends Referencable {
   linkText?: string;
 
   constructor(source: Information, target: Information, type: InformationLinkType, linkText?: string,
-              ref?: Ref, parserContext?: ParserContext, jsonOpt?: InformationLinkJson
+              ref?: Ref, parser?: Parser, jsonOpt?: InformationLinkJson
   ) {
     super(ref);
-    if(parserContext) {
-      parserContext.put(this)
-      let json: InformationLinkJson = jsonOpt ? jsonOpt : parserContext.getJsonFromTree(ref!.$ref)
+    if(parser) {
+      parser.put(this)
+      let json: InformationLinkJson = jsonOpt ? jsonOpt : parser.getJsonFromTree(ref!.$ref)
       //todo this works against a bug in the used json lib: it computes the necessary source if it is not present
       let src = json.source? json.source : new Ref(Ref.getParentAddress(ref!.$ref), JsonFixer.determineParentInfoClass(ref!.$ref))
-      this.source = parserContext.getOrCreate(src)
-      this.target = parserContext.getOrCreate(json.target);
+      this.source = parser.getOrCreate(src)
+      this.target = parser.getOrCreate(json.target);
       this.type = json.type;
       this.linkText = json.linkText;
     } else {
