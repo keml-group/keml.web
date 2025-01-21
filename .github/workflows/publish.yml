@@ -24,7 +24,7 @@ jobs:
         cache: 'npm'
     - run: npm ci
     # - run: npm run build --if-present
-    - run: npm exec ng test keml.graphical --no-watch --no-progress --browsers=ChromeHeadless
+    - run: npm exec ng test keml.graphical --browsers=ChromeHeadless --progress=false --watch=false
     - run: npm exec ng run keml.graphical:package
     #now, minified version lies under dist/src
 #************** interact with the web-editor repository *****************
