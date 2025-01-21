@@ -8,7 +8,7 @@ name: Publish to WebEditor
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "43-repair-tests" ]
 
 jobs:
   build:
@@ -24,7 +24,7 @@ jobs:
         cache: 'npm'
     - run: npm ci
     # - run: npm run build --if-present
-    # - run: npm test
+    - run: npm test
     - run: npm exec ng run keml.graphical:package
     #now, minified version lies under dist/src
 #************** interact with the web-editor repository *****************
