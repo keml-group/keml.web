@@ -35,7 +35,7 @@ jobs:
         ref: main
         path: webeditor
         token: ${{secrets.WEB_EDITOR_ACCESS}}
-    - run: cp -r ./dist/docs ./webeditor/docs
+    - run: cp -r ./dist/docs ./webeditor
     - run: echo $(ls ./dist/docs)
     - run: echo $(ls ./webeditor/docs)
     - name: Add and commit to main
