@@ -8,7 +8,7 @@ name: Publish to WebEditor
 
 on:
   push:
-    branches: [ "54-bug-deployment-does-not-cause-editor-change" ]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -35,9 +35,7 @@ jobs:
         ref: main
         path: webeditor
         token: ${{secrets.WEB_EDITOR_ACCESS}}
-    - run: cp -r ./dist/docs ./webeditor
-    - run: echo $(ls ./dist/docs)
-    - run: echo $(ls ./webeditor/docs)
+    - run: cp -r ./dist/docs ./webeditor #this causes a folder docs under webeditor
     - name: Add and commit to main
       run: |
         cd webeditor
