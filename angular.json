@@ -98,7 +98,7 @@
         "package": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/src",
+            "outputPath": "dist/docs",
             "baseHref": "/web-editor/",
             "index": "src/index.html",
             "main": "src/main.ts",
