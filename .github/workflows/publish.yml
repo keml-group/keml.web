@@ -26,7 +26,7 @@ jobs:
    # - run: npm run build --if-present
     - run: npm run test:ci
     - run: npm exec ng run keml.graphical:package
-    #now, minified version lies under dist/src
+    #now, minified version lies under dist/docs
 #************** interact with the web-editor repository *****************
     - name: Set up Git repository to push
       uses: actions/checkout@v4
@@ -35,8 +35,8 @@ jobs:
         ref: main
         path: webeditor
         token: ${{secrets.WEB_EDITOR_ACCESS}}
-    - run: cp -r ./dist/src ./webeditor/docs
-    - run: echo $(ls ./dist/src)
+    - run: cp -r ./dist/docs ./webeditor/docs
+    - run: echo $(ls ./dist/docs)
     - run: echo $(ls ./webeditor/docs)
     - name: Add and commit to main
       run: |

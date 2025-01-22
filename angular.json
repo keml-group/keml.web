@@ -98,21 +98,21 @@
         "package": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/src",
+            "outputPath": "dist/docs",
             "baseHref": "/web-editor/",
-            "index": "src/index.html",
-            "main": "src/main.ts",
+            "index": "docs/index.html",
+            "main": "docs/main.ts",
             "polyfills": [
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "docs/favicon.ico",
+              "docs/assets"
             ],
             "styles": [
-              "src/custom-theme.scss",
-              "src/styles.css"
+              "docs/custom-theme.scss",
+              "docs/styles.css"
             ],
             "scripts": []
           }
