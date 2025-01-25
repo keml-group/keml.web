@@ -17,6 +17,7 @@ import {Referencable} from "../parser/referenceable";
 import {JsonFixer} from "./parser/json-fixer";
 import {BoundingBox} from "../graphical/bounding-box";
 import {GeneralHelper} from "../../utility/general-helper";
+import {PositionHelper} from "../graphical/position-helper";
 
 export abstract class Message extends Referencable {
   protected readonly eClass: string = '';
@@ -226,7 +227,7 @@ export abstract class Information extends Referencable {
       let json: InformationJson = jsonOpt ? jsonOpt : parser.getJsonFromTree(ref!.$ref)
       this.message = json.message;
       this.isInstruction = json.isInstruction;
-      this.position = json.position? json.position : new BoundingBox();
+      this.position = json.position? json.position : PositionHelper.newBoundingBox();
       this.initialTrust = json.initialTrust;
       this.currentTrust = json.currentTrust;
       this.feltTrustImmediately = json.feltTrustImmediately;
@@ -240,7 +241,7 @@ export abstract class Information extends Referencable {
     } else {
       this.message = message;
       this.isInstruction = isInstruction;
-      this.position = position? position: new BoundingBox();
+      this.position = position? position: PositionHelper.newBoundingBox();
       this.initialTrust = initialTrust;
       this.currentTrust = currentTrust;
       this.feltTrustImmediately = feltTrustImmediately;

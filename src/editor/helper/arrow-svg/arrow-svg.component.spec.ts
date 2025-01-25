@@ -16,8 +16,8 @@ describe('ArrowSvgComponent', () => {
     })
     .compileComponents();
 
-    let start = new BoundingBox(50, -20, 200, 80)
-    let end = new BoundingBox(80, 20, 100, 200)
+    let start: BoundingBox = {x: 50, y: -20, w: 200, h: 80}
+    let end: BoundingBox = {x: 80, y: 20, w: 100, h: 200}
 
     fixture = TestBed.createComponent(ArrowSvgComponent);
     component = fixture.componentInstance;

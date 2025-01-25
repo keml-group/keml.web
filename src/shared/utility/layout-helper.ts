@@ -54,31 +54,31 @@ export class LayoutHelper {
   }
 
   static bbForNewInfo(index: number): BoundingBox {
-    return new BoundingBox(
-      LayoutHelper.newInfoX - LayoutHelper.distanceBetweenInfos*index,
-      LayoutHelper.distanceBetweenInfos*index,
-      LayoutHelper.infoBoxWidth,
-      LayoutHelper.infoBoxHeight
-    )
+    return {
+      x: LayoutHelper.newInfoX - LayoutHelper.distanceBetweenInfos * index,
+      y: LayoutHelper.distanceBetweenInfos * index,
+      w: LayoutHelper.infoBoxWidth,
+      h: LayoutHelper.infoBoxHeight
+    }
   }
 
   static bbForInfoDuplication(info: Information): BoundingBox {
     let pos = info.position
-    return new BoundingBox(
-      pos.x - LayoutHelper.distanceBetweenInfos,
-      pos.y + LayoutHelper.distanceBetweenInfos,
-      pos.w,
-      pos.h
-    )
+    return {
+      x: pos.x - LayoutHelper.distanceBetweenInfos,
+      y: pos.y + LayoutHelper.distanceBetweenInfos,
+      w: pos.w,
+      h: pos.h
+    }
   }
 
   static bbForPreknowledge(y: number): BoundingBox {
-    return new BoundingBox(
-      LayoutHelper.preknowledgeX,
-      y,
-      LayoutHelper.infoBoxWidth,
-      LayoutHelper.infoBoxHeight
-    )
+    return {
+      x: LayoutHelper.preknowledgeX,
+      y: y,
+      w: LayoutHelper.infoBoxWidth,
+      h: LayoutHelper.infoBoxHeight
+    }
   }
 
   static positionInfos(pre: Preknowledge[], msgs: Message[]): void {

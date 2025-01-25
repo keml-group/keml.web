@@ -10,7 +10,7 @@ export class PositionHelper {
     let y = relativePosition.y;
     let x_abs = translationMatrix.a*x+translationMatrix.c*y+translationMatrix.e;
     let y_abs = translationMatrix.b*x+translationMatrix.d*y+translationMatrix.f;
-    return new BoundingBox(x_abs,y_abs, relativePosition.width, relativePosition.height)
+    return {x: x_abs, y: y_abs, w: relativePosition.width, h: relativePosition.height}
   }
 
   static makeRelativeToElem(p: Point, elem: SVGGraphicsElement): void {
@@ -24,5 +24,9 @@ export class PositionHelper {
     let y_trans = translationMatrix.b*x+translationMatrix.d*y+translationMatrix.f;
     p.x = x_trans
     p.y = y_trans
+  }
+
+  static newBoundingBox(x: number = 0, y: number = 0, width: number = 5, height: number = 5): BoundingBox {
+    return {x: x, y: y, w: width, h: height};
   }
 }
