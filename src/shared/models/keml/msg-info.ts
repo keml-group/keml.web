@@ -330,6 +330,7 @@ export class NewInformation extends Information {
   override toJson(): NewInformationJson {
     let res = (<NewInformationJson>super.toJson());
     res.source = this.source.getRef()
+    res.eClass = NewInformation.eClass
     return res;
   }
 
