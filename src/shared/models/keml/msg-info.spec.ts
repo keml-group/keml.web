@@ -1,9 +1,40 @@
-import {NewInformation, Preknowledge, ReceiveMessage} from "./msg-info";
+import {NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "./msg-info";
 import {NewInformationJson, PreknowledgeJson} from "./json/knowledge-models";
 import {ConversationPartner} from "./conversation-partner";
-import {Author} from "./author";
+import {ReceiveMessageJson, SendMessageJson} from "./json/sequence-diagram-models";
 
 describe('Msg-Info (models)', () => {
+
+  it('should serialize a send msg', () => {
+    let cp = new ConversationPartner()
+    let msg = new SendMessage(cp, 0, "sendContent")
+    let msgJson: SendMessageJson = {
+      eClass: SendMessage.eClass,
+      content: "sendContent",
+      originalContent: undefined,
+      timing: 0,
+      counterPart: cp.getRef(),
+      uses: []
+    }
+    expect(msg.toJson()).toEqual(msgJson);
+  });
+
+  it('should serialize a receive msg', () => {
+    let cp = new ConversationPartner()
+    let msg = new ReceiveMessage(cp, 1, "receiveContent")
+    let msgJson: ReceiveMessageJson = {
+      eClass: ReceiveMessage.eClass,
+      content: "receiveContent",
+      originalContent: undefined,
+      timing: 1,
+      counterPart: cp.getRef(),
+      isInterrupted: false,
+      generates: [],
+      repeats: []
+    }
+    expect(msg.toJson()).toEqual(msgJson);
+  });
+
 
   it('should serialize preknowledge', () => {
     let preknowledge = new Preknowledge()
@@ -25,7 +56,6 @@ describe('Msg-Info (models)', () => {
   });
 
   it('should serialize newInfo', () => {
-    let author = new Author()
     let cp = new ConversationPartner()
     let msg = new ReceiveMessage(cp, 1, "receiveContent")
     let newInfo = new NewInformation(msg, 'New Info')
