@@ -356,7 +356,9 @@ export class Preknowledge extends Information {
   }
 
   override toJson(): PreknowledgeJson {
-    return (<PreknowledgeJson>super.toJson())
+    let result = super.toJson();
+    result.eClass = Preknowledge.eClass;
+    return (<PreknowledgeJson>result)
   }
 }
 
