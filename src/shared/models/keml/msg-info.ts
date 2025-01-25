@@ -296,11 +296,11 @@ export class NewInformation extends Information {
   constructor(source: ReceiveMessage,
               message: string, isInstruction: boolean = false, position?: BoundingBox,
               causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
-              initialTrust: number = 0.5, currentTrust: number = 0.5, feltTrustImmediately: number = 0.5, feltTrustAfterwards: number = 0.5,
+              initialTrust: number = 0.5, currentTrust: number = 0.5, feltTrustImmediately?: number , feltTrustAfterwards?: number,
               ref?: Ref, parser?: Parser, jsonOpt?: NewInformationJson
   ) {
     super(message, isInstruction, position,
-      [], [], [], [],
+      causes, targetedBy, isUsedOn, repeatedBy,
       initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards,
       ref, parser, jsonOpt);
     if(parser) {
