@@ -180,6 +180,7 @@ export class ReceiveMessage extends Message {
     let res = (<ReceiveMessageJson>super.toJson());
     res.generates = this.generates.map(g => g.toJson())
     res.repeats = this.repeats.map(r => r.getRef())
+    res.isInterrupted = this.isInterrupted
     return res;
   }
 
