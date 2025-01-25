@@ -303,6 +303,7 @@ export class NewInformation extends Information {
       causes, targetedBy, isUsedOn, repeatedBy,
       initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards,
       ref, parser, jsonOpt);
+    this.eClass = NewInformation.eClass;
     if(parser) {
       let json: NewInformationJson = jsonOpt ? jsonOpt : parser.getJsonFromTree(ref!.$ref)
       //todo this works against a bug in the used json lib: it computes the necessary source if it is not present
@@ -330,7 +331,6 @@ export class NewInformation extends Information {
   override toJson(): NewInformationJson {
     let res = (<NewInformationJson>super.toJson());
     res.source = this.source.getRef()
-    res.eClass = NewInformation.eClass
     return res;
   }
 
@@ -350,6 +350,7 @@ export class Preknowledge extends Information {
               feltTrustImmediately?: number, feltTrustAfterwards?: number,
               ref?: Ref, parser?: Parser, jsonOpt?: PreknowledgeJson) {
     super(message, isInstruction, position, causes, targetedBy, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, ref, parser, jsonOpt);
+    this.eClass = Preknowledge.eClass;
   }
 
   override duplicate(): Preknowledge {
@@ -357,9 +358,7 @@ export class Preknowledge extends Information {
   }
 
   override toJson(): PreknowledgeJson {
-    let result = super.toJson();
-    result.eClass = Preknowledge.eClass;
-    return (<PreknowledgeJson>result)
+    return (<PreknowledgeJson>super.toJson())
   }
 }
 
