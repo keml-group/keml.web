@@ -300,11 +300,10 @@ export class NewInformation extends Information {
               initialTrust: number = 0.5, currentTrust: number = 0.5, feltTrustImmediately?: number , feltTrustAfterwards?: number,
               ref?: Ref, parser?: Parser, jsonOpt?: NewInformationJson
   ) {
-    let refDef = ref? ref : new Ref('', NewInformation.eClass)
     super(message, isInstruction, position,
       causes, targetedBy, isUsedOn, repeatedBy,
       initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards,
-      refDef, parser, jsonOpt);
+      ref, parser, jsonOpt);
     this.eClass = NewInformation.eClass;
     if(parser) {
       let json: NewInformationJson = jsonOpt ? jsonOpt : parser.getJsonFromTree(ref!.$ref)
@@ -351,8 +350,7 @@ export class Preknowledge extends Information {
               initialTrust: number = 0.5, currentTrust: number = 0.5,
               feltTrustImmediately?: number, feltTrustAfterwards?: number,
               ref?: Ref, parser?: Parser, jsonOpt?: PreknowledgeJson) {
-    let refDef = ref? ref : new Ref('', Preknowledge.eClass)
-    super(message, isInstruction, position, causes, targetedBy, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, refDef, parser, jsonOpt);
+    super(message, isInstruction, position, causes, targetedBy, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, ref, parser, jsonOpt);
     this.eClass = Preknowledge.eClass;
   }
 
