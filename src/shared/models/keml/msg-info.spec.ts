@@ -126,6 +126,16 @@ describe('Msg-Info (models)', () => {
       type: InformationLinkType.STRONG_SUPPORT
     }
     expect(infoLink_pre_pre.toJson()).toEqual(infoLink_pre_pre_Json);
+
+    let infoLink_pre_pre_2 = new InformationLink(preknowledge1, preknowledge2, InformationLinkType.ATTACK)
+    let infoLink_pre_pre_2_Json: InformationLinkJson = {
+      eClass: InformationLink.eClass,
+      linkText: undefined,
+      source: new Ref('', Preknowledge.eClass),
+      target: new Ref('', Preknowledge.eClass),
+      type: InformationLinkType.ATTACK
+    }
+    expect(infoLink_pre_pre_2.toJson()).toEqual(infoLink_pre_pre_2_Json);
   });
 
 });
