@@ -1,9 +1,9 @@
 import { Referencable } from './referenceable';
 
-/*
-describe('Referencable', () => {
-  it('should create an instance', () => {
-    expect(new Referencable()).toBeTruthy();
+describe('Referenceable', () => {
+
+  it('should prepare all real children', () => {
+
   });
-});
-*/
+
+})
