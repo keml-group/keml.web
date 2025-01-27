@@ -162,18 +162,15 @@ export class ReceiveMessage extends Message {
       this.repeats = reps ? reps : []
       this.isInterrupted = json.isInterrupted;
     } else {
-      this.addGenerates(generates);
+      this.generates = generates ? generates : [];
+      generates?.forEach(info => {
+        info.setSource(this)
+      })
       this.repeats = repeats;
       this.isInterrupted = isInterrupted;
 //    this.ref = new Ref('', this.eClass)
     }
     this.listChildren.set(ReceiveMessage.generatesPrefix, this.generates)
-  }
-
-  addGenerates(generated: NewInformation[]) {
-    generated?.forEach(info => {
-      info.setSource(this)
-    })
   }
 
   override toJson(): ReceiveMessageJson {
