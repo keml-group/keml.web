@@ -88,24 +88,43 @@ describe('Msg-Info (models)', () => {
     // ***** candidates **********
     let infoLink_new_new = new InformationLink(newInfo1, newInfo2, InformationLinkType.SUPPLEMENT, 'text')
     let infoLink_new_new_Json: InformationLinkJson = {
-      eClass: "http://www.unikoblenz.de/keml#//InformationLink",
+      eClass: InformationLink.eClass,
       linkText: "text",
       source: newInfo1.getRef(),
       target: newInfo2.getRef(),
       type: InformationLinkType.SUPPLEMENT
     }
     expect(infoLink_new_new.toJson()).toEqual(infoLink_new_new_Json);
-    
+
     let infoLink_new_pre = new InformationLink(newInfo1, preknowledge1, InformationLinkType.STRONG_ATTACK, 'text')
     let infoLink_new_pre_Json: InformationLinkJson = {
-      eClass: "http://www.unikoblenz.de/keml#//InformationLink",
+      eClass: InformationLink.eClass,
       linkText: "text",
       source: newInfo1.getRef(),
       target: preknowledge1.getRef(),
       type: InformationLinkType.STRONG_ATTACK
     }
     expect(infoLink_new_pre.toJson()).toEqual(infoLink_new_pre_Json);
-  });
 
+    let infoLink_pre_new = new InformationLink(preknowledge1, newInfo1, InformationLinkType.SUPPORT)
+    let infoLink_pre_new_Json: InformationLinkJson = {
+      eClass: InformationLink.eClass,
+      linkText: "",
+      source: preknowledge1.getRef(),
+      target: newInfo1.getRef(),
+      type: InformationLinkType.SUPPORT
+    }
+    expect(infoLink_pre_new.toJson()).toEqual(infoLink_pre_new_Json);
+
+    let infoLink_pre_pre = new InformationLink(preknowledge1, preknowledge2, InformationLinkType.STRONG_SUPPORT)
+    let infoLink_pre_pre_Json: InformationLinkJson = {
+      eClass: InformationLink.eClass,
+      linkText: "",
+      source: preknowledge1.getRef(),
+      target: preknowledge2.getRef(),
+      type: InformationLinkType.STRONG_SUPPORT
+    }
+    expect(infoLink_pre_pre.toJson()).toEqual(infoLink_pre_pre_Json);
+  });
 
 });
