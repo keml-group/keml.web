@@ -54,14 +54,14 @@ export abstract class Message extends Referencable {
   }
 
   isSend(): boolean {
-    return Message.isSend(this.ref.eClass!);
+    return Message.isSend(this.ref.eClass);
   }
 
   toJson(): MessageJson {
     return {
       content: this.content,
       counterPart: this.counterPart.getRef(),
-      eClass: this.ref.eClass!,
+      eClass: this.ref.eClass,
       originalContent: this.originalContent,
       timing: this.timing
     }
@@ -237,7 +237,7 @@ export abstract class Information extends Referencable {
     return {
       causes: this.causes.map(c => c.toJson()),
       currentTrust: this.currentTrust,
-      eClass: this.ref.eClass!,
+      eClass: this.ref.eClass,
       initialTrust: this.initialTrust,
       feltTrustImmediately: this.feltTrustImmediately,
       feltTrustAfterwards: this.feltTrustAfterwards,

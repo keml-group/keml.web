@@ -63,7 +63,7 @@ export class ConstructorPointers {
   }
 
   get<T extends Referencable>(ref: Ref, parser: Parser): T {
-    let constrPointer: ((e: string) => ( parser: Parser ) => Referencable) | undefined = this.constructorPointers.get(ref.eClass!)
+    let constrPointer: ((e: string) => ( parser: Parser ) => Referencable) | undefined = this.constructorPointers.get(ref.eClass)
     if (constrPointer) {
       let res = constrPointer(ref.$ref)
       let withParse = res(parser)
