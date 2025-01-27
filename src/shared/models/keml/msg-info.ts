@@ -89,8 +89,8 @@ export class SendMessage extends Message {
     uses: Information[] = [],
     ref?: Ref, parser?: Parser, jsonOpt?: SendMessageJson,
   ) {
-    let resRef = Ref.createRef(SendMessage.eClass, ref)
-    super(resRef, counterPart, timing, content, originalContent, parser, jsonOpt);
+    let refC = Ref.createRef(SendMessage.eClass, ref)
+    super(refC, counterPart, timing, content, originalContent, parser, jsonOpt);
     if (parser) {
       //parser.put(this) // already done in super
       let json: SendMessageJson = jsonOpt ? jsonOpt : parser?.getJsonFromTree(ref!.$ref);
