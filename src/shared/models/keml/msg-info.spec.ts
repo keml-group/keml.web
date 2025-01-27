@@ -1,5 +1,5 @@
-import {NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "./msg-info";
-import {NewInformationJson, PreknowledgeJson} from "./json/knowledge-models";
+import {InformationLink, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "./msg-info";
+import {InformationLinkJson, InformationLinkType, NewInformationJson, PreknowledgeJson} from "./json/knowledge-models";
 import {ConversationPartner} from "./conversation-partner";
 import {ReceiveMessageJson, SendMessageJson} from "./json/sequence-diagram-models";
 
@@ -76,4 +76,26 @@ describe('Msg-Info (models)', () => {
     }
     expect(newInfo.toJson()).toEqual(newInfoJson);
   });
+
+  it('should serialize information links', () => {
+    let cp = new ConversationPartner()
+    let msg = new ReceiveMessage(cp, 1, "receiveContent")
+    let newInfo1 = new NewInformation(msg, 'New Info1')
+    let newInfo2 = new NewInformation(msg, 'New Info2')
+    let preknowledge1 = new Preknowledge('Preknowledge1')
+    let preknowledge2 = new Preknowledge('Preknowledge2')
+
+    // ***** candidates **********
+    let infoLink_new_new = new InformationLink(newInfo1, newInfo2, InformationLinkType.SUPPLEMENT, 'text')
+    let infoLink_new_new_Json: InformationLinkJson = {
+      eClass: "http://www.unikoblenz.de/keml#//InformationLink",
+      linkText: "text",
+      source: newInfo1.getRef(),
+      target: newInfo2.getRef(),
+      type: InformationLinkType.SUPPLEMENT
+    }
+    expect(infoLink_new_new.toJson()).toEqual(infoLink_new_new_Json);
+  });
+
+
 });
