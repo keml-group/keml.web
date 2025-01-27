@@ -6,6 +6,12 @@ import {Ref} from "../parser/ref";
 
 describe('Msg-Info (models)', () => {
 
+  it('should prepare the information serialization for getRef', () => {
+    let preknowledge = new Preknowledge()
+     preknowledge.prepare('fantasy')
+    expect (preknowledge.getRef()).toEqual(new Ref('fantasy', Preknowledge.eClass));
+  })
+
   it('should serialize a send msg', () => {
     let cp = new ConversationPartner()
     let msg = new SendMessage(cp, 0, "sendContent")
