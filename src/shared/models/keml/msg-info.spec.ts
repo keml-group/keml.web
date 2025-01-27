@@ -110,7 +110,7 @@ describe('Msg-Info (models)', () => {
     let infoLink_pre_new = new InformationLink(preknowledge1, newInfo1, InformationLinkType.SUPPORT)
     let infoLink_pre_new_Json: InformationLinkJson = {
       eClass: InformationLink.eClass,
-      linkText: "",
+      linkText: undefined,
       source: new Ref('', Preknowledge.eClass),
       target: new Ref('', NewInformation.eClass),
       type: InformationLinkType.SUPPORT
@@ -120,7 +120,7 @@ describe('Msg-Info (models)', () => {
     let infoLink_pre_pre = new InformationLink(preknowledge1, preknowledge2, InformationLinkType.STRONG_SUPPORT)
     let infoLink_pre_pre_Json: InformationLinkJson = {
       eClass: InformationLink.eClass,
-      linkText: "",
+      linkText: undefined,
       source: new Ref('', Preknowledge.eClass),
       target: new Ref('', Preknowledge.eClass),
       type: InformationLinkType.STRONG_SUPPORT
