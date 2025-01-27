@@ -305,6 +305,12 @@ export class NewInformation extends Information {
       initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards,
       ref, parser, jsonOpt);
     this.eClass = NewInformation.eClass;
+    if (!ref) {
+      this.ref = new Ref('', this.eClass)
+    } else {
+      ref.eClass = this.eClass
+      this.ref = ref // todo
+    }
     if(parser) {
       let json: NewInformationJson = jsonOpt ? jsonOpt : parser.getJsonFromTree(ref!.$ref)
       //todo this works against a bug in the used json lib: it computes the necessary source if it is not present
