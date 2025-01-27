@@ -95,6 +95,16 @@ describe('Msg-Info (models)', () => {
       type: InformationLinkType.SUPPLEMENT
     }
     expect(infoLink_new_new.toJson()).toEqual(infoLink_new_new_Json);
+    
+    let infoLink_new_pre = new InformationLink(newInfo1, preknowledge1, InformationLinkType.STRONG_ATTACK, 'text')
+    let infoLink_new_pre_Json: InformationLinkJson = {
+      eClass: "http://www.unikoblenz.de/keml#//InformationLink",
+      linkText: "text",
+      source: newInfo1.getRef(),
+      target: preknowledge1.getRef(),
+      type: InformationLinkType.STRONG_ATTACK
+    }
+    expect(infoLink_new_pre.toJson()).toEqual(infoLink_new_pre_Json);
   });
 
 
