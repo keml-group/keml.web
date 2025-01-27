@@ -2,6 +2,7 @@ import {InformationLink, NewInformation, Preknowledge, ReceiveMessage, SendMessa
 import {InformationLinkJson, InformationLinkType, NewInformationJson, PreknowledgeJson} from "./json/knowledge-models";
 import {ConversationPartner} from "./conversation-partner";
 import {ReceiveMessageJson, SendMessageJson} from "./json/sequence-diagram-models";
+import {Ref} from "../parser/ref";
 
 describe('Msg-Info (models)', () => {
 
@@ -90,8 +91,8 @@ describe('Msg-Info (models)', () => {
     let infoLink_new_new_Json: InformationLinkJson = {
       eClass: InformationLink.eClass,
       linkText: "text",
-      source: newInfo1.getRef(),
-      target: newInfo2.getRef(),
+      source: new Ref('', NewInformation.eClass),
+      target: new Ref('', NewInformation.eClass),
       type: InformationLinkType.SUPPLEMENT
     }
     expect(infoLink_new_new.toJson()).toEqual(infoLink_new_new_Json);
@@ -100,8 +101,8 @@ describe('Msg-Info (models)', () => {
     let infoLink_new_pre_Json: InformationLinkJson = {
       eClass: InformationLink.eClass,
       linkText: "text",
-      source: newInfo1.getRef(),
-      target: preknowledge1.getRef(),
+      source: new Ref('', NewInformation.eClass),
+      target: new Ref('', Preknowledge.eClass),
       type: InformationLinkType.STRONG_ATTACK
     }
     expect(infoLink_new_pre.toJson()).toEqual(infoLink_new_pre_Json);
@@ -110,8 +111,8 @@ describe('Msg-Info (models)', () => {
     let infoLink_pre_new_Json: InformationLinkJson = {
       eClass: InformationLink.eClass,
       linkText: "",
-      source: preknowledge1.getRef(),
-      target: newInfo1.getRef(),
+      source: new Ref('', Preknowledge.eClass),
+      target: new Ref('', NewInformation.eClass),
       type: InformationLinkType.SUPPORT
     }
     expect(infoLink_pre_new.toJson()).toEqual(infoLink_pre_new_Json);
@@ -120,8 +121,8 @@ describe('Msg-Info (models)', () => {
     let infoLink_pre_pre_Json: InformationLinkJson = {
       eClass: InformationLink.eClass,
       linkText: "",
-      source: preknowledge1.getRef(),
-      target: preknowledge2.getRef(),
+      source: new Ref('', Preknowledge.eClass),
+      target: new Ref('', Preknowledge.eClass),
       type: InformationLinkType.STRONG_SUPPORT
     }
     expect(infoLink_pre_pre.toJson()).toEqual(infoLink_pre_pre_Json);
