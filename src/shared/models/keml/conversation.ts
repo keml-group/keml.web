@@ -8,7 +8,7 @@ import {Referencable} from "../parser/referenceable";
 
 export class Conversation extends Referencable {
   static readonly ownPath: string = '/'
-  readonly eClass ='http://www.unikoblenz.de/keml#//Conversation';
+  static readonly eClass ='http://www.unikoblenz.de/keml#//Conversation';
   title: string;
   static readonly authorPrefix = 'author';
   author: Author;
@@ -21,8 +21,8 @@ export class Conversation extends Referencable {
     conversationPartners: ConversationPartner[] = [],
     parser?: Parser,
   ) {
-    super();
-    this.ref = new Ref(Conversation.ownPath, this.eClass)
+    let ref = new Ref(Conversation.ownPath, Conversation.eClass)
+    super(ref);
     if (parser) {
       let convJson: ConversationJson = parser?.getJsonFromTree(this.ref.$ref)
       parser.put(this)
@@ -45,7 +45,7 @@ export class Conversation extends Referencable {
     let cps = this.conversationPartners.map(x => x.toJson())
 
     return {
-      eClass: this.eClass,
+      eClass: Conversation.eClass,
       title: this.title,
       conversationPartners: cps,
       author: this.author.toJson(),
@@ -55,16 +55,5 @@ export class Conversation extends Referencable {
   static fromJSON (conv: ConversationJson): Conversation {
     let context = new Parser(conv);
     return new Conversation(undefined, undefined, undefined, context)
-
-    /*
-    let currentPrefix = '/';
-    let convPPrefix = 'conversationPartners';
-    let convPartners: ConversationPartner[] = conv.conversationPartners.map(cp => ConversationPartner.fromJSON(cp, context))
-    //context.putList(currentPrefix, convPPrefix, convPartners);
-
-    let author: Author = Author.fromJson(conv.author, context);
-
-    return new Conversation(conv.title, author, convPartners)
-     */
   }
 }

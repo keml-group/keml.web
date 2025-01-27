@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export abstract class Referencable {
 
-  protected ref?: Ref;
+  protected ref: Ref;
   gId: string;
 
   /* todo two open points:
@@ -14,20 +14,17 @@ export abstract class Referencable {
   singleChildren: Map<string, Referencable> = new Map();
   listChildren: Map<string, Referencable[]> = new Map();
 
-  protected constructor(ref?: Ref) {
+  protected constructor(ref: Ref) {
     this.ref = ref;
     this.gId = uuidv4();
   }
 
   public getRef(): Ref {
-    if (!this.ref) {
-      throw 'No ref found for '+this+', did you set it?'
-    }
     return this.ref;
   }
 
   private setRef(ownPos: string) {
-    this.ref = new Ref(ownPos, this.ref?.eClass)
+    this.ref = new Ref(ownPos, this.ref.eClass)
   }
 
   prepare(ownPos: string) {

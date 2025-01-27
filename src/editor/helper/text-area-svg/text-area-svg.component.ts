@@ -82,7 +82,7 @@ export class TextAreaSvgComponent implements OnChanges {
   }
 
   computeBB(words: string): BoundingBox {
-    return new BoundingBox(0,0, words.length*7.6, 20 )
+    return {x: 0, y:0, w: words.length*7.6, h: 20 }
   }
 
 }
