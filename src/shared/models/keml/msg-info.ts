@@ -20,7 +20,6 @@ import {GeneralHelper} from "../../utility/general-helper";
 import {PositionHelper} from "../graphical/position-helper";
 
 export abstract class Message extends Referencable {
-  protected readonly eClass: string = '';
   static eClass = 'http://www.unikoblenz.de/keml#//Message'
   counterPart: ConversationPartner;
   timing: number = 0;
@@ -28,11 +27,11 @@ export abstract class Message extends Referencable {
   originalContent?: string;
 
   protected constructor(
+    ref: Ref,
     counterPart: ConversationPartner,
     timing: number,
     content: string,
-    originalContent?: string,
-    ref?: Ref, parser?: Parser, jsonOpt?: MessageJson,
+    originalContent?: string, parser?: Parser, jsonOpt?: MessageJson,
   ) {
     super(ref);
     if(parser) {
@@ -47,8 +46,6 @@ export abstract class Message extends Referencable {
       this.timing = timing;
       this.content = content;
       this.originalContent = originalContent;
-
-      this.ref = new Ref('', this.eClass);
     }
   }
 
@@ -57,14 +54,14 @@ export abstract class Message extends Referencable {
   }
 
   isSend(): boolean {
-    return Message.isSend(this.eClass);
+    return Message.isSend(this.ref.eClass!);
   }
 
   toJson(): MessageJson {
     return {
       content: this.content,
       counterPart: this.counterPart.getRef(),
-      eClass: this.eClass,
+      eClass: this.ref.eClass!,
       originalContent: this.originalContent,
       timing: this.timing
     }
@@ -82,7 +79,6 @@ export abstract class Message extends Referencable {
 
 export class SendMessage extends Message {
   static override readonly eClass: string = 'http://www.unikoblenz.de/keml#//SendMessage'
-  override readonly eClass: string = "http://www.unikoblenz.de/keml#//SendMessage";
   uses: Information[];
 
   constructor(
@@ -93,17 +89,8 @@ export class SendMessage extends Message {
     uses: Information[] = [],
     ref?: Ref, parser?: Parser, jsonOpt?: SendMessageJson,
   ) {
-    let resRef = ref? ref : new Ref('')
-    resRef.eClass = SendMessage.eClass
-    super(
-      counterPart,
-      timing,
-      content,
-      originalContent,
-      resRef,
-      parser,
-      jsonOpt
-    );
+    let resRef = Ref.createRef(SendMessage.eClass, ref)
+    super(resRef, counterPart, timing, content, originalContent, parser, jsonOpt);
     if (parser) {
       //parser.put(this) // already done in super
       let json: SendMessageJson = jsonOpt ? jsonOpt : parser?.getJsonFromTree(ref!.$ref);
@@ -130,7 +117,6 @@ export class SendMessage extends Message {
 }
 
 export class ReceiveMessage extends Message {
-  override readonly eClass: string = "http://www.unikoblenz.de/keml#//ReceiveMessage";
   static override readonly eClass: string = 'http://www.unikoblenz.de/keml#//ReceiveMessage'
   static readonly generatesPrefix: string = 'generates';
   generates: NewInformation[] = [];
@@ -147,13 +133,8 @@ export class ReceiveMessage extends Message {
     isInterrupted: boolean = false,
     ref?: Ref, parser?: Parser, jsonOpt?: ReceiveMessageJson,
   ) {
-    super(
-      counterPart,
-      timing,
-      content? content: "New receive content",
-      originalContent,
-      ref, parser, jsonOpt
-    );
+    let refC = Ref.createRef(ReceiveMessage.eClass, ref)
+    super(refC, counterPart, timing, content ? content : "New receive content", originalContent, parser, jsonOpt);
     if (parser) {
       let json: ReceiveMessageJson = jsonOpt ? jsonOpt : parser.getJsonFromTree(ref!.$ref)
       let generatesRefs = Parser.createRefList(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates?.map(g => g.eClass? g.eClass: NewInformation.eClass))
@@ -168,7 +149,6 @@ export class ReceiveMessage extends Message {
       })
       this.repeats = repeats;
       this.isInterrupted = isInterrupted;
-//    this.ref = new Ref('', this.eClass)
     }
     this.listChildren.set(ReceiveMessage.generatesPrefix, this.generates)
   }
@@ -196,7 +176,6 @@ export class ReceiveMessage extends Message {
 
 export abstract class Information extends Referencable {
 
-  eClass = '';
   message: string;
   isInstruction: boolean;
   position: BoundingBox;
@@ -213,11 +192,11 @@ export abstract class Information extends Referencable {
   repeatedBy: ReceiveMessage[];
 
 
-  protected constructor(message: string, isInstruction: boolean = false, position?: BoundingBox,
-              causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
-              initialTrust: number = 0.5, currentTrust: number = 0.5,
-              feltTrustImmediately?: number, feltTrustAfterwards?: number,
-              ref?: Ref, parser?: Parser, jsonOpt?: InformationJson
+  protected constructor(ref: Ref, message: string, isInstruction: boolean = false,
+              position?: BoundingBox, causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [],
+              repeatedBy: ReceiveMessage[] = [], initialTrust: number = 0.5,
+              currentTrust: number = 0.5, feltTrustImmediately?: number,
+              feltTrustAfterwards?: number, parser?: Parser, jsonOpt?: InformationJson
   ) {
     super(ref);
     if (parser) {
@@ -258,7 +237,7 @@ export abstract class Information extends Referencable {
     return {
       causes: this.causes.map(c => c.toJson()),
       currentTrust: this.currentTrust,
-      eClass: this.eClass,
+      eClass: this.ref.eClass!,
       initialTrust: this.initialTrust,
       feltTrustImmediately: this.feltTrustImmediately,
       feltTrustAfterwards: this.feltTrustAfterwards,
@@ -279,7 +258,6 @@ export abstract class Information extends Referencable {
       GeneralHelper.removeFromList(this, send.uses)
     })
     this.targetedBy.forEach((link: InformationLink) => {
-      console.log('Destroying link '+link.getRef())
       link.destruct()
     })
     this.targetedBy.splice(0, this.targetedBy.length)
@@ -297,11 +275,8 @@ export class NewInformation extends Information {
               initialTrust: number = 0.5, currentTrust: number = 0.5, feltTrustImmediately?: number , feltTrustAfterwards?: number,
               ref?: Ref, parser?: Parser, jsonOpt?: NewInformationJson
   ) {
-    super(message, isInstruction, position,
-      causes, targetedBy, isUsedOn, repeatedBy,
-      initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards,
-      ref, parser, jsonOpt);
-    this.eClass = NewInformation.eClass;
+    let refC = Ref.createRef(NewInformation.eClass, ref)
+    super(refC, message, isInstruction, position, causes, targetedBy, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, parser, jsonOpt);
     if(parser) {
       let json: NewInformationJson = jsonOpt ? jsonOpt : parser.getJsonFromTree(ref!.$ref)
       //todo this works against a bug in the used json lib: it computes the necessary source if it is not present
@@ -347,8 +322,8 @@ export class Preknowledge extends Information {
               initialTrust: number = 0.5, currentTrust: number = 0.5,
               feltTrustImmediately?: number, feltTrustAfterwards?: number,
               ref?: Ref, parser?: Parser, jsonOpt?: PreknowledgeJson) {
-    super(message, isInstruction, position, causes, targetedBy, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, ref, parser, jsonOpt);
-    this.eClass = Preknowledge.eClass;
+    let refC = Ref.createRef(Preknowledge.eClass, ref)
+    super(refC, message, isInstruction, position, causes, targetedBy, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, parser, jsonOpt);
   }
 
   override duplicate(): Preknowledge {
@@ -371,7 +346,8 @@ export class InformationLink extends Referencable {
   constructor(source: Information, target: Information, type: InformationLinkType, linkText?: string,
               ref?: Ref, parser?: Parser, jsonOpt?: InformationLinkJson
   ) {
-    super(ref);
+    let refC = Ref.createRef(InformationLink.eClass, ref)
+    super(refC);
     if(parser) {
       parser.put(this)
       let json: InformationLinkJson = jsonOpt ? jsonOpt : parser.getJsonFromTree(ref!.$ref)

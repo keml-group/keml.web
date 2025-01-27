@@ -14,10 +14,10 @@ export class Author extends LifeLine{
 
   constructor(name = 'Author', xPosition: number = 0, preknowledge: Preknowledge[] = [], messages: Message[] = [],
               ref?: Ref, parser?: Parser) {
+    let refC = Ref.createRef(Author.eClass, ref)
     if (parser) {
       let authorJson: AuthorJson = parser?.getJsonFromTree(ref!.$ref)
-      super(authorJson.name, authorJson.xPosition)
-      this.ref = ref!
+      super(authorJson.name, authorJson.xPosition, refC)
       parser.put(this)
       //compute and use refs for all tree children:
       let preknowledgeRefs = Parser.createRefList(ref!.$ref, Author.preknowledgePrefix, authorJson.preknowledge? authorJson.preknowledge.map(_ => Preknowledge.eClass): [])
@@ -25,10 +25,9 @@ export class Author extends LifeLine{
       let messageRefs = Parser.createRefList(ref!.$ref, Author.messagesPrefix, authorJson.messages.map(r => r.eClass))
       this.messages = messageRefs.map(r => parser.getOrCreate<Message>(r));
     } else {
-      super(name, xPosition);
+      super(name, xPosition, refC);
       this.preknowledge = preknowledge;
       this.messages = messages;
-      //this.ref = new Ref('', Author.eClass)
     }
     this.listChildren.set(Author.preknowledgePrefix, this.preknowledge)
     this.listChildren.set(Author.messagesPrefix, this.messages)

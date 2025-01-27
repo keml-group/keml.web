@@ -10,6 +10,10 @@ export class Ref {
     this.eClass = eClass;
   }
 
+  static createRef(eClass: string, ref?: Ref): Ref {
+    return ref? ref: new Ref('', eClass);
+  }
+
   static getIndexFromString(ref: string): number {
     let substrings = ref.split('.');
     return parseInt(substrings[substrings.length-1]);
