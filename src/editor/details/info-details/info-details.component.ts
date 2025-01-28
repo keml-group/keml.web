@@ -1,5 +1,5 @@
 import {Component, Input, OnInit,} from '@angular/core';
-import {Information, NewInformation} from "../../../shared/models/keml/msg-info";
+import {Information, NewInformation, ReceiveMessage} from "../../../shared/models/keml/msg-info";
 import {MatDialogRef} from "@angular/material/dialog";
 import {ModelIOService} from "../../../shared/services/model-io.service";
 import {DetailsService} from "../service/details.service";
@@ -40,6 +40,12 @@ export class InfoDetailsComponent implements OnInit {
     if (newInfo) {
       this.dialogRef.close();
       this.detailsService.openInfoDetails(newInfo)
+    }
+  }
+
+  changeSource(receive: ReceiveMessage) {
+    if (this.newInfo){
+      this.modelIOService.changeInfoSource(this.newInfo, receive)
     }
   }
 
