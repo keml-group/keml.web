@@ -64,6 +64,10 @@ export class EditorComponent {
     }
   }
 
+  openSimulation() {
+    this.detailsService.openSimulationDialog(this.conversation)
+  }
+
   addConversationPartner() {
     const cp = this.modelIOService.addNewConversationPartner();
     this.detailsService.openConversationPartnerDetails(cp)

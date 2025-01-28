@@ -8,6 +8,7 @@ import {
 import {ConversationPartner} from "../../../shared/models/keml/conversation-partner";
 import {ConversationPartnerDetailsComponent} from "../cp-details/cp-details.component";
 import {InfoDetailsComponent} from "../info-details/info-details.component";
+import {Conversation} from "../../../shared/models/keml/conversation";
 
 @Injectable({
   providedIn: 'root'
@@ -57,4 +58,8 @@ export class DetailsService {
     dialogRef.componentInstance.infoLink = link;
   }
 
+  openSimulationDialog(conversation: Conversation) {
+    // const dialogRef = this.dialog.open()
+    console.log(conversation.title)
+  }
 }
