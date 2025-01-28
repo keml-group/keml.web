@@ -48,7 +48,10 @@
           </svg>
         </button>
         <button class="tool-button" title="Add new information" (click)="addNewInfo()" [disabled]="modelIOService.disableAddNewNewInfo()">
-          !
+          <svg width="32" height="24">
+            <rect width="30" height="12" x="1" y="6" stroke="orange" stroke-width="0.8" fill="none"></rect>
+            <line x1="7" x2="7" y1="6" y2="18" stroke="orange" stroke-width="0.8"></line>
+          </svg>
         </button>
         <button class="tool-button" title="Add information link" (click)="detailsService.openLinkCreationDialog()" [disabled]="modelIOService.disableLinkCreation()">
           Link
