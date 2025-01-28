@@ -9,6 +9,7 @@ import {ConversationPartner} from "../../../shared/models/keml/conversation-part
 import {ConversationPartnerDetailsComponent} from "../cp-details/cp-details.component";
 import {InfoDetailsComponent} from "../info-details/info-details.component";
 import {Conversation} from "../../../shared/models/keml/conversation";
+import {SimulatorComponent} from "../../../simulator/simulator/simulator.component";
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +60,14 @@ export class DetailsService {
   }
 
   openSimulationDialog(conversation: Conversation) {
-    // const dialogRef = this.dialog.open()
-    console.log(conversation.title)
+    const dialogRef = this.dialog.open(
+      SimulatorComponent,
+      {
+        width: '100vw',
+        maxWidth: '100vw', //otherwise it is 80, see https://stackoverflow.com/questions/46034619/angular-material-2-how-to-overwrite-dialog-max-width-to-100vw
+        height: '100vh'
+      }
+    )
+    dialogRef.componentInstance.conv = conversation
   }
 }
