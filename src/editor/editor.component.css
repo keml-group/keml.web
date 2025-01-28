@@ -61,6 +61,10 @@
   .svg-dis{
     stroke: #666666;
   }
+  .mat-icon{
+    color: #666666;
+    background: transparent;
+  }
 }
 
 .filter-to-orange{
