@@ -39,7 +39,7 @@
   </div>
 
   <label class="form-label" *ngIf="newInfo">Source</label>
-  <msg-choice *ngIf="newInfo" [(receiveMsg)]="newInfo.source"></msg-choice>
+  <msg-choice *ngIf="newInfo" [receiveMsg]="newInfo.source" (receiveMsgChange)="changeSource($event)"></msg-choice>
 
   <label class="form-label" >Information Links</label>
   <div class="row">

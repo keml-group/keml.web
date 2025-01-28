@@ -378,6 +378,11 @@ export class ModelIOService {
     }
   }
 
+  changeInfoSource(info: NewInformation, newSrc: ReceiveMessage) {
+    GeneralHelper.removeFromList(info, info.source.generates)
+    info.source = newSrc
+    newSrc.generates.push(info)
+  }
   //***************** information links ********************
 
   disableLinkCreation() {

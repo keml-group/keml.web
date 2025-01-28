@@ -1,8 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ModelIOService } from './model-io.service';
-import {ConversationJson, ConversationPartnerJson} from "../models/keml/json/sequence-diagram-models";
+import {ConversationPartnerJson} from "../models/keml/json/sequence-diagram-models";
 import {Conversation} from "../models/keml/conversation";
+import {ConversationPartner} from "../models/keml/conversation-partner";
+import {NewInformation, ReceiveMessage} from "../models/keml/msg-info";
 
 describe('ModelIOService', () => {
   let service: ModelIOService;
@@ -99,4 +101,21 @@ describe('ModelIOService', () => {
     expect(conv.conversationPartners?.at(1)?.name).toEqual("Other");
     expect(conv.author?.messages?.at(0)?.counterPart).toBe(conv.conversationPartners?.at(0))
   });
+
+  it('should change a new info\'s source', () => {
+    let cp = new ConversationPartner()
+    let msg1 = new ReceiveMessage(cp, 0, "rec1")
+    let msg2 = new ReceiveMessage(cp, 1, "rec2")
+    let newInfo = new NewInformation(msg2, 'newInfo', false)
+    msg2.generates.push(newInfo)
+    expect(msg1.generates.length).toEqual(0)
+    expect(msg2.generates.length).toEqual(1)
+    expect(newInfo.source).toEqual(msg2)
+
+    // call to test:
+    service.changeInfoSource(newInfo, msg1)
+    expect(msg1.generates.length).toEqual(1)
+    expect(msg2.generates.length).toEqual(0)
+    expect(newInfo.source).toEqual(msg1)
+  })
 });
