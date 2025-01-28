@@ -29,20 +29,25 @@
 }
 
 .edit-tools{
-  width: 5%;
+  width: 5rem;
+  height: 5rem;
   flex-direction: column;
   display: block;
 }
 
 .tool-button{
-  margin: 1rem;
   text-align: center;
+  align-items: center;
   color: orange;
+  margin: 1rem;
   height: 3rem;
   width: 3rem;
   background: white;
   border: 2px solid orange;
   border-radius: 4px;
+  .svg-dis{
+    stroke: orange;
+  }
 }
 .tool-button:hover {
   box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
@@ -53,6 +58,13 @@
   border: 1px solid #999999;
   background-color: #cccccc;
   color: #666666;
+  .svg-dis{
+    stroke: #666666;
+  }
+  .mat-icon{
+    color: #666666;
+    background: transparent;
+  }
 }
 
 .filter-to-orange{
