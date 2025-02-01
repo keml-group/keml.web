@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Conversation} from "../../shared/models/keml/conversation";
+import {Conversation} from "../shared/models/keml/conversation";
 import {MatIcon} from "@angular/material/icon";
 import {MatDialogRef} from "@angular/material/dialog";
 

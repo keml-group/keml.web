@@ -9,7 +9,7 @@ import {ConversationPartner} from "../../../shared/models/keml/conversation-part
 import {ConversationPartnerDetailsComponent} from "../cp-details/cp-details.component";
 import {InfoDetailsComponent} from "../info-details/info-details.component";
 import {Conversation} from "../../../shared/models/keml/conversation";
-import {SimulatorComponent} from "../../../simulator/simulator/simulator.component";
+import {SimulatorComponent} from "../../../simulator/simulator.component";
 
 @Injectable({
   providedIn: 'root'
