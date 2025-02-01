@@ -11,9 +11,9 @@ describe('ArrowSvgComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ArrowSvgComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-    })
+    imports: [ArrowSvgComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+})
     .compileComponents();
 
     let start: BoundingBox = {x: 50, y: -20, w: 200, h: 80}

@@ -11,9 +11,9 @@ describe('MsgInnerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MsgInnerComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-    })
+    imports: [MsgInnerComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(MsgInnerComponent);

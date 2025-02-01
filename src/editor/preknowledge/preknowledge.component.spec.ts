@@ -10,9 +10,9 @@ describe('PreknowledgeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PreknowledgeComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-    })
+    imports: [PreknowledgeComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(PreknowledgeComponent);

@@ -13,13 +13,12 @@ describe('MsgDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MsgDetailsComponent],
-      providers: [
-        {provide: MatDialogRef, useValue: {}},
-      ],
-      imports: [MatIcon],
-      schemas: [NO_ERRORS_SCHEMA],
-    })
+    providers: [
+        { provide: MatDialogRef, useValue: {} },
+    ],
+    imports: [MatIcon, MsgDetailsComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(MsgDetailsComponent);

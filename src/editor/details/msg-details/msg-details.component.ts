@@ -4,11 +4,19 @@ import {Information, Message, ReceiveMessage, SendMessage} from "../../../shared
 import {ConversationPartner} from "../../../shared/models/keml/conversation-partner";
 import {ModelIOService} from "../../../shared/services/model-io.service";
 import {DetailsService} from "../service/details.service";
+import { MatTooltip } from '@angular/material/tooltip';
+import { InfoChoiceComponent } from '../../helper/info-choice/info-choice.component';
+import { InfoInnerComponent } from '../../helper/info-inner/info-inner.component';
+import { MatIcon } from '@angular/material/icon';
+import { NgFor, NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'msg-details',
-  templateUrl: './msg-details.component.html',
-  styleUrl: './msg-details.component.css'
+    selector: 'msg-details',
+    templateUrl: './msg-details.component.html',
+    styleUrl: './msg-details.component.css',
+    standalone: true,
+    imports: [FormsModule, NgFor, MatIcon, NgIf, InfoInnerComponent, InfoChoiceComponent, MatTooltip]
 })
 export class MsgDetailsComponent implements OnInit {
   @Input() msg!: Message;

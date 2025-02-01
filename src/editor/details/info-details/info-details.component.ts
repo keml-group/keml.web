@@ -3,11 +3,22 @@ import {Information, NewInformation, ReceiveMessage} from "../../../shared/model
 import {MatDialogRef} from "@angular/material/dialog";
 import {ModelIOService} from "../../../shared/services/model-io.service";
 import {DetailsService} from "../service/details.service";
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MsgOverviewComponent } from '../../helper/msg-overview/msg-overview.component';
+import { ArrowSvgComponent } from '../../helper/arrow-svg/arrow-svg.component';
+import { InfoInnerComponent } from '../../helper/info-inner/info-inner.component';
+import { MsgChoiceComponent } from '../../helper/msg-choice/msg-choice.component';
+import { NgIf, NgFor } from '@angular/common';
+import { IsInstrSvgComponent } from '../../helper/is-instr-svg/is-instr-svg.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'info-details',
-  templateUrl: './info-details.component.html',
-  styleUrl: './info-details.component.css'
+    selector: 'info-details',
+    templateUrl: './info-details.component.html',
+    styleUrl: './info-details.component.css',
+    standalone: true,
+    imports: [FormsModule, IsInstrSvgComponent, NgIf, MsgChoiceComponent, NgFor, InfoInnerComponent, ArrowSvgComponent, MsgOverviewComponent, MatIcon, MatTooltip]
 })
 export class InfoDetailsComponent implements OnInit {
   @Input() info!: Information;

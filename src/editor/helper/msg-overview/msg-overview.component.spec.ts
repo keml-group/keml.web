@@ -11,9 +11,9 @@ describe('MsgOverviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MsgOverviewComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-    })
+    imports: [MsgOverviewComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(MsgOverviewComponent);

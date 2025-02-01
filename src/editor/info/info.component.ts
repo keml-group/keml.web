@@ -2,11 +2,15 @@ import {AfterViewInit, Component, EventEmitter, Input, Output} from '@angular/co
 import {Information} from "../../shared/models/keml/msg-info";
 import {NewInformation} from "../../shared/models/keml/msg-info";
 import {SVGAccessService} from "../../shared/services/svg-access.service";
+import { TextAreaSvgComponent } from '../helper/text-area-svg/text-area-svg.component';
+import { IsInstrSvgComponent } from '../helper/is-instr-svg/is-instr-svg.component';
 
 @Component({
-  selector: '[infoG]',
-  templateUrl: './info.component.svg',
-  styleUrl: './info.component.css'
+    selector: '[infoG]',
+    templateUrl: './info.component.svg',
+    styleUrl: './info.component.css',
+    standalone: true,
+    imports: [IsInstrSvgComponent, TextAreaSvgComponent]
 })
 export class InfoComponent implements AfterViewInit {
   @Input() info!: Information;

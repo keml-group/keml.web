@@ -3,11 +3,15 @@ import {MatDialogRef} from "@angular/material/dialog";
 import {ConversationPartner} from "../../../shared/models/keml/conversation-partner";
 import {ModelIOService} from "../../../shared/services/model-io.service";
 import {DetailsService} from "../service/details.service";
+import { MatIcon } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'cp-details',
-  templateUrl: './cp-details.component.html',
-  styleUrl: './cp-details.component.css'
+    selector: 'cp-details',
+    templateUrl: './cp-details.component.html',
+    styleUrl: './cp-details.component.css',
+    standalone: true,
+    imports: [FormsModule, MatIcon]
 })
 export class ConversationPartnerDetailsComponent {
   @Input() cp!: ConversationPartner;

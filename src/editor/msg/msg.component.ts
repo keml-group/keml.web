@@ -5,11 +5,17 @@ import {Information} from "../../shared/models/keml/msg-info";
 import {LayoutHelper} from "../../shared/utility/layout-helper";
 import {ArrowType} from "../../shared/models/graphical/arrow-heads";
 import {SVGAccessService} from "../../shared/services/svg-access.service";
+import { ArrowBetweenElemsComponent } from '../helper/arrow-between-elems/arrow-between-elems.component';
+import { NewInfoComponent } from '../new-info/new-info.component';
+import { NgIf, NgFor } from '@angular/common';
+import { MsgInnerComponent } from '../helper/msg-inner/msg-inner.component';
 
 @Component({
-  selector: '[msgG]',
-  templateUrl: './msg.component.svg',
-  styleUrl: './msg.component.css'
+    selector: '[msgG]',
+    templateUrl: './msg.component.svg',
+    styleUrl: './msg.component.css',
+    standalone: true,
+    imports: [MsgInnerComponent, NgIf, NgFor, NewInfoComponent, ArrowBetweenElemsComponent]
 })
 export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() msgTiming!: number; //extra input to be used to detect changes

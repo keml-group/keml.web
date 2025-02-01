@@ -8,8 +8,8 @@ describe('DatabaseSvgComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DatabaseSvgComponent]
-    })
+    imports: [DatabaseSvgComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(DatabaseSvgComponent);

@@ -10,9 +10,9 @@ describe('AuthorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AuthorComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-    })
+    imports: [AuthorComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(AuthorComponent);

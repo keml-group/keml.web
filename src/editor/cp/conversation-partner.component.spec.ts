@@ -10,9 +10,9 @@ describe('ConversationPartnerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ConversationPartnerComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-    })
+    imports: [ConversationPartnerComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(ConversationPartnerComponent);
