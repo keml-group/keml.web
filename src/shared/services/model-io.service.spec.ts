@@ -173,6 +173,7 @@ describe('ModelIOService', () => {
       expect(msg.content).toEqual(msgs[i].content)
       expect(msg.originalContent).toEqual(msgs[i].originalContent)
       expect(msg.counterPart.getRef()).toEqual(msgs[i].counterPart.getRef())
+      expect(msg.timing).toEqual(msgs[i].timing)
       expect(msg.getRef()).toEqual(msgs[i].getRef())
     })
 

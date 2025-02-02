@@ -38,6 +38,12 @@ export class LayoutHelper {
     } else {return LayoutHelper.distanceToFirstCP;}
   }
 
+  static timeMessages(msgs: Message[]) {
+    msgs.forEach((msg, i) => {
+      msg.timing = i
+    })
+  }
+
   static  computeMessageY(timing: number): number {
     return LayoutHelper.distanceToFirstMessage+LayoutHelper.distanceBetweenMessages*timing;
   }

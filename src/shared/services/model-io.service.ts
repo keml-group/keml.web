@@ -39,6 +39,7 @@ export class ModelIOService {
 
     let conv = Conversation.fromJSON(convJson);
     LayoutHelper.positionConversationPartners(conv.conversationPartners)
+    LayoutHelper.timeMessages(conv.author.messages)
     LayoutHelper.positionInfos(conv.author.preknowledge, conv.author.messages);
 
     this.conversation = conv;
