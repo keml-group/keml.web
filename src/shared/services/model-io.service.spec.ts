@@ -15,6 +15,7 @@ import {
 import {Author} from "../models/keml/author";
 import {InformationLinkType} from "../models/keml/json/knowledge-models";
 import {Ref} from "../models/parser/ref";
+import {Referencable} from "../models/parser/referenceable";
 
 describe('ModelIOService', () => {
   let service: ModelIOService;
@@ -124,9 +125,13 @@ describe('ModelIOService', () => {
       new Ref('//@author/@messages.1', 'http://www.unikoblenz.de/keml#//ReceiveMessage')
   )
     let msgs: Message[] = [msg0, msg1]
-    let newInfo0 = new NewInformation(msg1, "ni0", true)
-    let newInfo1 = new NewInformation(msg1, "ni1")
-
+    let newInfo0 = new NewInformation(msg1, "ni0", true,
+      undefined, undefined, undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
+      new Ref('//@author/@messages.1/@generates.0', 'http://www.unikoblenz.de/keml#//NewInformation'))
+    let newInfo1 = new NewInformation(msg1, "ni1",
+      false,undefined, undefined, undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
+      new Ref('//@author/@messages.1/@generates.1', 'http://www.unikoblenz.de/keml#//NewInformation'))
+    
 
     let infoLink0 = new InformationLink(newInfo0, pre0, InformationLinkType.SUPPLEMENT) // necessary to test JsonFixer.addMissingSupplementType
     let infoLink1 = new InformationLink(pre1, newInfo1, InformationLinkType.STRONG_ATTACK)
@@ -150,6 +155,13 @@ describe('ModelIOService', () => {
     let callResult = service.loadKEML(str)
     expect(callResult.title).toEqual(conv.title)
 
+    function testListRefs<T extends Referencable>(l1: T[], l2: T[]) {
+      expect(l1.length).toEqual(l2.length)
+      l1.forEach((l,i) => {
+        expect(l.getRef()).toEqual(l2[i].getRef())
+      })
+    }
+
     // ********* conversationPartners **************
     callResult.conversationPartners.forEach((cp, index) => {
       expect(cp.name).toEqual(cps[index].name)
@@ -162,10 +174,7 @@ describe('ModelIOService', () => {
     callResult.author.preknowledge.forEach((pre, i) => {
       expect(pre.message).toEqual(preknowledge[i].message)
       expect(pre.getRef()).toEqual(preknowledge[i].getRef())
-      expect(pre.isUsedOn.length).toEqual(preknowledge[i].isUsedOn.length)
-      pre.isUsedOn.forEach((usage, j) => {
-        expect(usage.getRef()).toEqual(preknowledge[i].isUsedOn[j].getRef())
-      })
+      testListRefs(pre.isUsedOn, preknowledge[i].isUsedOn)
     })
 
     // ********* messages **************
@@ -176,7 +185,13 @@ describe('ModelIOService', () => {
       expect(msg.timing).toEqual(msgs[i].timing)
       expect(msg.getRef()).toEqual(msgs[i].getRef())
     })
-
+    testListRefs(
+      (callResult.author.messages[0] as SendMessage).uses,
+      msg0.uses
+    )
+    let resultRec = (callResult.author.messages[1] as ReceiveMessage)
+    testListRefs(resultRec.generates, msg1.generates)
+    testListRefs(resultRec.repeats, msg1.repeats)
   })
 
   it('should change a new info\'s source', () => {
