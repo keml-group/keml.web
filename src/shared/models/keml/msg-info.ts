@@ -14,7 +14,6 @@ import {
 import {Ref} from "../parser/ref";
 import {Parser} from "../parser/parser";
 import {Referencable} from "../parser/referenceable";
-import {JsonFixer} from "./parser/json-fixer";
 import {BoundingBox} from "../graphical/bounding-box";
 import {GeneralHelper} from "../../utility/general-helper";
 import {PositionHelper} from "../graphical/position-helper";
@@ -351,8 +350,8 @@ export class InformationLink extends Referencable {
     if(parser) {
       parser.put(this)
       let json: InformationLinkJson = jsonOpt ? jsonOpt : parser.getJsonFromTree(ref!.$ref)
-      //todo this works against a bug in the used json lib: it computes the necessary source if it is not present
-      let src = json.source? json.source : new Ref(Ref.getParentAddress(ref!.$ref), JsonFixer.determineParentInfoClass(ref!.$ref))
+      //todo there is a problem with the incoming json: it does not have the link soruces. However, we solve this via 'prepareJsonInfoLinkSources' called in the loadKEML() method on modelIoService
+      let src = json.source!!
       this.source = parser.getOrCreate(src)
       this.target = parser.getOrCreate(json.target);
       this.type = json.type;
