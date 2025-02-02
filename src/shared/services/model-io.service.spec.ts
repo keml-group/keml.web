@@ -126,7 +126,7 @@ describe('ModelIOService', () => {
     let msgs: Message[] = [msg0, msg1]
     let newInfo0 = new NewInformation(msg1, "ni0", true)
     let newInfo1 = new NewInformation(msg1, "ni1")
-    
+
 
     let infoLink0 = new InformationLink(newInfo0, pre0, InformationLinkType.SUPPLEMENT) // necessary to test JsonFixer.addMissingSupplementType
     let infoLink1 = new InformationLink(pre1, newInfo1, InformationLinkType.STRONG_ATTACK)
@@ -263,7 +263,6 @@ describe('ModelIOService', () => {
     let msg1 = new ReceiveMessage(cp, 0, "rec1")
     let msg2 = new ReceiveMessage(cp, 1, "rec2")
     let newInfo = new NewInformation(msg2, 'newInfo', false)
-    msg2.generates.push(newInfo)
     expect(msg1.generates.length).toEqual(0)
     expect(msg2.generates.length).toEqual(1)
     expect(newInfo.source).toEqual(msg2)

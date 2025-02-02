@@ -144,7 +144,7 @@ export class ReceiveMessage extends Message {
     } else {
       this.generates = generates ? generates : [];
       generates?.forEach(info => {
-        info.setSource(this)
+        info.source = this
       })
       this.repeats = repeats;
       this.isInterrupted = isInterrupted;
@@ -266,7 +266,7 @@ export abstract class Information extends Referencable {
 
 export class NewInformation extends Information {
   static eClass: string = 'http://www.unikoblenz.de/keml#//NewInformation'
-  source: ReceiveMessage;
+  private _source!: ReceiveMessage;
 
   constructor(source: ReceiveMessage,
               message: string, isInstruction: boolean = false, position?: BoundingBox,
@@ -280,34 +280,38 @@ export class NewInformation extends Information {
       let json: NewInformationJson = jsonOpt ? jsonOpt : parser.getJsonFromTree(ref!.$ref)
       //todo this works against a bug in the used json lib: it computes the necessary source if it is not present
       let src = json.source? json.source : new Ref(Ref.getParentAddress(ref!.$ref), ReceiveMessage.eClass)
-      this.source = parser.getOrCreate(src)
+      this._source = parser.getOrCreate(src)
     } else {
-      this.setSource(source)
+      this.source = source
     }
   }
 
   override duplicate(): NewInformation {
-    return new NewInformation(this.source, 'Copy of ' + this.message, this.isInstruction, this.position, [], [], [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
+    return new NewInformation(this._source, 'Copy of ' + this.message, this.isInstruction, this.position, [], [], [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
   }
 
   // does both directions (source and generates)
-  setSource(rec: ReceiveMessage) {
-    if (this.source != rec) {
-      GeneralHelper.removeFromList(this, this.source.generates)
-      this.source = rec
+  set source(rec: ReceiveMessage) {
+    if (this._source != rec) {
+      GeneralHelper.removeFromList(this, this._source?.generates)
+      this._source = rec
       if(rec.generates.indexOf(this ) == -1)
         rec.generates.push(this)
     }
   }
 
+  get source(): ReceiveMessage {
+    return this._source
+  }
+
   override toJson(): NewInformationJson {
     let res = (<NewInformationJson>super.toJson());
-    res.source = this.source.getRef()
+    res.source = this._source.getRef()
     return res;
   }
 
   override destruct() {
-    GeneralHelper.removeFromList(this, this.source.generates)
+    GeneralHelper.removeFromList(this, this._source.generates)
     super.destruct();
   }
 }
