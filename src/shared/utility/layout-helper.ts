@@ -87,7 +87,12 @@ export class LayoutHelper {
 
     pre.forEach(p => {
       if (p.position.w < 7 ) {
-        const timing = Math.min(...p.isUsedOn.map(send => send.timing));
+        let timing;
+        if (p.isUsedOn?.length >0) {
+          timing = Math.min(...p.isUsedOn.map(send => send.timing));
+        } else {
+          timing = 0
+        }
         p.position = this.bbForPreknowledge(LayoutHelper.computeMessageY(timing))
       }
     })
