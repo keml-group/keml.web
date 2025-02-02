@@ -54,8 +54,8 @@ export class Parser {
   // for changing eClass assignment (i.e. on subtypes)
   static createRefList(formerPrefix: string, ownHeader: string, eClasses: string[] = []): Ref[] {
     const prefix = Ref.computePrefix(formerPrefix, ownHeader);
-    console.log(eClasses)
-    return eClasses.map((eClass, index) => new Ref(Ref.mixWithIndex(prefix, index), eClass))
+    let res = eClasses? eClasses : []
+    return res.map((eClass, index) => new Ref(Ref.mixWithIndex(prefix, index), eClass))
   }
 
   static createSingleRef(formerPrefix: string, ownHeader: string, eClass: string): Ref {

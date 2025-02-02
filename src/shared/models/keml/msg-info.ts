@@ -211,9 +211,9 @@ export abstract class Information extends Referencable {
       //todo actually, causes should exist on the json, however, it is missing and we hence set it manually:
       let causesRefs = Parser.createRefList(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass? c.eClass : InformationLink.eClass))
       this.causes = causesRefs.map(r => parser.getOrCreate<InformationLink>(r))
-      this.targetedBy = json.targetedBy?.map(r =>  parser.getOrCreate(r))
-      this.isUsedOn = json.isUsedOn?.map(r => parser.getOrCreate<SendMessage>(r))
-      this.repeatedBy = json.repeatedBy?.map(r => parser.getOrCreate<ReceiveMessage>(r))
+      this.targetedBy = json.targetedBy? json.targetedBy.map(r =>  parser.getOrCreate(r)) : []
+      this.isUsedOn = json.isUsedOn? json.isUsedOn.map(r => parser.getOrCreate<SendMessage>(r)): []
+      this.repeatedBy = json.repeatedBy? json.repeatedBy.map(r => parser.getOrCreate<ReceiveMessage>(r)): []
     } else {
       this.message = message;
       this.isInstruction = isInstruction;
@@ -222,10 +222,10 @@ export abstract class Information extends Referencable {
       this.currentTrust = currentTrust;
       this.feltTrustImmediately = feltTrustImmediately;
       this.feltTrustAfterwards = feltTrustAfterwards;
-      this.causes = causes;
-      this.targetedBy = targetedBy;
-      this.isUsedOn = isUsedOn;
-      this.repeatedBy = repeatedBy;
+      this.causes = causes? causes : [];
+      this.targetedBy = targetedBy? targetedBy: [];
+      this.isUsedOn = isUsedOn ? isUsedOn : [];
+      this.repeatedBy = repeatedBy? repeatedBy: [];
     }
     this.listChildren.set(Information.causesPrefix, this.causes)
   }

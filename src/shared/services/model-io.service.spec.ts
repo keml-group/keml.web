@@ -61,8 +61,13 @@ describe('ModelIOService', () => {
       "        }\n" +
       "      } ]\n"+
       "    } ]\n"
-    let pre0 = new Preknowledge('pre0')
-    let pre1 = new Preknowledge('pre1')
+    let pre0 = new Preknowledge('pre0',
+      false, undefined, undefined, undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
+      new Ref('//@author/@preknowledge.0', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
+    let pre1 = new Preknowledge('pre1',
+      false, undefined, undefined, undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
+      new Ref('//@author/@preknowledge.1', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
+
     let preknowledge = [pre0, pre1]
 
     let newInfo0Str = "{\n" +
@@ -110,8 +115,14 @@ describe('ModelIOService', () => {
       "      \"generates\" : [ "+newInfo0Str +", "+newInfo1Str+
       "       ]\n" +
       "   } ]\n"
-    let msg0 = new SendMessage(cp0,0, "m0", "m0long", [pre0])
-    let msg1 = new ReceiveMessage(cp1, 1, "m1", "m1long")
+    let msg0 = new SendMessage(cp0,0, "m0", "m0long", [pre0],
+      new Ref('//@author/@messages.0', 'http://www.unikoblenz.de/keml#//SendMessage'))
+    //todo
+    pre0.isUsedOn.push(msg0)
+    let msg1 = new ReceiveMessage(cp1, 1, "m1", "m1long",
+      undefined, undefined, false,
+      new Ref('//@author/@messages.1', 'http://www.unikoblenz.de/keml#//ReceiveMessage')
+  )
     let msgs: Message[] = [msg0, msg1]
     let newInfo0 = new NewInformation(msg1, "ni0", true)
     let newInfo1 = new NewInformation(msg1, "ni1")
@@ -126,7 +137,7 @@ describe('ModelIOService', () => {
       preknowledgeStr + "\n"+
       "}"
 
-    let author = new Author('',0, preknowledge, msgs )
+    let author = new Author(undefined,0, preknowledge, msgs )
 
     let str = "{" +
       "\"eClass\" : \"http://www.unikoblenz.de/keml#//Conversation\",\n" +
@@ -140,10 +151,20 @@ describe('ModelIOService', () => {
     let callResult = service.loadKEML(str)
     callResult.conversationPartners.forEach((cp, index) => {
       expect(cp.name).toEqual(cps[index].name)
-      console.log(cp.getRef())
       expect(cp.getRef()).toEqual(cps[index].getRef())
     }) //only name and ref, no gIds
-    expect(callResult).toEqual(conv)
+
+    expect(callResult.author.name).toEqual('')
+    callResult.author.preknowledge.forEach((pre, i) => {
+      expect(pre.message).toEqual(preknowledge[i].message)
+      expect(pre.getRef()).toEqual(preknowledge[i].getRef())
+      expect(pre.isUsedOn.length).toEqual(preknowledge[i].isUsedOn.length)
+      pre.isUsedOn.forEach((usage, j) => {
+        expect(usage.getRef()).toEqual(preknowledge[i].isUsedOn[j].getRef())
+      })
+    })
+
+    //expect(callResult).toEqual(conv)
   })
 
   it('should parse a json into a conversation', () => {

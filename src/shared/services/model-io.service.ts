@@ -42,7 +42,6 @@ export class ModelIOService {
     LayoutHelper.positionInfos(conv.author.preknowledge, conv.author.messages);
 
     this.conversation = conv;
-    console.log(this.conversation)
     return conv;
   }
 
