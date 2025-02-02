@@ -282,7 +282,7 @@ export class NewInformation extends Information {
       let src = json.source? json.source : new Ref(Ref.getParentAddress(ref!.$ref), ReceiveMessage.eClass)
       this.source = parser.getOrCreate(src)
     } else {
-      this.source = source;
+      this.setSource(source)
     }
   }
 

@@ -126,8 +126,7 @@ describe('ModelIOService', () => {
     let msgs: Message[] = [msg0, msg1]
     let newInfo0 = new NewInformation(msg1, "ni0", true)
     let newInfo1 = new NewInformation(msg1, "ni1")
-    //todo move into constructor of new info:
-    msg1.generates.push(newInfo0, newInfo1)
+    
 
     let infoLink0 = new InformationLink(newInfo0, pre0, InformationLinkType.SUPPLEMENT) // necessary to test JsonFixer.addMissingSupplementType
     let infoLink1 = new InformationLink(pre1, newInfo1, InformationLinkType.STRONG_ATTACK)
