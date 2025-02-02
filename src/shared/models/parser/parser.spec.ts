@@ -1,5 +1,4 @@
 import { Parser } from './parser';
-import {ConversationJson} from "../keml/json/sequence-diagram-models";
 
 describe('Parser', () => {
   it('should create an instance', () => {

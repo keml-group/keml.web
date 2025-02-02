@@ -51,13 +51,6 @@ export class Parser {
     this.context.set(elem.getRef().$ref, elem);
   }
 
-  putList<T extends Referencable>(formerPrefix: string, ownHeader: string, content: T[]) {
-    const prefix = Ref.computePrefix(formerPrefix, ownHeader);
-    content?.forEach((t: T, index) =>
-      this.context.set(Ref.mixWithIndex(prefix, index), t)
-    )
-  }
-
   // for changing eClass assignment (i.e. on subtypes)
   static createRefList(formerPrefix: string, ownHeader: string, eClasses: string[] = []): Ref[] {
     const prefix = Ref.computePrefix(formerPrefix, ownHeader);
