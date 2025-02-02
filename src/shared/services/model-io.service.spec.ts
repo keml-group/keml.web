@@ -115,11 +115,11 @@ describe('ModelIOService', () => {
       "      \"generates\" : [ "+newInfo0Str +", "+newInfo1Str+
       "       ]\n" +
       "   } ]\n"
-    let msg0 = new SendMessage(cp0,0, "m0", "m0long", [pre0],
+    let msg0 = new SendMessage(cp0,0, "m0", "msg0long", [pre0],
       new Ref('//@author/@messages.0', 'http://www.unikoblenz.de/keml#//SendMessage'))
     //todo
     pre0.isUsedOn.push(msg0)
-    let msg1 = new ReceiveMessage(cp1, 1, "m1", "m1long",
+    let msg1 = new ReceiveMessage(cp1, 1, "m1", "msg1long",
       undefined, undefined, false,
       new Ref('//@author/@messages.1', 'http://www.unikoblenz.de/keml#//ReceiveMessage')
   )
@@ -148,12 +148,17 @@ describe('ModelIOService', () => {
     let conv = new Conversation("Test1", author, cps)
 
     let callResult = service.loadKEML(str)
+    expect(callResult.title).toEqual(conv.title)
+
+    // ********* conversationPartners **************
     callResult.conversationPartners.forEach((cp, index) => {
       expect(cp.name).toEqual(cps[index].name)
       expect(cp.getRef()).toEqual(cps[index].getRef())
     }) //only name and ref, no gIds
 
+    // ********* author **************
     expect(callResult.author.name).toEqual('')
+    // ********* preknowledge **************
     callResult.author.preknowledge.forEach((pre, i) => {
       expect(pre.message).toEqual(preknowledge[i].message)
       expect(pre.getRef()).toEqual(preknowledge[i].getRef())
@@ -163,7 +168,14 @@ describe('ModelIOService', () => {
       })
     })
 
-    //expect(callResult).toEqual(conv)
+    // ********* messages **************
+    callResult.author.messages.forEach((msg, i) => {
+      expect(msg.content).toEqual(msgs[i].content)
+      expect(msg.originalContent).toEqual(msgs[i].originalContent)
+      expect(msg.counterPart.getRef()).toEqual(msgs[i].counterPart.getRef())
+      expect(msg.getRef()).toEqual(msgs[i].getRef())
+    })
+
   })
 
   it('should change a new info\'s source', () => {
