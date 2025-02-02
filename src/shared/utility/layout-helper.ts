@@ -84,7 +84,10 @@ export class LayoutHelper {
   static positionInfos(pre: Preknowledge[], msgs: Message[]): void {
     //todo currently position new infos as 0:
     this.initializeInfoPos(msgs);
+    this.positionPreknowledge(pre);
+  }
 
+  static positionPreknowledge(pre: Preknowledge[]) {
     pre.forEach(p => {
       if (p.position.w < 7 ) {
         let timing;
