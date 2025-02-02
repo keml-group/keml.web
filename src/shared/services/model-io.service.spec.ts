@@ -4,7 +4,16 @@ import { ModelIOService } from './model-io.service';
 import {ConversationPartnerJson} from "../models/keml/json/sequence-diagram-models";
 import {Conversation} from "../models/keml/conversation";
 import {ConversationPartner} from "../models/keml/conversation-partner";
-import {NewInformation, ReceiveMessage} from "../models/keml/msg-info";
+import {
+  InformationLink,
+  Message,
+  NewInformation,
+  Preknowledge,
+  ReceiveMessage,
+  SendMessage
+} from "../models/keml/msg-info";
+import {Author} from "../models/keml/author";
+import {InformationLinkType} from "../models/keml/json/knowledge-models";
 
 describe('ModelIOService', () => {
   let service: ModelIOService;
@@ -18,8 +27,121 @@ describe('ModelIOService', () => {
     expect(service).toBeTruthy();
   });
 
+  it('should parse an original json (missing sources and eClasses) into a conversation', () => {
+    let cpsText = "  \"conversationPartners\" : [ {\n" +
+      "    \"name\" : \"LLM\"\n" +
+      "  }, {\n" +
+      "    \"name\" : \"Other\"\n" +
+      "  } ]"
+    let cp0 = new ConversationPartner('LLM', 0)
+    let cp1 = new ConversationPartner('Other', 1)
+    let cps = [cp0, cp1]
+
+    let preknowledgeStr =
+      " \"preknowledge\" : [" +
+      "    {\n" +
+      "      \"message\" : \"pre0\",\n" +
+      "      \"isUsedOn\" : [ {\n" +
+      "        \"eClass\" : \"http://www.unikoblenz.de/keml#//SendMessage\",\n" +
+      "        \"$ref\" : \"//@author/@messages.0\"\n " +
+      "      } ],\n" +
+      "      \"targetedBy\" : [ {\n" +
+      "        \"eClass\" : \"http://www.unikoblenz.de/keml#//InformationLink\",\n" +
+      "        \"$ref\" : \"//@author/@messages.1/@generates.0/@causes.0\"\n" +
+      "      } ]" +
+      "    }, {" +
+      "      \"message\" : \"pre1\",\n" +
+      "      \"causes\" : [ {\n" +
+      "        \"linkText\" : \"\",\n" +
+      "        \"type\" : \"STRONG_ATTACK\",\n" +
+      "        \"target\" : {\n" +
+      "          \"eClass\" : \"http://www.unikoblenz.de/keml#//NewInformation\",\n" +
+      "          \"$ref\" : \"//@author/@messages.1/@generates.1\"\n" +
+      "        }\n" +
+      "      } ]\n"+
+      "    } ]\n"
+    let pre0 = new Preknowledge('pre0')
+    let pre1 = new Preknowledge('pre1')
+    let preknowledge = [pre0, pre1]
+
+    let newInfo0Str = "{\n" +
+      "        \"message\" : \"ni0\",\n" +
+      "        \"isInstruction\" : true,\n" +
+      "        \"causes\" : [ {\n" +
+      "         \"linkText\" : \"\",\n" +
+      "         \"type\" : \"SUPPORT\",\n" +
+      "         \"target\" : {\n" +
+      "          \"eClass\" : \"http://www.unikoblenz.de/keml#//PreKnowledge\",\n" +
+      "          \"$ref\" : \"//@author/@preknowledge.0\"\n" +
+      "           }\n" +
+      "         } ]" +
+      "       }"
+
+    let newInfo1Str = "{\n" +
+      "        \"message\" : \"ni1\",\n" +
+      "        \"targetedBy\" : [ {\n" +
+      "          \"eClass\" : \"http://www.unikoblenz.de/keml#//InformationLink\",\n" +
+      "          \"$ref\" : \"//@author/@preknowledge.1/@causes.0\"\n" +
+      "        }]\n" +
+      "}\n"
+
+    let msgsStr =
+      "\"messages\" : [ {" +
+      "      \"eClass\" : \"http://www.unikoblenz.de/keml#//SendMessage\",\n" +
+      "      \"content\" : \"m0\",\n" +
+      "      \"counterPart\" : {\n" +
+      "        \"eClass\" : \"http://www.unikoblenz.de/keml#//ConversationPartner\",\n" +
+      "        \"$ref\" : \"//@conversationPartners.0\"\n" +
+      "      },"+
+      "      \"originalContent\" : \"msg0long\",\n" +
+      "      \"uses\" : [ {\n" +
+      "        \"eClass\" : \"http://www.unikoblenz.de/keml#//PreKnowledge\",\n" +
+      "        \"$ref\" : \"//@author/@preknowledge.0\"\n" +
+      "      } ] "+
+      "   }, {\n" +
+      "      \"eClass\" : \"http://www.unikoblenz.de/keml#//ReceiveMessage\",\n" +
+      "      \"content\" : \"m1\",\n" +
+      "      \"counterPart\" : {\n" +
+      "        \"eClass\" : \"http://www.unikoblenz.de/keml#//ConversationPartner\",\n" +
+      "        \"$ref\" : \"//@conversationPartners.1\"\n" +
+      "      },"+
+      "      \"originalContent\" : \"msg1long\",\n" +
+      "      \"generates\" : [ "+newInfo0Str +", "+newInfo1Str+
+      "       ]\n" +
+      "   } ]\n"
+    let msg0 = new SendMessage(cp0,0, "m0", "m0long", [pre0])
+    let msg1 = new ReceiveMessage(cp1, 1, "m1", "m1long")
+    let msgs: Message[] = [msg0, msg1]
+    let newInfo0 = new NewInformation(msg1, "ni0", true)
+    let newInfo1 = new NewInformation(msg1, "ni1")
+    //todo move into constructor of new info:
+    msg1.generates.push(newInfo0, newInfo1)
+
+    let infoLink0 = new InformationLink(newInfo0, pre0, InformationLinkType.SUPPLEMENT) // necessary to test JsonFixer.addMissingSupplementType
+    let infoLink1 = new InformationLink(pre1, newInfo1, InformationLinkType.STRONG_ATTACK)
+
+    let authorStr = "\"author\" : {" +
+      msgsStr +",\n" +
+      preknowledgeStr + "\n"+
+      "}"
+
+    let author = new Author('',0, preknowledge, msgs )
+
+    let str = "{" +
+      "\"eClass\" : \"http://www.unikoblenz.de/keml#//Conversation\",\n" +
+      "  \"title\" : \"Test1\"," +
+      authorStr + ",\n" +
+      cpsText +
+      "}\n"
+
+    let conv = new Conversation("Test1", author, cps)
+
+    let callResult = service.loadKEML(str)
+    expect(callResult).toEqual(conv)
+  })
+
   it('should parse a json into a conversation', () => {
-    let convPartnersJson: string = "  \"conversationPartners\" : [ " +
+    let convPartnersStr: string = "  \"conversationPartners\" : [ " +
       "     {\n" +
       "     \"eClass\" : \"http://www.unikoblenz.de/keml#//ConversationPartner\",\n" +
       "     \"name\" : \"LLM\"\n" +
@@ -29,11 +151,27 @@ describe('ModelIOService', () => {
       "     \"name\" : \"Other\"\n" +
       "     }" +
       " ]\n";
-    let cp0: ConversationPartnerJson = {name: "LLM", xPosition:300, eClass: "http://www.unikoblenz.de/keml#//ConversationPartner", $ref: ''};
-    let cp1: ConversationPartnerJson = {name: "Other", xPosition:450, eClass: "http://www.unikoblenz.de/keml#//ConversationPartner", $ref: ''};
-    let convPartners: ConversationPartnerJson[] = [cp0, cp1];
+    let cp0Json: ConversationPartnerJson = {name: "LLM", xPosition:300, eClass: "http://www.unikoblenz.de/keml#//ConversationPartner", $ref: '//@conversationPartners.0'};
+    let cp1Json: ConversationPartnerJson = {name: "Other", xPosition:450, eClass: "http://www.unikoblenz.de/keml#//ConversationPartner", $ref: '//@conversationPartners.1'};
+    let convPartnersJson: ConversationPartnerJson[] = [cp0Json, cp1Json];
 
-    let info1aJson = " {\n" +
+    let cp0 = new ConversationPartner("LLM", 300)
+    let cp1 = new ConversationPartner("Other", 450)
+
+    let msg1Str = "  {\n" +
+      "      \"eClass\" : \"http://www.unikoblenz.de/keml#//SendMessage\",\n" +
+      "      \"content\" : \"question1\",\n" +
+      "      \"timing\" : 1,\n" +
+      "      \"counterPart\" : {\n" +
+      "        \"eClass\" : \"http://www.unikoblenz.de/keml#//ConversationPartner\",\n" +
+      "        \"$ref\" : \"//@conversationPartners.0\"\n" +
+      "         },\n" +
+      "      \"originalContent\" : \"long question1\"\n" +
+      "      }";
+    let msg1 = new SendMessage(cp0,0, 'question1', )
+
+
+    let info1aStr = " {\n" +
       "         \"message\" : \"info1a\",\n" +
       "         \"isInstruction\" : true,\n" +
       "         \"targetedBy\" : [ " +
@@ -58,21 +196,7 @@ describe('ModelIOService', () => {
       "        ]\n" +
       "      } ";
 
-    let msg1 = "  {\n" +
-      "      \"eClass\" : \"http://www.unikoblenz.de/keml#//SendMessage\",\n" +
-      "      \"content\" : \"question1\",\n" +
-      "      \"timing\" : 1,\n" +
-      "      \"counterPart\" : {\n" +
-      "        \"eClass\" : \"http://www.unikoblenz.de/keml#//ConversationPartner\",\n" +
-      "        \"$ref\" : \"//@conversationPartners.0\"\n" +
-      "         },\n" +
-      "      \"originalContent\" : \"long question1\",\n" +
-      "      \"generates\" : [ " +
-      info1aJson +
-      "       ]" +
-      "      }";
-
-    let msg2 = "      {\n" +
+    let msg2Str = "      {\n" +
       "      \"eClass\" : \"http://www.unikoblenz.de/keml#//ReceiveMessage\",\n" +
       "      \"content\" : \"answer1\",\n" +
       "      \"timing\" : 2,\n" +
@@ -80,21 +204,27 @@ describe('ModelIOService', () => {
       "        \"eClass\" : \"http://www.unikoblenz.de/keml#//ConversationPartner\",\n" +
       "        \"$ref\" : \"//@conversationPartners.0\"\n" +
       "         },\n" +
-      "      \"originalContent\" : \"long answer1\"\n" +
+      "      \"originalContent\" : \"long answer1\",\n" +
+      "      \"generates\" : [ " +
+      info1aStr +
+      "       ]" +
       "      } ";
 
-    let text = "{\n" +
+    /*let msg2 = new ReceiveMessage()
+    let info1a = new NewInformation()*/
+
+    let str = "{\n" +
       "  \"eClass\" : \"http://www.unikoblenz.de/keml#//Conversation\",\n" +
       "  \"title\" : \"Test-Conv\",\n" +
       "  \"author\" : {\n" +
       "    \"messages\" : [ \n" +
-              msg1 + ",\n" +
-              msg2 +
+      msg1Str + ",\n" +
+      msg2Str +
       "     ]" +
       "   },\n" +
-      convPartnersJson +
+      convPartnersStr +
       "}";
-    let conv: Conversation = service.loadKEML(text);
+    let conv: Conversation = service.loadKEML(str);
     expect(conv).toBeDefined();
     expect(conv.title).toEqual("Test-Conv");
     expect(conv.conversationPartners?.at(0)?.name).toEqual("LLM");
