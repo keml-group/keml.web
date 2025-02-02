@@ -12,11 +12,9 @@ export class ConversationPartner extends LifeLine {
       if(parser) {
         let cpJson: ConversationPartnerJson = parser.getJsonFromTree(ref!.$ref)
         super(cpJson.name, cpJson.xPosition, refC)
-        this.ref = ref!
         parser.put(this)
       } else {
         super(name, xPosition, refC);
-        this.ref = new Ref('', ConversationPartner.eClass)
       }
     }
 

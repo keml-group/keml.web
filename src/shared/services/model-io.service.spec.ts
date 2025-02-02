@@ -14,6 +14,7 @@ import {
 } from "../models/keml/msg-info";
 import {Author} from "../models/keml/author";
 import {InformationLinkType} from "../models/keml/json/knowledge-models";
+import {Ref} from "../models/parser/ref";
 
 describe('ModelIOService', () => {
   let service: ModelIOService;
@@ -33,8 +34,8 @@ describe('ModelIOService', () => {
       "  }, {\n" +
       "    \"name\" : \"Other\"\n" +
       "  } ]"
-    let cp0 = new ConversationPartner('LLM', 0)
-    let cp1 = new ConversationPartner('Other', 1)
+    let cp0 = new ConversationPartner('LLM', 0, new Ref('//@conversationPartners.0', 'http://www.unikoblenz.de/keml#//ConversationPartner'))
+    let cp1 = new ConversationPartner('Other', 1, new Ref('//@conversationPartners.1', 'http://www.unikoblenz.de/keml#//ConversationPartner'))
     let cps = [cp0, cp1]
 
     let preknowledgeStr =
@@ -137,6 +138,11 @@ describe('ModelIOService', () => {
     let conv = new Conversation("Test1", author, cps)
 
     let callResult = service.loadKEML(str)
+    callResult.conversationPartners.forEach((cp, index) => {
+      expect(cp.name).toEqual(cps[index].name)
+      console.log(cp.getRef())
+      expect(cp.getRef()).toEqual(cps[index].getRef())
+    }) //only name and ref, no gIds
     expect(callResult).toEqual(conv)
   })
 
