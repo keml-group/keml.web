@@ -8,7 +8,6 @@ import {
 } from "../../../shared/models/keml/msg-info";
 import {MatDialogRef} from "@angular/material/dialog";
 import {ModelIOService} from "../../../shared/services/model-io.service";
-import {DetailsService} from "../service/details.service";
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { MsgOverviewComponent } from '../../helper/msg-overview/msg-overview.component';
@@ -30,12 +29,12 @@ export class InfoDetailsComponent implements OnInit {
   @Input() info!: Information;
   @Output() chooseLink = new EventEmitter<InformationLink>();
   @Output() chooseMsg = new EventEmitter<Message>();
+  @Output() createLinkFromSrc = new EventEmitter<Information>();
   newInfo?: NewInformation;
 
   constructor(
     public modelIOService: ModelIOService,
     private dialogRef: MatDialogRef<InfoDetailsComponent>,
-    public detailsService: DetailsService,
   ) {}
 
   ngOnInit() {
@@ -74,12 +73,16 @@ export class InfoDetailsComponent implements OnInit {
     }
   }
 
+  clickMsg(msg: Message) {
+    this.chooseMsg.emit(msg);
+  }
+  
   clickLink(link: InformationLink) {
     this.chooseLink.emit(link);
   }
 
-  clickMsg(msg: Message) {
-    this.chooseMsg.emit(msg);
+  createLink(src: Information) {
+    this.createLinkFromSrc.emit(src)
   }
 
 }

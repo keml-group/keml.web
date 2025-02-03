@@ -46,6 +46,7 @@ export class DetailsService {
     dialogRef.componentInstance.info = info;
     dialogRef.componentInstance.chooseMsg.subscribe(m => this.openMessageDetails(m))
     dialogRef.componentInstance.chooseLink.subscribe(i => this.openLinkDetails(i));
+    dialogRef.componentInstance.createLinkFromSrc.subscribe(i => this.openLinkCreationDialog(i))
   }
 
   openLinkDetails(link: InformationLink) {
