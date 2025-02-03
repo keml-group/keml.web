@@ -68,8 +68,8 @@
             <g text-area-svg [(text)]="conversation.title" [singleEdit]="true" [w]="600" [h]="25" [x]="0" [y]="0"></g>
             <g authorG [author]="conversation.author"></g>
             <g cp *ngFor="let convP of conversation.conversationPartners" [conversationPartner]="convP" (openDetails)="detailsService.openConversationPartnerDetails(convP)"></g>
-            <g preknowG *ngFor="let pre of conversation.author.preknowledge" [info]="pre" (chooseInfo)="infoDetailsService.openInfoDetails(pre)"></g>
-            <g msgG *ngFor="let m of conversation.author.messages" [msg]="m" [msgTiming]="m.timing" (chooseMsg)="msgDetailsService.openMessageDetails(m)" (chooseInfo)="infoDetailsService.openInfoDetails($event)"></g>
+            <g preknowG *ngFor="let pre of conversation.author.preknowledge" [info]="pre" (chooseInfo)="infoDetailsService.openInfoDetails(pre)" (chooseInfoLink)="infoLinkDetailsService.openLinkDetails($event)"></g>
+            <g msgG *ngFor="let m of conversation.author.messages" [msg]="m" [msgTiming]="m.timing" (chooseMsg)="msgDetailsService.openMessageDetails(m)" (chooseInfo)="infoDetailsService.openInfoDetails($event)" (chooseInfoLink)="infoLinkDetailsService.openLinkDetails($event)"></g>
           </g>
         </svg>
       </div>

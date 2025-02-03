@@ -16,6 +16,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatToolbar } from '@angular/material/toolbar';
 import {MsgDetailsService} from "./details/service/msg-details.service";
 import {InfoDetailsService} from "./details/service/info-details.service";
+import {LinkDetailsService} from "./details/service/link-details.service";
 
 @Component({
     selector: 'keml-editor',
@@ -33,6 +34,7 @@ export class EditorComponent {
     public detailsService: DetailsService,
     public msgDetailsService: MsgDetailsService,
     public infoDetailsService: InfoDetailsService,
+    public infoLinkDetailsService: LinkDetailsService,
     public modelIOService: ModelIOService,
     private ioService: IoService,
   ) {

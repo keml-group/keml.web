@@ -10,5 +10,5 @@
      style="outline: 1px solid #c9c2c2;"
   >
   </g>
-  <g infoLinkG *ngFor="let link of info.causes" [infoLink]="link"></g>
+  <g infoLinkG *ngFor="let link of info.causes" [infoLink]="link" (chooseLink)="chooseLink($event)"></g>
 </svg:g>

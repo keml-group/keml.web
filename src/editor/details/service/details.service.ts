@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Information, InformationLink} from "../../../shared/models/keml/msg-info";
+import {Information} from "../../../shared/models/keml/msg-info";
 import {MatDialog} from "@angular/material/dialog";
 import {
   InformationLinkDetailsComponent
@@ -30,14 +30,6 @@ export class DetailsService {
     const ref = this.dialog.open(InformationLinkDetailsComponent, {width: '40%', height: '80%'});
     ref.componentInstance.src = src;
     ref.componentInstance.target = target;
-  }
-
-  openLinkDetails(link: InformationLink) {
-    const dialogRef = this.dialog.open(
-      InformationLinkDetailsComponent,
-      {width: '40%', height: '80%'}
-    )
-    dialogRef.componentInstance.infoLink = link;
   }
 
   openSimulationDialog(conversation: Conversation) {

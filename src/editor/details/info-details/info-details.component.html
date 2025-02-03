@@ -50,7 +50,7 @@
     </div>
     <div class="column">
       <svg width="200" height="100" *ngFor="let link of info.causes">
-        <g info-inner [info]="link.target"  (click)="detailsService.openLinkDetails(link)">
+        <g info-inner [info]="link.target"  (click)="linkDetailsService.openLinkDetails(link)">
         </g>
         <g arrow-svg
           [start]="{x: 97.5, y: 80, w: 5, h: 5}"

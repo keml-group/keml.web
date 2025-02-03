@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, EventEmitter, Input, Output} from '@angular/core';
-import {Information} from "../../shared/models/keml/msg-info";
+import {Information, InformationLink} from "../../shared/models/keml/msg-info";
 import {NewInformation} from "../../shared/models/keml/msg-info";
 import {SVGAccessService} from "../../shared/services/svg-access.service";
 import { TextAreaSvgComponent } from '../helper/text-area-svg/text-area-svg.component';
@@ -15,6 +15,7 @@ import { IsInstrSvgComponent } from '../helper/is-instr-svg/is-instr-svg.compone
 export class InfoComponent implements AfterViewInit {
   @Input() info!: Information;
   @Output() chooseInfo = new EventEmitter<Information>();
+  @Output() chooseInfoLink = new EventEmitter<InformationLink>();
 
   dragActive = false;
   wasReallyDragged = false;
@@ -22,7 +23,7 @@ export class InfoComponent implements AfterViewInit {
   dragStartY: number = 0;
 
   constructor(
-    protected svgAccessService: SVGAccessService
+    protected svgAccessService: SVGAccessService,
   ) {}
 
   ngAfterViewInit() {
@@ -80,6 +81,10 @@ export class InfoComponent implements AfterViewInit {
       this.chooseInfo.emit(this.info);
       event.preventDefault();
     }
+  }
+
+  chooseLink(link: InformationLink) {
+    this.chooseInfoLink.emit(link)
   }
 
 }

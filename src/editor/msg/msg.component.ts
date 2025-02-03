@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {Message, SendMessage} from "../../shared/models/keml/msg-info";
+import {InformationLink, Message, SendMessage} from "../../shared/models/keml/msg-info";
 import {ReceiveMessage} from "../../shared/models/keml/msg-info";
 import {Information} from "../../shared/models/keml/msg-info";
 import {LayoutHelper} from "../../shared/utility/layout-helper";
@@ -23,6 +23,7 @@ export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() showInfos = true;
   @Output() chooseMsg: EventEmitter<Message> = new EventEmitter();
   @Output() chooseInfo = new EventEmitter<Information>();
+  @Output() chooseInfoLink: EventEmitter<InformationLink> = new EventEmitter<InformationLink>()
 
   receiveMsg?: ReceiveMessage;
   sendMsg?: SendMessage;
@@ -64,6 +65,10 @@ export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
 
   clickInfo(info: Information) {
     this.chooseInfo.emit(info);
+  }
+
+  clickInfoLink(link: InformationLink) {
+    this.chooseInfoLink.emit(link);
   }
 
   protected readonly ArrowType = ArrowType;

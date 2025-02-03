@@ -13,6 +13,7 @@ import { NgIf, NgFor } from '@angular/common';
 import { IsInstrSvgComponent } from '../../helper/is-instr-svg/is-instr-svg.component';
 import { FormsModule } from '@angular/forms';
 import {MsgDetailsService} from "../service/msg-details.service";
+import {LinkDetailsService} from "../service/link-details.service";
 
 @Component({
     selector: 'info-details',
@@ -28,8 +29,9 @@ export class InfoDetailsComponent implements OnInit {
   constructor(
     public modelIOService: ModelIOService,
     private dialogRef: MatDialogRef<InfoDetailsComponent>,
+    public linkDetailsService: LinkDetailsService,
+    public msgDetailsService: MsgDetailsService,
     public detailsService: DetailsService,
-    public msgDetailsService: MsgDetailsService
   ) {}
 
   ngOnInit() {
