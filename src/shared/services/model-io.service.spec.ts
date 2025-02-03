@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ModelIOService } from './model-io.service';
-import {ConversationPartnerJson} from "../models/keml/json/sequence-diagram-models";
 import {Conversation} from "../models/keml/conversation";
 import {ConversationPartner} from "../models/keml/conversation-partner";
 import {
