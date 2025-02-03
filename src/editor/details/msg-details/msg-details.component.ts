@@ -3,13 +3,13 @@ import {MatDialogRef} from "@angular/material/dialog";
 import {Information, Message, ReceiveMessage, SendMessage} from "../../../shared/models/keml/msg-info";
 import {ConversationPartner} from "../../../shared/models/keml/conversation-partner";
 import {ModelIOService} from "../../../shared/services/model-io.service";
-import {DetailsService} from "../service/details.service";
 import { MatTooltip } from '@angular/material/tooltip';
 import { InfoChoiceComponent } from '../../helper/info-choice/info-choice.component';
 import { InfoInnerComponent } from '../../helper/info-inner/info-inner.component';
 import { MatIcon } from '@angular/material/icon';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import {InfoDetailsService} from "../service/info-details.service";
 
 @Component({
     selector: 'msg-details',
@@ -31,7 +31,7 @@ export class MsgDetailsComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<MsgDetailsComponent>,
     public modelIOService: ModelIOService,
-    public detailsService: DetailsService,
+    public infoDetailsService: InfoDetailsService,
   ) {
     this.cps = this.modelIOService.getConversationPartners();
   }
@@ -88,7 +88,7 @@ export class MsgDetailsComponent implements OnInit {
     if (this.receiveMsg) {
       const newInfo = this.modelIOService.addNewNewInfo(this.receiveMsg)
       if (newInfo)
-        this.detailsService.openInfoDetails(newInfo);
+        this.infoDetailsService.openInfoDetails(newInfo);
     }
   }
 

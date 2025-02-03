@@ -36,6 +36,8 @@ export class InfoDetailsComponent implements OnInit {
     let newInfo: NewInformation = (this.info as NewInformation)
     if(newInfo.source) {
       this.newInfo = newInfo
+    } else {
+      this.newInfo = undefined;
     }
   }
 

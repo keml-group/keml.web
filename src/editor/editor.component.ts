@@ -15,6 +15,7 @@ import { PersonSvgComponent } from './helper/person-svg/person-svg.component';
 import { MatIcon } from '@angular/material/icon';
 import { MatToolbar } from '@angular/material/toolbar';
 import {MsgDetailsService} from "./details/service/msg-details.service";
+import {InfoDetailsService} from "./details/service/info-details.service";
 
 @Component({
     selector: 'keml-editor',
@@ -31,6 +32,7 @@ export class EditorComponent {
   constructor(
     public detailsService: DetailsService,
     public msgDetailsService: MsgDetailsService,
+    public infoDetailsService: InfoDetailsService,
     public modelIOService: ModelIOService,
     private ioService: IoService,
   ) {
@@ -96,12 +98,12 @@ export class EditorComponent {
   addNewInfo() {
     const newInfo = this.modelIOService.addNewNewInfo()
     if (newInfo)
-      this.detailsService.openInfoDetails(newInfo);
+      this.infoDetailsService.openInfoDetails(newInfo);
   }
 
   addPreknowledge() {
     const pre = this.modelIOService.addNewPreknowledge();
-    this.detailsService.openInfoDetails(pre);
+    this.infoDetailsService.openInfoDetails(pre);
   }
 
 }
