@@ -16,6 +16,7 @@ import {Author} from "../models/keml/author";
 import {InformationLinkType} from "../models/keml/json/knowledge-models";
 import {Ref} from "../models/parser/ref";
 import {Referencable} from "../models/parser/referenceable";
+import {LayoutHelper} from "../utility/layout-helper";
 
 describe('ModelIOService', () => {
   let service: ModelIOService;
@@ -35,8 +36,8 @@ describe('ModelIOService', () => {
       "  }, {\n" +
       "    \"name\" : \"Other\"\n" +
       "  } ]"
-    let cp0 = new ConversationPartner('LLM', 0, new Ref('//@conversationPartners.0', 'http://www.unikoblenz.de/keml#//ConversationPartner'))
-    let cp1 = new ConversationPartner('Other', 1, new Ref('//@conversationPartners.1', 'http://www.unikoblenz.de/keml#//ConversationPartner'))
+    let cp0 = new ConversationPartner('LLM', 300, new Ref('//@conversationPartners.0', 'http://www.unikoblenz.de/keml#//ConversationPartner'))
+    let cp1 = new ConversationPartner('Other', 450, new Ref('//@conversationPartners.1', 'http://www.unikoblenz.de/keml#//ConversationPartner'))
     let cps = [cp0, cp1]
 
     let preknowledgeStr =
@@ -70,6 +71,7 @@ describe('ModelIOService', () => {
       new Ref('//@author/@preknowledge.1', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
 
     let preknowledge = [pre0, pre1]
+    LayoutHelper.positionPreknowledge(preknowledge)
 
     let newInfo0Str = "{\n" +
       "        \"message\" : \"ni0\",\n" +
@@ -132,6 +134,7 @@ describe('ModelIOService', () => {
       false,undefined, undefined, undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
       new Ref('//@author/@messages.1/@generates.1', 'http://www.unikoblenz.de/keml#//NewInformation'))
 
+    LayoutHelper.initializeInfoPos(msgs)
 
     let infoLink0 = new InformationLink(newInfo0, pre0, InformationLinkType.SUPPLEMENT, undefined, new Ref('//@author/@messages.1/@generates.0/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink')) // necessary to test JsonFixer.addMissingSupplementType
     let infoLink1 = new InformationLink(pre1, newInfo1, InformationLinkType.STRONG_ATTACK, undefined, new Ref( '//@author/@preknowledge.1/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink'))
@@ -166,13 +169,15 @@ describe('ModelIOService', () => {
     callResult.conversationPartners.forEach((cp, index) => {
       expect(cp.name).toEqual(cps[index].name)
       expect(cp.getRef()).toEqual(cps[index].getRef())
-    }) //only name and ref, no gIds
+      expect(cp.xPosition).toEqual(cps[index].xPosition)
+    })
 
     // ********* author **************
     expect(callResult.author.name).toEqual('')
     // ********* preknowledge **************
     callResult.author.preknowledge.forEach((pre, i) => {
       expect(pre.message).toEqual(preknowledge[i].message)
+      expect(pre.position).toEqual(preknowledge[i].position)
       expect(pre.getRef()).toEqual(preknowledge[i].getRef())
       testListRefs(pre.isUsedOn, preknowledge[i].isUsedOn)
     })
@@ -198,6 +203,7 @@ describe('ModelIOService', () => {
     resultNewInfos.forEach((newInfo, i) => {
       expect(newInfo.message).toEqual(msg1.generates[i].message)
       expect(newInfo.isInstruction).toEqual(msg1.generates[i].isInstruction)
+      expect(newInfo.position).toEqual(msg1.generates[i].position)
       expect(newInfo.source.getRef()).toEqual(msg1.generates[i].source.getRef())
       testListRefs(newInfo.causes, msg1.generates[i].causes)
       testListRefs(newInfo.targetedBy, msg1.generates[i].targetedBy)
