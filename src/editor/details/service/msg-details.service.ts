@@ -19,5 +19,6 @@ export class MsgDetailsService {
     );
     dialogRef.componentInstance.msg = msg;
     dialogRef.componentInstance.openOtherDetails.subscribe(m => this.openMessageDetails(m))
+    dialogRef.componentInstance.openInfoDetails.subscribe(i => {console.log("Broken")})
   }
 }

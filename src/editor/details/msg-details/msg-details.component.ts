@@ -9,7 +9,6 @@ import { InfoInnerComponent } from '../../helper/info-inner/info-inner.component
 import { MatIcon } from '@angular/material/icon';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {InfoDetailsService} from "../service/info-details.service";
 
 @Component({
     selector: 'msg-details',
@@ -21,6 +20,7 @@ import {InfoDetailsService} from "../service/info-details.service";
 export class MsgDetailsComponent implements OnInit {
   @Input() msg!: Message;
   @Output() openOtherDetails: EventEmitter<Message> = new EventEmitter<Message>();
+ @Output() openInfoDetails: EventEmitter<Information> = new EventEmitter<Information>();
 
   cps: ConversationPartner[];
   sendMsg?: SendMessage;
@@ -31,7 +31,6 @@ export class MsgDetailsComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<MsgDetailsComponent>,
     public modelIOService: ModelIOService,
-    public infoDetailsService: InfoDetailsService,
   ) {
     this.cps = this.modelIOService.getConversationPartners();
   }
@@ -88,8 +87,13 @@ export class MsgDetailsComponent implements OnInit {
     if (this.receiveMsg) {
       const newInfo = this.modelIOService.addNewNewInfo(this.receiveMsg)
       if (newInfo)
-        this.infoDetailsService.openInfoDetails(newInfo);
+        this.dialogRef.close();
+        this.openInfoDetails.emit(newInfo);
     }
+  }
+
+  chooseInfo(info: Information){
+    this.openInfoDetails.emit(info)
   }
 
   repeatAnInfo(info: Information) {
