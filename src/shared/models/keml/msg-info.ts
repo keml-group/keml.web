@@ -202,7 +202,7 @@ export abstract class Information extends Referencable {
       parser.put(this)
       let json: InformationJson = jsonOpt ? jsonOpt : parser.getJsonFromTree(ref!.$ref)
       this.message = json.message;
-      this.isInstruction = json.isInstruction;
+      this.isInstruction = json.isInstruction? json.isInstruction : false;
       this.position = json.position? json.position : PositionHelper.newBoundingBox();
       this.initialTrust = json.initialTrust;
       this.currentTrust = json.currentTrust;
