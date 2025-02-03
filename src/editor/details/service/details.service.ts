@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Information} from "../../../shared/models/keml/msg-info";
+import {Information, InformationLink, Message} from "../../../shared/models/keml/msg-info";
 import {MatDialog} from "@angular/material/dialog";
 import {
   InformationLinkDetailsComponent
@@ -8,6 +8,8 @@ import {ConversationPartner} from "../../../shared/models/keml/conversation-part
 import {ConversationPartnerDetailsComponent} from "../cp-details/cp-details.component";
 import {Conversation} from "../../../shared/models/keml/conversation";
 import {SimulatorComponent} from "../../../simulator/simulator.component";
+import {MsgDetailsComponent} from "../msg-details/msg-details.component";
+import {InfoDetailsComponent} from "../info-details/info-details.component";
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +26,34 @@ export class DetailsService {
       {width: '40%', height: '80%'}
     )
     dialogRef.componentInstance.cp = cp;
+  }
+
+  openMessageDetails(msg: Message) {
+    const dialogRef = this.dialog.open(
+      MsgDetailsComponent,
+      {width: '40%', height: '80%'}
+    );
+    dialogRef.componentInstance.msg = msg;
+    dialogRef.componentInstance.openOtherDetails.subscribe(m => this.openMessageDetails(m))
+    dialogRef.componentInstance.openInfoDetails.subscribe(i => this.openInfoDetails(i))
+  }
+
+  openInfoDetails(info: Information) {
+    const dialogRef = this.dialog.open(
+      InfoDetailsComponent,
+      {width: '40%', height: '80%'}
+    );
+    dialogRef.componentInstance.info = info;
+    dialogRef.componentInstance.chooseMsg.subscribe(m => this.openMessageDetails(m))
+    dialogRef.componentInstance.chooseLink.subscribe(i => this.openLinkDetails(i));
+  }
+
+  openLinkDetails(link: InformationLink) {
+    const dialogRef = this.dialog.open(
+      InformationLinkDetailsComponent,
+      {width: '40%', height: '80%'}
+    )
+    dialogRef.componentInstance.infoLink = link;
   }
 
   openLinkCreationDialog(src?: Information, target?: Information) {

@@ -1,5 +1,11 @@
-import {Component, Input, OnInit,} from '@angular/core';
-import {Information, NewInformation, ReceiveMessage} from "../../../shared/models/keml/msg-info";
+import {Component, EventEmitter, Input, OnInit, Output,} from '@angular/core';
+import {
+  Information,
+  InformationLink,
+  Message,
+  NewInformation,
+  ReceiveMessage
+} from "../../../shared/models/keml/msg-info";
 import {MatDialogRef} from "@angular/material/dialog";
 import {ModelIOService} from "../../../shared/services/model-io.service";
 import {DetailsService} from "../service/details.service";
@@ -12,8 +18,6 @@ import { MsgChoiceComponent } from '../../helper/msg-choice/msg-choice.component
 import { NgIf, NgFor } from '@angular/common';
 import { IsInstrSvgComponent } from '../../helper/is-instr-svg/is-instr-svg.component';
 import { FormsModule } from '@angular/forms';
-import {MsgDetailsService} from "../service/msg-details.service";
-import {LinkDetailsService} from "../service/link-details.service";
 
 @Component({
     selector: 'info-details',
@@ -24,13 +28,13 @@ import {LinkDetailsService} from "../service/link-details.service";
 })
 export class InfoDetailsComponent implements OnInit {
   @Input() info!: Information;
+  @Output() chooseLink = new EventEmitter<InformationLink>();
+  @Output() chooseMsg = new EventEmitter<Message>();
   newInfo?: NewInformation;
 
   constructor(
     public modelIOService: ModelIOService,
     private dialogRef: MatDialogRef<InfoDetailsComponent>,
-    public linkDetailsService: LinkDetailsService,
-    public msgDetailsService: MsgDetailsService,
     public detailsService: DetailsService,
   ) {}
 
@@ -68,6 +72,14 @@ export class InfoDetailsComponent implements OnInit {
     if (this.newInfo){
       this.modelIOService.changeInfoSource(this.newInfo, receive)
     }
+  }
+
+  clickLink(link: InformationLink) {
+    this.chooseLink.emit(link);
+  }
+
+  clickMsg(msg: Message) {
+    this.chooseMsg.emit(msg);
   }
 
 }
