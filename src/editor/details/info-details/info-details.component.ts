@@ -12,6 +12,7 @@ import { MsgChoiceComponent } from '../../helper/msg-choice/msg-choice.component
 import { NgIf, NgFor } from '@angular/common';
 import { IsInstrSvgComponent } from '../../helper/is-instr-svg/is-instr-svg.component';
 import { FormsModule } from '@angular/forms';
+import {MsgDetailsService} from "../service/msg-details.service";
 
 @Component({
     selector: 'info-details',
@@ -28,6 +29,7 @@ export class InfoDetailsComponent implements OnInit {
     public modelIOService: ModelIOService,
     private dialogRef: MatDialogRef<InfoDetailsComponent>,
     public detailsService: DetailsService,
+    public msgDetailsService: MsgDetailsService
   ) {}
 
   ngOnInit() {

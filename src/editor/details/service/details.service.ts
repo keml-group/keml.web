@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Information, InformationLink, Message} from "../../../shared/models/keml/msg-info";
-import {MsgDetailsComponent} from "../msg-details/msg-details.component";
+import {Information, InformationLink} from "../../../shared/models/keml/msg-info";
 import {MatDialog} from "@angular/material/dialog";
 import {
   InformationLinkDetailsComponent
@@ -19,15 +18,6 @@ export class DetailsService {
   constructor(
     private dialog: MatDialog,
   ) { }
-
-  openMessageDetails(msg: Message) {
-    const dialogRef = this.dialog.open(
-      MsgDetailsComponent,
-      {width: '40%', height: '80%'}
-    );
-    dialogRef.componentInstance.msg = msg;
-    dialogRef.componentInstance.openOtherDetails.subscribe(m => this.openMessageDetails(m))
-  }
 
   openConversationPartnerDetails(cp: ConversationPartner) {
     const dialogRef = this.dialog.open(
