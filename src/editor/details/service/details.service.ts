@@ -6,7 +6,6 @@ import {
 } from "../information-link-details/information-link-details.component";
 import {ConversationPartner} from "../../../shared/models/keml/conversation-partner";
 import {ConversationPartnerDetailsComponent} from "../cp-details/cp-details.component";
-import {InfoDetailsComponent} from "../info-details/info-details.component";
 import {Conversation} from "../../../shared/models/keml/conversation";
 import {SimulatorComponent} from "../../../simulator/simulator.component";
 
@@ -25,14 +24,6 @@ export class DetailsService {
       {width: '40%', height: '80%'}
     )
     dialogRef.componentInstance.cp = cp;
-  }
-
-  openInfoDetails(info: Information) {
-    const dialogRef = this.dialog.open(
-      InfoDetailsComponent,
-      {width: '40%', height: '80%'}
-    );
-    dialogRef.componentInstance.info = info;
   }
 
   openLinkCreationDialog(src?: Information, target?: Information) {

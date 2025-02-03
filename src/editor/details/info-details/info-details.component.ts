@@ -33,6 +33,10 @@ export class InfoDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.setIfNew()
+  }
+
+  private setIfNew() {
     let newInfo: NewInformation = (this.info as NewInformation)
     if(newInfo.source) {
       this.newInfo = newInfo
@@ -53,8 +57,8 @@ export class InfoDetailsComponent implements OnInit {
   duplicateMe(): void {
     const newInfo = this.modelIOService.duplicateInfo(this.info);
     if (newInfo) {
-      this.dialogRef.close();
-      this.detailsService.openInfoDetails(newInfo)
+      this.info = newInfo
+      this.setIfNew()
     }
   }
 
