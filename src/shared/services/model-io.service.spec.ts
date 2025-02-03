@@ -131,10 +131,10 @@ describe('ModelIOService', () => {
     let newInfo1 = new NewInformation(msg1, "ni1",
       false,undefined, undefined, undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
       new Ref('//@author/@messages.1/@generates.1', 'http://www.unikoblenz.de/keml#//NewInformation'))
-    
 
-    let infoLink0 = new InformationLink(newInfo0, pre0, InformationLinkType.SUPPLEMENT) // necessary to test JsonFixer.addMissingSupplementType
-    let infoLink1 = new InformationLink(pre1, newInfo1, InformationLinkType.STRONG_ATTACK)
+
+    let infoLink0 = new InformationLink(newInfo0, pre0, InformationLinkType.SUPPLEMENT, undefined, new Ref('//@author/@messages.1/@generates.0/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink')) // necessary to test JsonFixer.addMissingSupplementType
+    let infoLink1 = new InformationLink(pre1, newInfo1, InformationLinkType.STRONG_ATTACK, undefined, new Ref( '//@author/@preknowledge.1/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink'))
 
     let authorStr = "\"author\" : {" +
       msgsStr +",\n" +
@@ -192,6 +192,18 @@ describe('ModelIOService', () => {
     let resultRec = (callResult.author.messages[1] as ReceiveMessage)
     testListRefs(resultRec.generates, msg1.generates)
     testListRefs(resultRec.repeats, msg1.repeats)
+
+    // ********** newInfo ****************
+    let resultNewInfos = (callResult.author.messages[1] as ReceiveMessage).generates
+    resultNewInfos.forEach((newInfo, i) => {
+      expect(newInfo.message).toEqual(msg1.generates[i].message)
+      expect(newInfo.isInstruction).toEqual(msg1.generates[i].isInstruction)
+      expect(newInfo.source.getRef()).toEqual(msg1.generates[i].source.getRef())
+      testListRefs(newInfo.causes, msg1.generates[i].causes)
+      testListRefs(newInfo.targetedBy, msg1.generates[i].targetedBy)
+      testListRefs(newInfo.isUsedOn, msg1.generates[i].isUsedOn)
+      testListRefs(newInfo.repeatedBy, msg1.generates[i].repeatedBy)
+    })
   })
 
   it('should change a new info\'s source', () => {
