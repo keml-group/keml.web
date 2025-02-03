@@ -76,7 +76,7 @@ describe('ModelIOService', () => {
       "        \"isInstruction\" : true,\n" +
       "        \"causes\" : [ {\n" +
       "         \"linkText\" : \"\",\n" +
-      "         \"type\" : \"SUPPORT\",\n" +
+      "         \"type\" : \"SUPPLEMENT\",\n" +
       "         \"target\" : {\n" +
       "          \"eClass\" : \"http://www.unikoblenz.de/keml#//PreKnowledge\",\n" +
       "          \"$ref\" : \"//@author/@preknowledge.0\"\n" +
@@ -204,6 +204,19 @@ describe('ModelIOService', () => {
       testListRefs(newInfo.isUsedOn, msg1.generates[i].isUsedOn)
       testListRefs(newInfo.repeatedBy, msg1.generates[i].repeatedBy)
     })
+
+    // ********** infoLinks **************
+    let resultLink0 = resultNewInfos[0].causes[0]
+    let resultLink1 = callResult.author.preknowledge[1].causes[0]
+    function compareLinks(l1: InformationLink, l2: InformationLink) {
+      expect(l1.getRef()).toEqual(l2.getRef())
+      expect(l1.source.getRef()).toEqual(l2.source.getRef())
+      expect(l1.target.getRef()).toEqual(l2.target.getRef())
+      expect(l1.type).toEqual(l2.type)
+      expect(l1.linkText).toEqual(l2.linkText)
+    }
+    compareLinks(resultLink0, infoLink0)
+    compareLinks(resultLink1, infoLink1)
   })
 
   it('should change a new info\'s source', () => {
