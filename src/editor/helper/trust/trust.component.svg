@@ -1,3 +1,4 @@
 <svg:g >
   <rect [attr.x]="x" [attr.y]="y" [attr.width]="w" [attr.height]="h" [attr.fill]="color"></rect>
+  <text [attr.x]="0.45*w" [attr.y]="h*0.35" font-size="100%" transform="rotate(90)">{{trust}}</text>
 </svg:g>
