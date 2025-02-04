@@ -1,14 +1,9 @@
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {NgIf} from "@angular/common";
-import {PersonSvgComponent} from "../person-svg/person-svg.component";
 
 @Component({
-  selector: '[trust]',
+  selector: '[trust-svg]',
   standalone: true,
-  imports: [
-    NgIf,
-    PersonSvgComponent
-  ],
+  imports: [],
   templateUrl: './trust.component.svg',
   styleUrl: './trust.component.css'
 })
