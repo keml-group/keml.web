@@ -72,6 +72,6 @@ export class DetailsService {
         height: '100vh'
       }
     )
-    dialogRef.componentInstance.conv = conversation
+    dialogRef.componentInstance.conversation = conversation
   }
 }
