@@ -27,6 +27,7 @@ import {MsgInnerComponent} from "./helper/msg-inner/msg-inner.component";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MsgOverviewComponent} from "./helper/msg-overview/msg-overview.component";
 import {ArrowBetweenElemsComponent} from "./helper/arrow-between-elems/arrow-between-elems.component";
+import {ConversationPickerComponent} from "./helper/conversation-picker/conversation-picker.component";
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import {ArrowBetweenElemsComponent} from "./helper/arrow-between-elems/arrow-bet
     EditorComponent,
     ConversationPartnerComponent,
     ConversationPartnerDetailsComponent,
+    ConversationPickerComponent,
     PersonSvgComponent,
     DatabaseSvgComponent,
     AuthorComponent,

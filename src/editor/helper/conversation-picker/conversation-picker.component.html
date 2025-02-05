@@ -1,0 +1,14 @@
+<label>Pick a conversation</label>
+
+<button *ngFor="let title of titles; let i = index"
+        (click)="chooseConversation(i)">
+  {{title}}
+</button>
+
+<div class="row">
+  <button class="tool-button-text" (click)="closeMe()">
+    <mat-icon aria-hidden="false" fontIcon="x"></mat-icon>
+    Cancel
+  </button>
+</div>
+
