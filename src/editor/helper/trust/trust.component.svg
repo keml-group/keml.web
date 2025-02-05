@@ -1,4 +1,4 @@
-<svg:g >
-  <rect [attr.x]="x" [attr.y]="y" [attr.width]="w" [attr.height]="h" [attr.fill]="color"></rect>
-  <text [attr.x]="0" [attr.y]="0" font-size="100%" [attr.transform]="'translate('+x +','+ y +') rotate(90)'">{{trust}}</text>
+<svg:g [attr.transform]="'translate('+x+','+y+')'">
+  <rect [attr.x]="0" [attr.y]="0" [attr.width]="w" [attr.height]="h" [attr.fill]="color"></rect>
+  <text [attr.x]="0" [attr.y]="0" font-size="100%" [attr.transform]="'rotate(90) translate('+h/2+')'" text-anchor="middle" >{{trust}}</text>
 </svg:g>
