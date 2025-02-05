@@ -1,0 +1,14 @@
+<h2>Pick a conversation</h2>
+
+<button class="list-button" *ngFor="let title of titles; let i = index"
+        (click)="chooseConversation(i)">
+  {{title}}
+</button>
+
+<div class="msg-form">
+  <button class="tool-button-text" (click)="closeMe()">
+    <mat-icon aria-hidden="false" fontIcon="clear"></mat-icon>
+    Cancel
+  </button>
+</div>
+

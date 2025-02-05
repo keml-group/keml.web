@@ -14,13 +14,17 @@ import { DatabaseSvgComponent } from './helper/database-svg/database-svg.compone
 import { PersonSvgComponent } from './helper/person-svg/person-svg.component';
 import { MatIcon } from '@angular/material/icon';
 import { MatToolbar } from '@angular/material/toolbar';
+import {ConversationPickerComponent} from "./helper/conversation-picker/conversation-picker.component";
+import {MatDialog} from "@angular/material/dialog";
+import {MatTooltipModule} from "@angular/material/tooltip";
+
 
 @Component({
     selector: 'keml-editor',
     templateUrl: './editor.component.html',
     styleUrl: './editor.component.css',
     standalone: true,
-    imports: [MatToolbar, MatIcon, PersonSvgComponent, DatabaseSvgComponent, TextAreaSvgComponent, AuthorComponent, NgFor, ConversationPartnerComponent, PreknowledgeComponent, MsgComponent]
+    imports: [MatTooltipModule, MatToolbar, MatIcon, PersonSvgComponent, DatabaseSvgComponent, TextAreaSvgComponent, AuthorComponent, NgFor, ConversationPartnerComponent, PreknowledgeComponent, MsgComponent]
 })
 export class EditorComponent {
 
@@ -31,6 +35,7 @@ export class EditorComponent {
     public detailsService: DetailsService,
     public modelIOService: ModelIOService,
     private ioService: IoService,
+    private dialog: MatDialog,
   ) {
     this.conversation = this.modelIOService.newKEML();
   }
@@ -42,6 +47,36 @@ export class EditorComponent {
   newFromChatGpt(): void {
     document.getElementById('openChatGptConv')?.click();
   }
+
+  // this needs to be called on all input elements to allow them to accept the same value twice
+  clearElem(event: Event) {
+    let target = event.target as HTMLInputElement;
+    target.value = ''
+  }
+
+  newFromChatGptList() {
+    document.getElementById('openChatGptConvList')?.click();
+  }
+
+  startWithAllConvs(event: Event) {
+    this.ioService.loadStringFromFile(event).then( (txt: string) =>
+      this.openConversationPicker(ChatGptConv2LlmMessages.separateConvs(txt))
+    )
+  }
+
+  openConversationPicker(jsons: any[]) {
+    const dialogRef = this.dialog.open(
+      ConversationPickerComponent,
+      {width: '40%', height: '80%'}
+    )
+    dialogRef.componentInstance.texts = jsons;
+    dialogRef.componentInstance.chosenJson.subscribe(choice => {
+      let msgs = ChatGptConv2LlmMessages.parseConversationJSON(choice)
+      this.conversation = this.modelIOService.convFromLlmMessages(msgs)
+      dialogRef.componentInstance.chosenJson.unsubscribe()
+    })
+  }
+
 
   startWithMsgs(event: Event): void {
     this.ioService.loadStringFromFile(event).then(txt => {
