@@ -3,8 +3,20 @@ import {ChatGptAuthor, ChatGptMessage} from "./chat-gpt-message";
 
 export class ChatGptConv2LlmMessages {
 
+  static separateConvs(convs: string): any[] {
+    return (JSON.parse(convs) as any[]);
+  }
+
+  static getTitlesFromJsonArray(convJson: any[]) {
+    return convJson.map(entry => entry['title'])
+  }
+
   static parseConversation(conv: string): LLMMessage[] {
     let convJson = JSON.parse(conv);
+    return this.parseConversationJSON(convJson)
+  }
+
+  static parseConversationJSON(convJson: any): LLMMessage[] {
     return this.parseMessageMapping(convJson['mapping'], convJson['current_node'])
   }
 
