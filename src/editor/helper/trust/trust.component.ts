@@ -26,7 +26,7 @@ export class TrustComponent implements OnInit, OnChanges {
 
   computeColor() {
     if (!this.trust ) {
-      return '#666666' // todo
+      return '#FFFFFF' // todo
     }
     if (this.trust < 0) {
       return this.useRed()
@@ -36,8 +36,8 @@ export class TrustComponent implements OnInit, OnChanges {
   }
 
   useRed() {
-    let factor = 1- this.trust
-    let green = (factor * 160).toString(16)
+    let factor = 1+ this.trust
+    let green = (factor * 160).toString(16).substring(0,2)
     console.log(green)
     return '#ff'+green +'00'
   }
