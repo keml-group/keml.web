@@ -14,7 +14,7 @@ export class TrustComponent implements OnInit, OnChanges {
   @Input() x: number = 0;
   @Input() y: number = 0;
 
-  color: string = '#666666';
+  color: string = '#FFFFFF';
 
   ngOnInit() {
     this.color = this.computeColor()
@@ -25,36 +25,34 @@ export class TrustComponent implements OnInit, OnChanges {
   }
 
   computeColor() {
-    if (!this.trust ) {
+    if (this.trust == undefined ) {
       return '#FFFFFF' // todo
     }
     if (this.trust < 0) {
-      return this.useRed()
+      return this.createRed()
     } else {
-      return this.useGreen()
+      return this.createGreen()
     }
   }
 
-  useRed() {
-    let factor = 1+ this.trust
-    let green = this.computeTwoHexDigits(factor)
-    console.log(green)
-    return '#ff'+green +'00'
+  createRed() {
+    let factor = 1 + this.trust
+    return '#ff'+this.computeTwoHexDigits(factor) +'00'
   }
 
-  useGreen() {
+  createGreen() {
     let factor = 1- this.trust
-    let red = this.computeTwoHexDigits(factor)
-    return '#'+red+'ff00'
+    return '#'+this.computeTwoHexDigits(factor)+'ff00'
   }
 
   //expects a number between 0 and 1
-  private computeTwoHexDigits(factor: number): string{
-    let res = (factor * 160).toString(16).substring(0,2)
-    if(res.length==1){
-      res = '0'+res
+  computeTwoHexDigits(factor: number): string{
+    let res = Math.round(factor * 255)
+    let resStr =   res.toString(16)
+    if(resStr.length==1){
+      resStr = '0'+resStr
     }
-    return res
+    return resStr
   }
 
 }
