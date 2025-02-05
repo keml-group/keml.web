@@ -15,18 +15,34 @@ export class TrustComponent implements OnInit, OnChanges {
   @Input() y: number = 0;
 
   color: string = '#FFFFFF';
+  trust4Display: string = ''; //use to end after a certain number of digits
 
   ngOnInit() {
-    this.color = this.computeColor()
+    this.determineRepresentationAndColor()
   }
 
   ngOnChanges() {
+    this.determineRepresentationAndColor()
+  }
+
+  private determineRepresentationAndColor() {
     this.color = this.computeColor()
+    this.trust4Display =this.computeTrust4Display()
+  }
+
+  computeTrust4Display(): string {
+    if (this.trust != undefined) {
+      let str = this.trust.toString()
+      if (str.length > 9) {
+        str = str.substring(0,7)+'..'
+      }
+      return str
+    } else return ''
   }
 
   computeColor() {
     if (this.trust == undefined ) {
-      return '#FFFFFF' // todo
+      return '#FFFFFF'
     }
     if (this.trust < 0) {
       return this.createRed()
