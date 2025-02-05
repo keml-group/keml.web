@@ -10,12 +10,11 @@ describe('ConversationPickerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ConversationPickerComponent],
-      providers: [
-        {provide: MatDialogRef, useValue: {}},
-      ],
-      imports: [MatIcon],
-    })
+    providers: [
+        { provide: MatDialogRef, useValue: {} },
+    ],
+    imports: [MatIcon, ConversationPickerComponent],
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(ConversationPickerComponent);

@@ -1,11 +1,15 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ChatGptConv2LlmMessages} from "../../../shared/models/llm/chat-gpt-conv2-llm-messages";
 import {MatDialogRef} from "@angular/material/dialog";
+import {MatIcon} from "@angular/material/icon";
+import {NgFor} from "@angular/common";
 
 @Component({
   selector: 'app-conversation-picker',
   templateUrl: './conversation-picker.component.html',
-  styleUrl: './conversation-picker.component.css'
+  styleUrl: './conversation-picker.component.css',
+  standalone: true,
+  imports: [MatIcon, NgFor]
 })
 export class ConversationPickerComponent implements OnInit {
 
