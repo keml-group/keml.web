@@ -11,7 +11,7 @@ describe('TrustComponent', () => {
       imports: [TrustComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(TrustComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -20,4 +20,14 @@ describe('TrustComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should produce red', () => {
+    component.trust = -1.0
+    expect(component.computeColor()).toEqual('#ff0000')
+  })
+
+  it('should produce green', () => {
+    component.trust = 1.0
+    expect(component.computeColor()).toEqual('#00ff00')
+  })
 });
