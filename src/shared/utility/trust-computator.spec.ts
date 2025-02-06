@@ -1,8 +1,9 @@
-import { TrustComputator } from './trust-computator';
+import {TrustComputator} from './trust-computator';
 import {Conversation} from "../models/keml/conversation";
-import {Information, NewInformation, Preknowledge, ReceiveMessage} from "../models/keml/msg-info";
+import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "../models/keml/msg-info";
 import {ConversationPartner} from "../models/keml/conversation-partner";
 import {Author} from "../models/keml/author";
+import {InformationLinkType} from "../models/keml/json/knowledge-models";
 
 describe('TrustComputator', () => {
   it('should create an instance', () => {
@@ -83,6 +84,18 @@ describe('TrustComputator', () => {
     expectations.set(info2, 0.75)
     expectations.set(info3, 0.5)
     verify()
+
+    // add info links
+    new InformationLink(pre2, pre0, InformationLinkType.STRONG_ATTACK)
+
+
+    verify()
+
+/*
+    let json = conv.toJson()
+    let jsonStr: string = JSON.stringify(json)
+    expect(jsonStr).toEqual('')
+    */
 
   })
 });

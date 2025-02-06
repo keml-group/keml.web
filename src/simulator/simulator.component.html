@@ -2,6 +2,12 @@
 <button class="close-button">
   <mat-icon aria-hidden="false" fontIcon="close" (click)="close()"></mat-icon>
 </button>
+<mat-toolbar class="file-level-bar">
+  <button class="file-level-button" (click)="currentTrusts()">
+    <mat-icon aria-hidden="false" fontIcon="refresh" ></mat-icon>
+    Compute Current Trusts
+  </button>
+</mat-toolbar>
 
 <div style="width: 1500px; height: 1000px; overflow: auto;">
   <svg #simulation id="svg" style="border: 1px solid black;" width="1500" height="5000" overflow="scroll">

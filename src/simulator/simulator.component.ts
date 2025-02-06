@@ -9,6 +9,8 @@ import {NgForOf} from "@angular/common";
 import {PreknowledgeComponent} from "../editor/preknowledge/preknowledge.component";
 import {TextAreaSvgComponent} from "../editor/helper/text-area-svg/text-area-svg.component";
 import {SimulationService} from "../shared/services/simulation.service";
+import {MatToolbar} from "@angular/material/toolbar";
+import {TrustComputator} from "../shared/utility/trust-computator";
 
 @Component({
   selector: 'app-simulator',
@@ -20,7 +22,8 @@ import {SimulationService} from "../shared/services/simulation.service";
         MsgComponent,
         NgForOf,
         PreknowledgeComponent,
-        TextAreaSvgComponent
+        TextAreaSvgComponent,
+        MatToolbar
     ],
   templateUrl: './simulator.component.html',
   styleUrl: './simulator.component.css'
@@ -36,6 +39,10 @@ export class SimulatorComponent {
 
   close() {
     this.dialogRef.close();
+  }
+
+  currentTrusts() {
+    TrustComputator.computeCurrentTrusts(this.conversation)
   }
 
 }
