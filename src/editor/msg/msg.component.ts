@@ -21,6 +21,7 @@ export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() msgTiming!: number; //extra input to be used to detect changes
   @Input() msg!: Message;
   @Input() showInfos = true;
+  @Input() showInfoTrusts = false;
   @Output() chooseMsg: EventEmitter<Message> = new EventEmitter();
   @Output() chooseInfo = new EventEmitter<Information>();
   @Output() chooseInfoLink: EventEmitter<InformationLink> = new EventEmitter<InformationLink>()
