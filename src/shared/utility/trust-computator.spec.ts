@@ -1,6 +1,6 @@
 import { TrustComputator } from './trust-computator';
 import {Conversation} from "../models/keml/conversation";
-import {Preknowledge, ReceiveMessage} from "../models/keml/msg-info";
+import {Information, Preknowledge, ReceiveMessage} from "../models/keml/msg-info";
 import {ConversationPartner} from "../models/keml/conversation-partner";
 import {Author} from "../models/keml/author";
 
@@ -39,8 +39,15 @@ describe('TrustComputator', () => {
     //call to test:
     TrustComputator.computeCurrentTrusts(conv)
 
-    
+    let expectations: Map<Information, number> = new Map<Information, number>()
+    expectations.set(pre0, 0.5)
+    expectations.set(pre1, 0.5)
+    expectations.set(pre2, 0.5)
 
-    expect() //todo
+
+    for (let [info, num] of expectations) {
+      expect(info.currentTrust).toEqual(num)
+    }
+
   })
 });
