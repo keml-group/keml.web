@@ -1,6 +1,6 @@
 import { TrustComputator } from './trust-computator';
 import {Conversation} from "../models/keml/conversation";
-import {Information, Preknowledge, ReceiveMessage} from "../models/keml/msg-info";
+import {Information, NewInformation, Preknowledge, ReceiveMessage} from "../models/keml/msg-info";
 import {ConversationPartner} from "../models/keml/conversation-partner";
 import {Author} from "../models/keml/author";
 
@@ -36,18 +36,53 @@ describe('TrustComputator', () => {
     let author = new Author('author', 0, pres, msgs)
     let conv = new Conversation('trusts', author, cps)
 
-    //call to test:
-    TrustComputator.computeCurrentTrusts(conv)
+    function verify() {
+      //call to test:
+      TrustComputator.computeCurrentTrusts(conv)
+
+      for (let [info, num] of expectations) {
+        expect(info.currentTrust).toEqual(num)
+      }
+    }
 
     let expectations: Map<Information, number> = new Map<Information, number>()
     expectations.set(pre0, 0.5)
     expectations.set(pre1, 0.5)
     expectations.set(pre2, 0.5)
 
+    verify()
 
-    for (let [info, num] of expectations) {
-      expect(info.currentTrust).toEqual(num)
+    // **** next test: add repetitions
+    function addRep(info: Information, msg: ReceiveMessage) {
+      msg.repeats.push(info)
+      info.repeatedBy.push(msg)
     }
+
+    addRep(pre1, rec2)
+    addRep(pre0, rec2)
+    addRep(pre0, rec1)
+
+    expectations.set(pre0, 1)
+    expectations.set(pre1, 0.75)
+    expectations.set(pre2, 0.5)
+
+    verify()
+
+    // add new infos:
+    let info0 = new NewInformation(rec0, 'n0')
+    let info1 = new NewInformation(rec0, 'n1')
+    let info2 = new NewInformation(rec2, 'n2')
+    let info3 = new NewInformation(rec3, 'n3')
+
+    addRep(info0, rec1)
+    addRep(info0, rec3)
+    addRep(info2, rec3)
+
+    expectations.set(info0, 1)
+    expectations.set(info1, 0.5)
+    expectations.set(info2, 0.75)
+    expectations.set(info3, 0.5)
+    verify()
 
   })
 });
