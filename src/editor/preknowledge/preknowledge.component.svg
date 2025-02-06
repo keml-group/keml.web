@@ -2,6 +2,7 @@
   <g info-inner
      [attr.id]="info.gId+'-main'"
      [info]="info"
+     [showTrust]="showTrust"
      (mousedown)="startDrag($event)"
      (mousemove)="drag($event)"
      (mouseup)="endDrag($event)"

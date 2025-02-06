@@ -14,5 +14,6 @@ import { InfoInnerComponent } from '../helper/info-inner/info-inner.component';
 })
 export class PreknowledgeComponent extends InfoComponent {
   @Input() override info!: Preknowledge;
+  @Input() showTrust = false;
 
 }

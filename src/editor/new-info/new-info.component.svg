@@ -2,6 +2,7 @@
   <g info-inner
      [attr.id]="info.gId+'-main'"
      [info]="info"
+     [showTrust]="showTrust"
      [attr.transform]="'translate('+ (info.position.x) + ', ' + info.position.y +')'"
      (mousedown)="startDrag($event)"
      (mousemove)="drag($event)"

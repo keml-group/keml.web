@@ -15,5 +15,6 @@ import {InfoInnerComponent} from "../helper/info-inner/info-inner.component";
 })
 export class NewInfoComponent extends InfoComponent {
   @Input() override info!: NewInformation;
+  @Input() showTrust = false;
 
 }
