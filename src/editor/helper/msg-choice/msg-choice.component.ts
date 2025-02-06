@@ -4,11 +4,18 @@ import {ModelIOService} from "../../../shared/services/model-io.service";
 import {Message, ReceiveMessage, SendMessage} from "../../../shared/models/keml/msg-info";
 import {ConversationPartner} from "../../../shared/models/keml/conversation-partner";
 import {Author} from "../../../shared/models/keml/author";
+import { MsgComponent } from '../../msg/msg.component';
+import { ConversationPartnerComponent } from '../../cp/conversation-partner.component';
+import { AuthorComponent } from '../../author/author.component';
+import { MsgOverviewComponent } from '../msg-overview/msg-overview.component';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'msg-choice',
-  templateUrl: './msg-choice.component.html',
-  styleUrl: './msg-choice.component.css'
+    selector: 'msg-choice',
+    templateUrl: './msg-choice.component.html',
+    styleUrl: './msg-choice.component.css',
+    standalone: true,
+    imports: [NgIf, MsgOverviewComponent, AuthorComponent, NgFor, ConversationPartnerComponent, MsgComponent]
 })
 export class MsgChoiceComponent {
 

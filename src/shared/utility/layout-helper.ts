@@ -38,6 +38,12 @@ export class LayoutHelper {
     } else {return LayoutHelper.distanceToFirstCP;}
   }
 
+  static timeMessages(msgs: Message[]) {
+    msgs.forEach((msg, i) => {
+      msg.timing = i
+    })
+  }
+
   static  computeMessageY(timing: number): number {
     return LayoutHelper.distanceToFirstMessage+LayoutHelper.distanceBetweenMessages*timing;
   }
@@ -84,10 +90,18 @@ export class LayoutHelper {
   static positionInfos(pre: Preknowledge[], msgs: Message[]): void {
     //todo currently position new infos as 0:
     this.initializeInfoPos(msgs);
+    this.positionPreknowledge(pre);
+  }
 
+  static positionPreknowledge(pre: Preknowledge[]) {
     pre.forEach(p => {
       if (p.position.w < 7 ) {
-        const timing = Math.min(...p.isUsedOn.map(send => send.timing));
+        let timing;
+        if (p.isUsedOn?.length >0) {
+          timing = Math.min(...p.isUsedOn.map(send => send.timing));
+        } else {
+          timing = 0
+        }
         p.position = this.bbForPreknowledge(LayoutHelper.computeMessageY(timing))
       }
     })

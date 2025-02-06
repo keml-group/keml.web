@@ -11,9 +11,9 @@ describe('InformationLinkComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [InformationLinkComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-    })
+    imports: [InformationLinkComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(InformationLinkComponent);

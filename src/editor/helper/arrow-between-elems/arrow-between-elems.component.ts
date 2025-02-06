@@ -10,11 +10,15 @@ import {BoundingBox} from "../../../shared/models/graphical/bounding-box";
 import {ArrowType} from "../../../shared/models/graphical/arrow-heads";
 import {SVGAccessService} from "../../../shared/services/svg-access.service";
 import {Observable, Subscription} from "rxjs";
+import { ArrowSvgComponent } from '../arrow-svg/arrow-svg.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: '[arrowElems]',
-  templateUrl: './arrow-between-elems.component.svg',
-  styleUrl: './arrow-between-elems.component.css'
+    selector: '[arrowElems]',
+    templateUrl: './arrow-between-elems.component.svg',
+    styleUrl: './arrow-between-elems.component.css',
+    standalone: true,
+    imports: [NgIf, ArrowSvgComponent]
 })
 export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
 

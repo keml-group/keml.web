@@ -1,10 +1,14 @@
 import {Component, Input} from '@angular/core';
 import {Information} from "../../../shared/models/keml/msg-info";
+import { PersonSvgComponent } from '../person-svg/person-svg.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: '[is-instr]',
-  templateUrl: './is-instr-svg.component.svg',
-  styleUrl: './is-instr-svg.component.css'
+    selector: '[is-instr]',
+    templateUrl: './is-instr-svg.component.svg',
+    styleUrl: './is-instr-svg.component.css',
+    standalone: true,
+    imports: [NgIf, PersonSvgComponent]
 })
 export class IsInstrSvgComponent {
 

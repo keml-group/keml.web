@@ -1,13 +1,22 @@
 <div class="editor" id="editor">
   <div class="file-handling">
-    <input id="openKEML" type="file" class="file-upload" style="display: none" (change)="loadKeml($event)">
-    <input id="openChatGptConv" type="file" class="file-upload" style="display: none" (change)="startWithMsgs($event)">
+    <input id="openKEML" type="file" class="file-upload" style="display: none" (change)="loadKeml($event)" (click)="clearElem($event)">
+    <input id="openChatGptConv" type="file" class="file-upload" style="display: none" (change)="startWithMsgs($event)" (click)="clearElem($event)">
+    <input id="openChatGptConvList" type="file" class="file-upload" style="display: none" (change)="startWithAllConvs($event)" (click)="clearElem($event)">
     <mat-toolbar class="file-level-bar">
       <button class="file-level-button" (click)="newConversation()">
         <mat-icon aria-hidden="false" fontIcon="insert_drive_file" ></mat-icon>
         New
       </button>
-      <button class="file-level-button" (click)="newFromChatGpt()">
+      <button class="file-level-button"
+              [matTooltip]="'Upload your complete conv.json'"
+              (click)="newFromChatGptList()">
+        <mat-icon aria-hidden="false" fontIcon="insert_drive_file" ></mat-icon>
+        From ChatGPT List
+      </button>
+      <button class="file-level-button"
+              [matTooltip]="'Upload a single element of conv.json'"
+              (click)="newFromChatGpt()">
         <mat-icon aria-hidden="false" fontIcon="insert_drive_file" ></mat-icon>
         From ChatGPT
       </button>
@@ -68,8 +77,8 @@
             <g text-area-svg [(text)]="conversation.title" [singleEdit]="true" [w]="600" [h]="25" [x]="0" [y]="0"></g>
             <g authorG [author]="conversation.author"></g>
             <g cp *ngFor="let convP of conversation.conversationPartners" [conversationPartner]="convP" (openDetails)="detailsService.openConversationPartnerDetails(convP)"></g>
-            <g preknowG *ngFor="let pre of conversation.author.preknowledge" [info]="pre" (chooseInfo)="detailsService.openInfoDetails(pre)"></g>
-            <g msgG *ngFor="let m of conversation.author.messages" [msg]="m" [msgTiming]="m.timing" (chooseMsg)="detailsService.openMessageDetails(m)" (chooseInfo)="detailsService.openInfoDetails($event)"></g>
+            <g preknowG *ngFor="let pre of conversation.author.preknowledge" [info]="pre" (chooseInfo)="detailsService.openInfoDetails(pre)" (chooseInfoLink)="detailsService.openLinkDetails($event)"></g>
+            <g msgG *ngFor="let m of conversation.author.messages" [msg]="m" [msgTiming]="m.timing" (chooseMsg)="detailsService.openMessageDetails(m)" (chooseInfo)="detailsService.openInfoDetails($event)" (chooseInfoLink)="detailsService.openLinkDetails($event)"></g>
           </g>
         </svg>
       </div>

@@ -10,9 +10,9 @@ describe('InfoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [InfoComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-    })
+    imports: [InfoComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(InfoComponent);

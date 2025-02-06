@@ -1,9 +1,10 @@
 import {Component, Input} from '@angular/core';
 
 @Component({
-  selector: '[person]',
-  templateUrl: './person-svg.component.svg',
-  styleUrl: './person-svg.component.css'
+    selector: '[person]',
+    templateUrl: './person-svg.component.svg',
+    styleUrl: './person-svg.component.css',
+    standalone: true
 })
 export class PersonSvgComponent {
 

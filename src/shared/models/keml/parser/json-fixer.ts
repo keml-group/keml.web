@@ -7,15 +7,6 @@ import {InformationLinkType} from "../json/knowledge-models";
 
 export class JsonFixer {
 
-  // we can decide whether preknowledge or new info just by looking at the prefix of ref (however, this is hacky)
-  static determineParentInfoClass(ref: string): string {
-    let pathSegments = ref.split(Ref.pathDivider)
-    let relevant = pathSegments[pathSegments.length-2]
-    if (relevant.startsWith(Author.preknowledgePrefix))
-      return Preknowledge.eClass
-    else return NewInformation.eClass
-  }
-
   //since Supplement is =0 on the original KEML enum, it is not exported into the json
   static addMissingSupplementType(conv: ConversationJson) {
     conv.author.preknowledge?.forEach(pre => {
@@ -70,11 +61,6 @@ export class JsonFixer {
 
         }
       }
-    )
-
-    let receives = (conv.author.messages.filter(r => !Message.isSend(r.eClass)) as ReceiveMessageJson[])
-    receives.map(receive =>
-      receive.generates
     )
   }
 }

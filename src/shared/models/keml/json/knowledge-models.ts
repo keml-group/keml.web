@@ -35,9 +35,9 @@ export interface InformationLinkJson {
 }
 
 export enum InformationLinkType {
-  STRONG_ATTACK = 'STRONG_ATTACK',
-  ATTACK = 'ATTACK',
-  SUPPLEMENT = 'SUPPLEMENT',
+  SUPPLEMENT = 'SUPPLEMENT', //needs extra tests, jackson serialization treats it as 0 and hence does not write it
   SUPPORT = 'SUPPORT',
   STRONG_SUPPORT = 'STRONG_SUPPORT',
+  ATTACK = 'ATTACK',
+  STRONG_ATTACK = 'STRONG_ATTACK',
 }

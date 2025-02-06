@@ -5,6 +5,6 @@
        [startSuffix]="'-main'"
        [endGID]="infoLink.target.gId"
        [endSuffix]="'-main'"
-       (click)="openDetails()">
+       (click)="clickLink()">
 </svg:g>
 

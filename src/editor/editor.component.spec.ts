@@ -11,10 +11,9 @@ describe('EditorComponent', () => {
 
   beforeEach(waitForAsync (() => {
     TestBed.configureTestingModule({
-      declarations: [EditorComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-      imports: [MatToolbar, MatIcon],
-    })
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatToolbar, MatIcon, EditorComponent],
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(EditorComponent);

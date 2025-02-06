@@ -11,9 +11,9 @@ describe('NewInfoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [NewInfoComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-    })
+    imports: [NewInfoComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(NewInfoComponent);

@@ -44,13 +44,13 @@
   <label class="form-label" >Information Links</label>
   <div class="row">
     <div class="column">
-      <button (click)="detailsService.openLinkCreationDialog(info)">
+      <button (click)="createLink(info)">
         Create Link
       </button>
     </div>
     <div class="column">
       <svg width="200" height="100" *ngFor="let link of info.causes">
-        <g info-inner [info]="link.target"  (click)="detailsService.openLinkDetails(link)">
+        <g info-inner [info]="link.target" (click)="clickLink(link)">
         </g>
         <g arrow-svg
           [start]="{x: 97.5, y: 80, w: 5, h: 5}"
@@ -70,7 +70,7 @@
     </div>
     <div class="column">
       <svg width="350" height="80" *ngFor="let msg of info.repeatedBy">
-        <g msg-overview [msg]="msg" (click)="detailsService.openMessageDetails(msg)">
+        <g msg-overview [msg]="msg" (click)="clickMsg(msg)">
         </g>
         <foreignObject height="20" width="20" x="100" y="60" (click)="modelIOService.deleteRepetition(msg, info)">
           <mat-icon fontIcon="delete" style="color: orange" [matTooltip]="'Delete repetition'"></mat-icon>
@@ -87,7 +87,7 @@
     </div>
     <div class="column">
       <svg width="350" height="80" *ngFor="let msg of info.isUsedOn">
-        <g msg-overview [msg]="msg" (click)="detailsService.openMessageDetails(msg)">
+        <g msg-overview [msg]="msg" (click)="clickMsg(msg)">
         </g>
         <foreignObject height="20" width="20" x="100" y="60" (click)="modelIOService.deleteUsage(msg, info)">
           <mat-icon fontIcon="delete" style="color: orange" [matTooltip]="'Delete usage'"></mat-icon>

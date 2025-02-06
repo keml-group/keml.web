@@ -3,11 +3,17 @@ import {Information, InformationLink, Preknowledge} from "../../../shared/models
 import {MatDialogRef} from "@angular/material/dialog";
 import {ModelIOService} from "../../../shared/services/model-io.service";
 import {InformationLinkType} from "../../../shared/models/keml/json/knowledge-models";
+import { MatIcon } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
+import { InfoChoiceComponent } from '../../helper/info-choice/info-choice.component';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'app-information-link-details',
-  templateUrl: './information-link-details.component.html',
-  styleUrl: './information-link-details.component.css'
+    selector: 'app-information-link-details',
+    templateUrl: './information-link-details.component.html',
+    styleUrl: './information-link-details.component.css',
+    standalone: true,
+    imports: [NgIf, InfoChoiceComponent, FormsModule, NgFor, MatIcon]
 })
 export class InformationLinkDetailsComponent {
 
