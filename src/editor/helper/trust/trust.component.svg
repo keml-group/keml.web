@@ -1,4 +1,8 @@
 <svg:g [attr.transform]="'translate('+x+','+y+')'">
-  <rect [attr.x]="0" [attr.y]="0" [attr.width]="w" [attr.height]="h" [attr.fill]="color"></rect>
+  <rect [attr.x]="0" [attr.y]="0"
+        [attr.width]="w" [attr.height]="h"
+        [attr.fill]="color"
+        style="outline: 1px solid #c9c2c2;"
+  ></rect>
   <text [attr.x]="0" [attr.y]="0" font-size="100%" [attr.transform]="'rotate(90) translate('+h/2+')'" text-anchor="middle" >{{trust4Display}}</text>
 </svg:g>
