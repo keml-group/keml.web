@@ -28,16 +28,18 @@ describe('TrustComputator', () => {
     let rec0 = new ReceiveMessage(cp0, 0, 'm0')
     let rec1 = new ReceiveMessage(cp1, 1, 'm1')
     let rec2 = new ReceiveMessage(cp0, 2, 'm2')
-    let msgs = [rec0, rec1, rec2]
+    let rec3 = new ReceiveMessage(cp0, 3, 'm3')
+    let msgs = [rec0, rec1, rec2, rec3]
 
     //todo add infos and Links
 
     let author = new Author('author', 0, pres, msgs)
-
     let conv = new Conversation('trusts', author, cps)
 
     //call to test:
     TrustComputator.computeCurrentTrusts(conv)
+
+    
 
     expect() //todo
   })
