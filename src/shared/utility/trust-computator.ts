@@ -41,7 +41,7 @@ export class TrustComputator {
 
   static computeTrust(info: Information, recSize: number): number | undefined {
     let argScore = this.computeArgumentationScore(info)
-    if (argScore) {
+    if (argScore != undefined) {
       let res = info.initialTrust +
         this.computeRepetitionScore(info, recSize) +
         2*argScore
