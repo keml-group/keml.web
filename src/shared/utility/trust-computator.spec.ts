@@ -10,24 +10,47 @@ describe('TrustComputator', () => {
     expect(new TrustComputator()).toBeTruthy();
   });
 
-  let pre0: Preknowledge;
-  let pre1: Preknowledge;
-  let pre2: Preknowledge;
+  let p0: Preknowledge;
+  let p1: Preknowledge;
+  let p2: Preknowledge;
   let recLength = 2;
 
   beforeEach(function () {
-    pre0 = new Preknowledge('p0')
-    pre1 = new Preknowledge('p1')
-    pre2 = new Preknowledge('p2')
+    p0 = new Preknowledge('p0')
+    p1 = new Preknowledge('p1')
+    p2 = new Preknowledge('p2')
+
+    p0.currentTrust = 2
+    p1.currentTrust = 2
+    p2.currentTrust = 2
   })
 
+  it('should compute the score of a single Link correctly', () => {
+      let l0 = new InformationLink(p2, p0, InformationLinkType.STRONG_ATTACK)
+      //let l1 = new InformationLink(p1, p0, InformationLinkType.SUPPORT)
+      expect(TrustComputator.score(l0)).toEqual(undefined)
+      p2.currentTrust = 0.5
+      expect(TrustComputator.score(l0)).toEqual(-0.5)
+   }
+  )
+
+  it('should compute the argumentation score of a single node correctly', () => {
+      new InformationLink(p2, p0, InformationLinkType.STRONG_ATTACK)
+      new InformationLink(p1, p0, InformationLinkType.SUPPORT)
+      expect(TrustComputator.computeArgumentationScore(p0)).toEqual(undefined)
+      expect(TrustComputator.computeArgumentationScore(p1)).toEqual(0)
+      expect(TrustComputator.computeArgumentationScore(p2)).toEqual(0)
+      expect(TrustComputator.computeArgumentationScore(p0)).toEqual(-0.25)
+    }
+  )
+
   it('should evaluate a single node correctly', () => {
-      new InformationLink(pre2, pre0, InformationLinkType.STRONG_ATTACK)
-      new InformationLink(pre1, pre0, InformationLinkType.SUPPORT)
-      expect(TrustComputator.computeTrust(pre0, recLength)).toEqual(undefined)
-      expect(TrustComputator.computeTrust(pre1, recLength)).toEqual(0.5)
-      expect(TrustComputator.computeTrust(pre2, recLength)).toEqual(0.5)
-      expect(TrustComputator.computeTrust(pre0, recLength)).toEqual(0.25)
+      new InformationLink(p2, p0, InformationLinkType.STRONG_ATTACK)
+      new InformationLink(p1, p0, InformationLinkType.SUPPORT)
+      expect(TrustComputator.computeTrust(p0, recLength)).toEqual(undefined)
+      expect(TrustComputator.computeTrust(p1, recLength)).toEqual(0.5)
+      expect(TrustComputator.computeTrust(p2, recLength)).toEqual(0.5)
+      expect(TrustComputator.computeTrust(p0, recLength)).toEqual(0.25)
     }
   )
 
