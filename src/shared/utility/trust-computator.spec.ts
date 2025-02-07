@@ -10,6 +10,27 @@ describe('TrustComputator', () => {
     expect(new TrustComputator()).toBeTruthy();
   });
 
+  let pre0: Preknowledge;
+  let pre1: Preknowledge;
+  let pre2: Preknowledge;
+  let recLength = 2;
+
+  beforeEach(function () {
+    pre0 = new Preknowledge('p0')
+    pre1 = new Preknowledge('p1')
+    pre2 = new Preknowledge('p2')
+  })
+
+  it('should evaluate a single node correctly', () => {
+      new InformationLink(pre2, pre0, InformationLinkType.STRONG_ATTACK)
+      new InformationLink(pre1, pre0, InformationLinkType.SUPPORT)
+      expect(TrustComputator.computeTrust(pre0, recLength)).toEqual(undefined)
+      expect(TrustComputator.computeTrust(pre1, recLength)).toEqual(0.5)
+      expect(TrustComputator.computeTrust(pre2, recLength)).toEqual(0.5)
+      expect(TrustComputator.computeTrust(pre0, recLength)).toEqual(0.25)
+    }
+  )
+
   it('should adapt the current trusts', () => {
     let pre0 = new Preknowledge('pre0',
       false, undefined, undefined, undefined, undefined, undefined,
