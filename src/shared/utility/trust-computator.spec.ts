@@ -31,6 +31,10 @@ describe('TrustComputator', () => {
       expect(TrustComputator.score(l0)).toEqual(undefined)
       p2.currentTrust = 0.5
       expect(TrustComputator.score(l0)).toEqual(-0.5)
+      l0.type = InformationLinkType.SUPPORT
+      expect(TrustComputator.score(l0)).toEqual(0.25)
+      l0.type = InformationLinkType.SUPPLEMENT
+      expect(TrustComputator.score(l0)).toEqual(0)
    }
   )
 

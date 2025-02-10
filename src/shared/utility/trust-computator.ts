@@ -25,7 +25,7 @@ export class TrustComputator {
       for(let i = 0; i<toVisit.length; i++) {
         let info = toVisit[i]
         let res = this.computeTrust(info, recSize)
-        if (res) {
+        if (res != undefined) {
           info.currentTrust = res
           toVisit.splice(i, 1)
         }
