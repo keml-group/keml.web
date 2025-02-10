@@ -141,15 +141,11 @@ describe('TrustComputator', () => {
 
     // add info links
     new InformationLink(pre2, pre0, InformationLinkType.STRONG_ATTACK)
+    new InformationLink(info1, pre0, InformationLinkType.SUPPORT)
+    new InformationLink(info2, pre2, InformationLinkType.STRONG_SUPPORT)
 
-
+    expectations.set(pre2, 1)
+    expectations.set(pre0, -0.5)
     verify()
-
-/*
-    let json = conv.toJson()
-    let jsonStr: string = JSON.stringify(json)
-    expect(jsonStr).toEqual('')
-    */
-
   })
 });
