@@ -8,7 +8,7 @@ import {Component, Input, OnChanges, OnInit} from '@angular/core';
   styleUrl: './trust.component.css'
 })
 export class TrustComponent implements OnInit, OnChanges {
-  @Input() trust!: number;
+  @Input() trust: number | undefined;
   @Input() w!: number;
   @Input() h!: number;
   @Input() x: number = 0;
@@ -37,7 +37,7 @@ export class TrustComponent implements OnInit, OnChanges {
         str = str.substring(0,7)+'..'
       }
       return str
-    } else return ''
+    } else return '?'
   }
 
   computeColor() {
@@ -52,12 +52,12 @@ export class TrustComponent implements OnInit, OnChanges {
   }
 
   createRed() {
-    let factor = 1 + this.trust
+    let factor = 1 + this.trust!
     return '#ff'+this.computeTwoHexDigits(factor) +'00'
   }
 
   createGreen() {
-    let factor = 1- this.trust
+    let factor = 1- this.trust!
     return '#'+this.computeTwoHexDigits(factor)+'ff00'
   }
 
