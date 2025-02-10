@@ -4,6 +4,7 @@ import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessa
 import {ConversationPartner} from "../models/keml/conversation-partner";
 import {Author} from "../models/keml/author";
 import {InformationLinkType} from "../models/keml/json/knowledge-models";
+import {ConversationJson} from "../models/keml/json/sequence-diagram-models";
 
 describe('TrustComputator', () => {
   it('should create an instance', () => {
@@ -63,6 +64,50 @@ describe('TrustComputator', () => {
     // todo why is .toEqual(0.2) not possible? The numbers are easy, only negative sometimes
     }
   )
+
+  it('should return undefined on a node\'s trust computation if no initial trust exists on it', () => {
+    //it('should throw an error on a node\'s trust computation if no initial trust exists on it', () => {
+    //todo we need JSON to get a wrong preknowledge (one without initial trust) in
+    let json = '{\n' +
+      '  "eClass": "http://www.unikoblenz.de/keml#//Conversation",\n' +
+      '  "title": "New Conversation",\n' +
+      '  "conversationPartners": [],\n' +
+      '  "author": {\n' +
+      '    "eClass": "http://www.unikoblenz.de/keml#//Author",\n' +
+      '    "name": "Author",\n' +
+      '    "xPosition": 0,\n' +
+      '    "messages": [],\n' +
+      '    "preknowledge": [\n' +
+      '      {\n' +
+      '        "causes": [],\n' +
+      '        "eClass": "http://www.unikoblenz.de/keml#//PreKnowledge",\n' +
+      '        "isInstruction": false,\n' +
+      '        "isUsedOn": [],\n' +
+      '        "message": "p_no_init",\n' +
+      '        "repeatedBy": [],\n' +
+      '        "targetedBy": [],\n' +
+      '        "position": {\n' +
+      '          "x": -354,\n' +
+      '          "y": 122,\n' +
+      '          "w": 200,\n' +
+      '          "h": 50\n' +
+      '        }\n' +
+      '      }\n' +
+      '    ]\n' +
+      '  }\n' +
+      '}'
+    let convJson =  <ConversationJson>JSON.parse(json);
+    let conv = Conversation.fromJSON(convJson);
+    // TrustComputator.computeCurrentTrusts(conv)
+
+    let pres = conv.author.preknowledge
+    let pre0 = pres[0]
+
+    TrustComputator.computeTrust(pre0, 2)
+    // cannot use normal expect since actually, initial and current trust cannot be undefined
+    expect(pre0.initialTrust == undefined).toEqual(true)
+    expect(pre0.currentTrust == undefined).toEqual(true)
+  })
 
   it('should throw an error when evaluating a cycles', () => {
     new InformationLink(p0, p1, InformationLinkType.SUPPORT)
