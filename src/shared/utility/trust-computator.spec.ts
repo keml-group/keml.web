@@ -39,12 +39,15 @@ describe('TrustComputator', () => {
   )
 
   it('should compute the argumentation score of a single node correctly', () => {
-      new InformationLink(p2, p0, InformationLinkType.STRONG_ATTACK)
-      new InformationLink(p1, p0, InformationLinkType.SUPPORT)
-      expect(TrustComputator.computeArgumentationScore(p0)).toEqual(undefined)
+      new InformationLink(p2, p0, InformationLinkType.ATTACK)
+      new InformationLink(p1, p0, InformationLinkType.STRONG_SUPPORT)
       expect(TrustComputator.computeArgumentationScore(p1)).toEqual(0)
       expect(TrustComputator.computeArgumentationScore(p2)).toEqual(0)
-      expect(TrustComputator.computeArgumentationScore(p0)).toEqual(-0.25)
+      expect(TrustComputator.computeArgumentationScore(p0)).toEqual(undefined)
+      p1.currentTrust = 0.5
+      expect(TrustComputator.computeArgumentationScore(p0)).toEqual(undefined)
+      p2.currentTrust = 0.5
+      expect(TrustComputator.computeArgumentationScore(p0)).toEqual(0.25)
     }
   )
 

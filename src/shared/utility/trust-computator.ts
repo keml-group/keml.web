@@ -61,13 +61,14 @@ export class TrustComputator {
   }
 
   static computeArgumentationScore(info: Information): number | undefined {
-    let scores = info.targetedBy.map(link => this.score(link))
+    let scores: (number | undefined)[] = info.targetedBy.map(link => this.score(link))
+    if(scores.length == 0)
+      return 0
+    if (scores.filter(x => x == undefined).length >0) {
+      return undefined
+    }
     let res = 0
-    scores.map(sc => {
-      if (sc) {
-        res += sc
-      } else return undefined
-    } )
+    scores.map(sc => { res += sc!})
     return res
   }
 
