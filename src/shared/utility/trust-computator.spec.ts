@@ -64,6 +64,15 @@ describe('TrustComputator', () => {
     }
   )
 
+  it('should throw an error when evaluating a cycles', () => {
+    new InformationLink(p0, p1, InformationLinkType.SUPPORT)
+    new InformationLink(p1, p0, InformationLinkType.STRONG_ATTACK)
+    new InformationLink(p2, p1, InformationLinkType.STRONG_ATTACK)
+    let auth = new Author('auth', 0, [p0, p1, p2])
+    let conv = new Conversation('cycle', auth)
+    expect(() => TrustComputator.computeCurrentTrusts(conv)).toThrow('Endless loops of 2 nodes - please check the InformationLinks')
+  })
+
   it('should adapt the current trusts', () => {
     let pre0 = new Preknowledge('pre0',
       false, undefined, undefined, undefined, undefined, undefined,
