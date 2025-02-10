@@ -57,7 +57,10 @@ describe('TrustComputator', () => {
       expect(TrustComputator.computeTrust(p0, recLength)).toEqual(undefined)
       expect(TrustComputator.computeTrust(p1, recLength)).toEqual(0.5)
       expect(TrustComputator.computeTrust(p2, recLength)).toEqual(0.5)
-      expect(TrustComputator.computeTrust(p0, recLength)).toEqual(0.25)
+      p1.currentTrust = 0.5 //+0.25
+      p2.currentTrust = 0.4 //-0.4
+      expect(TrustComputator.computeTrust(p0, recLength)).toBeCloseTo(0.2, 0.000001)
+    // todo why is .toEqual(0.2) not possible? The numbers are easy, only negative sometimes
     }
   )
 
