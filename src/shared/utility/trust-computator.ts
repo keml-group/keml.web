@@ -1,19 +1,38 @@
 import {Conversation} from "../models/keml/conversation";
 import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "../models/keml/msg-info";
 import {InformationLinkType} from "../models/keml/json/knowledge-models";
+import {LifeLine} from "../models/keml/life-line";
 
 export class TrustComputator {
 
-  static computeCurrentTrusts(conv: Conversation) {
+  static generalDefault: number = 0.5
+
+  static computeCurrentTrusts(conv: Conversation, defaultsPerPartner?: Map<LifeLine, number>) {
     let pres: Preknowledge[] = conv.author.preknowledge
     let receives = conv.author.messages.filter(m => !m.isSend())
       .map(m =>m as ReceiveMessage)
     let newInfos: NewInformation[] = receives.flatMap(m => m.generates)
-
-    this.computeCTFromKnowledge(pres, newInfos, receives.length)
+    let defaults: Map<LifeLine, number> = this.determineDefaultsPerPartner(conv, defaultsPerPartner)
+    this.computeCTFromKnowledge(pres, newInfos, receives.length, defaults)
   }
 
-  static computeCTFromKnowledge(pres: Preknowledge[], newInfos: NewInformation[], recSize: number) {
+  static determineDefaultsPerPartner(conv: Conversation, inputDefaults?: Map<LifeLine, number>): Map<LifeLine, number> {
+    let length = conv.conversationPartners.length + 1 //author
+    if (inputDefaults?.size == length) {
+      return inputDefaults
+    } else {
+      let cps: LifeLine[] = conv.conversationPartners
+      cps.push(conv.author)
+      let res = new Map()
+      cps.map(ll => {
+        let preVal: number | undefined = inputDefaults?.get(ll)
+        res.set(ll, (preVal ? preVal: this.generalDefault ) )
+      })
+      return res
+    }
+  }
+
+  static computeCTFromKnowledge(pres: Preknowledge[], newInfos: NewInformation[], recSize: number, defaultsPerPartner: Map<LifeLine, number>) {
     let toVisit: Information[] = newInfos
     toVisit.push(...pres)
 
