@@ -57,7 +57,10 @@ export class TrustComputator {
   }
 
   static computeRepetitionScore(info: Information, recSize: number): number {
-    return info.repeatedBy.length/recSize
+    if(!recSize)
+      return 0;
+    else
+      return info.repeatedBy.length/recSize
   }
 
   static computeArgumentationScore(info: Information): number | undefined {
