@@ -31,17 +31,19 @@ export class TrustComponent implements OnInit, OnChanges {
   }
 
   computeTrust4Display(): string {
-    if (this.trust != undefined) {
+    if (this.trust == undefined || isNaN(this.trust)) {
+      return '?'
+    } else {
       let str = this.trust.toString()
       if (str.length > 9) {
         str = str.substring(0,7)+'..'
       }
       return str
-    } else return '?'
+    }
   }
 
   computeColor() {
-    if (this.trust == undefined ) {
+    if (this.trust == undefined || isNaN(this.trust) ) {
       return '#FFFFFF'
     }
     if (this.trust < 0) {
