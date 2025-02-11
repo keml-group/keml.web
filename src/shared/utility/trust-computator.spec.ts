@@ -118,6 +118,15 @@ describe('TrustComputator', () => {
     expect(() => TrustComputator.computeCurrentTrusts(conv)).toThrow('Endless loops of 2 nodes - please check the InformationLinks')
   })
 
+  it('should show the NaN error in a minimal setting', () => {
+    let conv = new Conversation()
+    conv.author.preknowledge = [p0, p1]
+    new InformationLink(p0, p1, InformationLinkType.SUPPORT)
+    TrustComputator.computeCurrentTrusts(conv)
+    expect(p0.currentTrust).toEqual(NaN)
+    expect(p1.currentTrust).toEqual(NaN)
+  } )
+
   it('should adapt the current trusts', () => {
     let pre0 = new Preknowledge('pre0',
       false, undefined, undefined, undefined, undefined, undefined,
