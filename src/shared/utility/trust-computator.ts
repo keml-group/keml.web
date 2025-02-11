@@ -2,6 +2,8 @@ import {Conversation} from "../models/keml/conversation";
 import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "../models/keml/msg-info";
 import {InformationLinkType} from "../models/keml/json/knowledge-models";
 import {LifeLine} from "../models/keml/life-line";
+import {ConversationPartner} from "../models/keml/conversation-partner";
+import {Author} from "../models/keml/author";
 
 export class TrustComputator {
 
@@ -13,7 +15,7 @@ export class TrustComputator {
       .map(m =>m as ReceiveMessage)
     let newInfos: NewInformation[] = receives.flatMap(m => m.generates)
     let defaults: Map<LifeLine, number> = this.determineDefaultsPerPartner(conv, defaultsPerPartner)
-    this.computeCTFromKnowledge(pres, newInfos, receives.length, defaults)
+    this.computeCTFromKnowledge(pres, newInfos, receives.length, defaults, conv.author)
   }
 
   static determineDefaultsPerPartner(conv: Conversation, inputDefaults?: Map<LifeLine, number>): Map<LifeLine, number> {
@@ -32,7 +34,7 @@ export class TrustComputator {
     }
   }
 
-  static computeCTFromKnowledge(pres: Preknowledge[], newInfos: NewInformation[], recSize: number, defaultsPerPartner: Map<LifeLine, number>) {
+  static computeCTFromKnowledge(pres: Preknowledge[], newInfos: NewInformation[], recSize: number, defaultsPerPartner: Map<LifeLine, number>, author: Author) {
     let toVisit: Information[] = newInfos
     toVisit.push(...pres)
 
@@ -43,7 +45,7 @@ export class TrustComputator {
 
       for(let i = 0; i<toVisit.length; i++) {
         let info = toVisit[i]
-        let res = this.computeTrust(info, recSize)
+        let res = this.computeTrust(info, recSize, defaultsPerPartner, author)
         if (res != undefined) {
           info.currentTrust = res
           toVisit.splice(i, 1)
@@ -58,15 +60,28 @@ export class TrustComputator {
     }
   }
 
-  static computeTrust(info: Information, recSize: number): number | undefined {
+  static computeTrust(info: Information, recSize: number, defaultsPerPartner: Map<LifeLine, number>, author: Author): number | undefined {
     let argScore = this.computeArgumentationScore(info)
     if (argScore != undefined) {
-      let res = info.initialTrust +
+      let initial = info.initialTrust ? info.initialTrust : this.determineInitialTrustForInfo(info, defaultsPerPartner, author)
+      let res = initial +
         this.computeRepetitionScore(info, recSize) +
         2*argScore
       return this.truncTo1(res)
     }
     return undefined
+  }
+
+  static determineInitialTrustForInfo(info: Information, defaultsPerPartner: Map<LifeLine, number>, author: Author): number {
+    let newInfo = info as NewInformation
+    let src: LifeLine;
+    if (newInfo.source) {
+      src = newInfo.source.counterPart
+    } else {
+      src = author
+    }
+    let res = defaultsPerPartner.get(src)
+    return res? res : this.generalDefault
   }
 
   static truncTo1(score: number): number {
