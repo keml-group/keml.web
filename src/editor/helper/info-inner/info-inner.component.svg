@@ -1,12 +1,16 @@
 <svg:g *ngIf="isNew">
   <g is-instr [info]="info" [w]="info.position.w*0.1" [h]="info.position.h"></g>
   <rect [attr.x]="info.position.w*0.1" y="0" [attr.width]="info.position.w*0.9" [attr.height]="info.position.h" [attr.fill]="color"></rect>
-  <g text-area-svg [text]="info.message" [x]="info.position.w*0.1" [y]="0" [w]="info.position.w*0.9" [h]="info.position.h"></g>
+  <g text-area-svg [text]="info.message" [x]="info.position.w*0.1" [y]="0" [w]="info.position.w*0.75" [h]="info.position.h"></g>
+  <g trust-svg *ngIf="showTrust"
+     [trust]="info.currentTrust" [x]="info.position.w*0.9" [y]="0" [w]="info.position.w*0.1" [h]="info.position.h" ></g>
 </svg:g>
 
 <svg:g *ngIf="!isNew">
   <g is-instr [attr.transform]="'translate(0, -'+ 0.9*info.position.w/8 +')'" [info]="info" [w]="info.position.w*0.1" [h]="info.position.h+0.9*info.position.w/8"></g>
   <g database [attr.transform]="'translate('+(info.position.w*0.1)+','+ -(0.9*(info.position.w/8+info.position.w/6)) +')'" [w]="info.position.w*0.9" [h]="info.position.h" [fill]="color"></g>
-  <g text-area-svg [text]="info.message" [x]="info.position.w*0.1" [y]="0" [w]="info.position.w*0.9" [h]="info.position.h"></g>
+  <g text-area-svg [text]="info.message" [x]="info.position.w*0.1" [y]="0" [w]="info.position.w*0.8" [h]="info.position.h" ></g>
+  <g trust-svg *ngIf="showTrust"
+     [trust]="info.currentTrust" [x]="info.position.w*0.9" [y]="-(0.9*info.position.w/8)" [w]="info.position.w*0.1" [h]="info.position.h+0.9*info.position.w/8"></g>
 </svg:g>
 

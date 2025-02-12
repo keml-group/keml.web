@@ -11,11 +11,14 @@ import {BoundingBox} from "../../../shared/models/graphical/bounding-box";
 import {PathLayouter} from "../../../shared/utility/path-layouter";
 import {v4 as uuidv4} from "uuid";
 import {Point} from "@angular/cdk/drag-drop";
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: '[arrow-svg]',
-  templateUrl: './arrow-svg.component.svg',
-  styleUrl: './arrow-svg.component.css'
+    selector: '[arrow-svg]',
+    templateUrl: './arrow-svg.component.svg',
+    styleUrl: './arrow-svg.component.css',
+    standalone: true,
+    imports: [NgIf]
 })
 export class ArrowSvgComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() start!: BoundingBox;

@@ -12,13 +12,12 @@ describe('ConversationPartnerDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ConversationPartnerDetailsComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-      providers: [
-        {provide: MatDialogRef, useValue: {}},
-      ],
-      imports: [MatIcon],
-    })
+    schemas: [NO_ERRORS_SCHEMA],
+    providers: [
+        { provide: MatDialogRef, useValue: {} },
+    ],
+    imports: [MatIcon, ConversationPartnerDetailsComponent],
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(ConversationPartnerDetailsComponent);

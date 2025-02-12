@@ -1,0 +1,22 @@
+<h1>Trust Simulator</h1>
+<button class="close-button">
+  <mat-icon aria-hidden="false" fontIcon="close" (click)="close()"></mat-icon>
+</button>
+<mat-toolbar class="file-level-bar">
+  <button class="file-level-button" (click)="currentTrusts()">
+    <mat-icon aria-hidden="false" fontIcon="refresh" ></mat-icon>
+    Compute Current Trusts
+  </button>
+</mat-toolbar>
+
+<div style="width: 1500px; height: 1000px; overflow: auto;">
+  <svg #simulation id="svg" style="border: 1px solid black;" width="1500" height="5000" overflow="scroll">
+    <g transform="translate(750,0)">
+      <g text-area-svg [(text)]="conversation.title" [singleEdit]="true" [w]="600" [h]="25" [x]="0" [y]="0"></g>
+      <g authorG [author]="conversation.author"></g>
+      <g cp *ngFor="let convP of conversation.conversationPartners" [conversationPartner]="convP"></g>
+      <g preknowG *ngFor="let pre of conversation.author.preknowledge" [info]="pre" [showTrust]="true" (chooseInfo)="simulationService.openInfoTrusts(pre)"></g>
+      <g msgG *ngFor="let m of conversation.author.messages" [msg]="m" [msgTiming]="m.timing" [showInfoTrusts]="true" (chooseInfo)="simulationService.openInfoTrusts($event)"></g>
+    </g>
+  </svg>
+</div>

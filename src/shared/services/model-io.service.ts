@@ -39,10 +39,10 @@ export class ModelIOService {
 
     let conv = Conversation.fromJSON(convJson);
     LayoutHelper.positionConversationPartners(conv.conversationPartners)
+    LayoutHelper.timeMessages(conv.author.messages)
     LayoutHelper.positionInfos(conv.author.preknowledge, conv.author.messages);
 
     this.conversation = conv;
-    console.log(this.conversation)
     return conv;
   }
 
@@ -369,9 +369,7 @@ export class ModelIOService {
   addNewNewInfo(causeMsg?: ReceiveMessage): NewInformation | undefined {
     let source = causeMsg? causeMsg : this.getFirstReceive()
     if (source) {
-      const newInfo: NewInformation = new NewInformation(source, 'New Information', false, LayoutHelper.bbForNewInfo(source.generates.length), [], [], [], [], 0.5, 0.5, 0.5, 0.5);
-      source.generates.push(newInfo);
-      return newInfo;
+      return new NewInformation(source, 'New Information', false, LayoutHelper.bbForNewInfo(source.generates.length), [], [], [], [], 0.5, 0.5, 0.5, 0.5);
     } else {
       console.error('No receive messages found');
       return undefined;
@@ -379,9 +377,7 @@ export class ModelIOService {
   }
 
   changeInfoSource(info: NewInformation, newSrc: ReceiveMessage) {
-    GeneralHelper.removeFromList(info, info.source.generates)
     info.source = newSrc
-    newSrc.generates.push(info)
   }
   //***************** information links ********************
 

@@ -10,9 +10,9 @@ describe('NewInfoInnerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [InfoInnerComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-    })
+    imports: [InfoInnerComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(InfoInnerComponent);

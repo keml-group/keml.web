@@ -11,9 +11,9 @@ describe('SendComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MsgComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-    })
+    imports: [MsgComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(MsgComponent);

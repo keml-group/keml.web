@@ -10,9 +10,9 @@ describe('IsInstrSvgComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [IsInstrSvgComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-    })
+    imports: [IsInstrSvgComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(IsInstrSvgComponent);

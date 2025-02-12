@@ -4,13 +4,27 @@ import {IoService} from "../shared/services/io.service";
 import {Conversation} from "../shared/models/keml/conversation";
 import {DetailsService} from "./details/service/details.service";
 import {ChatGptConv2LlmMessages} from "../shared/models/llm/chat-gpt-conv2-llm-messages";
+import { MsgComponent } from './msg/msg.component';
+import { PreknowledgeComponent } from './preknowledge/preknowledge.component';
+import { ConversationPartnerComponent } from './cp/conversation-partner.component';
+import { NgFor } from '@angular/common';
+import { AuthorComponent } from './author/author.component';
+import { TextAreaSvgComponent } from './helper/text-area-svg/text-area-svg.component';
+import { DatabaseSvgComponent } from './helper/database-svg/database-svg.component';
+import { PersonSvgComponent } from './helper/person-svg/person-svg.component';
+import { MatIcon } from '@angular/material/icon';
+import { MatToolbar } from '@angular/material/toolbar';
 import {ConversationPickerComponent} from "./helper/conversation-picker/conversation-picker.component";
 import {MatDialog} from "@angular/material/dialog";
+import {MatTooltipModule} from "@angular/material/tooltip";
+
 
 @Component({
-  selector: 'keml-editor',
-  templateUrl: './editor.component.html',
-  styleUrl: './editor.component.css'
+    selector: 'keml-editor',
+    templateUrl: './editor.component.html',
+    styleUrl: './editor.component.css',
+    standalone: true,
+    imports: [MatTooltipModule, MatToolbar, MatIcon, PersonSvgComponent, DatabaseSvgComponent, TextAreaSvgComponent, AuthorComponent, NgFor, ConversationPartnerComponent, PreknowledgeComponent, MsgComponent]
 })
 export class EditorComponent {
 
@@ -95,6 +109,10 @@ export class EditorComponent {
       const contentBlob = new Blob([svgContent.outerHTML], {type: 'image/svg+xml'});
       this.ioService.saveFile(contentBlob, 'conversation.svg');
     }
+  }
+
+  openSimulation() {
+    this.detailsService.openSimulationDialog(this.conversation)
   }
 
   addConversationPartner() {

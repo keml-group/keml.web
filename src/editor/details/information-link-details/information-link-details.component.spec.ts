@@ -10,12 +10,12 @@ describe('InformationLinkDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [InformationLinkDetailsComponent],
-      providers: [
-        {provide: MatDialogRef, useValue: {}},
-      ],
-      schemas: [NO_ERRORS_SCHEMA],
-    })
+    imports: [InformationLinkDetailsComponent],
+    providers: [
+        { provide: MatDialogRef, useValue: {} },
+    ],
+    schemas: [NO_ERRORS_SCHEMA],
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(InformationLinkDetailsComponent);
