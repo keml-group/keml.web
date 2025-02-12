@@ -2,7 +2,6 @@ import {Conversation} from "../models/keml/conversation";
 import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "../models/keml/msg-info";
 import {InformationLinkType} from "../models/keml/json/knowledge-models";
 import {LifeLine} from "../models/keml/life-line";
-import {ConversationPartner} from "../models/keml/conversation-partner";
 import {Author} from "../models/keml/author";
 
 export class TrustComputator {
@@ -38,7 +37,7 @@ export class TrustComputator {
     let toVisit: Information[] = newInfos
     toVisit.push(...pres)
 
-    toVisit.forEach(info => info.currentTrust = 2) //todo use undefined
+    toVisit.forEach(info => info.currentTrust = undefined)
 
     while(toVisit.length > 0) {
       let remaining = toVisit.length
@@ -110,7 +109,7 @@ export class TrustComputator {
   }
 
   static score(link: InformationLink): number | undefined {
-    if (link.source.currentTrust == 2) { //todo use undefined once this is allowed
+    if (link.source.currentTrust == undefined) {
       return undefined
     }
     return link.source.currentTrust*this.factorFromLinkType(link.type)
