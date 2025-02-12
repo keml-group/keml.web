@@ -54,13 +54,13 @@
 </div>
 
 <div class="row" *ngIf="!infoLink">
-  <button class="tool-button-text" (click)="closeMe()">
-    <mat-icon aria-hidden="false" fontIcon="clear"></mat-icon>
-    Close
-  </button>
   <button class="tool-button-text" (click)="createMe()" [disabled]="!(this.src && this.target && this.type)">
     <mat-icon aria-hidden="false" fontIcon="add"></mat-icon>
     Create
+  </button>
+  <button class="tool-button-text" (click)="closeMe()">
+    <mat-icon aria-hidden="false" fontIcon="clear"></mat-icon>
+    Cancel
   </button>
 </div>
 
