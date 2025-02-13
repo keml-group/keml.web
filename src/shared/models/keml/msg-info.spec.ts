@@ -153,4 +153,14 @@ describe('Msg-Info (models)', () => {
     link.destruct()
     expect(p0.targetedBy.length).toEqual(0)
   })
+
+  it('should delete an info that is a link source completely (also deletes the link)', () => {
+    let p0 = new Preknowledge('p0')
+    let p1 = new Preknowledge('p1')
+    let link = new InformationLink(p1, p0, InformationLinkType.SUPPORT)
+    expect(p0.targetedBy.length).toEqual(1)
+
+    p1.destruct()
+    expect(p0.targetedBy.length).toEqual(0)
+  })
 });
