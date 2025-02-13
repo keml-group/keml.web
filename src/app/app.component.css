@@ -145,14 +145,17 @@ main {
 }
 
 .pill-group .pill:nth-child(6n + 1) {
+  --pill-accent: var(--orange-red);
+}
+.pill-group .pill:nth-child(6n + 2) {
   --pill-accent: var(--bright-orange);
 }
-.pill-group .pill:nth-child(6n + 2),
 .pill-group .pill:nth-child(6n + 3),
-.pill-group .pill:nth-child(6n + 4) {
+.pill-group .pill:nth-child(6n + 4),
+.pill-group .pill:nth-child(6n + 5) {
   --pill-accent: var(--orange-yellow);
 }
-.pill-group .pill:nth-child(6n + 5) {
+.pill-group .pill:nth-child(6n + 6) {
   --pill-accent: var(--bright-yellow);
 }
 
