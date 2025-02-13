@@ -144,4 +144,13 @@ describe('Msg-Info (models)', () => {
     expect(infoLink_pre_pre_2.toJson()).toEqual(infoLink_pre_pre_2_Json);
   });
 
+  it('should delete an info link completely', () => {
+    let p0 = new Preknowledge('p0')
+    let p1 = new Preknowledge('p1')
+    let link = new InformationLink(p1, p0, InformationLinkType.SUPPORT)
+
+    expect(p0.targetedBy.length).toEqual(1)
+    link.destruct()
+    expect(p0.targetedBy.length).toEqual(0)
+  })
 });
