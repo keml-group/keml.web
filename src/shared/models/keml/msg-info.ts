@@ -384,8 +384,8 @@ export class InformationLink extends Referencable {
 
   override destruct() {
     GeneralHelper.removeFromList(this, this.source.causes)
-    //GeneralHelper.removeFromList(this, this.target.targetedBy)
-    //super.destruct();
+    GeneralHelper.removeFromList(this, this.target.targetedBy)
+    super.destruct();
   }
 
 }
