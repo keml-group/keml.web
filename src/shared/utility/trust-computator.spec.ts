@@ -108,7 +108,7 @@ describe('TrustComputator', () => {
     expect(pre0.currentTrust == undefined).toEqual(true)
   })
 
-  it('should throw an error when evaluating a cycles', () => {
+  it('should throw an error when evaluating a cycle', () => {
     new InformationLink(p0, p1, InformationLinkType.SUPPORT)
     new InformationLink(p1, p0, InformationLinkType.STRONG_ATTACK)
     new InformationLink(p2, p1, InformationLinkType.STRONG_ATTACK)
@@ -120,10 +120,10 @@ describe('TrustComputator', () => {
   it('should show that the case of 0 receives is handled correctly', () => {
     let conv = new Conversation()
     conv.author.preknowledge = [p0, p1]
-    new InformationLink(p0, p1, InformationLinkType.SUPPORT)
+    new InformationLink(p0, p1, InformationLinkType.ATTACK)
     TrustComputator.computeCurrentTrusts(conv)
-    expect(p0.currentTrust).toEqual(0.5)
-    expect(p1.currentTrust).toEqual(1)
+    expect(p0.currentTrust).toEqual(1.0)
+    expect(p1.currentTrust).toEqual(0)
   } )
 
   it('should adapt the current trusts', () => {
