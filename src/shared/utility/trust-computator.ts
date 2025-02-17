@@ -39,7 +39,7 @@ export class TrustComputator {
     let toVisit: Information[] = newInfos
     toVisit.push(...pres)
 
-    toVisit.forEach(info => info.currentTrust = 2) //todo use undefined
+    toVisit.forEach(info => info.currentTrust = undefined)
 
     while(toVisit.length > 0) {
       let remaining = toVisit.length
@@ -111,7 +111,7 @@ export class TrustComputator {
   }
 
   static score(link: InformationLink): number | undefined {
-    if (link.source.currentTrust == 2) { //todo use undefined once this is allowed
+    if (link.source.currentTrust == undefined) {
       return undefined
     }
     return link.source.currentTrust*this.factorFromLinkType(link.type)

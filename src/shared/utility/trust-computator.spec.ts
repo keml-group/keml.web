@@ -21,10 +21,6 @@ describe('TrustComputator', () => {
     p0 = new Preknowledge('p0')
     p1 = new Preknowledge('p1')
     p2 = new Preknowledge('p2')
-
-    p0.currentTrust = 2
-    p1.currentTrust = 2
-    p2.currentTrust = 2
   })
 
   it('should compute the score of a single Link correctly', () => {

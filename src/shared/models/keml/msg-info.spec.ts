@@ -47,12 +47,12 @@ describe('Msg-Info (models)', () => {
     let preknowledge = new Preknowledge()
     let preknowledgeJson : PreknowledgeJson = {
       causes: [],
-      currentTrust: 0.5,
+      currentTrust: undefined,
       eClass: Preknowledge.eClass,
       position: {x: 0, y: 0, w: 5, h: 5},
       feltTrustAfterwards: undefined,
       feltTrustImmediately: undefined,
-      initialTrust: 0.5,
+      initialTrust: undefined,
       isInstruction: false,
       isUsedOn: [],
       message: "Preknowledge",
@@ -69,11 +69,11 @@ describe('Msg-Info (models)', () => {
     let newInfoJson: NewInformationJson = {
       source: msg.getRef(),
       causes: [],
-      currentTrust: 0.5,
+      currentTrust: undefined,
       eClass: NewInformation.eClass,
       feltTrustAfterwards: undefined,
       feltTrustImmediately: undefined,
-      initialTrust: 0.5,
+      initialTrust: undefined,
       isInstruction: false,
       isUsedOn: [],
       message: 'New Info',

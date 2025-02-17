@@ -178,8 +178,8 @@ export abstract class Information extends Referencable {
   message: string;
   isInstruction: boolean;
   position: BoundingBox;
-  initialTrust: number;
-  currentTrust: number;
+  initialTrust: number | undefined;
+  currentTrust: number | undefined;
   feltTrustImmediately: number | undefined;
   feltTrustAfterwards: number | undefined;
 
@@ -193,8 +193,8 @@ export abstract class Information extends Referencable {
 
   protected constructor(ref: Ref, message: string, isInstruction: boolean = false,
               position?: BoundingBox, causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [],
-              repeatedBy: ReceiveMessage[] = [], initialTrust: number = 0.5,
-              currentTrust: number = 0.5, feltTrustImmediately?: number,
+              repeatedBy: ReceiveMessage[] = [], initialTrust?: number,
+              currentTrust?: number, feltTrustImmediately?: number,
               feltTrustAfterwards?: number, parser?: Parser, jsonOpt?: InformationJson
   ) {
     super(ref);
@@ -271,7 +271,7 @@ export class NewInformation extends Information {
   constructor(source: ReceiveMessage,
               message: string, isInstruction: boolean = false, position?: BoundingBox,
               causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
-              initialTrust: number = 0.5, currentTrust: number = 0.5, feltTrustImmediately?: number , feltTrustAfterwards?: number,
+              initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number , feltTrustAfterwards?: number,
               ref?: Ref, parser?: Parser, jsonOpt?: NewInformationJson
   ) {
     let refC = Ref.createRef(NewInformation.eClass, ref)
@@ -322,7 +322,7 @@ export class Preknowledge extends Information {
 
   constructor(message: string = 'Preknowledge', isInstruction: boolean = false, position?: BoundingBox,
               causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
-              initialTrust: number = 0.5, currentTrust: number = 0.5,
+              initialTrust?: number, currentTrust?: number,
               feltTrustImmediately?: number, feltTrustAfterwards?: number,
               ref?: Ref, parser?: Parser, jsonOpt?: PreknowledgeJson) {
     let refC = Ref.createRef(Preknowledge.eClass, ref)

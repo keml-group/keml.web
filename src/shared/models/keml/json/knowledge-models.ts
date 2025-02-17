@@ -5,8 +5,8 @@ export interface InformationJson {
   eClass: string;
   message: string;
   isInstruction: boolean;
-  initialTrust: number;
-  currentTrust: number;
+  initialTrust?: number;
+  currentTrust?: number;
   feltTrustImmediately: number | undefined;
   feltTrustAfterwards: number | undefined;
 
