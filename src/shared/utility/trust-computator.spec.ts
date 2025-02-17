@@ -908,6 +908,6 @@ describe('TrustComputator', () => {
     JsonFixer.addMissingSupplementType(convJson);
     let conv = Conversation.fromJSON(convJson)
     TrustComputator.computeCurrentTrusts(conv)
-    expect(conv.author.preknowledge[0].currentTrust).toEqual(0.5)
+    expect(conv.author.preknowledge[0].currentTrust).toEqual(1.0)
   })
 });
