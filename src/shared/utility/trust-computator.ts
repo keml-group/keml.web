@@ -2,17 +2,17 @@ import {Conversation} from "../models/keml/conversation";
 import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "../models/keml/msg-info";
 import {InformationLinkType} from "../models/keml/json/knowledge-models";
 import {LifeLine} from "../models/keml/life-line";
-import {ConversationPartner} from "../models/keml/conversation-partner";
 import {Author} from "../models/keml/author";
 
 export class TrustComputator {
 
   static generalDefault: number = 0.5
+  static preknowledgeDefault: number = 1.0
 
   static computeCurrentTrusts(conv: Conversation, defaultsPerPartner?: Map<LifeLine, number>) {
     let pres: Preknowledge[] = conv.author.preknowledge
     let receives = conv.author.messages.filter(m => !m.isSend())
-      .map(m =>m as ReceiveMessage)
+      .map(m => m as ReceiveMessage)
     let newInfos: NewInformation[] = receives.flatMap(m => m.generates)
     let defaults: Map<LifeLine, number> = this.determineDefaultsPerPartner(conv, defaultsPerPartner)
     this.computeCTFromKnowledge(pres, newInfos, receives.length, defaults, conv.author)
@@ -24,12 +24,13 @@ export class TrustComputator {
       return inputDefaults
     } else {
       let cps: LifeLine[] = conv.conversationPartners
-      cps.push(conv.author)
+      //cps.push(conv.author)
       let res = new Map()
       cps.map(ll => {
         let preVal: number | undefined = inputDefaults?.get(ll)
         res.set(ll, (preVal ? preVal: this.generalDefault ) )
       })
+      res.set(conv.author, this.preknowledgeDefault)
       return res
     }
   }
@@ -38,7 +39,7 @@ export class TrustComputator {
     let toVisit: Information[] = newInfos
     toVisit.push(...pres)
 
-    toVisit.forEach(info => info.currentTrust = 2) //todo use undefined
+    toVisit.forEach(info => info.currentTrust = undefined)
 
     while(toVisit.length > 0) {
       let remaining = toVisit.length
@@ -110,7 +111,7 @@ export class TrustComputator {
   }
 
   static score(link: InformationLink): number | undefined {
-    if (link.source.currentTrust == 2) { //todo use undefined once this is allowed
+    if (link.source.currentTrust == undefined) {
       return undefined
     }
     return link.source.currentTrust*this.factorFromLinkType(link.type)
