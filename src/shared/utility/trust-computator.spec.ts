@@ -54,12 +54,12 @@ describe('TrustComputator', () => {
       let defaults = new Map()
       new InformationLink(p2, p0, InformationLinkType.STRONG_ATTACK)
       new InformationLink(p1, p0, InformationLinkType.SUPPORT)
-      expect(TrustComputator.computeTrust(p0, recLength, defaults, author)).toEqual(undefined)
-      expect(TrustComputator.computeTrust(p1, recLength, defaults, author)).toEqual(0.5)
-      expect(TrustComputator.computeTrust(p2, recLength, defaults, author)).toEqual(0.5)
+      expect(TrustComputator.computeTrust(p0, recLength, defaults, author,2)).toEqual(undefined)
+      expect(TrustComputator.computeTrust(p1, recLength, defaults, author,2)).toEqual(0.5)
+      expect(TrustComputator.computeTrust(p2, recLength, defaults, author,2)).toEqual(0.5)
       p1.currentTrust = 0.5 //+0.25
       p2.currentTrust = 0.4 //-0.4
-      expect(TrustComputator.computeTrust(p0, recLength, defaults, author)).toBeCloseTo(0.2, 0.000001)
+      expect(TrustComputator.computeTrust(p0, recLength, defaults, author, 2)).toBeCloseTo(0.2, 0.000001)
     // todo why is .toEqual(0.2) not possible? The numbers are easy, only negative sometimes
     }
   )
@@ -102,7 +102,7 @@ describe('TrustComputator', () => {
     let pres = conv.author.preknowledge
     let pre0 = pres[0]
 
-    TrustComputator.computeTrust(pre0, 2, new Map(), conv.author)
+    TrustComputator.computeTrust(pre0, 2, new Map(), conv.author, 2)
     // cannot use normal expect since actually, initial and current trust cannot be undefined
     expect(pre0.initialTrust == undefined).toEqual(true)
     expect(pre0.currentTrust == undefined).toEqual(true)

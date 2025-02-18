@@ -9,13 +9,13 @@ export class TrustComputator {
   static generalDefault: number = 0.5
   static preknowledgeDefault: number = 1.0
 
-  static computeCurrentTrusts(conv: Conversation, defaultsPerPartner?: Map<LifeLine, number>) {
+  static computeCurrentTrusts(conv: Conversation, defaultsPerPartner?: Map<LifeLine, number>, weight: number = 2) {
     let pres: Preknowledge[] = conv.author.preknowledge
     let receives = conv.author.messages.filter(m => !m.isSend())
       .map(m => m as ReceiveMessage)
     let newInfos: NewInformation[] = receives.flatMap(m => m.generates)
     let defaults: Map<LifeLine, number> = this.determineDefaultsPerPartner(conv, defaultsPerPartner)
-    this.computeCTFromKnowledge(pres, newInfos, receives.length, defaults, conv.author)
+    this.computeCTFromKnowledge(pres, newInfos, receives.length, defaults, conv.author, weight)
   }
 
   static determineDefaultsPerPartner(conv: Conversation, inputDefaults?: Map<LifeLine, number>): Map<LifeLine, number> {
@@ -35,7 +35,7 @@ export class TrustComputator {
     }
   }
 
-  static computeCTFromKnowledge(pres: Preknowledge[], newInfos: NewInformation[], recSize: number, defaultsPerPartner: Map<LifeLine, number>, author: Author) {
+  static computeCTFromKnowledge(pres: Preknowledge[], newInfos: NewInformation[], recSize: number, defaultsPerPartner: Map<LifeLine, number>, author: Author, weight: number) {
     let toVisit: Information[] = newInfos
     toVisit.push(...pres)
 
@@ -46,7 +46,7 @@ export class TrustComputator {
 
       for(let i = 0; i<toVisit.length; i++) {
         let info = toVisit[i]
-        let res = this.computeTrust(info, recSize, defaultsPerPartner, author)
+        let res = this.computeTrust(info, recSize, defaultsPerPartner, author, weight)
         if (res != undefined) {
           info.currentTrust = res
           toVisit.splice(i, 1)
@@ -61,13 +61,13 @@ export class TrustComputator {
     }
   }
 
-  static computeTrust(info: Information, recSize: number, defaultsPerPartner: Map<LifeLine, number>, author: Author): number | undefined {
+  static computeTrust(info: Information, recSize: number, defaultsPerPartner: Map<LifeLine, number>, author: Author, weight: number): number | undefined {
     let argScore = this.computeArgumentationScore(info)
     if (argScore != undefined) {
       let initial = info.initialTrust ? info.initialTrust : this.determineInitialTrustForInfo(info, defaultsPerPartner, author)
       let res = initial +
         this.computeRepetitionScore(info, recSize) +
-        2*argScore
+        weight*argScore
       return this.truncTo1(res)
     }
     return undefined
