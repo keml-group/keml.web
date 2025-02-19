@@ -3,10 +3,10 @@ import {MatDialog} from "@angular/material/dialog";
 import {Conversation} from "@app/shared/keml/models/core/conversation";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
 import {Information, InformationLink, Message} from "@app/shared/keml/models/core/msg-info";
-import {ConversationPartnerDetailsComponent} from "@app/features/editor/components/cp-details/cp-details.component";
-import {MsgDetailsComponent} from "@app/features/editor/components/msg-details/msg-details.component";
-import {InfoDetailsComponent} from "@app/features/editor/components/info-details/info-details.component";
-import {InformationLinkDetailsComponent} from "@app/features/editor/components/information-link-details/information-link-details.component";
+import {ConversationPartnerDetailsComponent} from "@app/features/editor/components/details/cp-details/cp-details.component";
+import {MsgDetailsComponent} from "@app/features/editor/components/details/msg-details/msg-details.component";
+import {InfoDetailsComponent} from "@app/features/editor/components/details/info-details/info-details.component";
+import {InformationLinkDetailsComponent} from "@app/features/editor/components/details/information-link-details/information-link-details.component";
 import {SimulatorComponent} from "@app/features/simulator/components/simulator/simulator.component";
 
 @Injectable({
