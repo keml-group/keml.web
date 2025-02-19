@@ -17,6 +17,7 @@ import { TextAreaSvgComponent } from '@app/core/features/svg-base-components/tex
 import { DatabaseSvgComponent } from '@app/core/features/svg-base-components/database-svg/database-svg.component';
 import { PersonSvgComponent } from '@app/core/features/svg-base-components/person-svg/person-svg.component';
 import {ConversationPickerComponent} from '@app/features/editor/fromLLM/components/conversation-picker/conversation-picker.component';
+import {SimulationService} from "@app/features/simulator/services/simulation.service";
 
 
 @Component({
@@ -34,6 +35,7 @@ export class EditorComponent {
   constructor(
     public detailsService: DetailsService,
     public modelIOService: ModelIOService,
+    private simulationService: SimulationService,
     private ioService: IoService,
     private dialog: MatDialog,
   ) {
@@ -112,7 +114,7 @@ export class EditorComponent {
   }
 
   openSimulation() {
-    this.detailsService.openSimulationDialog(this.conversation)
+    this.simulationService.openSimulationDialog(this.conversation)
   }
 
   addConversationPartner() {
