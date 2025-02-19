@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {EditorComponent} from "../editor/editor.component";
+import {EditorComponent} from "@app/features/editor/components/editor/editor.component";
 
 
 @Component({
