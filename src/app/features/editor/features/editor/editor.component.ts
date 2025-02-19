@@ -7,7 +7,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { ModelIOService } from "@app/features/editor/services/model-io.service";
 import { IoService } from "@app/core/services/io.service";
 import { Conversation } from "@app/shared/keml/models/core/conversation";
-import { DetailsService } from "@app/features/editor/services/details.service";
+import { DetailsService } from "@app/features/editor/features/details/services/details.service";
 import { ChatGptConv2LlmMessages } from "@app/features/editor/fromLLM/utils/chat-gpt-conv2-llm-messages";
 import { MsgComponent } from '@app/shared/keml/components/msg/msg.component';
 import { PreknowledgeComponent } from '@app/shared/keml/components/preknowledge/preknowledge.component';
