@@ -3,5 +3,5 @@ import {ConversationPartner} from "@app/shared/keml/models/core/conversation-par
 export interface SimulationInputs {
   weight?: number;
   preknowledgeDefault?: number;
-  defaultsPerCp: Map<ConversationPartner, number>
+  defaultsPerCp: Map<ConversationPartner, number|undefined>
 }

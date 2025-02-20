@@ -4,7 +4,7 @@ import {MatIcon} from "@angular/material/icon";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
-import {NgForOf} from "@angular/common";
+import {KeyValuePipe, NgForOf} from "@angular/common";
 
 @Component({
   selector: 'simulation-input-details',
@@ -13,7 +13,8 @@ import {NgForOf} from "@angular/common";
     MatIcon,
     ReactiveFormsModule,
     FormsModule,
-    NgForOf
+    NgForOf,
+    KeyValuePipe
   ],
   templateUrl: './simulation-input-details.component.html',
   styleUrl: './simulation-input-details.component.css'

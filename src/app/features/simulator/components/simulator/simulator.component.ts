@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {NgForOf} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {MatDialogRef} from "@angular/material/dialog";
@@ -30,19 +30,27 @@ import {ConversationPartner} from "@app/shared/keml/models/core/conversation-par
   templateUrl: './simulator.component.html',
   styleUrl: './simulator.component.css'
 })
-export class SimulatorComponent {
+export class SimulatorComponent implements OnInit {
 
   @Input() conversation!: Conversation
   simulationInputs: SimulationInputs = {
-    weight: 2,
-    preknowledgeDefault: 1.0,
-    defaultsPerCp: new Map<ConversationPartner, number>()
+    weight: undefined,
+    preknowledgeDefault: undefined,
+    defaultsPerCp: new Map<ConversationPartner, number|undefined>()
   };
 
   constructor(
     public dialogRef: MatDialogRef<SimulatorComponent>,
     public simulationService: SimulationService,
   ) {}
+
+  ngOnInit() {
+    console.log('simInputs')
+    this.conversation.conversationPartners.forEach(cp => {
+      this.simulationInputs.defaultsPerCp.set(cp, undefined)
+    })
+    console.log(this.simulationInputs);
+  }
 
   close() {
     this.dialogRef.close();
