@@ -2,7 +2,20 @@
 
 <div class="defaults-form">
   <label class="form-label">Argumentation Weight</label>
-  <input type="number" name="y" min="0" [attr.max]="1000" [(ngModel)]="simulationInputs.weight">
+  <input type="number" name="aw" min="0" [attr.max]="1000" [(ngModel)]="simulationInputs.weight">
+
+  <label class="form-label">Preknowledge Default</label>
+  <input type="number" name="pre" min="-1" [attr.max]="1" [(ngModel)]="simulationInputs.preknowledgeDefault">
+
+  <label class="form-label">Conversation Partner Defaults</label>
+  <div class="defaults-inner-form">
+    <div *ngFor="let cp of cps">
+      <label class="form-label">
+        {{cp.name}}
+      </label>
+      <input type="number" [attr.name]="cp.name" min="-1" [attr.max]="1" [(ngModel)]="simulationInputs.defaultsPerCp[cp]">
+    </div>
+  </div>
 
 </div>
 

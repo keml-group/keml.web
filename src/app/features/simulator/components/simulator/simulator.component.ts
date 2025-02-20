@@ -12,6 +12,7 @@ import {SimulationService} from "../../services/simulation.service";
 import {MatToolbar} from "@angular/material/toolbar";
 import {TrustComputator} from "../../utils/trust-computator";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
+import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
 
 @Component({
   selector: 'app-simulator',
@@ -32,7 +33,11 @@ import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs
 export class SimulatorComponent {
 
   @Input() conversation!: Conversation
-  simulationInputs: SimulationInputs = {};
+  simulationInputs: SimulationInputs = {
+    weight: 2,
+    preknowledgeDefault: 1.0,
+    defaultsPerCp: new Map<ConversationPartner, number>()
+  };
 
   constructor(
     public dialogRef: MatDialogRef<SimulatorComponent>,
@@ -48,7 +53,7 @@ export class SimulatorComponent {
   }
 
   manageSimulationInputs() {
-    this.simulationService.openSimulationInputDetails(this.simulationInputs)
+    this.simulationService.openSimulationInputDetails(this.simulationInputs, this.conversation.conversationPartners)
   }
 
 }
