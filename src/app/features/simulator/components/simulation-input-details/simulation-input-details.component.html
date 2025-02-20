@@ -1,5 +1,14 @@
 <h2 style="align-self: center">Trust Computation Controls</h2>
 
 <div class="defaults-form">
+  <label class="form-label">Argumentation Weight</label>
+  <input type="number" name="y" min="0" [attr.max]="1000" [(ngModel)]="simulationInputs.weight">
 
+</div>
+
+<div class="row">
+  <button class="tool-button-text" (click)="closeMe()">
+    <mat-icon aria-hidden="false" fontIcon="check"></mat-icon>
+    Ok
+  </button>
 </div>

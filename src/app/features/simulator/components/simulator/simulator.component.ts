@@ -11,6 +11,7 @@ import {TextAreaSvgComponent} from "@app/core/features/svg-base-components/text-
 import {SimulationService} from "../../services/simulation.service";
 import {MatToolbar} from "@angular/material/toolbar";
 import {TrustComputator} from "../../utils/trust-computator";
+import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 
 @Component({
   selector: 'app-simulator',
@@ -31,6 +32,7 @@ import {TrustComputator} from "../../utils/trust-computator";
 export class SimulatorComponent {
 
   @Input() conversation!: Conversation
+  simulationInputs: SimulationInputs = {};
 
   constructor(
     public dialogRef: MatDialogRef<SimulatorComponent>,
@@ -46,7 +48,7 @@ export class SimulatorComponent {
   }
 
   manageSimulationInputs() {
-    this.simulationService.openSimulationInputDetails()
+    this.simulationService.openSimulationInputDetails(this.simulationInputs)
   }
 
 }
