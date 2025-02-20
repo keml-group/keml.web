@@ -1,21 +1,35 @@
-import {Conversation} from "../../../shared/keml/models/core/conversation";
-import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "../../../shared/keml/models/core/msg-info";
+import {Conversation} from "@app/shared/keml/models/core/conversation";
+import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "@app/shared/keml/models/core/msg-info";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
-import {LifeLine} from "../../../shared/keml/models/core/life-line";
-import {Author} from "../../../shared/keml/models/core/author";
+import {LifeLine} from '@app/shared/keml/models/core/life-line';
+import {Author} from '@app/shared/keml/models/core/author';
+import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 
 export class TrustComputator {
 
   static generalDefault: number = 0.5
   static preknowledgeDefault: number = 1.0
+  static weightDefault: number = 2;
 
-  static computeCurrentTrusts(conv: Conversation, defaultsPerPartner?: Map<LifeLine, number>, weight: number = 2) {
+  static computeCurrentTrusts(conv: Conversation, simulationInputs?: SimulationInputs) {
     let pres: Preknowledge[] = conv.author.preknowledge
     let receives = conv.author.messages.filter(m => !m.isSend())
       .map(m => m as ReceiveMessage)
     let newInfos: NewInformation[] = receives.flatMap(m => m.generates)
+    let defaultsPerPartner = new Map<LifeLine, number>();
+    if (simulationInputs?.preknowledgeDefault != undefined) {
+      defaultsPerPartner.set(conv.author, simulationInputs.preknowledgeDefault)
+    }
+    simulationInputs?.defaultsPerCp.forEach((v, c) => {
+      if (v != undefined) {
+        defaultsPerPartner.set(c, v)
+      }
+    })
     let defaults: Map<LifeLine, number> = this.determineDefaultsPerPartner(conv, defaultsPerPartner)
-    this.computeCTFromKnowledge(pres, newInfos, receives.length, defaults, conv.author, weight)
+    this.computeCTFromKnowledge(pres, newInfos, receives.length,
+      defaults,
+      conv.author,
+      simulationInputs?.weight ? simulationInputs?.weight: this.weightDefault )
   }
 
   static determineDefaultsPerPartner(conv: Conversation, inputDefaults?: Map<LifeLine, number>): Map<LifeLine, number> {

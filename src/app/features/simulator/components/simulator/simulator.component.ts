@@ -45,7 +45,6 @@ export class SimulatorComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log('simInputs')
     this.conversation.conversationPartners.forEach(cp => {
       this.simulationInputs.defaultsPerCp.set(cp, undefined)
     })
@@ -57,7 +56,8 @@ export class SimulatorComponent implements OnInit {
   }
 
   currentTrusts() {
-    TrustComputator.computeCurrentTrusts(this.conversation)
+    console.log(this.simulationInputs);
+    TrustComputator.computeCurrentTrusts(this.conversation, this.simulationInputs)
   }
 
   manageSimulationInputs() {
