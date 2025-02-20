@@ -45,4 +45,8 @@ export class SimulatorComponent {
     TrustComputator.computeCurrentTrusts(this.conversation)
   }
 
+  manageSimulationInputs() {
+    this.simulationService.openSimulationInputDetails()
+  }
+
 }

@@ -3,6 +3,10 @@
   <mat-icon aria-hidden="false" fontIcon="close" (click)="close()"></mat-icon>
 </button>
 <mat-toolbar class="file-level-bar">
+  <button class="file-level-button" (click)="manageSimulationInputs()">
+    <mat-icon aria-hidden="false" fontIcon="build" ></mat-icon>
+    Manage Simulation Inputs
+  </button>
   <button class="file-level-button" (click)="currentTrusts()">
     <mat-icon aria-hidden="false" fontIcon="refresh" ></mat-icon>
     Compute Current Trusts
