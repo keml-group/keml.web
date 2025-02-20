@@ -41,7 +41,7 @@ export class SimulationService {
     dialogRef.componentInstance.info = info
   }
 
-  openSimulationInputDetails(simulationInputs: SimulationInputs, cps: ConversationPartner[]) {
+  openSimulationInputDetails(simulationInputs: SimulationInputs) {
     const dialogRef = this.dialog.open(
       SimulationInputDetails,
       {
@@ -51,6 +51,5 @@ export class SimulationService {
       }
     )
     dialogRef.componentInstance.simulationInputs = simulationInputs
-    dialogRef.componentInstance.cps = cps
   }
 }

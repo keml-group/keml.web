@@ -22,7 +22,6 @@ import {KeyValuePipe, NgForOf} from "@angular/common";
 export class SimulationInputDetails {
 
   @Input() simulationInputs!: SimulationInputs
-  @Input() cps!: ConversationPartner[];
 
   constructor(
     private dialogRef: MatDialogRef<SimulationInputDetails>,

@@ -61,7 +61,7 @@ export class SimulatorComponent implements OnInit {
   }
 
   manageSimulationInputs() {
-    this.simulationService.openSimulationInputDetails(this.simulationInputs, this.conversation.conversationPartners)
+    this.simulationService.openSimulationInputDetails(this.simulationInputs)
   }
 
 }
