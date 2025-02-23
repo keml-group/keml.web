@@ -9,10 +9,10 @@
 
   <label class="form-label">Conversation Partner Defaults</label>
   <div class="defaults-inner-form">
-    <div *ngFor="let cpd of simulationInputs.defaultsPerCp| keyvalue">
-      <input [name]="cpd.key.name" type="number" min="-1" max="1" [(ngModel)]="cpd.value">
+    <div *ngFor="let partner of partnerList; let  i = index">
+      <input [name]="partner.name" type="number" min="-1" max="1" [ngModel]="defaultList[i]" (ngModelChange)="useListsForSimInputs(partner, $event)">
       <label class="form-label">
-        {{cpd.key.name}}
+        {{partner.name}}
       </label>
     </div>
   </div>
