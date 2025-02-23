@@ -9,6 +9,7 @@
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
+      "cli": { "cache": { "enabled": false} },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
