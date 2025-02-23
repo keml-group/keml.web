@@ -5,6 +5,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 import {KeyValuePipe, NgForOf} from "@angular/common";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+import {TrustComputator} from "@app/features/simulator/utils/trust-computator";
 
 @Component({
   selector: 'simulation-input-details',
@@ -41,4 +42,6 @@ export class SimulationInputDetails implements OnInit {
   closeMe() {
     this.dialogRef.close();
   }
+
+  protected readonly TrustComputator = TrustComputator;
 }
