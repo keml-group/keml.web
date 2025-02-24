@@ -1,6 +1,7 @@
 import {Conversation} from "@app/shared/keml/models/core/conversation";
 import {Author} from "@app/shared/keml/models/core/author";
 import {
+  Information,
   Message,
   NewInformation,
   Preknowledge,
@@ -15,6 +16,9 @@ export class IncrementalSimulator {
   simulationInputs: SimulationInputs;
   completeConv: Conversation
   incrementalConv: Conversation
+
+  msgConnections: Map<string, Message> = new Map<string, Message>();
+  infoConnections: Map<string, Information> = new Map<string, Information>();
 
   constructor(simulationInputs: SimulationInputs, conv: Conversation) {
     this.simulationInputs = simulationInputs;
@@ -34,9 +38,6 @@ export class IncrementalSimulator {
       await this.stepSend((msg as SendMessage))
     else
       await this.stepReceive((msg as ReceiveMessage))
-    await this.sleep(500)
-    TrustComputator.computeCurrentTrusts(this.incrementalConv, this.simulationInputs)
-
   }
 
   /*
@@ -47,11 +48,15 @@ export class IncrementalSimulator {
    */
   async stepSend(send: SendMessage) {
     let msg = new SendMessage(send.counterPart, send.timing, send.content, send.originalContent)
+    this.msgConnections.set(send.gId, msg)
     this.incrementalConv.author.messages.push(msg)
     await this.sleep(500)
-    this.incrementalConv.author.preknowledge.push(...this.findNewPreknowledges(send))
-    msg.uses = send.uses // todo sends are not necessarily the same
+    let pres = this.findNewPreknowledges(send).map(p => this.copyPreknowledge(p))
+    this.incrementalConv.author.preknowledge.push(...pres)
+    msg.uses = send.uses // todo sends are not necessarily the same but it works (since position of other send is the same)
     // todo distinguish between info and links?
+    await this.sleep(500)
+    TrustComputator.computeCurrentTrusts(this.incrementalConv, this.simulationInputs)
   }
 
   /*
@@ -64,6 +69,8 @@ export class IncrementalSimulator {
     let msg = new ReceiveMessage(rec.counterPart, rec.timing, rec.content, rec.originalContent)
     this.incrementalConv.author.messages.push(msg)
     await this.sleep(500)
+    let newInfos = rec.generates.map(i => this.copyNewInfo(i))
+    msg.generates.push(...newInfos)
   }
 
   private findNewPreknowledges(send: SendMessage): Preknowledge[] {
@@ -72,7 +79,44 @@ export class IncrementalSimulator {
     return pres.filter(pre =>  pre.timeInfo() == send.timing)
   }
 
-  sleep(ms: number) {
+  private copyPreknowledge(pre: Preknowledge): Preknowledge {
+    let preNew = new Preknowledge(
+      pre.message,
+      pre.isInstruction,
+      pre.position,
+      pre.causes,
+      [],
+      [],
+      [],
+      pre.initialTrust,
+      undefined,
+      pre.feltTrustImmediately,
+      pre.feltTrustAfterwards
+    )
+    this.infoConnections.set(pre.gId, preNew)
+    return preNew
+  }
+
+  private copyNewInfo(newInfo: NewInformation): NewInformation {
+    let newNew = new NewInformation(
+      newInfo.source, //todo copied src
+      newInfo.message,
+      newInfo.isInstruction,
+      newInfo.position,
+      newInfo.causes,
+      [],
+      [],
+      [],
+      newInfo.initialTrust,
+      undefined,
+      newInfo.feltTrustImmediately,
+      newInfo.feltTrustAfterwards
+    )
+    this.infoConnections.set(newInfo.gId, newNew)
+    return newNew
+  }
+
+  private sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 }
