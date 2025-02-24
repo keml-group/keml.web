@@ -65,10 +65,12 @@ export class IncrementalSimulator {
    */
   async stepReceive(rec: ReceiveMessage) {
     let msg = new ReceiveMessage(rec.counterPart, rec.timing, rec.content, rec.originalContent)
+    this.msgConnections.set(rec.gId, msg)
     this.incrementalConv.author.messages.push(msg)
     await this.sleep(500)
-    let newInfos = rec.generates.map(i => this.copyNewInfo(i))
-    msg.generates.push(...newInfos)
+    let newInfos = rec.generates
+    console.log(newInfos)
+    msg.generates.push(...newInfos.map(i => this.copyNewInfo(i)))
     await this.linkStep(newInfos)
   }
 
@@ -98,11 +100,11 @@ export class IncrementalSimulator {
 
   private copyNewInfo(newInfo: NewInformation): NewInformation {
     let newNew = new NewInformation(
-      newInfo.source, //todo copied src
+      (this.msgConnections.get(newInfo.source.gId) as ReceiveMessage)!,
       newInfo.message,
       newInfo.isInstruction,
       newInfo.position,
-      newInfo.causes,
+      [],
       [],
       [],
       [],
@@ -117,7 +119,9 @@ export class IncrementalSimulator {
 
   private addLinks(info: Information) {
     info.causes.map(link => {
-      new InformationLink(info, this.infoConnections.get(link.target.gId)!, link.type, link.linkText)
+      let src = this.infoConnections.get(info.gId)
+      let tar = this.infoConnections.get(link.target.gId)
+      new InformationLink(src!, tar!, link.type, link.linkText)
     })
   }
 
