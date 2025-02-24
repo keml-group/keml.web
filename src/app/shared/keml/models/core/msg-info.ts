@@ -14,9 +14,9 @@ import {
 import {Ref} from "@app/shared/keml/models/refs/ref";
 import {Parser} from "@app/shared/keml/parser/parser";
 import {Referencable} from "@app/shared/keml/models/refs/referenceable";
-import {BoundingBox} from "../../../../core/features/arrows/models/bounding-box";
+import {BoundingBox} from "@app/core/features/arrows/models/bounding-box";
 import {GeneralHelper} from "@app/core/utils/general-helper";
-import {PositionHelper} from "../../../../core/features/arrows/utils/position-helper";
+import {PositionHelper} from "@app/core/features/arrows/utils/position-helper";
 
 export abstract class Message extends Referencable {
   static eClass = 'http://www.unikoblenz.de/keml#//Message'
@@ -327,6 +327,16 @@ export class Preknowledge extends Information {
               ref?: Ref, parser?: Parser, jsonOpt?: PreknowledgeJson) {
     let refC = Ref.createRef(Preknowledge.eClass, ref)
     super(refC, message, isInstruction, position, causes, targetedBy, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, parser, jsonOpt);
+  }
+
+  timeInfo(): number {
+    let timing;
+    if (this.isUsedOn?.length >0) {
+      timing = Math.min(...this.isUsedOn.map(send => send.timing));
+    } else {
+      timing = 0
+    }
+    return timing
   }
 
   override duplicate(): Preknowledge {
