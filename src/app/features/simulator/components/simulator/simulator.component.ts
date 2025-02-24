@@ -65,9 +65,14 @@ export class SimulatorComponent implements OnInit {
 
   simulateIncrementally() {
     console.log("simulateIncrementally");
+    let oldConv = this.conversation
     let simulation = new IncrementalSimulator(this.simulationInputs, this.conversation)
     this.conversation = simulation.incrementalConv
-    simulation.simulate()
+    simulation.simulate().then( () => {
+        this.conversation = oldConv;
+        TrustComputator.computeCurrentTrusts(this.conversation, this.simulationInputs);
+      }
+    )
   }
 
 }

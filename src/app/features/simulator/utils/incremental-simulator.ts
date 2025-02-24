@@ -23,23 +23,20 @@ export class IncrementalSimulator {
     this.incrementalConv = new Conversation(conv.title, author, conv.conversationPartners)
   }
 
-  simulate() {
-    for(let msg of this.completeConv.author.messages) {
-      setInterval(() => {
-        this.step(msg)
-      },50)
+  async simulate() {
+    for (let msg of this.completeConv.author.messages) {
+      await this.step(msg)
     }
   }
 
-  step(msg: Message): void {
+  async step(msg: Message) {
     if(msg.isSend())
-      this.stepSend((msg as SendMessage))
+      await this.stepSend((msg as SendMessage))
     else
-      this.stepReceive((msg as ReceiveMessage))
-    setInterval(
-      () => {TrustComputator.computeCurrentTrusts(this.incrementalConv, this.simulationInputs)},
-      20
-    )
+      await this.stepReceive((msg as ReceiveMessage))
+    await this.sleep(500)
+    TrustComputator.computeCurrentTrusts(this.incrementalConv, this.simulationInputs)
+
   }
 
   /*
@@ -48,13 +45,13 @@ export class IncrementalSimulator {
     2) add "new" Preknowledges and all isUsedOn of the send
     3) add relationships of new preknowledges
    */
-  stepSend(send: SendMessage) {
+  async stepSend(send: SendMessage) {
     let msg = new SendMessage(send.counterPart, send.timing, send.content, send.originalContent)
     this.incrementalConv.author.messages.push(msg)
-    setInterval(()=> {
-      this.incrementalConv.author.preknowledge.push(...this.findNewPreknowledges(send))
-      msg.uses = send.uses // todo
-    }, 50)
+    await this.sleep(500)
+    this.incrementalConv.author.preknowledge.push(...this.findNewPreknowledges(send))
+    msg.uses = send.uses // todo sends are not necessarily the same
+    // todo distinguish between info and links?
   }
 
   /*
@@ -63,9 +60,10 @@ export class IncrementalSimulator {
    2) add generated new infos
    3) add relationships of those new infos
    */
-  stepReceive(rec: ReceiveMessage) {
+  async stepReceive(rec: ReceiveMessage) {
     let msg = new ReceiveMessage(rec.counterPart, rec.timing, rec.content, rec.originalContent)
     this.incrementalConv.author.messages.push(msg)
+    await this.sleep(500)
   }
 
   private findNewPreknowledges(send: SendMessage): Preknowledge[] {
@@ -74,4 +72,7 @@ export class IncrementalSimulator {
     return pres.filter(pre =>  pre.timeInfo() == send.timing)
   }
 
+  sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  }
 }
