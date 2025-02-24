@@ -13,6 +13,7 @@ import {MatToolbar} from "@angular/material/toolbar";
 import {TrustComputator} from "../../utils/trust-computator";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+import {IncrementalSimulator} from "@app/features/simulator/utils/incremental-simulator";
 
 @Component({
   selector: 'app-simulator',
@@ -63,7 +64,10 @@ export class SimulatorComponent implements OnInit {
   }
 
   simulateIncrementally() {
-
+    console.log("simulateIncrementally");
+    let simulation = new IncrementalSimulator(this.simulationInputs, this.conversation)
+    this.conversation = simulation.incrementalConv
+    simulation.simulate()
   }
 
 }
