@@ -1,7 +1,7 @@
 import {Conversation} from "@app/shared/keml/models/core/conversation";
 import {Author} from "@app/shared/keml/models/core/author";
 import {
-  Information,
+  Information, InformationLink,
   Message,
   NewInformation,
   Preknowledge,
@@ -51,13 +51,11 @@ export class IncrementalSimulator {
     this.msgConnections.set(send.gId, msg)
     this.incrementalConv.author.messages.push(msg)
     await this.sleep(500)
-    let pres = this.findNewPreknowledges(send).map(p => this.copyPreknowledge(p))
-    this.incrementalConv.author.preknowledge.push(...pres)
-    msg.uses = send.uses // todo sends are not necessarily the same but it works (since position of other send is the same)
-    // todo distinguish between info and links?
-    await this.sleep(500)
-    TrustComputator.computeCurrentTrusts(this.incrementalConv, this.simulationInputs)
-  }
+    let pres = this.findNewPreknowledges(send)
+    this.incrementalConv.author.preknowledge.push(...pres.map(p => this.copyPreknowledge(p)))
+    msg.uses = send.uses.map(u => this.infoConnections.get(u.gId)!)
+    await this.linkStep(pres)
+ }
 
   /*
   steps:
@@ -71,6 +69,7 @@ export class IncrementalSimulator {
     await this.sleep(500)
     let newInfos = rec.generates.map(i => this.copyNewInfo(i))
     msg.generates.push(...newInfos)
+    await this.linkStep(newInfos)
   }
 
   private findNewPreknowledges(send: SendMessage): Preknowledge[] {
@@ -114,6 +113,21 @@ export class IncrementalSimulator {
     )
     this.infoConnections.set(newInfo.gId, newNew)
     return newNew
+  }
+
+  private addLinks(info: Information) {
+    info.causes.map(link => {
+      new InformationLink(info, this.infoConnections.get(link.target.gId)!, link.type, link.linkText)
+    })
+  }
+
+  private async linkStep(infos: Information[]) {
+    TrustComputator.computeCurrentTrusts(this.incrementalConv, this.simulationInputs)
+    await this.sleep(500)
+    // set links:
+    infos.map(info => this.addLinks(info))
+    await this.sleep(100)
+    TrustComputator.computeCurrentTrusts(this.incrementalConv, this.simulationInputs)
   }
 
   private sleep(ms: number) {
