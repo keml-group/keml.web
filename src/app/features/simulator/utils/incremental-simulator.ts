@@ -44,7 +44,7 @@ export class IncrementalSimulator {
   three steps:
     1) add send msg itself
     2) add "new" Preknowledges and all isUsedOn of the send
-    3) add relationships of new preknowledges
+    3) add relationships of new preknowledges (linkStep)
    */
   async stepSend(send: SendMessage) {
     let msg = new SendMessage(send.counterPart, send.timing, send.content, send.originalContent)
@@ -60,16 +60,18 @@ export class IncrementalSimulator {
   /*
   steps:
    1) add rec msg itself
-   2) add generated new infos
-   3) add relationships of those new infos
+   2) add generated new infos and repetitions of the current rec
+   3) add relationships of those new infos (linkStep)
    */
   async stepReceive(rec: ReceiveMessage) {
     let msg = new ReceiveMessage(rec.counterPart, rec.timing, rec.content, rec.originalContent)
     this.msgConnections.set(rec.gId, msg)
     this.incrementalConv.author.messages.push(msg)
     await this.sleep(500)
+    let repeats: Information[] = rec.repeats.map(i => this.infoConnections.get(i.gId)!)
+    msg.repeats.push(...repeats)
+    repeats.forEach(r => r.repeatedBy.push(msg))
     let newInfos = rec.generates
-    console.log(newInfos)
     msg.generates.push(...newInfos.map(i => this.copyNewInfo(i)))
     await this.linkStep(newInfos)
   }
