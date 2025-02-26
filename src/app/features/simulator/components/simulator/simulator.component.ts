@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgTemplateOutlet} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {MatDialogRef} from "@angular/material/dialog";
 import {Conversation} from "@app/shared/keml/models/core/conversation";
@@ -18,16 +18,17 @@ import {IncrementalSimulator} from "@app/features/simulator/utils/incremental-si
 @Component({
   selector: 'app-simulator',
   standalone: true,
-    imports: [
-        MatIcon,
-        AuthorComponent,
-        ConversationPartnerComponent,
-        MsgComponent,
-        NgForOf,
-        PreknowledgeComponent,
-        TextAreaSvgComponent,
-        MatToolbar
-    ],
+  imports: [
+    MatIcon,
+    AuthorComponent,
+    ConversationPartnerComponent,
+    MsgComponent,
+    NgForOf,
+    PreknowledgeComponent,
+    TextAreaSvgComponent,
+    MatToolbar,
+    NgTemplateOutlet
+  ],
   templateUrl: './simulator.component.html',
   styleUrl: './simulator.component.css'
 })
