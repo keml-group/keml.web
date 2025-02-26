@@ -173,4 +173,37 @@ describe('Msg-Info (models)', () => {
     p0.destruct()
     expect(p1.causes.length).toEqual(0)
   })
+
+  it('should time a preknowledge correctly', () => {
+    let cp0 = new ConversationPartner()
+    let m0 = new SendMessage( cp0, 0, 'm0')
+    let m1 = new SendMessage( cp0, 2, 'm1')
+    let m2 = new SendMessage( cp0, 5, 'm2')
+    let m3 = new SendMessage( cp0, 6, 'm3')
+
+    let pre0 = new Preknowledge('p0', false)
+    let pre1 = new Preknowledge('p1', false)
+    let pre2 = new Preknowledge('p2', false)
+    let pre3 = new Preknowledge('p3', false)
+
+    m1.uses.push(pre1)
+    pre1.isUsedOn.push(m1)
+    m0.uses.push(pre1)
+    pre1.isUsedOn.push(m0)
+
+    m2.uses.push(pre2)
+    pre2.isUsedOn.push(m2)
+    m1.uses.push(pre2)
+    pre2.isUsedOn.push(m1)
+    m3.uses.push(pre2)
+    pre2.isUsedOn.push(m3)
+
+    m3.uses.push(pre3)
+    pre3.isUsedOn.push(m3)
+
+    expect(pre0.timeInfo()).toEqual(0)
+    expect(pre1.timeInfo()).toEqual(0)
+    expect(pre2.timeInfo()).toEqual(2)
+    expect(pre3.timeInfo()).toEqual(6)
+  })
 });
