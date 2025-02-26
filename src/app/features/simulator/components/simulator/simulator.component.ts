@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {NgForOf, NgTemplateOutlet} from "@angular/common";
+import {NgForOf, NgIf, NgTemplateOutlet} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {MatDialogRef} from "@angular/material/dialog";
 import {Conversation} from "@app/shared/keml/models/core/conversation";
@@ -27,7 +27,8 @@ import {IncrementalSimulator} from "@app/features/simulator/utils/incremental-si
     PreknowledgeComponent,
     TextAreaSvgComponent,
     MatToolbar,
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    NgIf
   ],
   templateUrl: './simulator.component.html',
   styleUrl: './simulator.component.css'
@@ -40,6 +41,7 @@ export class SimulatorComponent implements OnInit {
     preknowledgeDefault: undefined,
     defaultsPerCp: new Map<ConversationPartner, number|undefined>()
   };
+  incrementalSimulator?: IncrementalSimulator
 
   constructor(
     public dialogRef: MatDialogRef<SimulatorComponent>,
@@ -65,15 +67,14 @@ export class SimulatorComponent implements OnInit {
   }
 
   simulateIncrementally() {
-    console.log("simulateIncrementally");
-    let oldConv = this.conversation
-    let simulation = new IncrementalSimulator(this.simulationInputs, this.conversation)
-    this.conversation = simulation.incrementalConv
-    simulation.simulate().then( () => {
-        this.conversation = oldConv;
-        TrustComputator.computeCurrentTrusts(this.conversation, this.simulationInputs);
-      }
-    )
+    if (!this.incrementalSimulator) {
+      this.incrementalSimulator = new IncrementalSimulator(this.simulationInputs, this.conversation)
+      this.incrementalSimulator.simulate()
+        .then(() => {
+          TrustComputator.computeCurrentTrusts(this.conversation, this.simulationInputs);
+          this.incrementalSimulator = undefined;
+        })
+    }
   }
 
 }
