@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf, NgTemplateOutlet} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {MatDialogRef} from "@angular/material/dialog";
 import {Conversation} from "@app/shared/keml/models/core/conversation";
@@ -13,20 +13,23 @@ import {MatToolbar} from "@angular/material/toolbar";
 import {TrustComputator} from "../../utils/trust-computator";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+import {IncrementalSimulator} from "@app/features/simulator/utils/incremental-simulator";
 
 @Component({
   selector: 'app-simulator',
   standalone: true,
-    imports: [
-        MatIcon,
-        AuthorComponent,
-        ConversationPartnerComponent,
-        MsgComponent,
-        NgForOf,
-        PreknowledgeComponent,
-        TextAreaSvgComponent,
-        MatToolbar
-    ],
+  imports: [
+    MatIcon,
+    AuthorComponent,
+    ConversationPartnerComponent,
+    MsgComponent,
+    NgForOf,
+    PreknowledgeComponent,
+    TextAreaSvgComponent,
+    MatToolbar,
+    NgTemplateOutlet,
+    NgIf
+  ],
   templateUrl: './simulator.component.html',
   styleUrl: './simulator.component.css'
 })
@@ -38,6 +41,7 @@ export class SimulatorComponent implements OnInit {
     preknowledgeDefault: undefined,
     defaultsPerCp: new Map<ConversationPartner, number|undefined>()
   };
+  incrementalSimulator?: IncrementalSimulator
 
   constructor(
     public dialogRef: MatDialogRef<SimulatorComponent>,
@@ -48,7 +52,6 @@ export class SimulatorComponent implements OnInit {
     this.conversation.conversationPartners.forEach(cp => {
       this.simulationInputs.defaultsPerCp.set(cp, undefined)
     })
-    console.log(this.simulationInputs);
   }
 
   close() {
@@ -56,12 +59,20 @@ export class SimulatorComponent implements OnInit {
   }
 
   currentTrusts() {
-    console.log(this.simulationInputs);
     TrustComputator.computeCurrentTrusts(this.conversation, this.simulationInputs)
   }
 
   manageSimulationInputs() {
     this.simulationService.openSimulationInputDetails(this.simulationInputs)
+  }
+
+  simulateIncrementally() {
+    this.incrementalSimulator = new IncrementalSimulator(this.simulationInputs, this.conversation)
+    this.incrementalSimulator.simulate()
+      .then(() => {
+        TrustComputator.computeCurrentTrusts(this.conversation, this.simulationInputs);
+        this.incrementalSimulator = undefined;
+      })
   }
 
 }

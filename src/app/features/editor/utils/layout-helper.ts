@@ -1,9 +1,9 @@
 /* documents all layout specific choices (distances) so that we can work from that on
 * treats (0,0) as author position -> knowledge has a negative x, messages a positive x.
 */
-import {ConversationPartner} from '../../../shared/keml/models/core/conversation-partner';
-import {Message, ReceiveMessage, Preknowledge, Information} from "../../../shared/keml/models/core/msg-info";
-import {BoundingBox} from "../../../core/features/arrows/models/bounding-box";
+import {ConversationPartner} from '@app/shared/keml/models/core/conversation-partner';
+import {Message, ReceiveMessage, Preknowledge, Information} from "@app/shared/keml/models/core/msg-info";
+import {BoundingBox} from "@app/core/features/arrows/models/bounding-box";
 
 export class LayoutHelper {
   // distance to first partner should be bigger than distance in between:
@@ -96,12 +96,7 @@ export class LayoutHelper {
   static positionPreknowledge(pre: Preknowledge[]) {
     pre.forEach(p => {
       if (p.position.w < 7 ) {
-        let timing;
-        if (p.isUsedOn?.length >0) {
-          timing = Math.min(...p.isUsedOn.map(send => send.timing));
-        } else {
-          timing = 0
-        }
+        let timing = p.timeInfo()
         p.position = this.bbForPreknowledge(LayoutHelper.computeMessageY(timing))
       }
     })
