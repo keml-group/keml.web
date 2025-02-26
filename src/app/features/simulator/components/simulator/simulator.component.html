@@ -17,18 +17,18 @@
   </button>
 </mat-toolbar>
 <div style="width: 1500px; height: 1000px; overflow: auto;">
+  <svg #simulation id="svg" style="border: 1px solid black;" width="1500" height="5000" overflow="scroll">
     <ng-container *ngTemplateOutlet="svgcontent; context:{$implicit: conversation}">
     </ng-container>
+  </svg>
 </div>
 
 <ng-template #svgcontent let-conv>
-  <svg #simulation id="svg" style="border: 1px solid black;" width="1500" height="5000" overflow="scroll">
-    <g transform="translate(750,0)">
+  <svg:g transform="translate(750,0)">
     <g text-area-svg [(text)]="conv.title" [singleEdit]="true" [w]="600" [h]="25" [x]="0" [y]="0"></g>
     <g authorG [author]="conv.author"></g>
     <g cp *ngFor="let convP of conv.conversationPartners" [conversationPartner]="convP"></g>
     <g preknowG *ngFor="let pre of conv.author.preknowledge" [info]="pre" [showTrust]="true" (chooseInfo)="simulationService.openInfoTrusts(pre)"></g>
     <g msgG *ngFor="let m of conv.author.messages" [msg]="m" [msgTiming]="m.timing" [showInfoTrusts]="true" (chooseInfo)="simulationService.openInfoTrusts($event)"></g>
-  </g>
-  </svg>
+  </svg:g>
 </ng-template>
