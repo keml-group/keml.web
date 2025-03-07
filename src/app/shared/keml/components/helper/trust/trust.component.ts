@@ -30,13 +30,18 @@ export class TrustComponent implements OnInit, OnChanges {
     this.trust4Display =this.computeTrust4Display()
   }
 
+  // expects input between -1 and 1 and produces a string with two digits after the . and ... after them if the number was truncated
   computeTrust4Display(): string {
     if (this.trust == undefined || isNaN(this.trust)) {
       return '?'
     } else {
+      let length = 4
+      if (this.trust <0) {
+        length = 5
+      }
       let str = this.trust.toString()
-      if (str.length > 9) {
-        str = str.substring(0,7)+'..'
+      if (str.length > length) {
+        str = str.substring(0,length)+'..'
       }
       return str
     }
