@@ -67,12 +67,16 @@ describe('TrustComponent', () => {
     expect(component.computeTrust4Display()).toEqual('0.5')
     component.trust = -0.56;
     expect(component.computeTrust4Display()).toEqual('-0.56')
+    component.trust = 0.56;
+    expect(component.computeTrust4Display()).toEqual('0.56')
+    component.trust = -0.567;
+    expect(component.computeTrust4Display()).toEqual('-0.56..')
     component.trust = 0.567;
-    expect(component.computeTrust4Display()).toEqual('0.567')
+    expect(component.computeTrust4Display()).toEqual('0.56..')
     component.trust = -0.567234;
     expect(component.computeTrust4Display()).toEqual('-0.56..')
     component.trust = 0.567234;
-    expect(component.computeTrust4Display()).toEqual('0.567..')
+    expect(component.computeTrust4Display()).toEqual('0.56..')
 
   })
 });

@@ -39,9 +39,13 @@ export class TrustComponent implements OnInit, OnChanges {
       } else if (this.trust == -Infinity) {
         return '-1'
       }
+      let length = 4
+      if (this.trust <0) {
+        length = 5
+      }
       let str = this.trust.toString()
-      if (str.length > 5) {
-        str = str.substring(0,5)+'..'
+      if (str.length > length) {
+        str = str.substring(0,length)+'..'
       }
       return str
     }
