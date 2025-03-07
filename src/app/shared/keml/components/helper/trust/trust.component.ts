@@ -34,6 +34,11 @@ export class TrustComponent implements OnInit, OnChanges {
     if (this.trust == undefined || isNaN(this.trust)) {
       return '?'
     } else {
+      if (this.trust == Infinity) {
+        return '1'
+      } else if (this.trust == -Infinity) {
+        return '-1'
+      }
       let str = this.trust.toString()
       if (str.length > 5) {
         str = str.substring(0,5)+'..'
