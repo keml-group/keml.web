@@ -53,11 +53,8 @@ describe('TrustComponent', () => {
   })
 
   it('should calculate the string representation correctly', () => {
+    component.trust = undefined
     expect(component.computeTrust4Display()).toEqual('?') //undefined
-    component.trust = 1/0; //infinity
-    expect(component.computeTrust4Display()).toEqual('1')
-    component.trust = -1/0; //infinity
-    expect(component.computeTrust4Display()).toEqual('-1')
     component.trust = NaN;
     expect(component.computeTrust4Display()).toEqual('?')
 
