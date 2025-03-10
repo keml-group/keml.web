@@ -29,7 +29,7 @@ export class SimulationService {
     dialogRef.componentInstance.conversation = conversation
   }
 
-  openInfoTrusts(info: Information) {
+  openInfoTrusts(info: Information, conversation: Conversation, simulationInputs: SimulationInputs) {
     const dialogRef = this.dialog.open(
       InfoTrustDetailsComponent,
       {
@@ -39,6 +39,9 @@ export class SimulationService {
       }
     )
     dialogRef.componentInstance.info = info
+    dialogRef.componentInstance.infoChanged.subscribe(i => {
+      TrustComputator.computeCurrentTrusts(conversation, simulationInputs)
+    })
   }
 
   openSimulationInputDetails(conversation: Conversation, simulationInputs: SimulationInputs) {
