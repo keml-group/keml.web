@@ -59,10 +59,6 @@ export class SimulatorComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  currentTrusts() {
-    TrustComputator.computeCurrentTrusts(this.conversation, this.simulationInputs)
-  }
-
   manageSimulationInputs() {
     this.simulationService.openSimulationInputDetails(this.conversation, this.simulationInputs)
   }
