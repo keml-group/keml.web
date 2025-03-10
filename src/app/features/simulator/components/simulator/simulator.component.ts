@@ -64,7 +64,7 @@ export class SimulatorComponent implements OnInit {
   }
 
   manageSimulationInputs() {
-    this.simulationService.openSimulationInputDetails(this.simulationInputs)
+    this.simulationService.openSimulationInputDetails(this.conversation, this.simulationInputs)
   }
 
   simulateIncrementally() {

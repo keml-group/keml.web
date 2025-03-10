@@ -3,13 +3,13 @@
 <div class="defaults-form">
   <label class="form-label">Argumentation Weight</label>
   <div>
-    <input type="number" name="aw" min="0" [attr.max]="1000" [(ngModel)]="simulationInputs.weight">
+    <input type="number" name="aw" min="0" [attr.max]="1000" [ngModel]="simulationInputs.weight" (ngModelChange)="changeArgumentationWeight($event)">
     <small> Default: {{TrustComputator.weightDefault}}</small>
   </div>
 
   <label class="form-label">Preknowledge Default</label>
   <div>
-    <input type="number" name="pre" min="-1" [attr.max]="1" [(ngModel)]="simulationInputs.preknowledgeDefault">
+    <input type="number" name="pre" min="-1" [attr.max]="1" [ngModel]="simulationInputs.preknowledgeDefault" (ngModelChange)="changeDefaultForPre($event)">
     <small> Default: {{TrustComputator.preknowledgeDefault}}</small>
   </div>
 
@@ -17,7 +17,7 @@
   <small>Defaults: {{TrustComputator.generalDefault}}</small></label>
   <div class="defaults-inner-form">
     <div *ngFor="let partner of partnerList; let  i = index">
-      <input [name]="partner.name" type="number" min="-1" max="1" [ngModel]="defaultList[i]" (ngModelChange)="useListsForSimInputs(partner, $event)">
+      <input [name]="partner.name" type="number" min="-1" max="1" [ngModel]="defaultList[i]" (ngModelChange)="changeDefaultForCp(partner, $event)">
       <label class="form-label">
         {{partner.name}}
       </label>
