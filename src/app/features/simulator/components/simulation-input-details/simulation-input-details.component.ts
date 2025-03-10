@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
 import {MatIcon} from "@angular/material/icon";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -23,6 +23,7 @@ import {TrustComputator} from "@app/features/simulator/utils/trust-computator";
 export class SimulationInputDetails implements OnInit {
 
   @Input() simulationInputs!: SimulationInputs
+  @Output() recomputeWith: EventEmitter<SimulationInputs> = new EventEmitter<SimulationInputs>();
   partnerList: ConversationPartner[] = []
   defaultList: (number|undefined)[] = []
 
@@ -35,8 +36,19 @@ export class SimulationInputDetails implements OnInit {
     this.defaultList = Array.from(this.simulationInputs.defaultsPerCp.values())
   }
 
-  useListsForSimInputs(cp: ConversationPartner, val: (number| undefined)) {
+  changeArgumentationWeight(val: (number| undefined)) {
+    this.simulationInputs.weight = val
+    this.recomputeWith.emit(this.simulationInputs)
+  }
+
+  changeDefaultForPre(val: (number| undefined)) {
+    this.simulationInputs.preknowledgeDefault = val
+    this.recomputeWith.emit(this.simulationInputs)
+  }
+
+  changeDefaultForCp(cp: ConversationPartner, val: (number| undefined)) {
     this.simulationInputs.defaultsPerCp.set(cp, val)
+    this.recomputeWith.emit(this.simulationInputs)
   }
 
   closeMe() {

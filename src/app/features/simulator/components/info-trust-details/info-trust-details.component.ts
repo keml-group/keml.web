@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
 import {ArrowSvgComponent} from "@app/core/features/arrows/components/arrow-svg/arrow-svg.component";
 import {InfoInnerComponent} from "@app/shared/keml/components/helper/info-inner/info-inner.component";
@@ -32,10 +32,16 @@ import {MatTooltip} from "@angular/material/tooltip";
 })
 export class InfoTrustDetailsComponent {
   @Input() info!: Information
+  @Output() infoChanged: EventEmitter<(number|undefined)> = new EventEmitter<(number|undefined)>()
 
   constructor(
     private dialogRef: MatDialogRef<InfoTrustDetailsComponent>,
   ) {}
+
+  changeInitialTrust(val: (number|undefined)) {
+    this.info.initialTrust = val
+    this.infoChanged.emit(this.info.initialTrust);
+  }
 
   closeMe() {
     this.dialogRef.close();

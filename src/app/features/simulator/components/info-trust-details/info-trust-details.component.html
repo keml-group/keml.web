@@ -13,7 +13,7 @@
   <label class="form-label">Initial Trust</label>
   <div class="row">
     <div class="column">
-      <input #trustafter=ngModel type="number" name="initialTrust" min="-1" max="1" [(ngModel)]="info.initialTrust">
+      <input #trustafter=ngModel type="number" name="initialTrust" min="-1" max="1" [ngModel]="info.initialTrust" (ngModelChange)="changeInitialTrust($event)">
       <div *ngIf="trustafter.invalid" class="row alert">
         <div *ngIf="trustafter.errors?.['min']">
           Trust must be between -1 and 1. It is currently below -1.

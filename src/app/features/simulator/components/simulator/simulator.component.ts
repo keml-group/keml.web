@@ -52,18 +52,15 @@ export class SimulatorComponent implements OnInit {
     this.conversation.conversationPartners.forEach(cp => {
       this.simulationInputs.defaultsPerCp.set(cp, undefined)
     })
+    TrustComputator.computeCurrentTrusts(this.conversation, this.simulationInputs)
   }
 
   close() {
     this.dialogRef.close();
   }
 
-  currentTrusts() {
-    TrustComputator.computeCurrentTrusts(this.conversation, this.simulationInputs)
-  }
-
   manageSimulationInputs() {
-    this.simulationService.openSimulationInputDetails(this.simulationInputs)
+    this.simulationService.openSimulationInputDetails(this.conversation, this.simulationInputs)
   }
 
   simulateIncrementally() {
