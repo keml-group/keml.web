@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import {BoundingBox} from "@app/core/features/arrows/models/bounding-box";
 import {ArrowType} from "@app/core/features/arrows/models/arrow-heads";
-import {SVGAccessService} from "@app/features/editor/services/svg-access.service";
+import {SVGAccessService} from "@app/core/services/svg-access.service";
 import {Observable, Subscription} from "rxjs";
 import { ArrowSvgComponent } from '@app/core/features/arrows/components/arrow-svg/arrow-svg.component';
 import { NgIf } from '@angular/common';
