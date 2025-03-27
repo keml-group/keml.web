@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges,} from '@angular/core';
 import { Point } from "@angular/cdk/drag-drop";
 import { NgIf } from '@angular/common';
 import {v4 as uuidv4} from "uuid";

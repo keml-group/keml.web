@@ -7,11 +7,10 @@ export enum ArrowHead {
   SUPPLEMENT = 'SUPPLEMENT',
 }
 
-export enum CustomArrowType {
+export enum CustomArrowLineType {
   STANDARD = 'STANDARD',
-  DASHED = 'DASHED',
+  DASHED = 'DASHED'
 }
 
-
-export const ArrowType = {...InformationLinkType, ...CustomArrowType};
-export type ArrowType = InformationLinkType | CustomArrowType;
+export const ArrowType = {...InformationLinkType, ...CustomArrowLineType};
+export type ArrowType = InformationLinkType | CustomArrowLineType;

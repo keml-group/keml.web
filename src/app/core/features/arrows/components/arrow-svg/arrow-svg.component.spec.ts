@@ -3,7 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ArrowSvgComponent} from './arrow-svg.component';
 import {NO_ERRORS_SCHEMA} from "@angular/core";
 import {BoundingBox} from "@app/core/features/arrows/models/bounding-box";
-import {ArrowHead, CustomArrowType} from "@app/core/features/arrows/models/arrow-heads";
+import {ArrowHead, CustomArrowLineType} from "@app/core/features/arrows/models/arrow-heads";
 
 describe('ArrowSvgComponent', () => {
   let component: ArrowSvgComponent;
@@ -32,7 +32,7 @@ describe('ArrowSvgComponent', () => {
 
   it('should set right arrowHead and dashed (when positioned)', () => {
     component.positioned = true
-    component.arrowType = CustomArrowType.DASHED
+    component.arrowType = CustomArrowLineType.DASHED
     component.ngOnChanges()
     expect(component.dashed).toEqual([5])
     expect(component.endType).toEqual(ArrowHead.POINTER)
