@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {BoundingBox} from "../../../core/features/arrows/models/bounding-box";
 import {PositionHelper} from "../../../core/features/arrows/utils/position-helper";
 import {BehaviorSubject, Observable} from "rxjs";
-import {Message, ReceiveMessage, SendMessage} from "../../../shared/keml/models/core/msg-info";
 
 @Injectable({
   providedIn: 'root'
@@ -16,21 +15,6 @@ export class SVGAccessService {
   notifyPositionChange(id: string) {
     this.positionChange.next(id);
     console.log(id)
-  }
-
-  notifyPositionChangeMessage(msg: Message): void {
-    this.notifyPositionChange(msg.gId)
-    let rec = (msg as ReceiveMessage)
-    rec.generates?.forEach( i => {
-      this.notifyPositionChange(i.gId)
-    })
-    rec.repeats?.forEach( i => {
-      this.notifyPositionChange(i.gId)
-    })
-    let send = (msg as SendMessage)
-    send.uses?.forEach( i => {
-      this.notifyPositionChange(i.gId)
-    })
   }
 
   listenToPositionChange(): Observable<string> {

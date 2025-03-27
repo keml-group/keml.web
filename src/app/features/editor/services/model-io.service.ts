@@ -14,9 +14,9 @@ import {JsonFixer} from "../utils/json-fixer";
 import {LayoutHelper} from "../utils/layout-helper";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
 import {Author} from "../../../shared/keml/models/core/author";
-import {SVGAccessService} from "./svg-access.service";
 import {GeneralHelper} from "../../../core/utils/general-helper";
 import {LLMMessage} from "../fromLLM/models/llmmessage";
+import {MsgPositionChangeService} from "@app/features/editor/services/msg-position-change.service";
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +26,7 @@ export class ModelIOService {
   conversation!: Conversation;
 
   constructor(
-    private svgAccessService: SVGAccessService,
+    private msgPositionChangeService: MsgPositionChangeService,
   ) {
     console.log("ModelIOService constructed");
     this.newKEML();
@@ -160,10 +160,10 @@ export class ModelIOService {
     //actually, timing should be equal to the index - can we rely on it?
     msgs[msg.timing] = msgs[msg.timing-1];
     msgs[msg.timing].timing++;
-    this.svgAccessService.notifyPositionChangeMessage( msgs[msg.timing] )
+    this.msgPositionChangeService.notifyPositionChangeMessage( msgs[msg.timing] )
     msgs[msg.timing-1] = msg;
     msg.timing--;
-    this.svgAccessService.notifyPositionChangeMessage( msg)
+    this.msgPositionChangeService.notifyPositionChangeMessage( msg)
   }
 
   disableMoveUp(msg: Message): boolean {
@@ -175,10 +175,10 @@ export class ModelIOService {
     //actually, timing should be equal to the index - can we rely on it?
     msgs[msg.timing] = msgs[msg.timing+1];
     msgs[msg.timing].timing-=1;
-    this.svgAccessService.notifyPositionChangeMessage(msgs[msg.timing])
+    this.msgPositionChangeService.notifyPositionChangeMessage(msgs[msg.timing])
     msgs[msg.timing+1] = msg;
     msg.timing+=1;
-    this.svgAccessService.notifyPositionChangeMessage(msg)
+    this.msgPositionChangeService.notifyPositionChangeMessage(msg)
   }
 
   disableMoveDown(msg: Message): boolean {
@@ -220,14 +220,14 @@ export class ModelIOService {
     msgs.splice(msg.timing, 1)
     msg.timing = newPos
     msgs.splice(newPos, 0, msg)
-    this.svgAccessService.notifyPositionChangeMessage(msg)
+    this.msgPositionChangeService.notifyPositionChangeMessage(msg)
   }
 
   private moveMessagesDown(start: number, afterEnd: number) {
     const msgs = this.conversation.author.messages
     for(let i = start; i < afterEnd; i++) {
       msgs[i].timing++;
-      this.svgAccessService.notifyPositionChangeMessage(msgs[i])
+      this.msgPositionChangeService.notifyPositionChangeMessage(msgs[i])
       //todo also adapt infos?
     }
   }
@@ -236,7 +236,7 @@ export class ModelIOService {
     const msgs = this.conversation.author.messages
     for(let i = start; i < afterEnd; i++) {
       msgs[i].timing--;
-      this.svgAccessService.notifyPositionChangeMessage(msgs[i])
+      this.msgPositionChangeService.notifyPositionChangeMessage(msgs[i])
       //todo also adapt infos?
     }
   }
