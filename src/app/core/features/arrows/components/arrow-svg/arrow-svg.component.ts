@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit,} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, } from '@angular/core';
 import { Point } from "@angular/cdk/drag-drop";
 import { NgIf } from '@angular/common';
 import {v4 as uuidv4} from "uuid";
@@ -13,11 +13,11 @@ import {PathLayouter} from "@app/core/utils/path-layouter";
     standalone: true,
     imports: [NgIf]
 })
-export class ArrowSvgComponent implements OnInit, OnChanges, AfterViewInit {
+export class ArrowSvgComponent implements OnChanges, AfterViewInit {
   @Input() start!: BoundingBox;
   @Input() end!: BoundingBox;
   @Input() arrowType: ArrowType = ArrowType.STANDARD;
-  @Input() breaks: BoundingBox[] = [];
+//  @Input() breaks: BoundingBox[] = [];
   @Input() text?: string;
   @Input() style?: string;
 
@@ -36,15 +36,6 @@ export class ArrowSvgComponent implements OnInit, OnChanges, AfterViewInit {
 
   constructor(
     private cdr: ChangeDetectorRef) {
-  }
-
-  ngOnInit() {
-    /*if (!this.startId) {
-      this.computePositions()
-    } else {
-      this.computePositionsByIds()
-    }
-    this.pickConfiguration()*/
   }
 
   ngAfterViewInit() {

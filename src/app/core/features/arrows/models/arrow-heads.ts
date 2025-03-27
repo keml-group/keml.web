@@ -10,8 +10,8 @@ export enum ArrowHead {
 export enum CustomArrowType {
   STANDARD = 'STANDARD',
   DASHED = 'DASHED',
-  INTERRUPTION = 'INTERRUPTION',
 }
+
 
 export const ArrowType = {...InformationLinkType, ...CustomArrowType};
 export type ArrowType = InformationLinkType | CustomArrowType;
