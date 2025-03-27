@@ -4,7 +4,7 @@ import { NgIf } from '@angular/common';
 import {v4 as uuidv4} from "uuid";
 import {ArrowHead, ArrowType} from "@app/core/features/arrows/models/arrow-heads";
 import {BoundingBox} from "@app/core/features/arrows/models/bounding-box";
-import {PathLayouter} from "@app/features/editor/utils/path-layouter";
+import {PathLayouter} from "@app/core/utils/path-layouter";
 
 @Component({
     selector: '[arrow-svg]',
