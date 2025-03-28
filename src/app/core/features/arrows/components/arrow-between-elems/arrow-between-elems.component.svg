@@ -2,7 +2,7 @@
   <g arrow-svg *ngIf="start && end"
        [start]="start"
        [end]="end"
-       [arrowType2]="arrowType2"
+       [arrowType]="arrowType"
        [text]="text"
        [style]="style">
   </g>

@@ -6,7 +6,7 @@
   </g>
   <g *ngIf="showInfos">
     <g newInfoG *ngFor="let info of receiveMsg?.generates" [info]="info" [showTrust]="showInfoTrusts" (chooseInfo)="clickInfo(info)" (chooseInfoLink)="clickInfoLink($event)"></g>
-    <g arrowElems *ngFor="let info of receiveMsg?.repeats" [startGID]="msg.gId" [startSuffix]="'-left'" [endGID]="info.gId" [endSuffix]="'-main'" [arrowType2]="ArrowType.DASHED"></g>
-    <g arrowElems *ngFor="let info of sendMsg?.uses" [startGID]="info.gId" [startSuffix]="'-main'" [endGID]="msg.gId" [endSuffix]="'-left'" [arrowType2]="ArrowType.STANDARD"></g>
+    <g arrowElems *ngFor="let info of receiveMsg?.repeats" [startGID]="msg.gId" [startSuffix]="'-left'" [endGID]="info.gId" [endSuffix]="'-main'" [arrowType]="ArrowType.DASHED"></g>
+    <g arrowElems *ngFor="let info of sendMsg?.uses" [startGID]="info.gId" [startSuffix]="'-main'" [endGID]="msg.gId" [endSuffix]="'-left'" [arrowType]="ArrowType.STANDARD"></g>
   </g>
 </svg:g>

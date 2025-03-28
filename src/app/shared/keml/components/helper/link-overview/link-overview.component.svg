@@ -4,7 +4,7 @@
   <g arrow-svg
      [start]="{x: 97.5, y: 80, w: 5, h: 5}"
      [end]="{x: 97.5, y: 60, w: 5, h: 5}"
-     [arrowType2]="link.type"
+     [arrowType]="link.type"
   >
   </g>
 </svg:g>

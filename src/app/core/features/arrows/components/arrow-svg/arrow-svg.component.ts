@@ -18,7 +18,7 @@ import {ArrowTypeConfigurator} from "@app/core/features/arrows/utils/arrow-type-
 export class ArrowSvgComponent implements OnChanges, AfterViewInit {
   @Input() start!: BoundingBox;
   @Input() end!: BoundingBox;
-  @Input() arrowType2?: string;
+  @Input() arrowType?: string;
 //  @Input() breaks: BoundingBox[] = [];
   @Input() text?: string;
   @Input() style?: string;
@@ -53,7 +53,7 @@ export class ArrowSvgComponent implements OnChanges, AfterViewInit {
   }
 
   private pickConfiguration() {
-    this.arrowStyleConfiguration = ArrowTypeConfigurator.styleArrow(this.arrowType2)
+    this.arrowStyleConfiguration = ArrowTypeConfigurator.styleArrow(this.arrowType)
   }
 
 
