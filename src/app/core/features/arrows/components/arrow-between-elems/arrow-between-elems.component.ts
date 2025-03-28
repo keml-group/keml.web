@@ -11,8 +11,6 @@ import {SVGAccessService} from "@app/core/services/svg-access.service";
 import {Observable, Subscription} from "rxjs";
 import { ArrowSvgComponent } from '@app/core/features/arrows/components/arrow-svg/arrow-svg.component';
 import { NgIf } from '@angular/common';
-import {ArrowStyleConfiguration} from "@app/core/features/arrows/models/arrow-style-configuration";
-import {ArrowTypeConfigurator} from "@app/core/features/arrows/utils/arrow-type-configurator";
 
 @Component({
     selector: '[arrowElems]',
@@ -28,7 +26,6 @@ export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit, OnChan
   @Input() endGID!: string;
   @Input() endSuffix!: string;
   @Input() arrowType2?: string;
-  @Input() arrowStyleConfiguration: ArrowStyleConfiguration = ArrowTypeConfigurator.styleArrow();
 
   @Input() breaks: BoundingBox[] = [];
   @Input() text?: string;

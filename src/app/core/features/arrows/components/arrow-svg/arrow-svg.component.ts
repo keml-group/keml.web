@@ -23,7 +23,7 @@ export class ArrowSvgComponent implements OnChanges, AfterViewInit {
   @Input() text?: string;
   @Input() style?: string;
 
-  arrowStyleConfiguration: ArrowStyleConfiguration = ArrowTypeConfigurator.styleArrow();
+  arrowStyleConfiguration: ArrowStyleConfiguration = ArrowTypeConfigurator.styleArrow2();
 
   x1: number = 0;
   y1: number = 0;

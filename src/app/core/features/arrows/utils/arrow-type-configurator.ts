@@ -10,7 +10,7 @@ export class ArrowTypeConfigurator {
     } else return this.styleArrow()
   }
 
-  static styleArrow(arrowType?: ArrowType): ArrowStyleConfiguration {
+  private static styleArrow(arrowType?: ArrowType): ArrowStyleConfiguration {
     let arrowHead: ArrowHead = this.setArrowHead(arrowType)
     return {
       endPointer: arrowHead, //todo this field should later be KEML independent

@@ -7,7 +7,7 @@ describe('ArrowTypeConfigurator', () => {
   });
 
   it('should set right arrowHead, color and dashed for None', () => {
-    expect(ArrowTypeConfigurator.styleArrow()).toEqual({
+    expect(ArrowTypeConfigurator.styleArrow2()).toEqual({
       dashed: [0],
       color: 'black',
       endPointer: ArrowHead.POINTER,
@@ -15,7 +15,7 @@ describe('ArrowTypeConfigurator', () => {
   })
 
   it('should set right arrowHead, color and dashed for DASHED', () => {
-    expect(ArrowTypeConfigurator.styleArrow(ArrowType.DASHED)).toEqual({
+    expect(ArrowTypeConfigurator.styleArrow2(ArrowType.DASHED)).toEqual({
       dashed: [5],
       color: 'black',
       endPointer: ArrowHead.POINTER,
@@ -23,7 +23,7 @@ describe('ArrowTypeConfigurator', () => {
   })
 
   it('should set right arrowHead, color and dashed for STRONG_ATTACK', () => {
-    expect(ArrowTypeConfigurator.styleArrow(ArrowType.STRONG_ATTACK)).toEqual({
+    expect(ArrowTypeConfigurator.styleArrow2(ArrowType.STRONG_ATTACK)).toEqual({
       dashed: [0],
       color: 'red',
       endPointer: ArrowHead.ATTACK,
