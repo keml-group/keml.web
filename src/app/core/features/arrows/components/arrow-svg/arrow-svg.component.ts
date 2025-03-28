@@ -2,18 +2,18 @@ import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges,} from '@
 import { Point } from "@angular/cdk/drag-drop";
 import { NgIf } from '@angular/common';
 import {v4 as uuidv4} from "uuid";
-import {ArrowHead} from "@app/core/features/arrows/models/arrow-heads";
 import {BoundingBox} from "@app/core/features/arrows/models/bounding-box";
 import {PathLayouter} from "@app/core/utils/path-layouter";
 import {ArrowStyleConfiguration} from "@app/core/features/arrows/models/arrow-style-configuration";
 import {ArrowTypeConfigurator} from "@app/core/features/arrows/utils/arrow-type-configurator";
+import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-markers/arrow-markers.component";
 
 @Component({
     selector: '[arrow-svg]',
     templateUrl: './arrow-svg.component.svg',
     styleUrl: './arrow-svg.component.css',
     standalone: true,
-    imports: [NgIf]
+  imports: [NgIf, ArrowMarkersComponent]
 })
 export class ArrowSvgComponent implements OnChanges, AfterViewInit {
   @Input() start!: BoundingBox;
@@ -69,5 +69,4 @@ export class ArrowSvgComponent implements OnChanges, AfterViewInit {
     this.y2 = res[1].y;
   }
 
-  protected readonly ArrowHead = ArrowHead;
 }

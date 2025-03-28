@@ -1,0 +1,14 @@
+<svg:defs>
+  <marker [attr.id]='ArrowHead.POINTER' orient="auto" markerWidth='10' markerHeight='10' refX='10' refY='5'>
+    <path d='M0,0 L10,5 L0,10 L2,5 Z' stroke="black" fill="black"></path>
+  </marker>
+  <marker [attr.id]='ArrowHead.SUPPLEMENT' orient="auto" markerWidth='10' markerHeight='10' refX='10' refY='5'>
+    <circle cx="5" cy="5" r="5" stroke="black" fill="white"></circle>
+  </marker>
+  <marker [attr.id]='ArrowHead.ATTACK' orient="auto" markerWidth='10' markerHeight='10' refX='10' refY='5'>
+    <path d='M0,0 L10,10 L5,5 L0,10 L10,0' stroke="red" fill="none"></path>
+  </marker>
+  <marker [attr.id]='ArrowHead.SUPPORT' orient="auto" markerWidth='10' markerHeight='10' refX='10' refY='5'>
+    <path d="M0,5 L10,0 Z L10,5 Z L10,10 Z" stroke="green" fill="none"></path>
+  </marker>
+</svg:defs>
