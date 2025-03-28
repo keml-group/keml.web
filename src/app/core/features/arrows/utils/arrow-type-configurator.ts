@@ -3,14 +3,14 @@ import {ArrowHead, ArrowType} from "@app/core/features/arrows/models/arrow-heads
 
 export class ArrowTypeConfigurator {
 
-  static styleArrow2(arrowType?: string) {
+  static styleArrow(arrowType?: string) {
     if (arrowType) {
       let typed: ArrowType = (arrowType as ArrowType);
-      return this.styleArrow(typed)
-    } else return this.styleArrow()
+      return this.styleArrowTyped(typed)
+    } else return this.styleArrowTyped()
   }
 
-  private static styleArrow(arrowType?: ArrowType): ArrowStyleConfiguration {
+  private static styleArrowTyped(arrowType?: ArrowType): ArrowStyleConfiguration {
     let arrowHead: ArrowHead = this.setArrowHead(arrowType)
     return {
       endPointer: arrowHead, //todo this field should later be KEML independent

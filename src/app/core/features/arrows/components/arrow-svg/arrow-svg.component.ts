@@ -23,7 +23,7 @@ export class ArrowSvgComponent implements OnChanges, AfterViewInit {
   @Input() text?: string;
   @Input() style?: string;
 
-  arrowStyleConfiguration: ArrowStyleConfiguration = ArrowTypeConfigurator.styleArrow2();
+  arrowStyleConfiguration: ArrowStyleConfiguration = ArrowTypeConfigurator.styleArrow();
 
   x1: number = 0;
   y1: number = 0;
@@ -53,7 +53,7 @@ export class ArrowSvgComponent implements OnChanges, AfterViewInit {
   }
 
   private pickConfiguration() {
-    this.arrowStyleConfiguration = ArrowTypeConfigurator.styleArrow2(this.arrowType2)
+    this.arrowStyleConfiguration = ArrowTypeConfigurator.styleArrow(this.arrowType2)
   }
 
 
