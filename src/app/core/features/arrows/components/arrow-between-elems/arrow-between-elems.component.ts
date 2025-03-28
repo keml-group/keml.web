@@ -7,11 +7,12 @@ import {
   ViewChild
 } from '@angular/core';
 import {BoundingBox} from "@app/core/features/arrows/models/bounding-box";
-import {ArrowType} from "@app/core/features/arrows/models/arrow-heads";
 import {SVGAccessService} from "@app/core/services/svg-access.service";
 import {Observable, Subscription} from "rxjs";
 import { ArrowSvgComponent } from '@app/core/features/arrows/components/arrow-svg/arrow-svg.component';
 import { NgIf } from '@angular/common';
+import {ArrowStyleConfiguration} from "@app/core/features/arrows/models/arrow-style-configuration";
+import {ArrowTypeConfigurator} from "@app/core/features/arrows/utils/arrow-type-configurator";
 
 @Component({
     selector: '[arrowElems]',
@@ -26,10 +27,11 @@ export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit, OnChan
   @Input() startSuffix!: string;
   @Input() endGID!: string;
   @Input() endSuffix!: string;
-  @Input() arrowType: ArrowType = ArrowType.STANDARD;
+  @Input() arrowStyleConfiguration: ArrowStyleConfiguration = ArrowTypeConfigurator.styleArrow();
+
   @Input() breaks: BoundingBox[] = [];
   @Input() text?: string;
-  @Input() style?: string;
+  @Input() style?: string; //todo move into ArrowStyleConfig?
 
   startId!: string;
   endId!: string;

@@ -7,6 +7,8 @@ import { ArrowBetweenElemsComponent } from '@app/core/features/arrows/components
 import { NewInfoComponent } from '@app/shared/keml/components/new-info/new-info.component';
 import { NgIf, NgFor } from '@angular/common';
 import { MsgInnerComponent } from '@app/shared/keml/components/helper/msg-inner/msg-inner.component';
+import {ArrowStyleConfiguration} from "@app/core/features/arrows/models/arrow-style-configuration";
+import {ArrowTypeConfigurator} from "@app/core/features/arrows/utils/arrow-type-configurator";
 
 @Component({
     selector: '[msgG]',
@@ -28,6 +30,9 @@ export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
   sendMsg?: SendMessage;
 
   msgY: number = 0;
+  //todo move to configurator?
+  repetitionConfiguration: ArrowStyleConfiguration = ArrowTypeConfigurator.styleArrow(ArrowType.DASHED)
+  standardConfiguration: ArrowStyleConfiguration = ArrowTypeConfigurator.styleArrow(ArrowType.STANDARD)
 
   constructor(private svgAccessService: SVGAccessService) { }
 
@@ -70,5 +75,4 @@ export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
     this.chooseInfoLink.emit(link);
   }
 
-  protected readonly ArrowType = ArrowType;
 }

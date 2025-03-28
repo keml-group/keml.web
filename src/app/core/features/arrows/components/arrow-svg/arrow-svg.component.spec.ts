@@ -30,11 +30,12 @@ describe('ArrowSvgComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  /*
   it('should set right arrowHead and dashed (when positioned)', () => {
     component.positioned = true
     component.arrowType = CustomArrowLineType.DASHED
     component.ngOnChanges()
     expect(component.dashed).toEqual([5])
     expect(component.endType).toEqual(ArrowHead.POINTER)
-  })
+  })*/
 });

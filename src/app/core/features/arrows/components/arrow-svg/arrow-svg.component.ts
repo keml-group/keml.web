@@ -5,6 +5,8 @@ import {v4 as uuidv4} from "uuid";
 import {ArrowHead, ArrowType} from "@app/core/features/arrows/models/arrow-heads";
 import {BoundingBox} from "@app/core/features/arrows/models/bounding-box";
 import {PathLayouter} from "@app/core/utils/path-layouter";
+import {ArrowStyleConfiguration} from "@app/core/features/arrows/models/arrow-style-configuration";
+import {ArrowTypeConfigurator} from "@app/core/features/arrows/utils/arrow-type-configurator";
 
 @Component({
     selector: '[arrow-svg]',
@@ -17,6 +19,7 @@ export class ArrowSvgComponent implements OnChanges, AfterViewInit {
   @Input() start!: BoundingBox;
   @Input() end!: BoundingBox;
   @Input() arrowType: ArrowType = ArrowType.STANDARD;
+  @Input() arrowStyleConfiguration: ArrowStyleConfiguration = ArrowTypeConfigurator.styleArrow();
 //  @Input() breaks: BoundingBox[] = [];
   @Input() text?: string;
   @Input() style?: string;

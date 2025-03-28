@@ -1,5 +1,5 @@
 <svg:g arrowElems
-       [arrowType]="infoLink.type"
+       [arrowStyleConfiguration]="config"
        [text]="infoLink.linkText"
        [startGID]="infoLink.source.gId"
        [startSuffix]="'-main'"
