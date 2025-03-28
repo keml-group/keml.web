@@ -27,6 +27,7 @@ export class ArrowBetweenElemsComponent implements OnInit, AfterViewInit, OnChan
   @Input() startSuffix!: string;
   @Input() endGID!: string;
   @Input() endSuffix!: string;
+  @Input() arrowType2?: string;
   @Input() arrowStyleConfiguration: ArrowStyleConfiguration = ArrowTypeConfigurator.styleArrow();
 
   @Input() breaks: BoundingBox[] = [];

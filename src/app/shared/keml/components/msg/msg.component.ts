@@ -75,4 +75,5 @@ export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
     this.chooseInfoLink.emit(link);
   }
 
+  protected readonly ArrowType = ArrowType;
 }

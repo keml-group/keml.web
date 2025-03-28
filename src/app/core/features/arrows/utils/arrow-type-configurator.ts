@@ -3,6 +3,13 @@ import {ArrowHead, ArrowType} from "@app/core/features/arrows/models/arrow-heads
 
 export class ArrowTypeConfigurator {
 
+  static styleArrow2(arrowType?: string) {
+    if (arrowType) {
+      let typed: ArrowType = (arrowType as ArrowType);
+      return this.styleArrow(typed)
+    } else return this.styleArrow()
+  }
+
   static styleArrow(arrowType?: ArrowType): ArrowStyleConfiguration {
     let arrowHead: ArrowHead = this.setArrowHead(arrowType)
     return {

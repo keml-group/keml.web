@@ -18,11 +18,13 @@ import {ArrowTypeConfigurator} from "@app/core/features/arrows/utils/arrow-type-
 export class ArrowSvgComponent implements OnChanges, AfterViewInit {
   @Input() start!: BoundingBox;
   @Input() end!: BoundingBox;
+  @Input() arrowType2?: string;
   @Input() arrowType: ArrowType = ArrowType.STANDARD;
-  @Input() arrowStyleConfiguration: ArrowStyleConfiguration = ArrowTypeConfigurator.styleArrow();
 //  @Input() breaks: BoundingBox[] = [];
   @Input() text?: string;
   @Input() style?: string;
+
+  arrowStyleConfiguration: ArrowStyleConfiguration = ArrowTypeConfigurator.styleArrow();
 
   x1: number = 0;
   y1: number = 0;
@@ -30,10 +32,6 @@ export class ArrowSvgComponent implements OnChanges, AfterViewInit {
   y2: number = 5;
 
   id = uuidv4();
-
-  endType: ArrowHead = ArrowHead.POINTER;
-  color: string = 'black';
-  dashed = [0];
 
   positioned= false;
 
@@ -56,47 +54,9 @@ export class ArrowSvgComponent implements OnChanges, AfterViewInit {
   }
 
   private pickConfiguration() {
-    this.switchDashed()
-    switch (this.arrowType) {
-      case ArrowType.ATTACK:
-      case ArrowType.STRONG_ATTACK: {
-        this.endType = ArrowHead.ATTACK;
-        this.color = 'red';
-        break;
-      }
-      case ArrowType.SUPPORT:
-      case ArrowType.STRONG_SUPPORT: {
-        this.endType = ArrowHead.SUPPORT;
-        this.color = 'green';
-        break;
-      }
-      case ArrowType.SUPPLEMENT: {
-        this.endType = ArrowHead.SUPPLEMENT;
-        this.color = 'black';
-        break;
-      }
-      default: {
-        this.endType = ArrowHead.POINTER;
-        this.color = 'black';
-        break;
-      }
-    }
+    this.arrowStyleConfiguration = ArrowTypeConfigurator.styleArrow2(this.arrowType2)
   }
 
-  private switchDashed() {
-    switch(this.arrowType) {
-      case ArrowType.DASHED:
-      case ArrowType.SUPPORT:
-      case ArrowType.ATTACK: {
-        this.dashed = [5]
-        break;
-      }
-      default: {
-        this.dashed = [0]
-        break;
-      }
-    }
-  }
 
   private computePositions() {
     let res = PathLayouter.bestPoints(this.start, this.end);

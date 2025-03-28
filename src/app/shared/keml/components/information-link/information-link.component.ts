@@ -2,8 +2,6 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angula
 import {InfoComponent} from "@app/shared/keml/components/helper/info/info.component";
 import { ArrowBetweenElemsComponent } from '@app/core/features/arrows/components/arrow-between-elems/arrow-between-elems.component';
 import {InformationLink} from "@app/shared/keml/models/core/msg-info";
-import {ArrowStyleConfiguration} from "@app/core/features/arrows/models/arrow-style-configuration";
-import {ArrowTypeConfigurator} from "@app/core/features/arrows/utils/arrow-type-configurator";
 
 @Component({
     selector: '[infoLinkG]',
@@ -18,20 +16,17 @@ export class InformationLinkComponent implements OnInit, OnChanges {
 
   startRef?: InfoComponent
   endRef?: InfoComponent
-  config: ArrowStyleConfiguration=ArrowTypeConfigurator.styleArrow(this.infoLink?.type)
 
   constructor() {}
 
   ngOnInit(): void {
     this.getStartRef()
     this.getEndRef()
-    this.config = ArrowTypeConfigurator.styleArrow(this.infoLink.type)
   }
 
   ngOnChanges(){
     this.getStartRef()
     this.getEndRef()
-    this.config = ArrowTypeConfigurator.styleArrow(this.infoLink.type)
   }
 
   clickLink() {
