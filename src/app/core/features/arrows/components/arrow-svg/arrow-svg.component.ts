@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges,} from '@
 import { Point } from "@angular/cdk/drag-drop";
 import { NgIf } from '@angular/common';
 import {v4 as uuidv4} from "uuid";
-import {ArrowHead, ArrowType} from "@app/core/features/arrows/models/arrow-heads";
+import {ArrowHead} from "@app/core/features/arrows/models/arrow-heads";
 import {BoundingBox} from "@app/core/features/arrows/models/bounding-box";
 import {PathLayouter} from "@app/core/utils/path-layouter";
 import {ArrowStyleConfiguration} from "@app/core/features/arrows/models/arrow-style-configuration";
@@ -19,7 +19,6 @@ export class ArrowSvgComponent implements OnChanges, AfterViewInit {
   @Input() start!: BoundingBox;
   @Input() end!: BoundingBox;
   @Input() arrowType2?: string;
-  @Input() arrowType: ArrowType = ArrowType.STANDARD;
 //  @Input() breaks: BoundingBox[] = [];
   @Input() text?: string;
   @Input() style?: string;
