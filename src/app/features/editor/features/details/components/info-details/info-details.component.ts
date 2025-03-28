@@ -7,17 +7,16 @@ import { FormsModule } from '@angular/forms';
 import { Message, ReceiveMessage, Information, NewInformation, InformationLink} from "@app/shared/keml/models/core/msg-info";
 import { ModelIOService } from "@app/features/editor/services/model-io.service";
 import { MsgOverviewComponent } from '@app/shared/keml/components/helper/msg-overview/msg-overview.component';
-import { InfoInnerComponent } from '@app/shared/keml/components/helper/info-inner/info-inner.component';
 import { MsgChoiceComponent } from '@app/shared/keml/components/helper/choices/msg-choice/msg-choice.component';
 import { IsInstrSvgComponent } from "@app/shared/keml/components/helper/is-instr-svg/is-instr-svg.component";
-import { ArrowSvgComponent } from '@app/core/features/arrows/components/arrow-svg/arrow-svg.component';
+import {LinkOverview} from "@app/shared/keml/components/helper/link-overview/link-overview.component";
 
 @Component({
     selector: 'info-details',
     templateUrl: './info-details.component.html',
     styleUrl: './info-details.component.css',
     standalone: true,
-    imports: [FormsModule, IsInstrSvgComponent, NgIf, MsgChoiceComponent, NgFor, InfoInnerComponent, ArrowSvgComponent, MsgOverviewComponent, MatIcon, MatTooltip]
+  imports: [FormsModule, IsInstrSvgComponent, NgIf, MsgChoiceComponent, NgFor, MsgOverviewComponent, MatIcon, MatTooltip, LinkOverview]
 })
 export class InfoDetailsComponent implements OnInit {
   @Input() info!: Information;

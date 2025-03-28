@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { InfoLinkShortComponent } from './info-link-short.component';
+import { LinkOverview } from './link-overview.component';
 import {InformationLink, Preknowledge} from "@app/shared/keml/models/core/msg-info";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
 
 describe('InfoLinkShortComponent', () => {
-  let component: InfoLinkShortComponent;
-  let fixture: ComponentFixture<InfoLinkShortComponent>;
+  let component: LinkOverview;
+  let fixture: ComponentFixture<LinkOverview>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InfoLinkShortComponent]
+      imports: [LinkOverview]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(InfoLinkShortComponent);
+    fixture = TestBed.createComponent(LinkOverview);
     component = fixture.componentInstance;
     let info1 = new Preknowledge()
     let info2 = new Preknowledge()
