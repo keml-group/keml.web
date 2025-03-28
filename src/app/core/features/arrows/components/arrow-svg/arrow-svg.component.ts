@@ -7,6 +7,7 @@ import {PathLayouter} from "@app/core/utils/path-layouter";
 import {ArrowStyleConfiguration} from "@app/core/features/arrows/models/arrow-style-configuration";
 import {ArrowTypeConfigurator} from "@app/core/features/arrows/utils/arrow-type-configurator";
 import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-markers/arrow-markers.component";
+import {ArrowStyleConfigurationService} from "@app/core/services/arrow-style-configuration.service";
 
 @Component({
     selector: '[arrow-svg]',
@@ -35,7 +36,8 @@ export class ArrowSvgComponent implements OnChanges, AfterViewInit {
   positioned= false;
 
   constructor(
-    private cdr: ChangeDetectorRef) {
+    private cdr: ChangeDetectorRef,
+    private arrowStyleConfigService: ArrowStyleConfigurationService,) {
   }
 
   ngAfterViewInit() {
