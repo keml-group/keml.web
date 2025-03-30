@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 
 @Component({
     selector: '[database]',
@@ -6,7 +6,7 @@ import {Component, Input} from '@angular/core';
     styleUrl: './database-svg.component.css',
     standalone: true
 })
-export class DatabaseSvgComponent {
+export class DatabaseSvgComponent implements OnInit, OnChanges {
 
   @Input() stroke: string = 'black'
   @Input() strokewidth: number = 0.2;
@@ -14,6 +14,15 @@ export class DatabaseSvgComponent {
   @Input() w: number = 48;
   @Input() h: number = 15;
 
+  path: string ='';
+
+  ngOnInit() {
+    this.path = this.computePath()
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.path = this.computePath()
+  }
 
   computePath(): string {
     const w = this.w;
