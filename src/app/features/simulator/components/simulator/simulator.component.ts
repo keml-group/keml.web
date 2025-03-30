@@ -14,8 +14,6 @@ import {TrustComputator} from "../../utils/trust-computator";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
 import {IncrementalSimulator} from "@app/features/simulator/utils/incremental-simulator";
-import {KEMLArrowStyleConfigurationService} from "@app/shared/keml/services/kemlarrow-style-configuration.service";
-import {ArrowStyleConfigurationService} from "@app/core/features/arrows/services/arrow-style-configuration.service";
 
 @Component({
   selector: 'app-simulator',
@@ -31,12 +29,6 @@ import {ArrowStyleConfigurationService} from "@app/core/features/arrows/services
     MatToolbar,
     NgTemplateOutlet,
     NgIf
-  ],
-  providers: [
-    {
-        provide: ArrowStyleConfigurationService,
-        useClass: KEMLArrowStyleConfigurationService
-    },
   ],
   templateUrl: './simulator.component.html',
   styleUrl: './simulator.component.css'
