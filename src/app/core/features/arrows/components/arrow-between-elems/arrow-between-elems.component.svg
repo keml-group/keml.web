@@ -1,9 +1,0 @@
-<svg:g #arrow>
-  <g arrow-svg *ngIf="start && end"
-       [start]="start"
-       [end]="end"
-       [arrowType]="arrowType"
-       [text]="text"
-       [style]="style">
-  </g>
-></svg:g>

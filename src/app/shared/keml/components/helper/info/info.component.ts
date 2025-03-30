@@ -1,8 +1,8 @@
 import {AfterViewInit, Component, EventEmitter, Input, Output} from '@angular/core';
-import {SVGAccessService} from "@app/core/features/arrows/services/svg-access.service";
 import {Information, NewInformation, InformationLink} from "@app/shared/keml/models/core/msg-info";
 import { TextAreaSvgComponent } from '@app/core/features/svg-base-components/text-area-svg/text-area-svg.component';
 import { IsInstrSvgComponent } from '../is-instr-svg/is-instr-svg.component';
+import {SVGAccessService} from "ngx-arrows";
 
 @Component({
     selector: '[infoG]',

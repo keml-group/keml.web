@@ -5,9 +5,9 @@ import {
   OnChanges,
   Output,
 } from '@angular/core';
-import {BoundingBox} from "@app/core/features/arrows/models/bounding-box";
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
+import {BoundingBox} from "ngx-arrows";
 
 @Component({
     selector: '[text-area-svg]',

@@ -1,5 +1,5 @@
 import {Ref} from "@app/shared/keml/models/refs/ref";
-import {BoundingBox} from "../../../../core/features/arrows/models/bounding-box";
+import {BoundingBox} from "ngx-arrows";
 
 export interface InformationJson {
   eClass: string;

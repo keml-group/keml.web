@@ -1,8 +1,8 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {Message} from "@app/shared/keml/models/core/msg-info";
 import { TextAreaSvgComponent } from '@app/core/features/svg-base-components/text-area-svg/text-area-svg.component';
-import { ArrowSvgComponent } from '@app/core/features/arrows/components/arrow-svg/arrow-svg.component';
 import { NgIf } from '@angular/common';
+import {ArrowSvgComponent} from "ngx-arrows";
 
 @Component({
     selector: '[msg-inner]',
