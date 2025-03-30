@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {SVGAccessService} from "@app/core/services/svg-access.service";
+import {SVGAccessService} from "@app/core/features/arrows/services/svg-access.service";
 import {Message, ReceiveMessage, SendMessage} from "@app/shared/keml/models/core/msg-info";
 
 @Injectable({

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {BoundingBox} from "../features/arrows/models/bounding-box";
-import {PositionHelper} from "../features/arrows/utils/position-helper";
+import {BoundingBox} from "../models/bounding-box";
+import {PositionHelper} from "../utils/position-helper";
 import {BehaviorSubject, Observable} from "rxjs";
 
 @Injectable({
