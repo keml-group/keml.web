@@ -18,6 +18,7 @@ import { DatabaseSvgComponent } from '@app/core/features/svg-base-components/dat
 import { PersonSvgComponent } from '@app/core/features/svg-base-components/person-svg/person-svg.component';
 import {ConversationPickerComponent} from '@app/features/editor/fromLLM/components/conversation-picker/conversation-picker.component';
 import {SimulationService} from "@app/features/simulator/services/simulation.service";
+import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-markers/arrow-markers.component";
 
 
 @Component({
@@ -25,7 +26,7 @@ import {SimulationService} from "@app/features/simulator/services/simulation.ser
     templateUrl: './editor.component.html',
     styleUrl: './editor.component.css',
     standalone: true,
-    imports: [MatTooltipModule, MatToolbar, MatIcon, PersonSvgComponent, DatabaseSvgComponent, TextAreaSvgComponent, AuthorComponent, NgFor, ConversationPartnerComponent, PreknowledgeComponent, MsgComponent]
+  imports: [MatTooltipModule, MatToolbar, MatIcon, PersonSvgComponent, DatabaseSvgComponent, TextAreaSvgComponent, AuthorComponent, NgFor, ConversationPartnerComponent, PreknowledgeComponent, MsgComponent, ArrowMarkersComponent]
 })
 export class EditorComponent {
 

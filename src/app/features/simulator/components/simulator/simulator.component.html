@@ -14,6 +14,7 @@
 </mat-toolbar>
 <div style="width: 1500px; height: 1000px; overflow: auto;">
   <svg #simulation id="svg" style="border: 1px solid black;" width="1500" height="5000" overflow="scroll">
+    <g arrow-markers></g>
     <ng-container *ngIf="!incrementalSimulator" >
       <ng-container *ngTemplateOutlet="svgcontent; context:{$implicit: conversation}">
       </ng-container>

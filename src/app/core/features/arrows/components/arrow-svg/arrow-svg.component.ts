@@ -5,7 +5,6 @@ import {v4 as uuidv4} from "uuid";
 import {BoundingBox} from "@app/core/features/arrows/models/bounding-box";
 import {PathLayouter} from "@app/core/features/arrows/utils/path-layouter";
 import {ArrowStyleConfiguration} from "@app/core/features/arrows/models/arrow-style-configuration";
-import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-markers/arrow-markers.component";
 import {ArrowStyleConfigurationService} from "@app/core/features/arrows/services/arrow-style-configuration.service";
 
 @Component({
@@ -13,7 +12,7 @@ import {ArrowStyleConfigurationService} from "@app/core/features/arrows/services
     templateUrl: './arrow-svg.component.svg',
     styleUrl: './arrow-svg.component.css',
     standalone: true,
-  imports: [NgIf, ArrowMarkersComponent]
+  imports: [NgIf]
 })
 export class ArrowSvgComponent implements OnChanges, AfterViewInit {
   @Input() start!: BoundingBox;

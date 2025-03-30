@@ -50,6 +50,7 @@
     </div>
     <div class="column">
       <svg width="200" height="100" *ngFor="let link of info.causes">
+        <g arrow-markers></g>
         <g link-overview [link]="link" (click)="clickLink(link)"></g>
       </svg>
     </div>

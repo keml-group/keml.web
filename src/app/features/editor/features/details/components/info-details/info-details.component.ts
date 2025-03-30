@@ -10,13 +10,14 @@ import { MsgOverviewComponent } from '@app/shared/keml/components/helper/msg-ove
 import { MsgChoiceComponent } from '@app/shared/keml/components/helper/choices/msg-choice/msg-choice.component';
 import { IsInstrSvgComponent } from "@app/shared/keml/components/helper/is-instr-svg/is-instr-svg.component";
 import {LinkOverview} from "@app/shared/keml/components/helper/link-overview/link-overview.component";
+import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-markers/arrow-markers.component";
 
 @Component({
     selector: 'info-details',
     templateUrl: './info-details.component.html',
     styleUrl: './info-details.component.css',
     standalone: true,
-  imports: [FormsModule, IsInstrSvgComponent, NgIf, MsgChoiceComponent, NgFor, MsgOverviewComponent, MatIcon, MatTooltip, LinkOverview]
+  imports: [FormsModule, IsInstrSvgComponent, NgIf, MsgChoiceComponent, NgFor, MsgOverviewComponent, MatIcon, MatTooltip, LinkOverview, ArrowMarkersComponent]
 })
 export class InfoDetailsComponent implements OnInit {
   @Input() info!: Information;

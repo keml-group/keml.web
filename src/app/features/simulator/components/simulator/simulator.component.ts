@@ -14,6 +14,7 @@ import {TrustComputator} from "../../utils/trust-computator";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
 import {IncrementalSimulator} from "@app/features/simulator/utils/incremental-simulator";
+import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-markers/arrow-markers.component";
 
 @Component({
   selector: 'app-simulator',
@@ -28,7 +29,8 @@ import {IncrementalSimulator} from "@app/features/simulator/utils/incremental-si
     TextAreaSvgComponent,
     MatToolbar,
     NgTemplateOutlet,
-    NgIf
+    NgIf,
+    ArrowMarkersComponent
   ],
   templateUrl: './simulator.component.html',
   styleUrl: './simulator.component.css'

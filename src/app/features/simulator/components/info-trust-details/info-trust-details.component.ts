@@ -7,20 +7,22 @@ import {NgForOf, NgIf} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Information} from "@app/shared/keml/models/core/msg-info";
 import {LinkOverview} from "@app/shared/keml/components/helper/link-overview/link-overview.component";
+import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-markers/arrow-markers.component";
 
 @Component({
   selector: 'info-trust-details',
   standalone: true,
-    imports: [
-        IsInstrSvgComponent,
-        MatIcon,
-        MsgOverviewComponent,
-        NgForOf,
-        NgIf,
-        ReactiveFormsModule,
-        FormsModule,
-        LinkOverview
-    ],
+  imports: [
+    IsInstrSvgComponent,
+    MatIcon,
+    MsgOverviewComponent,
+    NgForOf,
+    NgIf,
+    ReactiveFormsModule,
+    FormsModule,
+    LinkOverview,
+    ArrowMarkersComponent
+  ],
   templateUrl: './info-trust-details.component.html',
   styleUrl: './info-trust-details.component.css'
 })
