@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
-import {ArrowStyleConfigurationService} from "@app/core/services/arrow-style-configuration.service";
+import {ArrowStyleConfigurationService} from "@app/core/features/arrows/services/arrow-style-configuration.service";
 import {ArrowStyleConfiguration} from "@app/core/features/arrows/models/arrow-style-configuration";
+import {ArrowTypeConfigurator} from "@app/core/features/arrows/utils/arrow-type-configurator";
 
 @Injectable({
   providedIn: 'root'
 })
-export class KEMLArrowStyleConfigurationService implements ArrowStyleConfigurationService {
+export class KEMLArrowStyleConfigurationService extends ArrowStyleConfigurationService {
 
-  styleArrow(arrowType?: string): ArrowStyleConfiguration {
-    return {
-      color: 'black',
-      dashed: [0]
-    };
+  override styleArrow(arrowType?: string): ArrowStyleConfiguration {
+    console.log("KEML")
+    return ArrowTypeConfigurator.styleArrow(arrowType)
   }
 
 
