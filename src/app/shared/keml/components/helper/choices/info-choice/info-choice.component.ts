@@ -11,7 +11,6 @@ import { NgIf, NgFor } from '@angular/common';
     selector: 'info-choice',
     templateUrl: './info-choice.component.html',
     styleUrl: './info-choice.component.css',
-    standalone: true,
     imports: [NgIf, InfoInnerComponent, NgFor, MsgComponent, PreknowledgeComponent]
 })
 export class InfoChoiceComponent {

@@ -17,23 +17,22 @@ import {IncrementalSimulator} from "@app/features/simulator/utils/incremental-si
 import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-markers/arrow-markers.component";
 
 @Component({
-  selector: 'app-simulator',
-  standalone: true,
-  imports: [
-    MatIcon,
-    AuthorComponent,
-    ConversationPartnerComponent,
-    MsgComponent,
-    NgForOf,
-    PreknowledgeComponent,
-    TextAreaSvgComponent,
-    MatToolbar,
-    NgTemplateOutlet,
-    NgIf,
-    ArrowMarkersComponent
-  ],
-  templateUrl: './simulator.component.html',
-  styleUrl: './simulator.component.css'
+    selector: 'app-simulator',
+    imports: [
+        MatIcon,
+        AuthorComponent,
+        ConversationPartnerComponent,
+        MsgComponent,
+        NgForOf,
+        PreknowledgeComponent,
+        TextAreaSvgComponent,
+        MatToolbar,
+        NgTemplateOutlet,
+        NgIf,
+        ArrowMarkersComponent
+    ],
+    templateUrl: './simulator.component.html',
+    styleUrl: './simulator.component.css'
 })
 export class SimulatorComponent implements OnInit {
 

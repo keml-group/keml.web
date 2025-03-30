@@ -9,20 +9,19 @@ import {Information} from "@app/shared/keml/models/core/msg-info";
 import {LinkOverview} from "@app/shared/keml/components/helper/link-overview/link-overview.component";
 
 @Component({
-  selector: 'info-trust-details',
-  standalone: true,
-  imports: [
-    IsInstrSvgComponent,
-    MatIcon,
-    MsgOverviewComponent,
-    NgForOf,
-    NgIf,
-    ReactiveFormsModule,
-    FormsModule,
-    LinkOverview,
-  ],
-  templateUrl: './info-trust-details.component.html',
-  styleUrl: './info-trust-details.component.css'
+    selector: 'info-trust-details',
+    imports: [
+        IsInstrSvgComponent,
+        MatIcon,
+        MsgOverviewComponent,
+        NgForOf,
+        NgIf,
+        ReactiveFormsModule,
+        FormsModule,
+        LinkOverview,
+    ],
+    templateUrl: './info-trust-details.component.html',
+    styleUrl: './info-trust-details.component.css'
 })
 export class InfoTrustDetailsComponent {
   @Input() info!: Information

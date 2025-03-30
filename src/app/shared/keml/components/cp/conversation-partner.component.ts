@@ -7,7 +7,6 @@ import {ConversationPartner} from "@app/shared/keml/models/core/conversation-par
     selector: '[cp]',
     templateUrl: './conversation-partner.component.svg',
     styleUrl: './conversation-partner.component.css',
-    standalone: true,
     imports: [PersonSvgComponent, TextAreaSvgComponent]
 })
 export class ConversationPartnerComponent {

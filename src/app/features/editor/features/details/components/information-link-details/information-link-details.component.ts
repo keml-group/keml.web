@@ -12,7 +12,6 @@ import { InfoChoiceComponent } from '@app/shared/keml/components/helper/choices/
     selector: 'app-information-link-details',
     templateUrl: './information-link-details.component.html',
     styleUrl: './information-link-details.component.css',
-    standalone: true,
     imports: [NgIf, InfoChoiceComponent, FormsModule, NgFor, MatIcon]
 })
 export class InformationLinkDetailsComponent {

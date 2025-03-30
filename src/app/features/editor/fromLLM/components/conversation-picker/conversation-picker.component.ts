@@ -5,11 +5,10 @@ import {MatIcon} from "@angular/material/icon";
 import {NgFor} from "@angular/common";
 
 @Component({
-  selector: 'app-conversation-picker',
-  templateUrl: './conversation-picker.component.html',
-  styleUrl: './conversation-picker.component.css',
-  standalone: true,
-  imports: [MatIcon, NgFor]
+    selector: 'app-conversation-picker',
+    templateUrl: './conversation-picker.component.html',
+    styleUrl: './conversation-picker.component.css',
+    imports: [MatIcon, NgFor]
 })
 export class ConversationPickerComponent implements OnInit {
 

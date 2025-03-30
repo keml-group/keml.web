@@ -8,7 +8,6 @@ import {ArrowSvgComponent} from "ngx-arrows";
     selector: '[msg-inner]',
     templateUrl: './msg-inner.component.svg',
     styleUrl: './msg-inner.component.css',
-    standalone: true,
     imports: [NgIf, ArrowSvgComponent, TextAreaSvgComponent]
 })
 export class MsgInnerComponent implements OnInit, OnChanges {

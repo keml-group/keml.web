@@ -11,7 +11,6 @@ import {ArrowBetweenElemsComponent, SVGAccessService} from "ngx-arrows";
     selector: '[msgG]',
     templateUrl: './msg.component.svg',
     styleUrl: './msg.component.css',
-    standalone: true,
     imports: [MsgInnerComponent, NgIf, NgFor, NewInfoComponent, ArrowBetweenElemsComponent]
 })
 export class MsgComponent implements OnInit, AfterViewInit, OnChanges {

@@ -14,7 +14,6 @@ import { NgIf, NgFor } from '@angular/common';
     selector: 'msg-choice',
     templateUrl: './msg-choice.component.html',
     styleUrl: './msg-choice.component.css',
-    standalone: true,
     imports: [NgIf, MsgOverviewComponent, AuthorComponent, NgFor, ConversationPartnerComponent, MsgComponent]
 })
 export class MsgChoiceComponent {

@@ -13,7 +13,6 @@ import {BoundingBox} from "ngx-arrows";
     selector: '[text-area-svg]',
     templateUrl: './text-area-svg.component.svg',
     styleUrl: './text-area-svg.component.css',
-    standalone: true,
     imports: [NgFor, NgIf, FormsModule]
 })
 export class TextAreaSvgComponent implements OnChanges {

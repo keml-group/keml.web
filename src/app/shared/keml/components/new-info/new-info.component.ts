@@ -10,8 +10,7 @@ import {ArrowSvgComponent} from "ngx-arrows";
     selector: '[newInfoG]',
     templateUrl: './new-info.component.svg',
     styleUrl: './new-info.component.css',
-    standalone: true,
-  imports: [ ArrowSvgComponent, NgFor, InformationLinkComponent, InfoInnerComponent]
+    imports: [ArrowSvgComponent, NgFor, InformationLinkComponent, InfoInnerComponent]
 })
 export class NewInfoComponent extends InfoComponent {
   @Input() override info!: NewInformation;

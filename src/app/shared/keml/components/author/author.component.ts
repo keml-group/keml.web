@@ -7,7 +7,6 @@ import { PersonSvgComponent } from '@app/core/features/svg-base-components/perso
     selector: '[authorG]',
     templateUrl: './author.component.svg',
     styleUrl: './author.component.css',
-    standalone: true,
     imports: [PersonSvgComponent, TextAreaSvgComponent]
 })
 export class AuthorComponent {

@@ -25,8 +25,7 @@ import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-ma
     selector: 'keml-editor',
     templateUrl: './editor.component.html',
     styleUrl: './editor.component.css',
-    standalone: true,
-  imports: [MatTooltipModule, MatToolbar, MatIcon, PersonSvgComponent, DatabaseSvgComponent, TextAreaSvgComponent, AuthorComponent, NgFor, ConversationPartnerComponent, PreknowledgeComponent, MsgComponent, ArrowMarkersComponent]
+    imports: [MatTooltipModule, MatToolbar, MatIcon, PersonSvgComponent, DatabaseSvgComponent, TextAreaSvgComponent, AuthorComponent, NgFor, ConversationPartnerComponent, PreknowledgeComponent, MsgComponent, ArrowMarkersComponent]
 })
 export class EditorComponent {
 

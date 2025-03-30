@@ -9,7 +9,6 @@ import { InformationLinkComponent } from '../information-link/information-link.c
     selector: '[preknowG]',
     templateUrl: './preknowledge.component.svg',
     styleUrl: './preknowledge.component.css',
-    standalone: true,
     imports: [InfoInnerComponent, NgFor, InformationLinkComponent]
 })
 export class PreknowledgeComponent extends InfoComponent {

@@ -4,11 +4,10 @@ import {EditorComponent} from "@app/features/editor/features/editor/editor.compo
 
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, EditorComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+    selector: 'app-root',
+    imports: [RouterOutlet, EditorComponent],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css'
 })
 export class AppComponent {
   title = 'KEMLeditor';

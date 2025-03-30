@@ -8,7 +8,6 @@ import {SVGAccessService} from "ngx-arrows";
     selector: '[infoG]',
     templateUrl: './info.component.svg',
     styleUrl: './info.component.css',
-    standalone: true,
     imports: [IsInstrSvgComponent, TextAreaSvgComponent]
 })
 export class InfoComponent implements AfterViewInit {

@@ -7,7 +7,6 @@ import { PersonSvgComponent } from '@app/core/features/svg-base-components/perso
     selector: '[is-instr]',
     templateUrl: './is-instr-svg.component.svg',
     styleUrl: './is-instr-svg.component.css',
-    standalone: true,
     imports: [NgIf, PersonSvgComponent]
 })
 export class IsInstrSvgComponent {

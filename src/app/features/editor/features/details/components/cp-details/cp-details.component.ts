@@ -9,7 +9,6 @@ import { ConversationPartner } from "@app/shared/keml/models/core/conversation-p
     selector: 'cp-details',
     templateUrl: './cp-details.component.html',
     styleUrl: './cp-details.component.css',
-    standalone: true,
     imports: [FormsModule, MatIcon]
 })
 export class ConversationPartnerDetailsComponent {

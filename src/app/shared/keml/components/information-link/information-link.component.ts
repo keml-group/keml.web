@@ -7,7 +7,6 @@ import {ArrowBetweenElemsComponent} from "ngx-arrows";
     selector: '[infoLinkG]',
     templateUrl: './information-link.component.svg',
     styleUrl: './information-link.component.css',
-    standalone: true,
     imports: [ArrowBetweenElemsComponent]
 })
 export class InformationLinkComponent implements OnInit, OnChanges {

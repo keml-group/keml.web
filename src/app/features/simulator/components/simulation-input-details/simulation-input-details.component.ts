@@ -3,22 +3,20 @@ import {MatDialogRef} from "@angular/material/dialog";
 import {MatIcon} from "@angular/material/icon";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
-import {KeyValuePipe, NgForOf} from "@angular/common";
+import {NgForOf} from "@angular/common";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
 import {TrustComputator} from "@app/features/simulator/utils/trust-computator";
 
 @Component({
-  selector: 'simulation-input-details',
-  standalone: true,
-  imports: [
-    MatIcon,
-    ReactiveFormsModule,
-    FormsModule,
-    NgForOf,
-    KeyValuePipe
-  ],
-  templateUrl: './simulation-input-details.component.html',
-  styleUrl: './simulation-input-details.component.css'
+    selector: 'simulation-input-details',
+    imports: [
+        MatIcon,
+        ReactiveFormsModule,
+        FormsModule,
+        NgForOf,
+    ],
+    templateUrl: './simulation-input-details.component.html',
+    styleUrl: './simulation-input-details.component.css'
 })
 export class SimulationInputDetails implements OnInit {
 

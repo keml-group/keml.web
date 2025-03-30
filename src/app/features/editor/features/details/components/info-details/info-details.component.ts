@@ -15,8 +15,7 @@ import {LinkOverview} from "@app/shared/keml/components/helper/link-overview/lin
     selector: 'info-details',
     templateUrl: './info-details.component.html',
     styleUrl: './info-details.component.css',
-    standalone: true,
-  imports: [FormsModule, IsInstrSvgComponent, NgIf, MsgChoiceComponent, NgFor, MsgOverviewComponent, MatIcon, MatTooltip, LinkOverview]
+    imports: [FormsModule, IsInstrSvgComponent, NgIf, MsgChoiceComponent, NgFor, MsgOverviewComponent, MatIcon, MatTooltip, LinkOverview]
 })
 export class InfoDetailsComponent implements OnInit {
   @Input() info!: Information;
