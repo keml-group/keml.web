@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnChanges, OnInit} from '@angular/core';
 
 @Component({
     selector: '[person]',
@@ -6,13 +6,23 @@ import {Component, Input} from '@angular/core';
     styleUrl: './person-svg.component.css',
     standalone: true
 })
-export class PersonSvgComponent {
+export class PersonSvgComponent implements OnInit, OnChanges {
 
   @Input() stroke: string = 'black'
   @Input() strokewidth: number = 0.2;
   @Input() fill: string = 'none';
   @Input() w: number = 40;
   @Input() h: number = 70;
+
+  path: string = '';
+
+  ngOnInit(): void {
+    this.path = this.computePath()
+  }
+
+  ngOnChanges(): void {
+    this.path = this.computePath()
+  }
 
   computePath(): string {
     const w= this.w;
