@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {ArrowStyleConfigurationService} from "@app/core/features/arrows/services/arrow-style-configuration.service";
 import {ArrowStyleConfiguration} from "@app/core/features/arrows/models/arrow-style-configuration";
-import {ArrowHead, ArrowType} from "@app/core/features/arrows/models/arrow-heads";
+import {ArrowHead, ArrowType} from "@app/shared/keml/models/arrow-heads";
 
 @Injectable({
   providedIn: 'root'
