@@ -5,11 +5,7 @@ import {ArrowStyleConfiguration} from "@app/core/features/arrows/models/arrow-st
 @Injectable({
   providedIn: 'root'
 })
-export class KEMLArrowStyleConfigurationService extends ArrowStyleConfigurationService {
-
-  constructor() {
-    super();
-  }
+export class KEMLArrowStyleConfigurationService implements ArrowStyleConfigurationService {
 
   styleArrow(arrowType?: string): ArrowStyleConfiguration {
     return {
