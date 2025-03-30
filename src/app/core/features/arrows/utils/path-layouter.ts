@@ -1,4 +1,4 @@
-import {BoundingBox} from "../features/arrows/models/bounding-box";
+import {BoundingBox} from "../models/bounding-box";
 import {Point} from "@angular/cdk/drag-drop";
 
 export class PathLayouter {

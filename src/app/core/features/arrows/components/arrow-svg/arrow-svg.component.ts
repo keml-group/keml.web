@@ -3,7 +3,7 @@ import { Point } from "@angular/cdk/drag-drop";
 import { NgIf } from '@angular/common';
 import {v4 as uuidv4} from "uuid";
 import {BoundingBox} from "@app/core/features/arrows/models/bounding-box";
-import {PathLayouter} from "@app/core/utils/path-layouter";
+import {PathLayouter} from "@app/core/features/arrows/utils/path-layouter";
 import {ArrowStyleConfiguration} from "@app/core/features/arrows/models/arrow-style-configuration";
 import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-markers/arrow-markers.component";
 import {ArrowStyleConfigurationService} from "@app/core/features/arrows/services/arrow-style-configuration.service";
