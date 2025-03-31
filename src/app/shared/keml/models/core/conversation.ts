@@ -1,9 +1,8 @@
 import {Author} from "./author";
 import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
-import {Parser} from "@app/shared/keml/parser/parser";
-import {Ref} from "@app/shared/keml/models/refs/ref";
-import {Referencable} from "@app/shared/keml/models/refs/referenceable";
+import {Parser, Ref, Referencable} from "emfular";
+import {KEMLConstructorPointers} from "@app/shared/keml/models/json2core/keml-constructor-pointers";
 
 
 export class Conversation extends Referencable {
@@ -24,7 +23,7 @@ export class Conversation extends Referencable {
     let ref = new Ref(Conversation.ownPath, Conversation.eClass)
     super(ref);
     if (parser) {
-      let convJson: ConversationJson = parser?.getJsonFromTree(this.ref.$ref)
+      let convJson: ConversationJson = parser.getJsonFromTree(this.ref.$ref)
       parser.put(this)
       this.title = convJson.title;
       const authorRef = Parser.createSingleRef(Conversation.ownPath, Conversation.authorPrefix, Author.eClass)
@@ -53,7 +52,7 @@ export class Conversation extends Referencable {
   }
 
   static fromJSON (conv: ConversationJson): Conversation {
-    let context = new Parser(conv);
+    let context = new Parser(conv, KEMLConstructorPointers.getConstructorPointers());
     return new Conversation(undefined, undefined, undefined, context)
   }
 }

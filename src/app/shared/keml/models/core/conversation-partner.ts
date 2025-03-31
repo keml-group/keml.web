@@ -1,7 +1,6 @@
 import {LifeLine} from "./life-line";
 import {ConversationPartnerJson} from "@app/shared/keml/models/json/sequence-diagram-models"
-import {Parser} from "@app/shared/keml/parser/parser";
-import {Ref} from "@app/shared/keml/models/refs/ref";
+import {Parser, Ref} from "emfular";
 
 export class ConversationPartner extends LifeLine {
 

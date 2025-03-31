@@ -1,4 +1,4 @@
-import {Ref} from "@app/shared/keml/models/refs/ref";
+import {Ref} from "emfular";
 import {BoundingBox} from "ngx-arrows";
 
 export interface InformationJson {

@@ -1,7 +1,12 @@
-import { Parser } from './parser';
+import { KEMLConstructorPointers } from './keml-constructor-pointers';
+import {Parser} from "emfular";
 
-describe('Parser', () => {
+describe('KEMLConstructorPointers', () => {
   it('should create an instance', () => {
+    expect(new KEMLConstructorPointers()).toBeTruthy();
+  });
+
+  it('should parse into the expected object', () => {
     let json = "{\n" +
       "  \"eClass\": \"http://www.unikoblenz.de/keml#//Conversation\",\n" +
       "  \"title\": \"New Conversation\",\n" +
@@ -98,6 +103,6 @@ describe('Parser', () => {
       "  }\n" +
       "}"
     let convJson = JSON.parse(json);
-    expect(new Parser(convJson)).toBeTruthy();
-  });
+    expect(new Parser(convJson, KEMLConstructorPointers.getConstructorPointers())).toBeTruthy();
+  })
 });
