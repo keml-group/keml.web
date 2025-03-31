@@ -1,6 +1,5 @@
 import {Ref} from "@app/core/emfular/refs/ref";
 import {Referencable} from "@app/core/emfular/refs/referenceable";
-import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
 import {ConstructorPointer, ConstructorPointers} from "@app/core/emfular/parser/constructor-pointers";
 
 /*
@@ -10,15 +9,14 @@ idea:
  */
 export class Parser {
 
-  private completeJSON: any;
-  private constructorPointers: Map<string, ConstructorPointer>;
+  private readonly completeJSON: any;
+  private readonly constructorPointers: Map<string, ConstructorPointer>;
 
   // all so far parsed objects
   private context: Map<string, any> = new Map<string, any>();
 
-  constructor(conv: ConversationJson, constructorPointers: ConstructorPointers) {
-    this.completeJSON = (conv as any);
-
+  constructor(json: any, constructorPointers: ConstructorPointers) {
+    this.completeJSON = json; //(json as any);
     this.constructorPointers = constructorPointers
   }
 
@@ -34,7 +32,7 @@ export class Parser {
   }
 
   getOrCreate<T extends Referencable>(ref: Ref): T {
-    //get constructor from ref.eclass
+    //get constructor from ref.eClass
     let res = this.get<T>(ref.$ref)
     if (res)
       return res
