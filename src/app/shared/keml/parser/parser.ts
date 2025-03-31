@@ -1,7 +1,7 @@
 import {Ref} from "@app/core/emfular/refs/ref";
 import {Referencable} from "@app/core/emfular/refs/referenceable";
 import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
-import {ConstructorPointer, ConstructorPointers} from "./constructor-pointers";
+import {ConstructorPointer, ConstructorPointers} from "@app/core/emfular/parser/constructor-pointers";
 
 /*
 idea:

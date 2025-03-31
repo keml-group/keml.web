@@ -10,7 +10,7 @@ import {
   SendMessage
 } from "@app/shared/keml/models/core/msg-info";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
-import {ConstructorPointers} from "@app/shared/keml/parser/constructor-pointers";
+import {ConstructorPointers} from "@app/core/emfular/parser/constructor-pointers";
 
 
 export class KEMLConstructorPointers {
