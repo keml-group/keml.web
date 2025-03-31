@@ -1,4 +1,4 @@
-import {Parser} from "@app/shared/keml/parser/parser";
+import {Parser} from "@app/core/emfular/parser/parser";
 import {Author} from "@app/shared/keml/models/core/author";
 import {Ref} from "@app/core/emfular/refs/ref";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";

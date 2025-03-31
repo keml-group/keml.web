@@ -2,7 +2,7 @@ import {LifeLine} from "./life-line";
 import {Message} from "./msg-info";
 import {AuthorJson} from "@app/shared/keml/models/json/sequence-diagram-models"
 import {Preknowledge} from "./msg-info";
-import {Parser} from "@app/shared/keml/parser/parser";
+import {Parser} from "@app/core/emfular/parser/parser";
 import {Ref} from "@app/core/emfular/refs/ref";
 
 export class Author extends LifeLine{
