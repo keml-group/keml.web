@@ -25,7 +25,7 @@ export class Conversation extends Referencable {
     let ref = new Ref(Conversation.ownPath, Conversation.eClass)
     super(ref);
     if (parser) {
-      let convJson: ConversationJson = parser?.getJsonFromTree(this.ref.$ref)
+      let convJson: ConversationJson = parser.getJsonFromTree(this.ref.$ref)
       parser.put(this)
       this.title = convJson.title;
       const authorRef = Parser.createSingleRef(Conversation.ownPath, Conversation.authorPrefix, Author.eClass)
