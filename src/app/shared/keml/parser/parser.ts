@@ -39,13 +39,24 @@ export class Parser {
     if (res)
       return res
     else {
-      //get from constructor pointer....
-      return this.constructorPointers.get<T>(ref, this)
+      // construct via pointer....
+      return this.create<T>(ref)
     }
   }
 
-  get<T extends Referencable>(key: string): T {
+  private get<T extends Referencable>(key: string): T {
     return (this.context.get(key) as T);
+  }
+
+  private create<T extends Referencable>(ref: Ref): T {
+    let constrPointer: ((e: string) => ( parser: Parser ) => Referencable) | undefined
+      = this.constructorPointers.mapGet(ref.eClass)
+    if (constrPointer) {
+      let constr = constrPointer(ref.$ref)
+      return (constr(this) as T);
+    } else {
+      throw(`Constructor pointer for ${ref} not set.`);
+    }
   }
 
   put<T extends Referencable>(elem: T ) {

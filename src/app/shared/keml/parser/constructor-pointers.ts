@@ -11,6 +11,10 @@ export abstract class ConstructorPointers {
     this.constructorPointers = new Map();
   }
 
+  mapGet(eClass:string): ((e: string) => ( parser: Parser ) => Referencable) | undefined  {
+    return this.constructorPointers.get(eClass)
+  }
+
   get<T extends Referencable>(ref: Ref, parser: Parser): T {
     let constrPointer: ((e: string) => ( parser: Parser ) => Referencable) | undefined = this.constructorPointers.get(ref.eClass)
     if (constrPointer) {
