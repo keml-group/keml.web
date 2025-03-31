@@ -1,9 +1,7 @@
 import {Author} from "./author";
 import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
-import {Parser} from "@app/core/emfular/parsing/parser";
-import {Ref} from "@app/core/emfular/referencing/ref";
-import {Referencable} from "@app/core/emfular/referencing/referenceable";
+import {Parser, Ref, Referencable} from "emfular";
 import {KEMLConstructorPointers} from "@app/shared/keml/models/json2core/keml-constructor-pointers";
 
 

@@ -1,5 +1,5 @@
 import { KEMLConstructorPointers } from './keml-constructor-pointers';
-import {Parser} from "@app/core/emfular/parsing/parser";
+import {Parser} from "emfular";
 
 describe('KEMLConstructorPointers', () => {
   it('should create an instance', () => {

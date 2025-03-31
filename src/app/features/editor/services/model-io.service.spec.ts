@@ -1,8 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 
+import {Ref, Referencable} from "emfular";
 import { ModelIOService } from './model-io.service';
-import {Conversation} from "../../../shared/keml/models/core/conversation";
-import {ConversationPartner} from "../../../shared/keml/models/core/conversation-partner";
+import {Conversation} from "@app/shared/keml/models/core/conversation";
+import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
 import {
   InformationLink,
   Message,
@@ -10,11 +11,9 @@ import {
   Preknowledge,
   ReceiveMessage,
   SendMessage
-} from "../../../shared/keml/models/core/msg-info";
-import {Author} from "../../../shared/keml/models/core/author";
+} from "@app/shared/keml/models/core/msg-info";
+import {Author} from "@app/shared/keml/models/core/author";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
-import {Ref} from "@app/core/emfular/referencing/ref";
-import {Referencable} from "@app/core/emfular/referencing/referenceable";
 import {LayoutHelper} from "../utils/layout-helper";
 
 describe('ModelIOService', () => {

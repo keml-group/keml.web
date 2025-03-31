@@ -1,5 +1,4 @@
-import {Referencable} from "@app/core/emfular/referencing/referenceable";
-import {Ref} from "@app/core/emfular/referencing/ref";
+import {Ref, Referencable} from "emfular";
 
 export abstract class LifeLine extends Referencable{
   name: string;
