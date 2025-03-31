@@ -1,13 +1,12 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {InfoComponent} from "@app/shared/keml/components/helper/info/info.component";
-import { ArrowBetweenElemsComponent } from '@app/core/features/arrows/components/arrow-between-elems/arrow-between-elems.component';
 import {InformationLink} from "@app/shared/keml/models/core/msg-info";
+import {ArrowBetweenElemsComponent} from "ngx-arrows";
 
 @Component({
     selector: '[infoLinkG]',
     templateUrl: './information-link.component.svg',
     styleUrl: './information-link.component.css',
-    standalone: true,
     imports: [ArrowBetweenElemsComponent]
 })
 export class InformationLinkComponent implements OnInit, OnChanges {

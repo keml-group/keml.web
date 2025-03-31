@@ -14,9 +14,8 @@ import {
 import {Ref} from "@app/shared/keml/models/refs/ref";
 import {Parser} from "@app/shared/keml/parser/parser";
 import {Referencable} from "@app/shared/keml/models/refs/referenceable";
-import {BoundingBox} from "@app/core/features/arrows/models/bounding-box";
 import {GeneralHelper} from "@app/core/utils/general-helper";
-import {PositionHelper} from "@app/core/features/arrows/utils/position-helper";
+import {BoundingBox, PositionHelper} from "ngx-arrows";
 
 export abstract class Message extends Referencable {
   static eClass = 'http://www.unikoblenz.de/keml#//Message'

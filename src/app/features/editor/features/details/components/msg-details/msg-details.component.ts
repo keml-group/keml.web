@@ -15,7 +15,6 @@ import { InfoInnerComponent } from '@app/shared/keml/components/helper/info-inne
     selector: 'msg-details',
     templateUrl: './msg-details.component.html',
     styleUrl: './msg-details.component.css',
-    standalone: true,
     imports: [FormsModule, NgFor, MatIcon, NgIf, InfoInnerComponent, InfoChoiceComponent, MatTooltip]
 })
 export class MsgDetailsComponent implements OnInit {

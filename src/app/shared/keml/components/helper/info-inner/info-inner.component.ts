@@ -10,8 +10,7 @@ import {TrustComponent} from "@app/shared/keml/components/helper/trust/trust.com
     selector: '[info-inner]',
     templateUrl: './info-inner.component.svg',
     styleUrl: './info-inner.component.css',
-    standalone: true,
-  imports: [NgIf, IsInstrSvgComponent, TextAreaSvgComponent, DatabaseSvgComponent, TrustComponent]
+    imports: [NgIf, IsInstrSvgComponent, TextAreaSvgComponent, DatabaseSvgComponent, TrustComponent]
 })
 // todo we cannot use it on new info currently, it leads to bounding box errors on arrows
 export class InfoInnerComponent implements OnInit, OnChanges {

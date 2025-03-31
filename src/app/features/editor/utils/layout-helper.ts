@@ -3,7 +3,7 @@
 */
 import {ConversationPartner} from '@app/shared/keml/models/core/conversation-partner';
 import {Message, ReceiveMessage, Preknowledge, Information} from "@app/shared/keml/models/core/msg-info";
-import {BoundingBox} from "@app/core/features/arrows/models/bounding-box";
+import {BoundingBox} from "ngx-arrows";
 
 export class LayoutHelper {
   // distance to first partner should be bigger than distance in between:

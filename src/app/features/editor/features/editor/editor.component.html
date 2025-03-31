@@ -73,6 +73,7 @@
       </div>
       <div style="width: 1500px; height: 1000px; overflow: auto;">
         <svg #svg id="svg" style="border: 1px solid black;" width="1500" height="5000" overflow="scroll">
+          <g arrow-markers></g>
           <g transform="translate(750,0)">
             <g text-area-svg [(text)]="conversation.title" [singleEdit]="true" [w]="600" [h]="25" [x]="0" [y]="0"></g>
             <g authorG [author]="conversation.author"></g>

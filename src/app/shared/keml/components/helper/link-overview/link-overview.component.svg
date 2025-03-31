@@ -1,0 +1,10 @@
+<svg:g>
+  <g info-inner [info]="link.target">
+  </g>
+  <g arrow-svg
+     [start]="{x: 97.5, y: 80, w: 5, h: 5}"
+     [end]="{x: 97.5, y: 60, w: 5, h: 5}"
+     [arrowType]="link.type"
+  >
+  </g>
+</svg:g>

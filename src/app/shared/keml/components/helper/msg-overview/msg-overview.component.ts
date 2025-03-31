@@ -8,7 +8,6 @@ import { MsgInnerComponent } from '../msg-inner/msg-inner.component';
     selector: '[msg-overview]',
     templateUrl: './msg-overview.component.svg',
     styleUrl: './msg-overview.component.css',
-    standalone: true,
     imports: [MsgInnerComponent, PersonSvgComponent, TextAreaSvgComponent]
 })
 export class MsgOverviewComponent {

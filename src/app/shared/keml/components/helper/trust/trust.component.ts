@@ -1,11 +1,10 @@
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
 
 @Component({
-  selector: '[trust-svg]',
-  standalone: true,
-  imports: [],
-  templateUrl: './trust.component.svg',
-  styleUrl: './trust.component.css'
+    selector: '[trust-svg]',
+    imports: [],
+    templateUrl: './trust.component.svg',
+    styleUrl: './trust.component.css'
 })
 export class TrustComponent implements OnInit, OnChanges {
   @Input() trust: number | undefined;

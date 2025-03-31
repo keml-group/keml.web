@@ -1,18 +1,16 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {InformationLink, Message, SendMessage, ReceiveMessage, Information} from "@app/shared/keml/models/core/msg-info";
 import {LayoutHelper} from "@app/features/editor/utils/layout-helper";
-import {ArrowType} from "@app/core/features/arrows/models/arrow-heads";
-import {SVGAccessService} from "@app/features/editor/services/svg-access.service";
-import { ArrowBetweenElemsComponent } from '@app/core/features/arrows/components/arrow-between-elems/arrow-between-elems.component';
+import {ArrowType} from "@app/shared/keml/models/arrow-heads";
 import { NewInfoComponent } from '@app/shared/keml/components/new-info/new-info.component';
 import { NgIf, NgFor } from '@angular/common';
 import { MsgInnerComponent } from '@app/shared/keml/components/helper/msg-inner/msg-inner.component';
+import {ArrowBetweenElemsComponent, SVGAccessService} from "ngx-arrows";
 
 @Component({
     selector: '[msgG]',
     templateUrl: './msg.component.svg',
     styleUrl: './msg.component.css',
-    standalone: true,
     imports: [MsgInnerComponent, NgIf, NgFor, NewInfoComponent, ArrowBetweenElemsComponent]
 })
 export class MsgComponent implements OnInit, AfterViewInit, OnChanges {

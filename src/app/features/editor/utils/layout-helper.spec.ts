@@ -1,7 +1,7 @@
 import { LayoutHelper } from './layout-helper';
 import {Preknowledge, SendMessage} from "../../../shared/keml/models/core/msg-info";
 import {ConversationPartner} from "../../../shared/keml/models/core/conversation-partner";
-import {BoundingBox} from "../../../core/features/arrows/models/bounding-box";
+import {BoundingBox} from "ngx-arrows";
 
 describe('LayoutHelper', () => {
   it('should create an instance', () => {

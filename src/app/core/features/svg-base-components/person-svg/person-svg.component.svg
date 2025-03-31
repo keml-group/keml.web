@@ -1,4 +1,4 @@
 <svg:g>
   <circle [attr.cx]="w/2" [attr.cy]="w/4" [attr.r]="w/4" [attr.stroke]="stroke" [attr.strokewidth]="strokewidth"  [attr.fill]="fill"></circle>
-  <path [attr.d]="computePath()" [attr.stroke]="stroke" [attr.strokewidth]="strokewidth" fill="none"></path>
+  <path [attr.d]="path" [attr.stroke]="stroke" [attr.strokewidth]="strokewidth" fill="none"></path>
 </svg:g>

@@ -5,15 +5,14 @@ import {
   OnChanges,
   Output,
 } from '@angular/core';
-import {BoundingBox} from "@app/core/features/arrows/models/bounding-box";
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
+import {BoundingBox} from "ngx-arrows";
 
 @Component({
     selector: '[text-area-svg]',
     templateUrl: './text-area-svg.component.svg',
     styleUrl: './text-area-svg.component.css',
-    standalone: true,
     imports: [NgFor, NgIf, FormsModule]
 })
 export class TextAreaSvgComponent implements OnChanges {
