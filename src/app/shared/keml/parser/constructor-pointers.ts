@@ -11,7 +11,7 @@ export abstract class ConstructorPointers {
     this.constructorPointers = new Map();
   }
 
-  mapGet(eClass:string): ((e: string) => ( parser: Parser ) => Referencable) | undefined  {
+  get(eClass:string): ((e: string) => (parser: Parser ) => Referencable) | undefined  {
     return this.constructorPointers.get(eClass)
   }
 }

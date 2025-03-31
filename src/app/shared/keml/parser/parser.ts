@@ -50,7 +50,7 @@ export class Parser {
 
   private create<T extends Referencable>(ref: Ref): T {
     let constrPointer: ((e: string) => ( parser: Parser ) => Referencable) | undefined
-      = this.constructorPointers.mapGet(ref.eClass)
+      = this.constructorPointers.get(ref.eClass)
     if (constrPointer) {
       let constr = constrPointer(ref.$ref)
       return (constr(this) as T);
