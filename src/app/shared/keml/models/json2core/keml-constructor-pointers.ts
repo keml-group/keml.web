@@ -1,6 +1,6 @@
-import {Parser} from "@app/core/emfular/parser/parser";
+import {Parser} from "@app/core/emfular/parsing/parser";
 import {Author} from "@app/shared/keml/models/core/author";
-import {Ref} from "@app/core/emfular/refs/ref";
+import {Ref} from "@app/core/emfular/referencing/ref";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
 import {
   InformationLink,
@@ -10,7 +10,7 @@ import {
   SendMessage
 } from "@app/shared/keml/models/core/msg-info";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
-import {ConstructorPointers, ConstructorPointerFor} from "@app/core/emfular/parser/constructor-pointers";
+import {ConstructorPointers, ConstructorPointerFor} from "@app/core/emfular/parsing/constructor-pointers";
 
 
 export class KEMLConstructorPointers {

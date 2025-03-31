@@ -1,5 +1,5 @@
 import {PreknowledgeJson, NewInformationJson} from "./knowledge-models";
-import {Ref} from "@app/core/emfular/refs/ref";
+import {Ref} from "@app/core/emfular/referencing/ref";
 
 export interface ConversationJson {
   eClass: string;

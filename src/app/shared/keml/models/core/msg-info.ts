@@ -11,9 +11,9 @@ import {
   InformationLinkType,
   InformationLinkJson,
 } from "@app/shared/keml/models/json/knowledge-models";
-import {Ref} from "@app/core/emfular/refs/ref";
-import {Parser} from "@app/core/emfular/parser/parser";
-import {Referencable} from "@app/core/emfular/refs/referenceable";
+import {Ref} from "@app/core/emfular/referencing/ref";
+import {Parser} from "@app/core/emfular/parsing/parser";
+import {Referencable} from "@app/core/emfular/referencing/referenceable";
 import {GeneralHelper} from "@app/core/utils/general-helper";
 import {BoundingBox, PositionHelper} from "ngx-arrows";
 

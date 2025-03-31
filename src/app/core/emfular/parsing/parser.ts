@@ -1,6 +1,6 @@
-import {Ref} from "@app/core/emfular/refs/ref";
-import {Referencable} from "@app/core/emfular/refs/referenceable";
-import {ConstructorPointer, ConstructorPointers} from "@app/core/emfular/parser/constructor-pointers";
+import {Ref} from "@app/core/emfular/referencing/ref";
+import {Referencable} from "@app/core/emfular/referencing/referenceable";
+import {ConstructorPointer, ConstructorPointers} from "@app/core/emfular/parsing/constructor-pointers";
 
 /*
 idea:
@@ -60,7 +60,7 @@ export class Parser {
     this.context.set(elem.getRef().$ref, elem);
   }
 
-  // for changing eClass assignment (i.e. on subtypes)
+  // for setting eClass assignment (i.e. on subtypes)
   static createRefList(formerPrefix: string, ownHeader: string, eClasses: string[] = []): Ref[] {
     const prefix = Ref.computePrefix(formerPrefix, ownHeader);
     let res = eClasses? eClasses : []

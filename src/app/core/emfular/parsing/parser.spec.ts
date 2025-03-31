@@ -1,5 +1,5 @@
 import { Parser } from './parser';
-import {KEMLConstructorPointers} from "@app/shared/keml/parser/keml-constructor-pointers";
+import {KEMLConstructorPointers} from "@app/shared/keml/models/json2core/keml-constructor-pointers";
 
 describe('Parser', () => {
   it('should create an instance', () => {

@@ -2,8 +2,8 @@ import {LifeLine} from "./life-line";
 import {Message} from "./msg-info";
 import {AuthorJson} from "@app/shared/keml/models/json/sequence-diagram-models"
 import {Preknowledge} from "./msg-info";
-import {Parser} from "@app/core/emfular/parser/parser";
-import {Ref} from "@app/core/emfular/refs/ref";
+import {Parser} from "@app/core/emfular/parsing/parser";
+import {Ref} from "@app/core/emfular/referencing/ref";
 
 export class Author extends LifeLine{
   static readonly eClass = "http://www.unikoblenz.de/keml#//Author";

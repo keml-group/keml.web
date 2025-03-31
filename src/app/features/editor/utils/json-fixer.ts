@@ -1,6 +1,6 @@
 import {Author} from "@app/shared/keml/models/core/author";
 import {Message, NewInformation, Preknowledge, ReceiveMessage} from "@app/shared/keml/models/core/msg-info";
-import {Ref} from "@app/core/emfular/refs/ref";
+import {Ref} from "@app/core/emfular/referencing/ref";
 import {ConversationJson, ReceiveMessageJson,} from '@app/shared/keml/models/json/sequence-diagram-models'
 import {Conversation} from "@app/shared/keml/models/core/conversation";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";

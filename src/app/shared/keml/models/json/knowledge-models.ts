@@ -1,4 +1,4 @@
-import {Ref} from "@app/core/emfular/refs/ref";
+import {Ref} from "@app/core/emfular/referencing/ref";
 import {BoundingBox} from "ngx-arrows";
 
 export interface InformationJson {
