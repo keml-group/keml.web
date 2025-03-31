@@ -10,7 +10,7 @@ import {
 } from "../../../shared/keml/models/core/msg-info";
 import {Conversation} from "../../../shared/keml/models/core/conversation";
 import {ConversationPartner} from "../../../shared/keml/models/core/conversation-partner";
-import {JsonFixer} from "../utils/json-fixer";
+import {JsonFixer} from "../../../shared/keml/models/json2core/json-fixer";
 import {LayoutHelper} from "../utils/layout-helper";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
 import {Author} from "../../../shared/keml/models/core/author";

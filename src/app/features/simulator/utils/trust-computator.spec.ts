@@ -5,7 +5,7 @@ import {ConversationPartner} from "../../../shared/keml/models/core/conversation
 import {Author} from "../../../shared/keml/models/core/author";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
 import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
-import {JsonFixer} from "../../editor/utils/json-fixer";
+import {JsonFixer} from "../../../shared/keml/models/json2core/json-fixer";
 
 describe('TrustComputator', () => {
   it('should create an instance', () => {
