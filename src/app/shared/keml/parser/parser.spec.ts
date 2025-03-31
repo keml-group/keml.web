@@ -1,4 +1,5 @@
 import { Parser } from './parser';
+import {KEMLConstructorPointers} from "@app/shared/keml/parser/keml-constructor-pointers";
 
 describe('Parser', () => {
   it('should create an instance', () => {
@@ -98,6 +99,6 @@ describe('Parser', () => {
       "  }\n" +
       "}"
     let convJson = JSON.parse(json);
-    expect(new Parser(convJson)).toBeTruthy();
+    expect(new Parser(convJson, KEMLConstructorPointers.getConstructorPointers())).toBeTruthy();
   });
 });

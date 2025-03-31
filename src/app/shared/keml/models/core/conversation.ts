@@ -4,6 +4,7 @@ import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-mo
 import {Parser} from "@app/shared/keml/parser/parser";
 import {Ref} from "@app/core/emfular/refs/ref";
 import {Referencable} from "@app/core/emfular/refs/referenceable";
+import {KEMLConstructorPointers} from "@app/shared/keml/parser/keml-constructor-pointers";
 
 
 export class Conversation extends Referencable {
@@ -53,7 +54,7 @@ export class Conversation extends Referencable {
   }
 
   static fromJSON (conv: ConversationJson): Conversation {
-    let context = new Parser(conv);
+    let context = new Parser(conv, KEMLConstructorPointers.getConstructorPointers());
     return new Conversation(undefined, undefined, undefined, context)
   }
 }

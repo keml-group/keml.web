@@ -10,12 +10,12 @@ import {
   SendMessage
 } from "@app/shared/keml/models/core/msg-info";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
-import {ConstructorPointers2} from "@app/shared/keml/parser/constructor-pointers";
+import {ConstructorPointers} from "@app/shared/keml/parser/constructor-pointers";
 
 
 export class KEMLConstructorPointers {
 
-  static getConstructorPointers(): ConstructorPointers2 {
+  static getConstructorPointers(): ConstructorPointers {
     let constructorPointers = new Map();
 
     //create function pointers (!arrow functions (!) to have parsercontext as this) for all existing types:
