@@ -16,14 +16,13 @@ export class Parser {
   private context: Map<string, any> = new Map<string, any>();
 
   constructor(json: any, constructorPointers: ConstructorPointers) {
-    this.completeJSON = json; //(json as any);
+    this.completeJSON = json;
     this.constructorPointers = constructorPointers
   }
 
-  getJsonFromTree<T>(path: string): T {
-    //first replace index access (.) by normal path divider, since they are all finally [] accesses
-    const accessPaths = path.replaceAll('.', Ref.pathDivider).split(Ref.pathDivider)
-      //path.split( new RegExp('(/@|\\.)'), -1)
+  getJsonFromTree<T>($ref: string): T {
+    //first replace index access (.) by normal $ref divider, since they are all finally [] accesses
+    const accessPaths = $ref.replaceAll('.', Ref.pathDivider).split(Ref.pathDivider)
     let res = this.completeJSON;
     for (let i = 1; i<accessPaths.length; i++) {
       res = res[(accessPaths[i])]
@@ -42,8 +41,8 @@ export class Parser {
     }
   }
 
-  private get<T extends Referencable>(key: string): T {
-    return (this.context.get(key) as T);
+  private get<T extends Referencable>($ref: string): T {
+    return (this.context.get($ref) as T);
   }
 
   private create<T extends Referencable>(ref: Ref): T {
