@@ -1,7 +1,7 @@
 import {Ref} from "@app/core/emfular/refs/ref";
 import {Referencable} from "@app/core/emfular/refs/referenceable";
 import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
-import {ConstructorPointer, ConstructorPointers} from "./constructor-pointers";
+import {ConstructorPointer} from "./constructor-pointers";
 import {KEMLConstructorPointers} from "@app/shared/keml/parser/kemlconstructor-pointers";
 
 /*
@@ -12,15 +12,15 @@ idea:
 export class Parser {
 
   private completeJSON: any;
-  private constructorPointers: ConstructorPointers;
+  private constructorPointers: Map<string, ConstructorPointer>;
 
   // all so far parsed objects
   private context: Map<string, any> = new Map<string, any>();
 
-  constructor(conv: ConversationJson) {
+  constructor(conv: ConversationJson, ) {
     this.completeJSON = (conv as any);
 
-    this.constructorPointers = new KEMLConstructorPointers()
+    this.constructorPointers = new KEMLConstructorPointers().constructorPointers
   }
 
   getJsonFromTree<T>(path: string): T {
