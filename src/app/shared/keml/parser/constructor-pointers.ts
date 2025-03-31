@@ -1,17 +1,18 @@
 import {Referencable} from "@app/core/emfular/refs/referenceable";
 import {Parser} from "@app/shared/keml/parser/parser";
 
+export type ConstructorPointer = ($ref:string) => (p: Parser) => Referencable;
 
 export abstract class ConstructorPointers {
 
   // key is the respective eClass
-  constructorPointers: Map<string, (e:string) => (p: Parser) => Referencable >;
+  constructorPointers: Map<string, ConstructorPointer >;
 
   protected constructor() {
     this.constructorPointers = new Map();
   }
 
-  get(eClass:string): ((e: string) => (parser: Parser ) => Referencable) | undefined  {
+  get(eClass:string): ConstructorPointer | undefined  {
     return this.constructorPointers.get(eClass)
   }
 }

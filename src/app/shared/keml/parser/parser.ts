@@ -1,7 +1,7 @@
 import {Ref} from "@app/core/emfular/refs/ref";
 import {Referencable} from "@app/core/emfular/refs/referenceable";
 import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
-import {ConstructorPointers} from "./constructor-pointers";
+import {ConstructorPointer, ConstructorPointers} from "./constructor-pointers";
 import {KEMLConstructorPointers} from "@app/shared/keml/parser/kemlconstructor-pointers";
 
 /*
@@ -14,6 +14,7 @@ export class Parser {
   private completeJSON: any;
   private constructorPointers: ConstructorPointers;
 
+  // all so far parsed objects
   private context: Map<string, any> = new Map<string, any>();
 
   constructor(conv: ConversationJson) {
@@ -49,7 +50,7 @@ export class Parser {
   }
 
   private create<T extends Referencable>(ref: Ref): T {
-    let constrPointer: ((e: string) => ( parser: Parser ) => Referencable) | undefined
+    let constrPointer: ConstructorPointer | undefined
       = this.constructorPointers.get(ref.eClass)
     if (constrPointer) {
       let constr = constrPointer(ref.$ref)
