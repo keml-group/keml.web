@@ -1,5 +1,5 @@
-import {Ref} from "../models/refs/ref";
-import {Referencable} from "../models/refs/referenceable";
+import {Ref} from "@app/core/emfular/refs/ref";
+import {Referencable} from "@app/core/emfular/refs/referenceable";
 import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
 import {ConstructorPointers} from "./constructor-pointers";
 

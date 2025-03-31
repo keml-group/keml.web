@@ -2,8 +2,8 @@ import {Author} from "./author";
 import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
 import {Parser} from "@app/shared/keml/parser/parser";
-import {Ref} from "@app/shared/keml/models/refs/ref";
-import {Referencable} from "@app/shared/keml/models/refs/referenceable";
+import {Ref} from "@app/core/emfular/refs/ref";
+import {Referencable} from "@app/core/emfular/refs/referenceable";
 
 
 export class Conversation extends Referencable {

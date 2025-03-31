@@ -1,5 +1,5 @@
-import  {Ref} from "@app/shared/keml/models/refs/ref"
-import {Referencable} from "@app/shared/keml/models/refs/referenceable";
+import  {Ref} from "@app/core/emfular/refs/ref"
+import {Referencable} from "@app/core/emfular/refs/referenceable";
 import {Author} from "@app/shared/keml/models/core/author";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
 import {InformationLink, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "@app/shared/keml/models/core/msg-info";

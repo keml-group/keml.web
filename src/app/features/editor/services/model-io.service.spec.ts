@@ -13,8 +13,8 @@ import {
 } from "../../../shared/keml/models/core/msg-info";
 import {Author} from "../../../shared/keml/models/core/author";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
-import {Ref} from "@app/shared/keml/models/refs/ref";
-import {Referencable} from "@app/shared/keml/models/refs/referenceable";
+import {Ref} from "@app/core/emfular/refs/ref";
+import {Referencable} from "@app/core/emfular/refs/referenceable";
 import {LayoutHelper} from "../utils/layout-helper";
 
 describe('ModelIOService', () => {

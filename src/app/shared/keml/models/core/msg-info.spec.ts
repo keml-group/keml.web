@@ -2,7 +2,7 @@ import {InformationLink, NewInformation, Preknowledge, ReceiveMessage, SendMessa
 import {InformationLinkJson, InformationLinkType, NewInformationJson, PreknowledgeJson} from "@app/shared/keml/models/json/knowledge-models";
 import {ConversationPartner} from "./conversation-partner";
 import {ReceiveMessageJson, SendMessageJson} from "@app/shared/keml/models/json/sequence-diagram-models";
-import {Ref} from "@app/shared/keml/models/refs/ref";
+import {Ref} from "@app/core/emfular/refs/ref";
 
 describe('Msg-Info (models)', () => {
 

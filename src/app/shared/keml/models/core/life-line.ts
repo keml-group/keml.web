@@ -1,5 +1,5 @@
-import {Referencable} from "@app/shared/keml/models/refs/referenceable";
-import {Ref} from "@app/shared/keml/models/refs/ref";
+import {Referencable} from "@app/core/emfular/refs/referenceable";
+import {Ref} from "@app/core/emfular/refs/ref";
 
 export abstract class LifeLine extends Referencable{
   name: string;
