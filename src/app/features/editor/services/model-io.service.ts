@@ -14,7 +14,7 @@ import {JsonFixer} from "../utils/json-fixer";
 import {LayoutHelper} from "../utils/layout-helper";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
 import {Author} from "../../../shared/keml/models/core/author";
-import {GeneralHelper} from "../../../core/utils/general-helper";
+import {ListUpdater} from "../../../core/utils/list-updater";
 import {LLMMessage} from "../fromLLM/models/llmmessage";
 import {MsgPositionChangeService} from "@app/features/editor/services/msg-position-change.service";
 
@@ -132,7 +132,7 @@ export class ModelIOService {
   deleteConversationPartner(cp: ConversationPartner) {
     cp.destruct()
     this.deleteMsgsWithCP(cp)
-    GeneralHelper.removeFromList(cp, this.conversation.conversationPartners)
+    ListUpdater.removeFromList(cp, this.conversation.conversationPartners)
   }
 
   deleteMsgsWithCP(cp: ConversationPartner) {
@@ -188,7 +188,7 @@ export class ModelIOService {
   deleteMessage(msg: Message) {
     const msgs = this.conversation.author.messages
     msg.destruct()
-    GeneralHelper.removeFromList(msg, msgs)
+    ListUpdater.removeFromList(msg, msgs)
     // adapt later messages:
     this.moveMessagesUp(msg.timing, msgs.length)
   }
@@ -307,8 +307,8 @@ export class ModelIOService {
   }
 
   deleteRepetition(rec: ReceiveMessage, info: Information) {
-    GeneralHelper.removeFromList(info, rec.repeats)
-    GeneralHelper.removeFromList(rec, info.repeatedBy)
+    ListUpdater.removeFromList(info, rec.repeats)
+    ListUpdater.removeFromList(rec, info.repeatedBy)
   }
 
   addUsage(send: SendMessage, info: Information) {
@@ -327,15 +327,15 @@ export class ModelIOService {
   }
 
   deleteUsage(send: SendMessage, info: Information) {
-    GeneralHelper.removeFromList(info, send.uses)
-    GeneralHelper.removeFromList(send, info.isUsedOn)
+    ListUpdater.removeFromList(info, send.uses)
+    ListUpdater.removeFromList(send, info.isUsedOn)
   }
   //************** Infos ************************
 
   deleteInfo(info: Information) {
     const infos = this.getRightInfoList(info)
     info.destruct()
-    GeneralHelper.removeFromList(info, infos)
+    ListUpdater.removeFromList(info, infos)
   }
 
   duplicateInfo(info: Information): Information {

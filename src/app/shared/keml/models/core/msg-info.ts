@@ -14,7 +14,7 @@ import {
 import {Ref} from "@app/core/emfular/referencing/ref";
 import {Parser} from "@app/core/emfular/parsing/parser";
 import {Referencable} from "@app/core/emfular/referencing/referenceable";
-import {GeneralHelper} from "@app/core/utils/general-helper";
+import {ListUpdater} from "@app/core/utils/list-updater";
 import {BoundingBox, PositionHelper} from "ngx-arrows";
 
 export abstract class Message extends Referencable {
@@ -107,7 +107,7 @@ export class SendMessage extends Message {
 
   override destruct() {
     this.uses.forEach(info => {
-      GeneralHelper.removeFromList(this, info.isUsedOn)
+      ListUpdater.removeFromList(this, info.isUsedOn)
     })
     super.destruct()
   }
@@ -161,7 +161,7 @@ export class ReceiveMessage extends Message {
 
   override destruct() {
     this.repeats.forEach(info => {
-      GeneralHelper.removeFromList(this, info.repeatedBy)
+      ListUpdater.removeFromList(this, info.repeatedBy)
     })
     this.generates.forEach(info => {
       info.destruct()
@@ -250,10 +250,10 @@ export abstract class Information extends Referencable {
 
   override destruct() {
     this.repeatedBy.forEach((rec: ReceiveMessage) => {
-      GeneralHelper.removeFromList(this, rec.repeats)
+      ListUpdater.removeFromList(this, rec.repeats)
     })
     this.isUsedOn.forEach((send: SendMessage) => {
-      GeneralHelper.removeFromList(this, send.uses)
+      ListUpdater.removeFromList(this, send.uses)
     })
     this.targetedBy.forEach((link: InformationLink) => {
       link.destruct()
@@ -292,7 +292,7 @@ export class NewInformation extends Information {
   // does both directions (source and generates)
   set source(rec: ReceiveMessage) {
     if (this._source != rec) {
-      GeneralHelper.removeFromList(this, this._source?.generates)
+      ListUpdater.removeFromList(this, this._source?.generates)
       this._source = rec
       if(rec.generates.indexOf(this ) == -1)
         rec.generates.push(this)
@@ -310,7 +310,7 @@ export class NewInformation extends Information {
   }
 
   override destruct() {
-    GeneralHelper.removeFromList(this, this._source.generates)
+    ListUpdater.removeFromList(this, this._source.generates)
     super.destruct();
   }
 }
@@ -392,8 +392,8 @@ export class InformationLink extends Referencable {
   }
 
   override destruct() {
-    GeneralHelper.removeFromList(this, this.source.causes)
-    GeneralHelper.removeFromList(this, this.target.targetedBy)
+    ListUpdater.removeFromList(this, this.source.causes)
+    ListUpdater.removeFromList(this, this.target.targetedBy)
     super.destruct();
   }
 

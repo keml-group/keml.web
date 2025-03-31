@@ -1,4 +1,4 @@
-export class GeneralHelper {
+export class ListUpdater {
 
   // ************** Helper *********************
   public static removeFromList<T>(elem: T, list: T[]): boolean {
