@@ -11,7 +11,7 @@ import {
   InformationLinkType,
   InformationLinkJson,
 } from "@app/shared/keml/models/json/knowledge-models";
-import {Ref, Referencable, Parser} from "emfular";
+import {Ref, Referencable, Deserializer} from "emfular";
 import {ListUpdater} from "@app/core/utils/list-updater";
 import {BoundingBox, PositionHelper} from "ngx-arrows";
 
@@ -27,13 +27,13 @@ export abstract class Message extends Referencable {
     counterPart: ConversationPartner,
     timing: number,
     content: string,
-    originalContent?: string, parser?: Parser, jsonOpt?: MessageJson,
+    originalContent?: string, deserializer?: Deserializer, jsonOpt?: MessageJson,
   ) {
     super(ref);
-    if(parser) {
-      parser.put(this)
-      let json: MessageJson = jsonOpt? jsonOpt: parser.getJsonFromTree(ref!.$ref);
-      this.counterPart = parser.getOrCreate(json.counterPart)
+    if(deserializer) {
+      deserializer.put(this)
+      let json: MessageJson = jsonOpt? jsonOpt: deserializer.getJsonFromTree(ref!.$ref);
+      this.counterPart = deserializer.getOrCreate(json.counterPart)
       this.timing = json.timing? json.timing : 0;
       this.content = json.content;
       this.originalContent = json.originalContent;
@@ -83,15 +83,15 @@ export class SendMessage extends Message {
     content: string = 'New send content',
     originalContent?: string,
     uses: Information[] = [],
-    ref?: Ref, parser?: Parser, jsonOpt?: SendMessageJson,
+    ref?: Ref, deserializer?: Deserializer, jsonOpt?: SendMessageJson,
   ) {
     let refC = Ref.createRef(SendMessage.eClass, ref)
-    super(refC, counterPart, timing, content, originalContent, parser, jsonOpt);
-    if (parser) {
-      //parser.put(this) // already done in super
-      let json: SendMessageJson = jsonOpt ? jsonOpt : parser?.getJsonFromTree(ref!.$ref);
+    super(refC, counterPart, timing, content, originalContent, deserializer, jsonOpt);
+    if (deserializer) {
+      //deserializer.put(this) // already done in super
+      let json: SendMessageJson = jsonOpt ? jsonOpt : deserializer?.getJsonFromTree(ref!.$ref);
       let uses = json.uses? json.uses : []
-      this.uses = uses.map(u => parser.getOrCreate(u))
+      this.uses = uses.map(u => deserializer.getOrCreate(u))
     } else {
       this.uses = uses
     }
@@ -127,15 +127,15 @@ export class ReceiveMessage extends Message {
     generates: NewInformation[] = [],
     repeats: Information[] = [],
     isInterrupted: boolean = false,
-    ref?: Ref, parser?: Parser, jsonOpt?: ReceiveMessageJson,
+    ref?: Ref, deserializer?: Deserializer, jsonOpt?: ReceiveMessageJson,
   ) {
     let refC = Ref.createRef(ReceiveMessage.eClass, ref)
-    super(refC, counterPart, timing, content ? content : "New receive content", originalContent, parser, jsonOpt);
-    if (parser) {
-      let json: ReceiveMessageJson = jsonOpt ? jsonOpt : parser.getJsonFromTree(ref!.$ref)
-      let generatesRefs = Parser.createRefList(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates?.map(g => g.eClass? g.eClass: NewInformation.eClass))
-      this.generates = generatesRefs.map(g => parser.getOrCreate(g))
-      let reps = json.repeats?.map(r => parser.getOrCreate<NewInformation>(r))
+    super(refC, counterPart, timing, content ? content : "New receive content", originalContent, deserializer, jsonOpt);
+    if (deserializer) {
+      let json: ReceiveMessageJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
+      let generatesRefs = Deserializer.createRefList(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates?.map(g => g.eClass? g.eClass: NewInformation.eClass))
+      this.generates = generatesRefs.map(g => deserializer.getOrCreate(g))
+      let reps = json.repeats?.map(r => deserializer.getOrCreate<NewInformation>(r))
       this.repeats = reps ? reps : []
       this.isInterrupted = json.isInterrupted;
     } else {
@@ -192,12 +192,12 @@ export abstract class Information extends Referencable {
               position?: BoundingBox, causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [],
               repeatedBy: ReceiveMessage[] = [], initialTrust?: number,
               currentTrust?: number, feltTrustImmediately?: number,
-              feltTrustAfterwards?: number, parser?: Parser, jsonOpt?: InformationJson
+              feltTrustAfterwards?: number, deserializer?: Deserializer, jsonOpt?: InformationJson
   ) {
     super(ref);
-    if (parser) {
-      parser.put(this)
-      let json: InformationJson = jsonOpt ? jsonOpt : parser.getJsonFromTree(ref!.$ref)
+    if (deserializer) {
+      deserializer.put(this)
+      let json: InformationJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
       this.message = json.message;
       this.isInstruction = json.isInstruction? json.isInstruction : false;
       this.position = json.position? json.position : PositionHelper.newBoundingBox();
@@ -206,11 +206,11 @@ export abstract class Information extends Referencable {
       this.feltTrustImmediately = json.feltTrustImmediately;
       this.feltTrustAfterwards = json.feltTrustAfterwards;
       //todo actually, causes should exist on the json, however, it is missing and we hence set it manually:
-      let causesRefs = Parser.createRefList(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass? c.eClass : InformationLink.eClass))
-      this.causes = causesRefs.map(r => parser.getOrCreate<InformationLink>(r))
-      this.targetedBy = json.targetedBy? json.targetedBy.map(r =>  parser.getOrCreate(r)) : []
-      this.isUsedOn = json.isUsedOn? json.isUsedOn.map(r => parser.getOrCreate<SendMessage>(r)): []
-      this.repeatedBy = json.repeatedBy? json.repeatedBy.map(r => parser.getOrCreate<ReceiveMessage>(r)): []
+      let causesRefs = Deserializer.createRefList(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass? c.eClass : InformationLink.eClass))
+      this.causes = causesRefs.map(r => deserializer.getOrCreate<InformationLink>(r))
+      this.targetedBy = json.targetedBy? json.targetedBy.map(r =>  deserializer.getOrCreate(r)) : []
+      this.isUsedOn = json.isUsedOn? json.isUsedOn.map(r => deserializer.getOrCreate<SendMessage>(r)): []
+      this.repeatedBy = json.repeatedBy? json.repeatedBy.map(r => deserializer.getOrCreate<ReceiveMessage>(r)): []
     } else {
       this.message = message;
       this.isInstruction = isInstruction;
@@ -269,15 +269,15 @@ export class NewInformation extends Information {
               message: string, isInstruction: boolean = false, position?: BoundingBox,
               causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
               initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number , feltTrustAfterwards?: number,
-              ref?: Ref, parser?: Parser, jsonOpt?: NewInformationJson
+              ref?: Ref, deserializer?: Deserializer, jsonOpt?: NewInformationJson
   ) {
     let refC = Ref.createRef(NewInformation.eClass, ref)
-    super(refC, message, isInstruction, position, causes, targetedBy, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, parser, jsonOpt);
-    if(parser) {
-      let json: NewInformationJson = jsonOpt ? jsonOpt : parser.getJsonFromTree(ref!.$ref)
+    super(refC, message, isInstruction, position, causes, targetedBy, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
+    if(deserializer) {
+      let json: NewInformationJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
       //todo this works against a bug in the used json lib: it computes the necessary source if it is not present
       let src = json.source? json.source : new Ref(Ref.getParentAddress(ref!.$ref), ReceiveMessage.eClass)
-      this._source = parser.getOrCreate(src)
+      this._source = deserializer.getOrCreate(src)
     } else {
       this.source = source
     }
@@ -321,9 +321,9 @@ export class Preknowledge extends Information {
               causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
               initialTrust?: number, currentTrust?: number,
               feltTrustImmediately?: number, feltTrustAfterwards?: number,
-              ref?: Ref, parser?: Parser, jsonOpt?: PreknowledgeJson) {
+              ref?: Ref, deserializer?: Deserializer, jsonOpt?: PreknowledgeJson) {
     let refC = Ref.createRef(Preknowledge.eClass, ref)
-    super(refC, message, isInstruction, position, causes, targetedBy, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, parser, jsonOpt);
+    super(refC, message, isInstruction, position, causes, targetedBy, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
   }
 
   timeInfo(): number {
@@ -354,17 +354,17 @@ export class InformationLink extends Referencable {
   linkText?: string;
 
   constructor(source: Information, target: Information, type: InformationLinkType, linkText?: string,
-              ref?: Ref, parser?: Parser, jsonOpt?: InformationLinkJson
+              ref?: Ref, deserializer?: Deserializer, jsonOpt?: InformationLinkJson
   ) {
     let refC = Ref.createRef(InformationLink.eClass, ref)
     super(refC);
-    if(parser) {
-      parser.put(this)
-      let json: InformationLinkJson = jsonOpt ? jsonOpt : parser.getJsonFromTree(ref!.$ref)
+    if(deserializer) {
+      deserializer.put(this)
+      let json: InformationLinkJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
       //todo there is a problem with the incoming json: it does not have the link soruces. However, we solve this via 'prepareJsonInfoLinkSources' called in the loadKEML() method on modelIoService
       let src = json.source!!
-      this.source = parser.getOrCreate(src)
-      this.target = parser.getOrCreate(json.target);
+      this.source = deserializer.getOrCreate(src)
+      this.target = deserializer.getOrCreate(json.target);
       this.type = json.type;
       let text;
       if (json.linkText && json.linkText.length > 0) {text = json.linkText} else {text = undefined}

@@ -1,5 +1,5 @@
 import { KEMLConstructorPointers } from './keml-constructor-pointers';
-import {Parser} from "emfular";
+import {Deserializer} from "emfular";
 
 describe('KEMLConstructorPointers', () => {
   it('should create an instance', () => {
@@ -103,6 +103,6 @@ describe('KEMLConstructorPointers', () => {
       "  }\n" +
       "}"
     let convJson = JSON.parse(json);
-    expect(new Parser(convJson, KEMLConstructorPointers.getConstructorPointers())).toBeTruthy();
+    expect(new Deserializer(convJson, KEMLConstructorPointers.getConstructorPointers())).toBeTruthy();
   })
 });

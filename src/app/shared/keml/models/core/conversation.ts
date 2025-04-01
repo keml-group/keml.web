@@ -1,7 +1,7 @@
 import {Author} from "./author";
 import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
-import {Parser, Ref, Referencable} from "emfular";
+import {Deserializer, Ref, Referencable} from "emfular";
 import {KEMLConstructorPointers} from "@app/shared/keml/models/json2core/keml-constructor-pointers";
 
 
@@ -18,18 +18,18 @@ export class Conversation extends Referencable {
     title: string = 'New Conversation',
     author: Author = new Author(),
     conversationPartners: ConversationPartner[] = [],
-    parser?: Parser,
+    deserializer?: Deserializer,
   ) {
     let ref = new Ref(Conversation.ownPath, Conversation.eClass)
     super(ref);
-    if (parser) {
-      let convJson: ConversationJson = parser.getJsonFromTree(this.ref.$ref)
-      parser.put(this)
+    if (deserializer) {
+      let convJson: ConversationJson = deserializer.getJsonFromTree(this.ref.$ref)
+      deserializer.put(this)
       this.title = convJson.title;
-      const authorRef = Parser.createSingleRef(Conversation.ownPath, Conversation.authorPrefix, Author.eClass)
-      this.author = parser.getOrCreate<Author>(authorRef);
-      const cpRefs: Ref[] = Parser.createRefList(Conversation.ownPath, Conversation.conversationPartnersPrefix, convJson.conversationPartners.map(_ => ConversationPartner.eClass))
-      this.conversationPartners = cpRefs.map( cp => parser.getOrCreate<ConversationPartner>(cp))
+      const authorRef = Deserializer.createSingleRef(Conversation.ownPath, Conversation.authorPrefix, Author.eClass)
+      this.author = deserializer.getOrCreate<Author>(authorRef);
+      const cpRefs: Ref[] = Deserializer.createRefList(Conversation.ownPath, Conversation.conversationPartnersPrefix, convJson.conversationPartners.map(_ => ConversationPartner.eClass))
+      this.conversationPartners = cpRefs.map( cp => deserializer.getOrCreate<ConversationPartner>(cp))
     } else {
       this.title = title;
       this.author = author;
@@ -52,7 +52,7 @@ export class Conversation extends Referencable {
   }
 
   static fromJSON (conv: ConversationJson): Conversation {
-    let context = new Parser(conv, KEMLConstructorPointers.getConstructorPointers());
+    let context = new Deserializer(conv, KEMLConstructorPointers.getConstructorPointers());
     return new Conversation(undefined, undefined, undefined, context)
   }
 }

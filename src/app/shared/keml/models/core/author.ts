@@ -2,7 +2,7 @@ import {LifeLine} from "./life-line";
 import {Message} from "./msg-info";
 import {AuthorJson} from "@app/shared/keml/models/json/sequence-diagram-models"
 import {Preknowledge} from "./msg-info";
-import {Parser, Ref} from "emfular";
+import {Deserializer, Ref} from "emfular";
 
 export class Author extends LifeLine{
   static readonly eClass = "http://www.unikoblenz.de/keml#//Author";
@@ -12,17 +12,17 @@ export class Author extends LifeLine{
   messages: Message[];
 
   constructor(name = 'Author', xPosition: number = 0, preknowledge: Preknowledge[] = [], messages: Message[] = [],
-              ref?: Ref, parser?: Parser) {
+              ref?: Ref, deserializer?: Deserializer) {
     let refC = Ref.createRef(Author.eClass, ref)
-    if (parser) {
-      let authorJson: AuthorJson = parser?.getJsonFromTree(ref!.$ref)
+    if (deserializer) {
+      let authorJson: AuthorJson = deserializer?.getJsonFromTree(ref!.$ref)
       super(authorJson.name, authorJson.xPosition, refC)
-      parser.put(this)
+      deserializer.put(this)
       //compute and use refs for all tree children:
-      let preknowledgeRefs = Parser.createRefList(ref!.$ref, Author.preknowledgePrefix, authorJson.preknowledge? authorJson.preknowledge.map(_ => Preknowledge.eClass): [])
-      this.preknowledge = preknowledgeRefs.map(r => parser.getOrCreate<Preknowledge>(r));
-      let messageRefs = Parser.createRefList(ref!.$ref, Author.messagesPrefix, authorJson.messages.map(r => r.eClass))
-      this.messages = messageRefs.map(r => parser.getOrCreate<Message>(r));
+      let preknowledgeRefs = Deserializer.createRefList(ref!.$ref, Author.preknowledgePrefix, authorJson.preknowledge? authorJson.preknowledge.map(_ => Preknowledge.eClass): [])
+      this.preknowledge = preknowledgeRefs.map(r => deserializer.getOrCreate<Preknowledge>(r));
+      let messageRefs = Deserializer.createRefList(ref!.$ref, Author.messagesPrefix, authorJson.messages.map(r => r.eClass))
+      this.messages = messageRefs.map(r => deserializer.getOrCreate<Message>(r));
     } else {
       super(name, xPosition, refC);
       this.preknowledge = preknowledge;
