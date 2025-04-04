@@ -11,6 +11,6 @@
      (click)="clickInfo($event)"
   >
 </g>
-  <g arrow-svg [attr.transform]="'translate('+ (info.position.x) + ', ' + info.position.y +')'" [start]="{x: -info.position.x, y: -info.position.y, w: 10, h:10}" [end]="{x: 0, y: 0, w: info.position.w, h: info.position.h}"></g>
+  <g arrow-between-boxes [attr.transform]="'translate('+ (info.position.x) + ', ' + info.position.y +')'" [start]="{x: -info.position.x, y: -info.position.y, w: 10, h:10}" [end]="{x: 0, y: 0, w: info.position.w, h: info.position.h}"></g>
   <g infoLinkG *ngFor="let link of info.causes" [infoLink]="link" (chooseLink)="chooseLink($event)"></g>
 </svg:g>

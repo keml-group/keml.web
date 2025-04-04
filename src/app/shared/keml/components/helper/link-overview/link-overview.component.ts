@@ -1,14 +1,14 @@
 import {Component, Input} from '@angular/core';
 import {InformationLink} from "@app/shared/keml/models/core/msg-info";
 import {InfoInnerComponent} from "@app/shared/keml/components/helper/info-inner/info-inner.component";
-import {ArrowSvgComponent} from "ngx-arrows";
+import {ArrowBetweenBoxesComponent} from "ngx-arrows";
 
 @Component({
     selector: '[link-overview]',
-    imports: [
-        ArrowSvgComponent,
-        InfoInnerComponent
-    ],
+  imports: [
+    InfoInnerComponent,
+    ArrowBetweenBoxesComponent
+  ],
     templateUrl: './link-overview.component.svg',
     styleUrl: './link-overview.component.css'
 })
