@@ -28,7 +28,7 @@
     "emfular": "^1.0.0",
     "express": "^4.18.2",
     "material-icons": "^1.13.12",
-    "ngx-arrows": "^0.0.1",
+    "ngx-arrows": "^1.0.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
