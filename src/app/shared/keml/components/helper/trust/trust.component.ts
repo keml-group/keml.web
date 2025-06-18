@@ -47,35 +47,4 @@ export class TrustComponent implements OnInit, OnChanges {
     }
   }
 
-  computeColor() {
-    if (this.trust == undefined || isNaN(this.trust) ) {
-      return '#FFFFFF'
-    }
-    if (this.trust < 0) {
-      return this.createRed()
-    } else {
-      return this.createGreen()
-    }
-  }
-
-  createRed() {
-    let factor = 1 + this.trust!
-    return '#ff'+this.computeTwoHexDigits(factor) +'00'
-  }
-
-  createGreen() {
-    let factor = 1- this.trust!
-    return '#'+this.computeTwoHexDigits(factor)+'ff00'
-  }
-
-  //expects a number between 0 and 1
-  computeTwoHexDigits(factor: number): string{
-    let res = Math.round(factor * 255)
-    let resStr =   res.toString(16)
-    if(resStr.length==1){
-      resStr = '0'+resStr
-    }
-    return resStr
-  }
-
 }

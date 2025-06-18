@@ -22,7 +22,7 @@ export class TrustColorer {
   }
 
   //expects a number between 0 and 1
-  private static computeTwoHexDigits(factor: number): string{
+  public static computeTwoHexDigits(factor: number): string{
     let res = Math.round(factor * 255)
     let resStr =   res.toString(16)
     if(resStr.length==1){

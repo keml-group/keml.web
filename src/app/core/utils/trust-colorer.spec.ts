@@ -5,6 +5,18 @@ describe('TrustColorer', () => {
     expect(new TrustColorer()).toBeTruthy();
   });
 
+  //todo why is 0.53335 here 88 but 77 in the string?
+  it('should compute twoHexDigits', () => {
+    let tests = new Map<number, string>()
+    tests.set(0, '00')
+    tests.set(0.5, '80')
+    tests.set(0.53335, '88')
+    tests.set(1, 'ff')
+    tests.forEach((str, num) =>  {
+      expect(TrustColorer.computeTwoHexDigits(num)).toBe(str);
+    })
+  })
+
   it('should produce red', () => {
     expect(TrustColorer.hexColor(-1.0)).toEqual('#ff0000')
   })
