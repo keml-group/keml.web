@@ -89,7 +89,7 @@ export class IncrementalSimulator {
       pre.message,
       pre.isInstruction,
       pre.position,
-      pre.causes,
+      [],
       [],
       [],
       [],
