@@ -1,4 +1,5 @@
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {TrustColorer} from "@app/core/utils/trust-colorer";
 
 @Component({
     selector: '[trust-svg]',
@@ -25,7 +26,7 @@ export class TrustComponent implements OnInit, OnChanges {
   }
 
   private determineRepresentationAndColor() {
-    this.color = this.computeColor()
+    this.color = TrustColorer.hexColor(this.trust)
     this.trust4Display =this.computeTrust4Display()
   }
 
