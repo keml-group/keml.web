@@ -1,5 +1,6 @@
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {TrustColorer} from "@app/core/utils/trust-colorer";
+import {NumberDisplayer} from "@app/core/utils/number-displayer";
 
 @Component({
     selector: '[trust-svg]',
@@ -27,24 +28,7 @@ export class TrustComponent implements OnInit, OnChanges {
 
   private determineRepresentationAndColor() {
     this.color = TrustColorer.hexColor(this.trust)
-    this.trust4Display =this.computeTrust4Display()
-  }
-
-  // expects input between -1 and 1 and produces a string with two digits after the . and ... after them if the number was truncated
-  computeTrust4Display(): string {
-    if (this.trust == undefined || isNaN(this.trust)) {
-      return '?'
-    } else {
-      let length = 4
-      if (this.trust <0) {
-        length = 5
-      }
-      let str = this.trust.toString()
-      if (str.length > length) {
-        str = str.substring(0,length)+'..'
-      }
-      return str
-    }
+    this.trust4Display = NumberDisplayer.displayNumWith1DigitBeforeSep(this.trust)
   }
 
 }

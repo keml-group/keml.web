@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TrustComponent } from './trust.component';
+import {NumberDisplayer} from "@app/core/utils/number-displayer";
 
 describe('TrustComponent', () => {
   let component: TrustComponent;
@@ -21,28 +22,17 @@ describe('TrustComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should calculate the string representation correctly', () => {
-    component.trust = undefined
-    expect(component.computeTrust4Display()).toEqual('?') //undefined
-    component.trust = NaN;
-    expect(component.computeTrust4Display()).toEqual('?')
+  it('should set color and trust4display correctly onInit', () => {
+    component.trust = -0.5678
+    component.ngOnInit()
+    expect(component.trust4Display).toEqual('-0.56..');
+    expect(component.color).toEqual('#ff6e00');
+  })
 
-    component.trust = -0.5;
-    expect(component.computeTrust4Display()).toEqual('-0.5')
-    component.trust = 0.5;
-    expect(component.computeTrust4Display()).toEqual('0.5')
-    component.trust = -0.56;
-    expect(component.computeTrust4Display()).toEqual('-0.56')
-    component.trust = 0.56;
-    expect(component.computeTrust4Display()).toEqual('0.56')
-    component.trust = -0.567;
-    expect(component.computeTrust4Display()).toEqual('-0.56..')
-    component.trust = 0.567;
-    expect(component.computeTrust4Display()).toEqual('0.56..')
-    component.trust = -0.567234;
-    expect(component.computeTrust4Display()).toEqual('-0.56..')
-    component.trust = 0.567234;
-    expect(component.computeTrust4Display()).toEqual('0.56..')
-
+  it('should set color and trust4display correctly onCHanges', () => {
+    component.trust = -0.5678
+    component.ngOnChanges()
+    expect(component.trust4Display).toEqual('-0.56..');
+    expect(component.color).toEqual('#ff6e00');
   })
 });
