@@ -1,13 +1,20 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'trust-slider',
-  imports: [],
+  imports: [
+    FormsModule
+  ],
   templateUrl: './trust-slider.component.html',
   styleUrl: './trust-slider.component.css'
 })
 export class TrustSliderComponent {
 
   @Input() trust?: number;
+  @Output() trustChange = new EventEmitter<number|undefined>();
 
+  changeT($event?: number) {
+    this.trustChange.emit($event);
+  }
 }
