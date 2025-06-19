@@ -1,10 +1,12 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormsModule} from "@angular/forms";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'trust-slider',
   imports: [
-    FormsModule
+    FormsModule,
+    NgIf
   ],
   templateUrl: './trust-slider.component.html',
   styleUrl: './trust-slider.component.css'
