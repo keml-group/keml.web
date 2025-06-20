@@ -21,7 +21,7 @@ input[type="range"] {
   appearance: none;
   background: var(--red-to-green-horizontal-gradient);
   cursor: pointer;
-  width: 15rem;
+  width: 12rem;
 }
 
 input[type="range"].nactive {
@@ -29,3 +29,6 @@ input[type="range"].nactive {
   cursor: default;
 }
 
+input[type="number"] {
+  width: 3rem;
+}
