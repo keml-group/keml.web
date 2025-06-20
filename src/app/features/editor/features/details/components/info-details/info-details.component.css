@@ -7,12 +7,6 @@ div.info-form {
 form-label { text-align:right; }
 form-label:after { content: ":"; }
 
-.alert {
-  font-size: 0.5rem;
-  text-align: left;
-  color: red;
-}
-
 .tool-button{
   margin: 1rem;
   text-align: center;

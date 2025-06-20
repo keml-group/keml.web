@@ -10,12 +10,15 @@ import { MsgOverviewComponent } from '@app/shared/keml/components/helper/msg-ove
 import { MsgChoiceComponent } from '@app/shared/keml/components/helper/choices/msg-choice/msg-choice.component';
 import { IsInstrSvgComponent } from "@app/shared/keml/components/helper/is-instr-svg/is-instr-svg.component";
 import {LinkOverview} from "@app/shared/keml/components/helper/link-overview/link-overview.component";
+import {
+  TrustSliderComponent
+} from "@app/features/editor/features/details/components/trust-slider/trust-slider.component";
 
 @Component({
     selector: 'info-details',
     templateUrl: './info-details.component.html',
     styleUrl: './info-details.component.css',
-    imports: [FormsModule, IsInstrSvgComponent, NgIf, MsgChoiceComponent, NgFor, MsgOverviewComponent, MatIcon, MatTooltip, LinkOverview]
+  imports: [FormsModule, IsInstrSvgComponent, NgIf, MsgChoiceComponent, NgFor, MsgOverviewComponent, MatIcon, MatTooltip, LinkOverview, TrustSliderComponent]
 })
 export class InfoDetailsComponent implements OnInit {
   @Input() info!: Information;
