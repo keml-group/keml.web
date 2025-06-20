@@ -36,6 +36,13 @@
     var(--electric-violet) 100%
   );
 
+  --red-to-green-horizontal-gradient: linear-gradient(
+    90deg,
+    #ff0000 0%,
+    #ffff00 50%,
+    #00ff00 100%
+  );
+
   --pill-accent: var(--bright-blue);
 
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,

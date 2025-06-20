@@ -3,3 +3,29 @@
   text-align: left;
   color: red;
 }
+
+/********** Range Input Styles **********/
+
+:host {
+  --red-to-green-horizontal-gradient: linear-gradient(
+    90deg,
+    #ff0000 0%,
+    #ffff00 50%,
+    #00ff00 100%
+  );
+}
+
+/*Range Reset*/
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--red-to-green-horizontal-gradient);
+  cursor: pointer;
+  width: 15rem;
+}
+
+input[type="range"].nactive {
+  background: lightgray;
+  cursor: default;
+}
+
