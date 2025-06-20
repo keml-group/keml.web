@@ -12,7 +12,7 @@ import { IsInstrSvgComponent } from "@app/shared/keml/components/helper/is-instr
 import {LinkOverview} from "@app/shared/keml/components/helper/link-overview/link-overview.component";
 import {
   TrustSliderComponent
-} from "@app/features/editor/features/details/components/trust-slider/trust-slider.component";
+} from "@app/shared/trust-slider/trust-slider.component";
 
 @Component({
     selector: 'info-details',
