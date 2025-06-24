@@ -46,7 +46,8 @@ export class SimulationInputDetails implements OnInit {
     this.recomputeWith.emit(this.simulationInputs)
   }
 
-  changeDefaultForCp(cp: ConversationPartner, val: (number| undefined)) {
+  changeDefaultForCp(cp: ConversationPartner, i: number, val: (number| undefined)) {
+    this.defaultList[i] = val;
     this.simulationInputs.defaultsPerCp.set(cp, val)
     this.recomputeWith.emit(this.simulationInputs)
   }
