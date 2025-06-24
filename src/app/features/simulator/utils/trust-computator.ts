@@ -92,14 +92,16 @@ export class TrustComputator {
     let src: LifeLine;
     if (newInfo.source) {
       src = newInfo.source.counterPart
+      let res = defaultsPerPartner.get(src)
+      return res? res : this.generalDefault
     } else {
       src = author
+      let res = defaultsPerPartner.get(src)
+      return res? res : this.preknowledgeDefault
     }
-    let res = defaultsPerPartner.get(src)
-    return res? res : this.generalDefault
   }
 
-  static truncTo1(score: number): number {
+  private static truncTo1(score: number): number {
     if(score <-1) return -1
     if (score>1) return 1
     return score
@@ -131,7 +133,7 @@ export class TrustComputator {
     return link.source.currentTrust*this.factorFromLinkType(link.type)
   }
 
-  static factorFromLinkType(linkType: InformationLinkType): number {
+  private static factorFromLinkType(linkType: InformationLinkType): number {
     switch (linkType) {
       case InformationLinkType.SUPPLEMENT:
         return 0;
