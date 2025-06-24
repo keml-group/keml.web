@@ -9,7 +9,7 @@
 
   <label class="form-label">Preknowledge Default</label>
   <div>
-    <input type="number" name="pre" min="-1" [attr.max]="1" [ngModel]="simulationInputs.preknowledgeDefault" (ngModelChange)="changeDefaultForPre($event)">
+    <trust-slider [trust]="simulationInputs.preknowledgeDefault" (trustChange)="changeDefaultForPre($event)"></trust-slider>
     <small> Default: {{TrustComputator.preknowledgeDefault}}</small>
   </div>
 
