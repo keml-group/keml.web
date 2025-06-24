@@ -1,9 +1,8 @@
 import {Conversation} from "@app/shared/keml/models/core/conversation";
 import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "@app/shared/keml/models/core/msg-info";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
-import {LifeLine} from '@app/shared/keml/models/core/life-line';
-import {Author} from '@app/shared/keml/models/core/author';
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
+import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
 
 export class TrustComputator {
 
@@ -16,40 +15,14 @@ export class TrustComputator {
     let receives = conv.author.messages.filter(m => !m.isSend())
       .map(m => m as ReceiveMessage)
     let newInfos: NewInformation[] = receives.flatMap(m => m.generates)
-    let defaultsPerPartner = new Map<LifeLine, number>();
-    if (simulationInputs?.preknowledgeDefault != undefined) {
-      defaultsPerPartner.set(conv.author, simulationInputs.preknowledgeDefault)
-    }
-    simulationInputs?.defaultsPerCp.forEach((v, c) => {
-      if (v != undefined) {
-        defaultsPerPartner.set(c, v)
-      }
-    })
-    let defaults: Map<LifeLine, number> = this.determineDefaultsPerPartner(conv, defaultsPerPartner)
     this.computeCTFromKnowledge(pres, newInfos, receives.length,
-      defaults,
-      conv.author,
-      simulationInputs?.weight ? simulationInputs?.weight: this.weightDefault )
+      simulationInputs
+    )
   }
 
-  static determineDefaultsPerPartner(conv: Conversation, inputDefaults?: Map<LifeLine, number>): Map<LifeLine, number> {
-    let length = conv.conversationPartners.length + 1 //author
-    if (inputDefaults?.size == length) {
-      return inputDefaults
-    } else {
-      let cps: LifeLine[] = conv.conversationPartners
-      //cps.push(conv.author)
-      let res = new Map()
-      cps.map(ll => {
-        let preVal: number | undefined = inputDefaults?.get(ll)
-        res.set(ll, (preVal ? preVal: this.generalDefault ) )
-      })
-      res.set(conv.author, this.preknowledgeDefault)
-      return res
-    }
-  }
-
-  static computeCTFromKnowledge(pres: Preknowledge[], newInfos: NewInformation[], recSize: number, defaultsPerPartner: Map<LifeLine, number>, author: Author, weight: number) {
+  static computeCTFromKnowledge(pres: Preknowledge[], newInfos: NewInformation[], recSize: number,
+                                simulationInputs?: SimulationInputs,
+                                ) {
     let toVisit: Information[] = newInfos
     toVisit.push(...pres)
 
@@ -60,7 +33,7 @@ export class TrustComputator {
 
       for(let i = 0; i<toVisit.length; i++) {
         let info = toVisit[i]
-        let res = this.computeTrust(info, recSize, defaultsPerPartner, author, weight)
+        let res = this.computeTrust(info, recSize, simulationInputs)
         if (res != undefined) {
           info.currentTrust = res
           toVisit.splice(i, 1)
@@ -75,28 +48,31 @@ export class TrustComputator {
     }
   }
 
-  static computeTrust(info: Information, recSize: number, defaultsPerPartner: Map<LifeLine, number>, author: Author, weight: number): number | undefined {
+  static computeTrust(info: Information, recSize: number, simulationInputs?: SimulationInputs): number | undefined {
     let argScore = this.computeArgumentationScore(info)
     if (argScore != undefined) {
-      let initial = info.initialTrust ? info.initialTrust : this.determineInitialTrustForInfo(info, defaultsPerPartner, author)
-      let res = initial +
+      let initial = this.determineInitialTrustForInfo(info, simulationInputs)
+      let weight = simulationInputs?.weight ? simulationInputs?.weight: this.weightDefault
+      return this.truncTo1(
+        initial +
         this.computeRepetitionScore(info, recSize) +
         weight*argScore
-      return this.truncTo1(res)
+      )
     }
     return undefined
   }
 
-  static determineInitialTrustForInfo(info: Information, defaultsPerPartner: Map<LifeLine, number>, author: Author): number {
+  static determineInitialTrustForInfo(info: Information, simulationInputs?: SimulationInputs): number {
+    if (info.initialTrust != undefined) {
+      return info.initialTrust
+    }
     let newInfo = info as NewInformation
-    let src: LifeLine;
     if (newInfo.source) {
-      src = newInfo.source.counterPart
-      let res = defaultsPerPartner.get(src)
+      let src: ConversationPartner = newInfo.source.counterPart
+      let res = simulationInputs?.defaultsPerCp?.get(src)
       return res? res : this.generalDefault
     } else {
-      src = author
-      let res = defaultsPerPartner.get(src)
+      let res = simulationInputs?.preknowledgeDefault
       return res? res : this.preknowledgeDefault
     }
   }
