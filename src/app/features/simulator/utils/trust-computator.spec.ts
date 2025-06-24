@@ -1,11 +1,12 @@
 import {TrustComputator} from './trust-computator';
-import {Conversation} from "../../../shared/keml/models/core/conversation";
-import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "../../../shared/keml/models/core/msg-info";
-import {ConversationPartner} from "../../../shared/keml/models/core/conversation-partner";
-import {Author} from "../../../shared/keml/models/core/author";
+import {Conversation} from "@app/shared/keml/models/core/conversation";
+import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "@app/shared/keml/models/core/msg-info";
+import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+import {Author} from "@app/shared/keml/models/core/author";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
 import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
-import {JsonFixer} from "../../../shared/keml/models/json2core/json-fixer";
+import {JsonFixer} from "@app/shared/keml/models/json2core/json-fixer";
+import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 
 describe('TrustComputator', () => {
   it('should create an instance', () => {
@@ -49,20 +50,87 @@ describe('TrustComputator', () => {
     }
   )
 
-  it('should evaluate a single node correctly', () => {
-      let author = new Author()
-      let defaults = new Map()
-      new InformationLink(p2, p0, InformationLinkType.STRONG_ATTACK)
-      new InformationLink(p1, p0, InformationLinkType.SUPPORT)
-      expect(TrustComputator.computeTrust(p0, recLength, defaults, author,2)).toEqual(undefined)
-      expect(TrustComputator.computeTrust(p1, recLength, defaults, author,2)).toEqual(0.5)
-      expect(TrustComputator.computeTrust(p2, recLength, defaults, author,2)).toEqual(0.5)
-      p1.currentTrust = 0.5 //+0.25
-      p2.currentTrust = 0.4 //-0.4
-      expect(TrustComputator.computeTrust(p0, recLength, defaults, author, 2)).toBeCloseTo(0.2, 0.000001)
-    // todo why is .toEqual(0.2) not possible? The numbers are easy, only negative sometimes
+  it('should compute the repetition score of a single node correctly', () => {
+    let cp = new ConversationPartner('cp')
+    let r1 = new ReceiveMessage(cp, 1)
+    let r2 = new ReceiveMessage(cp, 3)
+    let info = new Preknowledge('info')
+    expect(TrustComputator.computeRepetitionScore(info, 0)).toEqual(0)
+    expect(TrustComputator.computeRepetitionScore(info, 1)).toEqual(0)
+    info.repeatedBy.push(r1, r2)
+    expect(TrustComputator.computeRepetitionScore(info, 2)).toEqual(1)
+    expect(TrustComputator.computeRepetitionScore(info, 4)).toEqual(0.5)
+  })
+
+  it('should determineInitialTrustForInfo correctly', () => {
+    let cp0 = new ConversationPartner('0')
+    let cp1 = new ConversationPartner('1')
+    let r1 = new ReceiveMessage(cp0, 1)
+    let r2 = new ReceiveMessage(cp1, 2)
+    let newInfo1 = new NewInformation(r1, 'm1')
+    let newInfo2 = new NewInformation(r2, 'm2')
+    let defByPartner = new Map<ConversationPartner, number>()
+    let simInputs: SimulationInputs = {
+      defaultsPerCp: defByPartner,
     }
-  )
+    // no entries, hence real defaults should be used:
+    expect(
+      TrustComputator.determineInitialTrustForInfo(p0, simInputs)
+    ).toEqual(TrustComputator.preknowledgeDefault) //1.0
+    expect(
+      TrustComputator.determineInitialTrustForInfo(newInfo1, simInputs)
+    ).toEqual(TrustComputator.generalDefault) //0.5
+    expect(
+      TrustComputator.determineInitialTrustForInfo(newInfo2, simInputs)
+    ).toEqual(TrustComputator.generalDefault) //0.5
+
+    defByPartner.set(cp0, 0.1)
+    defByPartner.set(cp1, 0.2)
+    simInputs.preknowledgeDefault = 0.3
+    expect(
+      TrustComputator.determineInitialTrustForInfo(p0, simInputs)
+    ).toEqual(0.3)
+    expect(
+      TrustComputator.determineInitialTrustForInfo(newInfo1, simInputs)
+    ).toEqual(0.1)
+    expect(
+      TrustComputator.determineInitialTrustForInfo(newInfo2, simInputs)
+    ).toEqual(0.2)
+    //now use initial trust:
+    newInfo2.initialTrust = 0.8
+    expect(
+      TrustComputator.determineInitialTrustForInfo(newInfo2, simInputs)
+    ).toEqual(0.8)
+  })
+
+  it('should evaluate a single node correctly', () => {
+    let defaults = new Map()
+    let simInputs: SimulationInputs = {
+      defaultsPerCp: defaults,
+    }
+    new InformationLink(p2, p0, InformationLinkType.STRONG_ATTACK)
+    new InformationLink(p1, p0, InformationLinkType.SUPPORT)
+    expect(TrustComputator.computeTrust(p0, recLength, simInputs)).toEqual(undefined)
+    expect(TrustComputator.computeTrust(p1, recLength, simInputs)).toEqual(1.0)
+    expect(TrustComputator.computeTrust(p2, recLength, simInputs)).toEqual(1.0)
+
+    p1.currentTrust = 0.5 //on p0 +0.25 by Support
+    p2.currentTrust = 0.4 //on p0 -0.4 by Strong Attack
+    expect(TrustComputator.computeTrust(p1, recLength, simInputs)).toEqual(1.0)
+    expect(TrustComputator.computeTrust(p2, recLength, simInputs)).toEqual(1.0)
+
+    expect(TrustComputator.computeArgumentationScore(p0)).toBeCloseTo(-0.15, 0.00000001)
+    expect(TrustComputator.computeRepetitionScore(p0, recLength)).toEqual(0)
+    expect(p0.initialTrust).toEqual(undefined)
+    expect(TrustComputator.determineInitialTrustForInfo(p0, simInputs)).toEqual(1.0)
+
+    // weight = 2
+    expect(TrustComputator.computeTrust(p0, recLength, simInputs)).toBeCloseTo(0.7, 0.000000001)
+    simInputs.weight = 1
+    expect(TrustComputator.computeTrust(p0, recLength, simInputs)).toBeCloseTo(0.85, 0.000000001)
+    simInputs.weight = 3
+    expect(TrustComputator.computeTrust(p0, recLength, simInputs)).toBeCloseTo(0.55, 0.000000001)
+  })
 
   it('should return undefined on a node\'s trust computation if no initial trust exists on it', () => {
     //it('should throw an error on a node\'s trust computation if no initial trust exists on it', () => {
@@ -102,7 +170,7 @@ describe('TrustComputator', () => {
     let pres = conv.author.preknowledge
     let pre0 = pres[0]
 
-    TrustComputator.computeTrust(pre0, 2, new Map(), conv.author, 2)
+    TrustComputator.computeTrust(pre0, 2)
     // cannot use normal expect since actually, initial and current trust cannot be undefined
     expect(pre0.initialTrust == undefined).toEqual(true)
     expect(pre0.currentTrust == undefined).toEqual(true)
@@ -116,15 +184,6 @@ describe('TrustComputator', () => {
     let conv = new Conversation('cycle', auth)
     expect(() => TrustComputator.computeCurrentTrusts(conv)).toThrow('Endless loops of 2 nodes - please check the InformationLinks')
   })
-
-  it('should show that the case of 0 receives is handled correctly', () => {
-    let conv = new Conversation()
-    conv.author.preknowledge = [p0, p1]
-    new InformationLink(p0, p1, InformationLinkType.ATTACK)
-    TrustComputator.computeCurrentTrusts(conv)
-    expect(p0.currentTrust).toEqual(1.0)
-    expect(p1.currentTrust).toEqual(0)
-  } )
 
   it('should adapt the current trusts', () => {
     let pre0 = new Preknowledge('pre0',
@@ -210,6 +269,15 @@ describe('TrustComputator', () => {
     expectations.set(pre0, -0.5)
     verify()
   })
+
+  it('should show that the case of 0 receives is handled correctly', () => {
+    let conv = new Conversation()
+    conv.author.preknowledge = [p0, p1]
+    new InformationLink(p0, p1, InformationLinkType.ATTACK)
+    TrustComputator.computeCurrentTrusts(conv)
+    expect(p0.currentTrust).toEqual(1.0)
+    expect(p1.currentTrust).toEqual(0)
+  } )
 
   it('should deal with real 3-2', () => {
     let json = '{\n' +
