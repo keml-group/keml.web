@@ -7,14 +7,14 @@ import {
   NewInformation,
   Preknowledge,
   ReceiveMessage, SendMessage,
-} from "../../../shared/keml/models/core/msg-info";
-import {Conversation} from "../../../shared/keml/models/core/conversation";
-import {ConversationPartner} from "../../../shared/keml/models/core/conversation-partner";
-import {JsonFixer} from "../../../shared/keml/models/json2core/json-fixer";
+} from "@app/shared/keml/models/core/msg-info";
+import {Conversation} from "@app/shared/keml/models/core/conversation";
+import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+import {JsonFixer} from "@app/shared/keml/models/json2core/json-fixer";
 import {LayoutHelper} from "../utils/layout-helper";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
-import {Author} from "../../../shared/keml/models/core/author";
-import {ListUpdater} from "../../../core/utils/list-updater";
+import {Author} from "@app/shared/keml/models/core/author";
+import {ListUpdater} from "@app/core/utils/list-updater";
 import {LLMMessage} from "../fromLLM/models/llmmessage";
 import {MsgPositionChangeService} from "@app/features/editor/services/msg-position-change.service";
 
