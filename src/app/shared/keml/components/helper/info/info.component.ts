@@ -1,8 +1,9 @@
-import {AfterViewInit, Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Information, NewInformation, InformationLink} from "@app/shared/keml/models/core/msg-info";
 import { TextAreaSvgComponent } from '@app/core/features/svg-base-components/text-area-svg/text-area-svg.component';
 import { IsInstrSvgComponent } from '../is-instr-svg/is-instr-svg.component';
 import {SVGAccessService} from "ngx-arrows";
+import {DraggableComponent} from "@app/core/features/positionable/draggable/draggable.component";
 
 @Component({
     selector: '[infoG]',
@@ -10,22 +11,19 @@ import {SVGAccessService} from "ngx-arrows";
     styleUrl: './info.component.css',
     imports: [IsInstrSvgComponent, TextAreaSvgComponent]
 })
-export class InfoComponent implements AfterViewInit {
+export class InfoComponent extends DraggableComponent<Information> implements OnInit {
   @Input() info!: Information;
   @Output() chooseInfo = new EventEmitter<Information>();
   @Output() chooseInfoLink = new EventEmitter<InformationLink>();
 
-  dragActive = false;
-  wasReallyDragged = false;
-  dragStartX: number = 0;
-  dragStartY: number = 0;
-
   constructor(
-    protected svgAccessService: SVGAccessService,
-  ) {}
+    svgAccessService: SVGAccessService,
+  ) {
+    super(svgAccessService);
+  }
 
-  ngAfterViewInit() {
-    this.svgAccessService.notifyPositionChange(this.info.gId)
+  ngOnInit() {
+    this.elem = this.info;
   }
 
   // todo later use color here, then this is main method
@@ -42,43 +40,9 @@ export class InfoComponent implements AfterViewInit {
     return name == 'LLM'? '#ccffff' : '#ffff99'
   }
 
-  startDrag(event: MouseEvent) {
-    console.log('startDrag');
-    this.dragActive = true;
-    this.dragStartX = event.clientX;
-    this.dragStartY = event.clientY;
-    console.log(this.info.position.x)
-    console.log(this.info.position.y)
-  }
 
-  drag(event: MouseEvent) {
-    if (this.dragActive) {
-      this.wasReallyDragged = true;
-      event.preventDefault();
-      const dragX = event.clientX;
-      this.info.position.x+= (dragX - this.dragStartX);
-      this.dragStartX = dragX;
-      const dragY = event.clientY;
-      this.info.position.y+= (dragY - this.dragStartY);
-      this.dragStartY = dragY;
-      this.svgAccessService.notifyPositionChange(this.info.gId)
-    }
-  }
-
-  endDrag(event: MouseEvent) {
-    console.log('endDrag');
-    this.dragActive = false;
-    // todo was working for click vs drag, not now setTimeout(() => {this.dragActive = false;}, 50);
-    event.preventDefault();
-  }
-
-  clickInfo(event: MouseEvent) {
-    if (this.wasReallyDragged) {
-      this.wasReallyDragged = false;
-    } else {
-      this.chooseInfo.emit(this.info);
-      event.preventDefault();
-    }
+  public clickInfo(event: MouseEvent) {
+    this.clickElem(event)
   }
 
   chooseLink(link: InformationLink) {
