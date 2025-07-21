@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, EventEmitter, Output} from '@angular/core';
 import {SVGAccessService} from "ngx-arrows";
-import {Positionable} from "@app/core/features/positionable/positionable";
-import {Identifiable} from "@app/core/features/positionable/identifiable";
+import {Draggable} from "@app/core/features/positionable/positionable";
+import {Dragger} from "@app/core/features/positionable/dragger";
 
 @Component({
   imports: [],
@@ -9,62 +9,41 @@ import {Identifiable} from "@app/core/features/positionable/identifiable";
   templateUrl: './draggable.component.svg',
   styleUrl: './draggable.component.css'
 })
-export abstract class DraggableComponent<T extends Positionable & Identifiable> implements AfterViewInit {
+export abstract class DraggableComponent<T extends Draggable> implements AfterViewInit {
 
   @Output() chooseElem = new EventEmitter<T>();
-
+  //the caller must initialize both required elements (elem and elementDragger) either in the constructor
+  // (or if they are inputs) in the ngOnInit life cycle hook
   elem!: T;
-
-
-  dragActive = false;
-  wasReallyDragged = false;
-  dragStartX: number = 0;
-  dragStartY: number = 0;
+  elemDragger!: Dragger<T>;
 
   protected constructor(
     protected svgAccessService: SVGAccessService
   ) {}
+
 
   ngAfterViewInit() {
     this.svgAccessService.notifyPositionChange(this.elem.gId)
   }
 
   startDrag(event: MouseEvent) {
-    console.log('startDrag');
-    this.dragActive = true;
-    this.dragStartX = event.clientX;
-    this.dragStartY = event.clientY;
+    this.elemDragger.startDrag(event);
   }
 
   drag(event: MouseEvent) {
-    if (this.dragActive) {
-      this.wasReallyDragged = true;
-      event.preventDefault();
-      const dragX = event.clientX;
-      this.elem.position.x+= (dragX - this.dragStartX);
-      this.dragStartX = dragX;
-      const dragY = event.clientY;
-      this.elem.position.y+= (dragY - this.dragStartY);
-      this.dragStartY = dragY;
+    if (this.elemDragger.drag(event)) {
       this.svgAccessService.notifyPositionChange(this.elem.gId)
     }
   }
 
   endDrag(event: MouseEvent) {
-    console.log('endDrag');
-    this.dragActive = false;
-    // todo was working for click vs drag, not now setTimeout(() => {this.dragActive = false;}, 50);
-    event.preventDefault();
+    this.elemDragger.endDrag(event);
   }
 
   clickElem(event: MouseEvent) {
-    if (this.wasReallyDragged) {
-      this.wasReallyDragged = false;
-    } else {
+    if (this.elemDragger.clickElem(event)) {
       this.chooseElem.emit(this.elem);
-      event.preventDefault();
     }
   }
-
 
 }

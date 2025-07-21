@@ -1,5 +1,8 @@
 import {BoundingBox} from "ngx-arrows";
+import {Identifiable} from "@app/core/features/positionable/identifiable";
 
 export interface Positionable {
   position: BoundingBox
 }
+
+export type Draggable = Positionable & Identifiable;

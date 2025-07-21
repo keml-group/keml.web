@@ -4,6 +4,7 @@ import { TextAreaSvgComponent } from '@app/core/features/svg-base-components/tex
 import { IsInstrSvgComponent } from '../is-instr-svg/is-instr-svg.component';
 import {SVGAccessService} from "ngx-arrows";
 import {DraggableComponent} from "@app/core/features/positionable/draggable/draggable.component";
+import {Dragger} from "@app/core/features/positionable/dragger";
 
 @Component({
     selector: '[infoG]',
@@ -24,6 +25,7 @@ export class InfoComponent extends DraggableComponent<Information> implements On
 
   ngOnInit() {
     this.elem = this.info;
+    this.elemDragger = new Dragger(this.elem);
   }
 
   // todo later use color here, then this is main method
