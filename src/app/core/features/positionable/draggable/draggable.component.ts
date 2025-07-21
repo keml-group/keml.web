@@ -1,7 +1,7 @@
-import {AfterViewInit, Component, EventEmitter, Input, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Output} from '@angular/core';
 import {SVGAccessService} from "ngx-arrows";
 import {Positionable} from "@app/core/features/positionable/positionable";
-import {Referencable} from "emfular";
+import {Identifiable} from "@app/core/features/positionable/identifiable";
 
 @Component({
   imports: [],
@@ -9,7 +9,7 @@ import {Referencable} from "emfular";
   templateUrl: './draggable.component.svg',
   styleUrl: './draggable.component.css'
 })
-export abstract class DraggableComponent<T extends Positionable & Referencable> implements AfterViewInit {
+export abstract class DraggableComponent<T extends Positionable & Identifiable> implements AfterViewInit {
 
   @Output() chooseElem = new EventEmitter<T>();
 
