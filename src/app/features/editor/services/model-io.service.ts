@@ -15,8 +15,9 @@ import {LayoutHelper} from "../utils/layout-helper";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
 import {Author} from "@app/shared/keml/models/core/author";
 import {ListUpdater} from "@app/core/utils/list-updater";
-import {LLMMessage} from "../fromLLM/models/llmmessage";
 import {MsgPositionChangeService} from "@app/features/editor/services/msg-position-change.service";
+import {LLMMessage} from "@app/features/editor/fromLLM/models/llmmessage";
+import {LlmConversationCreator} from "@app/features/editor/fromLLM/utils/llm-conversation-creator";
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +29,6 @@ export class ModelIOService {
   constructor(
     private msgPositionChangeService: MsgPositionChangeService,
   ) {
-    console.log("ModelIOService constructed");
     this.newKEML();
   }
 
@@ -54,23 +54,8 @@ export class ModelIOService {
   }
 
   convFromLlmMessages(llmMsgs: LLMMessage[]): Conversation {
-    let cp = new ConversationPartner('LLM')
-    const conv = new Conversation('From model', new Author(), [cp]);
-    LayoutHelper.positionConversationPartners(conv.conversationPartners)
-    for( let i=0; i < llmMsgs.length; i++) {
-      let msg = this.createMsg(llmMsgs[i], cp, i)
-      conv.author.messages.push(msg)
-    }
-    this.conversation = conv;
-    return conv;
-  }
-
-  private createMsg(llmMsg: LLMMessage,counterPart: ConversationPartner, index: number): Message {
-    return Message.newMessage(ModelIOService.isSend(llmMsg), counterPart, index, llmMsg.message, llmMsg.message)
-  }
-
-  private static isSend(llmMsg: LLMMessage): boolean {
-    return llmMsg.author != 'LLM'
+    this.conversation = LlmConversationCreator.convFromLlmMessages(llmMsgs)
+    return this.conversation;
   }
 
   saveKEML(conv: Conversation): string {
