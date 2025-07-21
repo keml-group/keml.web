@@ -1,7 +1,7 @@
 import { LayoutHelper } from './layout-helper';
-import {Preknowledge, SendMessage} from "../../../shared/keml/models/core/msg-info";
-import {ConversationPartner} from "../../../shared/keml/models/core/conversation-partner";
-import {BoundingBox} from "ngx-arrows";
+import {Preknowledge, SendMessage} from "@app/shared/keml/models/core/msg-info";
+import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+import {BoundingBox} from "ngx-svg-graphics";
 
 describe('LayoutHelper', () => {
   it('should create an instance', () => {
