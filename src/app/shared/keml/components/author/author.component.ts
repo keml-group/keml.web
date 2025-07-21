@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {Author} from "../../models/core/author";
-import { TextAreaSvgComponent } from '@app/core/features/svg-base-components/text-area-svg/text-area-svg.component';
-import { PersonSvgComponent } from '@app/core/features/svg-base-components/person-svg/person-svg.component';
+import { TextAreaSvgComponent } from '@app/shared/keml/components/helper/svg-base-components/text-area-svg/text-area-svg.component';
+import { PersonSvgComponent } from '@app/shared/keml/components/helper/svg-base-components/person-svg/person-svg.component';
 
 @Component({
     selector: '[authorG]',
