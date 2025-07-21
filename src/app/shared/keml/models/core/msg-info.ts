@@ -13,7 +13,7 @@ import {
 } from "@app/shared/keml/models/json/knowledge-models";
 import {Ref, Referencable, Deserializer} from "emfular";
 import {ListUpdater} from "@app/core/utils/list-updater";
-import {BoundingBox, PositionHelper} from "ngx-arrows";
+import {BoundingBox, PositionHelper} from "ngx-svg-graphics";
 
 export abstract class Message extends Referencable {
   static eClass = 'http://www.unikoblenz.de/keml#//Message'

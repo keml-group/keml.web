@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, EventEmitter, Output} from '@angular/core';
-import {SVGAccessService} from "ngx-arrows";
+import {SVGAccessService} from "ngx-svg-graphics";
 import {Draggable} from "@app/core/features/positionable/positionable";
 import {Dragger} from "@app/core/features/positionable/dragger";
 

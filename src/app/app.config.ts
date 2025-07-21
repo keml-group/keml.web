@@ -5,7 +5,7 @@ import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {KEMLArrowStyleConfigurationService} from "@app/shared/keml/services/kemlarrow-style-configuration.service";
-import {ArrowStyleConfigurationService} from "ngx-arrows";
+import {ArrowStyleConfigurationService} from "ngx-svg-graphics";
 
 export const appConfig: ApplicationConfig = {
   providers: [

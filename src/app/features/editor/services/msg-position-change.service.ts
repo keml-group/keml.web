@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Message, ReceiveMessage, SendMessage} from "@app/shared/keml/models/core/msg-info";
-import {SVGAccessService} from "ngx-arrows";
+import {SVGAccessService} from "ngx-svg-graphics";
 
 @Injectable({
   providedIn: 'root'

@@ -1,5 +1,5 @@
 import {Ref} from "emfular";
-import {BoundingBox} from "ngx-arrows";
+import {BoundingBox} from "ngx-svg-graphics";
 
 export interface InformationJson {
   eClass: string;

@@ -5,7 +5,7 @@ import {ArrowType} from "@app/shared/keml/models/arrow-heads";
 import { NewInfoComponent } from '@app/shared/keml/components/new-info/new-info.component';
 import { NgIf, NgFor } from '@angular/common';
 import { MsgInnerComponent } from '@app/shared/keml/components/helper/msg-inner/msg-inner.component';
-import {ArrowBetweenElemsComponent, SVGAccessService} from "ngx-arrows";
+import {ArrowBetweenElemsComponent, SVGAccessService} from "ngx-svg-graphics";
 
 @Component({
     selector: '[msgG]',

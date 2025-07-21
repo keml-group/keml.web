@@ -4,7 +4,7 @@ import { NgFor } from '@angular/common';
 import {NewInformation} from "@app/shared/keml/models/core/msg-info";
 import {InfoInnerComponent} from "../helper/info-inner/info-inner.component";
 import { InformationLinkComponent } from '../information-link/information-link.component';
-import {ArrowBetweenBoxesComponent} from "ngx-arrows";
+import {ArrowBetweenBoxesComponent} from "ngx-svg-graphics";
 
 @Component({
     selector: '[newInfoG]',

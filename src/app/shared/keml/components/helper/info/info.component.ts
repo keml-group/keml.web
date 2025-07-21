@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Information, NewInformation, InformationLink} from "@app/shared/keml/models/core/msg-info";
 import { TextAreaSvgComponent } from '@app/core/features/svg-base-components/text-area-svg/text-area-svg.component';
 import { IsInstrSvgComponent } from '../is-instr-svg/is-instr-svg.component';
-import {SVGAccessService} from "ngx-arrows";
+import {SVGAccessService} from "ngx-svg-graphics";
 import {DraggableComponent} from "@app/core/features/positionable/draggable/draggable.component";
 import {Dragger} from "@app/core/features/positionable/dragger";
 

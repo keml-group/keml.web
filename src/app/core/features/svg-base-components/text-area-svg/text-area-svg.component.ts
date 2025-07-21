@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
-import {BoundingBox} from "ngx-arrows";
+import {BoundingBox} from "ngx-svg-graphics";
 
 @Component({
     selector: '[text-area-svg]',
