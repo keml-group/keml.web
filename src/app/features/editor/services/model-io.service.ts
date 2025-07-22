@@ -20,7 +20,7 @@ import {MsgPositionChangeService} from "@app/features/editor/services/msg-positi
 })
 export class ModelIOService {
 
-  conversation!: Conversation;
+  public conversation!: Conversation;
 
   constructor(
     private msgPositionChangeService: MsgPositionChangeService,

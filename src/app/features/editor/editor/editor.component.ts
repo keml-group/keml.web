@@ -6,7 +6,6 @@ import { MatToolbar } from '@angular/material/toolbar';
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { ModelIOService } from "@app/features/editor/services/model-io.service";
 import { IoService } from "@app/core/services/io.service";
-import { Conversation } from "@app/shared/keml/models/core/conversation";
 import { DetailsService } from "@app/features/editor/details/services/details.service";
 import { ChatGptConv2LlmMessages } from "@app/features/editor/fromLLM/utils/chat-gpt-conv2-llm-messages";
 import { MsgComponent } from '@app/shared/keml/components/msg/msg.component';
@@ -31,7 +30,6 @@ import {KEMLIOService} from "@app/features/editor/services/keml-io.service";
 export class EditorComponent {
 
   @ViewChild("svg") svg!: ElementRef<SVGElement>;
-  conversation: Conversation;
 
   constructor(
     public detailsService: DetailsService,
@@ -41,11 +39,11 @@ export class EditorComponent {
     private ioService: IoService,
     private dialog: MatDialog,
   ) {
-    this.conversation = this.kemlIOService.newKEML();
+    this.kemlIOService.newKEML();
   }
 
   newConversation(): void {
-    this.conversation = this.kemlIOService.newKEML();
+    this.kemlIOService.newKEML();
   }
 
   newFromChatGpt(): void {
@@ -76,7 +74,7 @@ export class EditorComponent {
     dialogRef.componentInstance.texts = jsons;
     dialogRef.componentInstance.chosenJson.subscribe(choice => {
       let msgs = ChatGptConv2LlmMessages.parseConversationJSON(choice)
-      this.conversation = this.kemlIOService.convFromLlmMessages(msgs)
+      this.kemlIOService.convFromLlmMessages(msgs)
       dialogRef.componentInstance.chosenJson.unsubscribe()
     })
   }
@@ -85,7 +83,7 @@ export class EditorComponent {
   startWithMsgs(event: Event): void {
     this.ioService.loadStringFromFile(event).then(txt => {
       let msgs = ChatGptConv2LlmMessages.parseConversation(txt)
-      this.conversation = this.kemlIOService.convFromLlmMessages(msgs)
+      this.kemlIOService.convFromLlmMessages(msgs)
     })
   }
 
@@ -96,12 +94,12 @@ export class EditorComponent {
   loadKeml(event: Event) {
     this.ioService.loadStringFromFile(event).then(txt => {
       //todo insert detection code for wrong files (no json, not appropriately structured
-      this.conversation = this.kemlIOService.loadKEML(txt);
+      this.kemlIOService.loadKEML(txt);
     });
   }
 
   saveKeml() {
-    const jsonString = this.kemlIOService.saveKEML(this.conversation);
+    const jsonString = this.kemlIOService.saveKEML(this.modelIOService.conversation);
     const contentBlob = new Blob([jsonString], {type: 'application/json'});
     this.ioService.saveFile(contentBlob, 'keml.json');
   }
@@ -116,7 +114,7 @@ export class EditorComponent {
   }
 
   openSimulation() {
-    this.simulationService.openSimulationDialog(this.conversation)
+    this.simulationService.openSimulationDialog(this.modelIOService.conversation)
   }
 
   addConversationPartner() {
