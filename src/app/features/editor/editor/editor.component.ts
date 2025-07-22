@@ -19,6 +19,7 @@ import { PersonSvgComponent } from '@app/shared/keml/components/helper/svg-base-
 import {ConversationPickerComponent} from '@app/features/editor/fromLLM/components/conversation-picker/conversation-picker.component';
 import {SimulationService} from "@app/features/simulator/services/simulation.service";
 import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-markers/arrow-markers.component";
+import {KEMLIOService} from "@app/features/editor/services/keml-io.service";
 
 
 @Component({
@@ -34,16 +35,17 @@ export class EditorComponent {
 
   constructor(
     public detailsService: DetailsService,
+    public kemlIOService: KEMLIOService,
     public modelIOService: ModelIOService,
     private simulationService: SimulationService,
     private ioService: IoService,
     private dialog: MatDialog,
   ) {
-    this.conversation = this.modelIOService.newKEML();
+    this.conversation = this.kemlIOService.newKEML();
   }
 
   newConversation(): void {
-    this.conversation = this.modelIOService.newKEML();
+    this.conversation = this.kemlIOService.newKEML();
   }
 
   newFromChatGpt(): void {
@@ -74,7 +76,7 @@ export class EditorComponent {
     dialogRef.componentInstance.texts = jsons;
     dialogRef.componentInstance.chosenJson.subscribe(choice => {
       let msgs = ChatGptConv2LlmMessages.parseConversationJSON(choice)
-      this.conversation = this.modelIOService.convFromLlmMessages(msgs)
+      this.conversation = this.kemlIOService.convFromLlmMessages(msgs)
       dialogRef.componentInstance.chosenJson.unsubscribe()
     })
   }
@@ -83,7 +85,7 @@ export class EditorComponent {
   startWithMsgs(event: Event): void {
     this.ioService.loadStringFromFile(event).then(txt => {
       let msgs = ChatGptConv2LlmMessages.parseConversation(txt)
-      this.conversation = this.modelIOService.convFromLlmMessages(msgs)
+      this.conversation = this.kemlIOService.convFromLlmMessages(msgs)
     })
   }
 
@@ -94,12 +96,12 @@ export class EditorComponent {
   loadKeml(event: Event) {
     this.ioService.loadStringFromFile(event).then(txt => {
       //todo insert detection code for wrong files (no json, not appropriately structured
-      this.conversation = this.modelIOService.loadKEML(txt);
+      this.conversation = this.kemlIOService.loadKEML(txt);
     });
   }
 
   saveKeml() {
-    const jsonString = this.modelIOService.saveKEML(this.conversation);
+    const jsonString = this.kemlIOService.saveKEML(this.conversation);
     const contentBlob = new Blob([jsonString], {type: 'application/json'});
     this.ioService.saveFile(contentBlob, 'keml.json');
   }

@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
 import {
   Information,
   InformationLink,
@@ -10,14 +9,11 @@ import {
 } from "@app/shared/keml/models/core/msg-info";
 import {Conversation} from "@app/shared/keml/models/core/conversation";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
-import {JsonFixer} from "@app/shared/keml/models/json2core/json-fixer";
 import {LayoutHelper} from "../utils/layout-helper";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
 import {Author} from "@app/shared/keml/models/core/author";
 import {ListUpdater} from "@app/core/utils/list-updater";
 import {MsgPositionChangeService} from "@app/features/editor/services/msg-position-change.service";
-import {LLMMessage} from "@app/features/editor/fromLLM/models/llmmessage";
-import {LlmConversationCreator} from "@app/features/editor/fromLLM/utils/llm-conversation-creator";
 
 @Injectable({
   providedIn: 'root'
@@ -29,38 +25,12 @@ export class ModelIOService {
   constructor(
     private msgPositionChangeService: MsgPositionChangeService,
   ) {
-    this.newKEML();
+    this.conversation = new Conversation();
+    LayoutHelper.positionConversationPartners(this.conversation.conversationPartners)
   }
 
-  loadKEML(json: string): Conversation {
-    let convJson =  <ConversationJson>JSON.parse(json);
-    JsonFixer.prepareJsonInfoLinkSources(convJson);
-    JsonFixer.addMissingSupplementType(convJson);
-
-    let conv = Conversation.fromJSON(convJson);
-    LayoutHelper.positionConversationPartners(conv.conversationPartners)
-    LayoutHelper.timeMessages(conv.author.messages)
-    LayoutHelper.positionInfos(conv.author.preknowledge, conv.author.messages);
-
-    this.conversation = conv;
-    return conv;
-  }
-
-  newKEML(): Conversation {
-    const conv = new Conversation();
-    LayoutHelper.positionConversationPartners(conv.conversationPartners)
-    this.conversation = conv;
-    return conv;
-  }
-
-  convFromLlmMessages(llmMsgs: LLMMessage[]): Conversation {
-    this.conversation = LlmConversationCreator.convFromLlmMessages(llmMsgs)
-    return this.conversation;
-  }
-
-  saveKEML(conv: Conversation): string {
-    let convJson = conv.toJson()
-    return JSON.stringify(convJson);
+  assignConversation(conversation: Conversation) {
+    this.conversation = conversation;
   }
 
   getAuthor(): Author {
