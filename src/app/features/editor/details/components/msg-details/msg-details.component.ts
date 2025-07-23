@@ -9,6 +9,7 @@ import {ConversationPartner} from "@app/shared/keml/models/core/conversation-par
 import {KemlService} from "@app/features/editor/services/keml.service";
 import { InfoChoiceComponent } from '@app/shared/keml/components/helper/choices/info-choice/info-choice.component';
 import { InfoInnerComponent } from '@app/shared/keml/components/helper/info-inner/info-inner.component';
+import {InputHandler} from "@app/core/utils/input-handler";
 
 
 @Component({
@@ -26,7 +27,6 @@ export class MsgDetailsComponent implements OnInit {
   sendMsg?: SendMessage;
   receiveMsg?: ReceiveMessage;
 
-  changedTiming: number = 0;
 
   constructor(
     public dialogRef: MatDialogRef<MsgDetailsComponent>,
@@ -41,7 +41,6 @@ export class MsgDetailsComponent implements OnInit {
     } else {
       this.receiveMsg = (this.msg as ReceiveMessage)
     }
-    this.changedTiming = this.msg.timing
   }
 
   closeMe(): void {
@@ -50,16 +49,15 @@ export class MsgDetailsComponent implements OnInit {
 
   moveUp() {
     this.kemlService.moveMessageUp(this.msg);
-    this.changedTiming = this.msg.timing
   }
 
   moveDown() {
     this.kemlService.moveMessageDown(this.msg);
-    this.changedTiming = this.msg.timing
   }
 
-  handleTimingChange() {
-    this.kemlService.changeMessagePos(this.msg, this.changedTiming);
+  handleTimingChange(event: Event) {
+    const value = InputHandler.getNewValueFromEvent(event)
+    this.kemlService.changeMessagePos(this.msg, value);
   }
 
   deleteMe() {

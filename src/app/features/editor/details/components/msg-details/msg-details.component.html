@@ -19,7 +19,10 @@
             [disabled]="kemlService.disableMoveUp(msg)">
       <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
     </button>
-    <input type="number" min="0" (change)="handleTimingChange()" [(ngModel)]="changedTiming"/>
+    <input type="number" min="0"
+           [ngModel]="msg.timing"
+           (input)="handleTimingChange($event)"
+    />
     <button class="tool-button" title="Move down"
             (click)="moveDown()"
             [disabled]="kemlService.disableMoveDown(msg)">
