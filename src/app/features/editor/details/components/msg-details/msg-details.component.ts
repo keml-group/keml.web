@@ -53,17 +53,9 @@ export class MsgDetailsComponent implements OnInit {
     this.changedTiming = this.msg.timing
   }
 
-  disableMoveUp(): boolean {
-    return this.kemlService.disableMoveUp(this.msg);
-  }
-
   moveDown() {
     this.kemlService.moveMessageDown(this.msg);
     this.changedTiming = this.msg.timing
-  }
-
-  disableMoveDown(): boolean {
-    return this.kemlService.disableMoveDown(this.msg)
   }
 
   handleTimingChange() {

@@ -14,11 +14,13 @@
 
   <label class="form-label">Timing</label>
   <div class="timing">
-    <button class="tool-button" title="Move up" (click)="moveUp()" [disabled]="disableMoveUp()">
+    <button class="tool-button" title="Move up"
+            (click)="moveUp()"
+            [disabled]="kemlService.disableMoveUp(msg)">
       <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
     </button>
     <label>{{msg.timing}}</label>
-    <button class="tool-button" title="Move down" (click)="moveDown()" [disabled]="disableMoveDown()">
+    <button class="tool-button" title="Move down" (click)="moveDown()" [disabled]="kemlService.disableMoveDown(msg)">
       <mat-icon aria-hidden="false" fontIcon="arrow_forward"></mat-icon>
     </button>
     <input type="number" (change)="handleTimingChange()" [(ngModel)]="changedTiming" />
