@@ -64,7 +64,7 @@ export class MsgDetailsComponent implements OnInit {
     const value = InputHandler.getNewValueFromEvent(event)
     this.kemlService.changeMessagePos(this.msg, value);
   }
-  
+
   addNewInfo() {
     if (this.receiveMsg) {
       const newInfo = this.kemlService.addNewNewInfo(this.receiveMsg)
@@ -76,12 +76,6 @@ export class MsgDetailsComponent implements OnInit {
 
   chooseInfo(info: Information){
     this.openInfoDetails.emit(info)
-  }
-
-  repeatAnInfo(info: Information) {
-    if (this.receiveMsg) {
-      this.kemlService.addRepetition(this.receiveMsg, info)
-    }
   }
 
 }

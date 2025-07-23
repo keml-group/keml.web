@@ -48,7 +48,7 @@
   <label *ngIf="receiveMsg" class="form-label">Repeated information</label>
   <div class="row" *ngIf="receiveMsg">
     <div class="column">
-      <info-choice (infoChange)="repeatAnInfo($event)" [showInfo]="false">
+      <info-choice (infoChange)="kemlService.addRepetition(receiveMsg, $event)" [showInfo]="false">
       </info-choice>
     </div>
     <div class="column">
