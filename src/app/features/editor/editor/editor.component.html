@@ -1,7 +1,6 @@
 <div class="editor" id="editor">
   <div class="file-handling">
     <input id="openKEML" type="file" class="file-upload" style="display: none" (change)="loadKeml($event)" (click)="InputHandler.clearElem($event)">
-    <input id="openChatGptConv" type="file" class="file-upload" style="display: none" (change)="conversationPickService.startWithMsgs($event)" (click)="InputHandler.clearElem($event)">
     <input id="openChatGptConvList" type="file" class="file-upload" style="display: none" (change)="conversationPickService.startWithAllConvs($event)" (click)="InputHandler.clearElem($event)">
     <mat-toolbar class="file-level-bar">
       <button class="file-level-button" (click)="newConversation()">
@@ -13,12 +12,6 @@
               (click)="newFromChatGptList()">
         <mat-icon aria-hidden="false" fontIcon="insert_drive_file" ></mat-icon>
         From ChatGPT List
-      </button>
-      <button class="file-level-button"
-              [matTooltip]="'Upload a single element of conv.json'"
-              (click)="newFromChatGpt()">
-        <mat-icon aria-hidden="false" fontIcon="insert_drive_file" ></mat-icon>
-        From ChatGPT
       </button>
       <button class="file-level-button" (click)="openKeml()">
         <mat-icon aria-hidden="false" fontIcon="file_upload" ></mat-icon>

@@ -45,10 +45,6 @@ export class EditorComponent {
     this.kemlIOService.newKEML();
   }
 
-  newFromChatGpt(): void {
-    document.getElementById('openChatGptConv')?.click();
-  }
-
   newFromChatGptList() {
     document.getElementById('openChatGptConvList')?.click();
   }

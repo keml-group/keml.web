@@ -37,11 +37,4 @@ export class ConversationPickService {
     })
   }
 
-  startWithMsgs(event: Event): void {
-    this.ioService.loadStringFromFile(event).then(txt => {
-      let msgs = ChatGptConv2LlmMessages.parseConversation(txt)
-      this.kemlIOService.convFromLlmMessages(msgs)
-    })
-  }
-
 }
