@@ -1,8 +1,8 @@
 <div class="editor" id="editor">
   <div class="file-handling">
-    <input id="openKEML" type="file" class="file-upload" style="display: none" (change)="loadKeml($event)" (click)="clearElem($event)">
-    <input id="openChatGptConv" type="file" class="file-upload" style="display: none" (change)="startWithMsgs($event)" (click)="clearElem($event)">
-    <input id="openChatGptConvList" type="file" class="file-upload" style="display: none" (change)="startWithAllConvs($event)" (click)="clearElem($event)">
+    <input id="openKEML" type="file" class="file-upload" style="display: none" (change)="loadKeml($event)" (click)="InputHandler.clearElem($event)">
+    <input id="openChatGptConv" type="file" class="file-upload" style="display: none" (change)="startWithMsgs($event)" (click)="InputHandler.clearElem($event)">
+    <input id="openChatGptConvList" type="file" class="file-upload" style="display: none" (change)="startWithAllConvs($event)" (click)="InputHandler.clearElem($event)">
     <mat-toolbar class="file-level-bar">
       <button class="file-level-button" (click)="newConversation()">
         <mat-icon aria-hidden="false" fontIcon="insert_drive_file" ></mat-icon>

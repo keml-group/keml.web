@@ -19,6 +19,7 @@ import {ConversationPickerComponent} from '@app/features/editor/fromLLM/componen
 import {SimulationService} from "@app/features/simulator/services/simulation.service";
 import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-markers/arrow-markers.component";
 import {KEMLIOService} from "@app/features/editor/services/keml-io.service";
+import {InputHandler} from "@app/core/utils/input-handler";
 
 
 @Component({
@@ -48,12 +49,6 @@ export class EditorComponent {
 
   newFromChatGpt(): void {
     document.getElementById('openChatGptConv')?.click();
-  }
-
-  // this needs to be called on all input elements to allow them to accept the same value twice
-  clearElem(event: Event) {
-    let target = event.target as HTMLInputElement;
-    target.value = ''
   }
 
   newFromChatGptList() {
@@ -100,16 +95,14 @@ export class EditorComponent {
 
   saveKeml() {
     const jsonString = this.kemlIOService.saveKEML(this.kemlService.conversation);
-    const contentBlob = new Blob([jsonString], {type: 'application/json'});
-    this.ioService.saveFile(contentBlob, 'keml.json');
+    this.ioService.saveModel(jsonString, this.kemlService.conversation.title)
   }
 
   //todo: handling of foreign objects leads to errors, will need self-written method
   saveSVG() {
     const svgContent = this.svg.nativeElement;
     if(svgContent) {
-      const contentBlob = new Blob([svgContent.outerHTML], {type: 'image/svg+xml'});
-      this.ioService.saveFile(contentBlob, 'conversation.svg');
+      this.ioService.saveSVG(svgContent, this.kemlService.conversation.title)
     }
   }
 
@@ -139,4 +132,5 @@ export class EditorComponent {
     this.detailsService.openInfoDetails(pre);
   }
 
+  protected readonly InputHandler = InputHandler;
 }
