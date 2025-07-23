@@ -1,13 +1,11 @@
 import {Component, ElementRef, ViewChild,} from '@angular/core';
 import { NgFor } from '@angular/common';
-import { MatDialog } from "@angular/material/dialog";
 import { MatIcon } from '@angular/material/icon';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { KemlService } from "@app/features/editor/services/keml.service";
 import { IoService } from "@app/core/services/io.service";
 import { DetailsService } from "@app/features/editor/details/services/details.service";
-import { ChatGptConv2LlmMessages } from "@app/features/editor/fromLLM/utils/chat-gpt-conv2-llm-messages";
 import { MsgComponent } from '@app/shared/keml/components/msg/msg.component';
 import { PreknowledgeComponent } from '@app/shared/keml/components/preknowledge/preknowledge.component';
 import { ConversationPartnerComponent } from '@app/shared/keml/components/cp/conversation-partner.component';
@@ -15,11 +13,11 @@ import { AuthorComponent } from '@app/shared/keml/components/author/author.compo
 import { TextAreaSvgComponent } from '@app/shared/keml/components/helper/svg-base-components/text-area-svg/text-area-svg.component';
 import { DatabaseSvgComponent } from '@app/shared/keml/components/helper/svg-base-components/database-svg/database-svg.component';
 import { PersonSvgComponent } from '@app/shared/keml/components/helper/svg-base-components/person-svg/person-svg.component';
-import {ConversationPickerComponent} from '@app/features/editor/fromLLM/components/conversation-picker/conversation-picker.component';
 import {SimulationService} from "@app/features/simulator/services/simulation.service";
 import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-markers/arrow-markers.component";
 import {KEMLIOService} from "@app/features/editor/services/keml-io.service";
 import {InputHandler} from "@app/core/utils/input-handler";
+import {ConversationPickService} from "@app/features/editor/fromLLM/services/conversation-pick.service";
 
 
 @Component({
@@ -36,9 +34,9 @@ export class EditorComponent {
     public detailsService: DetailsService,
     public kemlIOService: KEMLIOService,
     public kemlService: KemlService,
+    public conversationPickService: ConversationPickService,
     private simulationService: SimulationService,
     private ioService: IoService,
-    private dialog: MatDialog,
   ) {
     this.kemlIOService.newKEML();
   }
@@ -53,33 +51,6 @@ export class EditorComponent {
 
   newFromChatGptList() {
     document.getElementById('openChatGptConvList')?.click();
-  }
-
-  startWithAllConvs(event: Event) {
-    this.ioService.loadStringFromFile(event).then( (txt: string) =>
-      this.openConversationPicker(ChatGptConv2LlmMessages.separateConvs(txt))
-    )
-  }
-
-  openConversationPicker(jsons: any[]) {
-    const dialogRef = this.dialog.open(
-      ConversationPickerComponent,
-      {width: '40%', height: '80%'}
-    )
-    dialogRef.componentInstance.texts = jsons;
-    dialogRef.componentInstance.chosenJson.subscribe(choice => {
-      let msgs = ChatGptConv2LlmMessages.parseConversationJSON(choice)
-      this.kemlIOService.convFromLlmMessages(msgs)
-      dialogRef.componentInstance.chosenJson.unsubscribe()
-    })
-  }
-
-
-  startWithMsgs(event: Event): void {
-    this.ioService.loadStringFromFile(event).then(txt => {
-      let msgs = ChatGptConv2LlmMessages.parseConversation(txt)
-      this.kemlIOService.convFromLlmMessages(msgs)
-    })
   }
 
   openKeml() {
