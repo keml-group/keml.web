@@ -3,7 +3,7 @@
     <input id="openKEML" type="file" class="file-upload" style="display: none" (change)="loadKeml($event)" (click)="InputHandler.clearElem($event)">
     <input id="openChatGptConvList" type="file" class="file-upload" style="display: none" (change)="conversationPickService.startWithAllConvs($event)" (click)="InputHandler.clearElem($event)">
     <mat-toolbar class="file-level-bar">
-      <button class="file-level-button" (click)="newConversation()">
+      <button class="file-level-button" (click)="kemlIOService.newKEML()">
         <mat-icon aria-hidden="false" fontIcon="insert_drive_file" ></mat-icon>
         New
       </button>
@@ -17,7 +17,7 @@
         <mat-icon aria-hidden="false" fontIcon="file_upload" ></mat-icon>
         Open KEML
       </button>
-      <button class="file-level-button" (click)="saveKeml()">
+      <button class="file-level-button" (click)="kemlIOService.saveKEML()">
         <mat-icon aria-hidden="false" fontIcon="file_download" ></mat-icon>
         Save KEML
       </button>

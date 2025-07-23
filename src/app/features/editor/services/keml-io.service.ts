@@ -6,6 +6,7 @@ import {JsonFixer} from "@app/shared/keml/models/json2core/json-fixer";
 import {LayoutHelper} from "@app/features/editor/utils/layout-helper";
 import {LLMMessage} from "@app/features/editor/fromLLM/models/llmmessage";
 import {LlmConversationCreator} from "@app/features/editor/fromLLM/utils/llm-conversation-creator";
+import {IoService} from "@app/core/services/io.service";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class KEMLIOService {
   // it delegates the conversation
 
   constructor(
-    public kemlService: KemlService
+    private kemlService: KemlService,
+    private ioService: IoService,
   ) {}
 
   newKEML(): Conversation {
@@ -24,7 +26,6 @@ export class KEMLIOService {
     this.kemlService.assignConversation(conv) ;
     return conv;
   }
-
 
   loadKEML(json: string): Conversation {
     let convJson =  <ConversationJson>JSON.parse(json);
@@ -46,9 +47,10 @@ export class KEMLIOService {
     return conversation;
   }
 
-  saveKEML(conv: Conversation): string {
-    let convJson = conv.toJson()
-    return JSON.stringify(convJson);
+  saveKEML() {
+    const conv = this.kemlService.conversation;
+    const jsonString = JSON.stringify(conv.toJson());
+    this.ioService.saveModel(jsonString, conv.title)
   }
 
 }

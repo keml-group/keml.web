@@ -41,10 +41,6 @@ export class EditorComponent {
     this.kemlIOService.newKEML();
   }
 
-  newConversation(): void {
-    this.kemlIOService.newKEML();
-  }
-
   newFromChatGptList() {
     document.getElementById('openChatGptConvList')?.click();
   }
@@ -58,11 +54,6 @@ export class EditorComponent {
       //todo insert detection code for wrong files (no json, not appropriately structured
       this.kemlIOService.loadKEML(txt);
     });
-  }
-
-  saveKeml() {
-    const jsonString = this.kemlIOService.saveKEML(this.kemlService.conversation);
-    this.ioService.saveModel(jsonString, this.kemlService.conversation.title)
   }
 
   //todo: handling of foreign objects leads to errors, will need self-written method
