@@ -9,11 +9,11 @@
       </button>
       <button class="file-level-button"
               [matTooltip]="'Upload your complete conv.json'"
-              (click)="document.getElementById('openChatGptConvList')?.click()">
+              (click)="newFromChatGPTList()">
         <mat-icon aria-hidden="false" fontIcon="insert_drive_file" ></mat-icon>
         From ChatGPT List
       </button>
-      <button class="file-level-button" (click)="document.getElementById('openKEML')?.click()">
+      <button class="file-level-button" (click)="openKeml()">
         <mat-icon aria-hidden="false" fontIcon="file_upload" ></mat-icon>
         Open KEML
       </button>

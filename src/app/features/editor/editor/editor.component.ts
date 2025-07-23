@@ -49,6 +49,14 @@ export class EditorComponent {
     }
   }
 
+  openKeml() {
+    document.getElementById('openKEML')?.click();
+  }
+
+  newFromChatGPTList() {
+    document.getElementById('openChatGptConvList')?.click();
+  }
+
   openSimulation() {
     this.simulationService.openSimulationDialog(this.kemlService.conversation)
   }
@@ -76,5 +84,4 @@ export class EditorComponent {
   }
 
   protected readonly InputHandler = InputHandler;
-  protected readonly document = document;
 }
