@@ -27,6 +27,13 @@ export class KEMLIOService {
     return conv;
   }
 
+  loadKEMLfromFile(event: Event) {
+    this.ioService.loadStringFromFile(event).then(txt => {
+      //todo insert detection code for wrong files (no json, not appropriately structured
+      this.loadKEML(txt);
+    });
+  }
+
   loadKEML(json: string): Conversation {
     let convJson =  <ConversationJson>JSON.parse(json);
     JsonFixer.prepareJsonInfoLinkSources(convJson);

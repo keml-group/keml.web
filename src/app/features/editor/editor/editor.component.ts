@@ -41,21 +41,6 @@ export class EditorComponent {
     this.kemlIOService.newKEML();
   }
 
-  newFromChatGptList() {
-    document.getElementById('openChatGptConvList')?.click();
-  }
-
-  openKeml() {
-    document.getElementById('openKEML')?.click();
-  }
-
-  loadKeml(event: Event) {
-    this.ioService.loadStringFromFile(event).then(txt => {
-      //todo insert detection code for wrong files (no json, not appropriately structured
-      this.kemlIOService.loadKEML(txt);
-    });
-  }
-
   //todo: handling of foreign objects leads to errors, will need self-written method
   saveSVG() {
     const svgContent = this.svg.nativeElement;
@@ -91,4 +76,5 @@ export class EditorComponent {
   }
 
   protected readonly InputHandler = InputHandler;
+  protected readonly document = document;
 }
