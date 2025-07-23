@@ -1,18 +1,18 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ModelIOService } from './model-io.service';
+import { KemlService } from './keml.service';
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
 import {
   NewInformation,
   ReceiveMessage,
 } from "@app/shared/keml/models/core/msg-info";
 
-describe('ModelIOService', () => {
-  let service: ModelIOService;
+describe('KEML-Service', () => {
+  let service: KemlService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ModelIOService);
+    service = TestBed.inject(KemlService);
   });
 
   it('should be created', () => {

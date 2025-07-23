@@ -5,7 +5,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { Message, ReceiveMessage, Information, NewInformation, InformationLink} from "@app/shared/keml/models/core/msg-info";
-import { ModelIOService } from "@app/features/editor/services/model-io.service";
+import { KemlService } from "@app/features/editor/services/keml.service";
 import { MsgOverviewComponent } from '@app/shared/keml/components/helper/msg-overview/msg-overview.component';
 import { MsgChoiceComponent } from '@app/shared/keml/components/helper/choices/msg-choice/msg-choice.component';
 import { IsInstrSvgComponent } from "@app/shared/keml/components/helper/is-instr-svg/is-instr-svg.component";
@@ -28,7 +28,7 @@ export class InfoDetailsComponent implements OnInit {
   newInfo?: NewInformation;
 
   constructor(
-    public modelIOService: ModelIOService,
+    public kemlService: KemlService,
     private dialogRef: MatDialogRef<InfoDetailsComponent>,
   ) {}
 
@@ -50,12 +50,12 @@ export class InfoDetailsComponent implements OnInit {
   }
 
   deleteMe() {
-    this.modelIOService.deleteInfo(this.info);
+    this.kemlService.deleteInfo(this.info);
     this.dialogRef.close();
   }
 
   duplicateMe(): void {
-    const newInfo = this.modelIOService.duplicateInfo(this.info);
+    const newInfo = this.kemlService.duplicateInfo(this.info);
     if (newInfo) {
       this.info = newInfo
       this.setIfNew()
@@ -64,7 +64,7 @@ export class InfoDetailsComponent implements OnInit {
 
   changeSource(receive: ReceiveMessage) {
     if (this.newInfo){
-      this.modelIOService.changeInfoSource(this.newInfo, receive)
+      this.kemlService.changeInfoSource(this.newInfo, receive)
     }
   }
 

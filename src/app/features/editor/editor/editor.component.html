@@ -50,10 +50,10 @@
             <g person [w]="20" [h]="35" [stroke]="'orange'"></g>
           </svg>
         </button>
-        <button class="tool-button" title="Add send message" (click)="addMessage(true)" [disabled]="modelIOService.disableAddNewMessage()">
+        <button class="tool-button" title="Add send message" (click)="addMessage(true)" [disabled]="kemlService.disableAddNewMessage()">
           <mat-icon aria-hidden="false" fontIcon="arrow_forward"></mat-icon>
         </button>
-        <button class="tool-button" title="Add receive message" (click)="addMessage(false)" [disabled]="modelIOService.disableAddNewMessage()">
+        <button class="tool-button" title="Add receive message" (click)="addMessage(false)" [disabled]="kemlService.disableAddNewMessage()">
           <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
         </button>
         <button class="tool-button" title="Add preknowledge" (click)="addPreknowledge()">
@@ -61,13 +61,13 @@
             <g database [w]="32" [h]="9" [fill]="'white'" [stroke]="'orange'" [strokewidth]="1.5"></g>
           </svg>
         </button>
-        <button class="tool-button" title="Add new information" (click)="addNewInfo()" [disabled]="modelIOService.disableAddNewNewInfo()">
+        <button class="tool-button" title="Add new information" (click)="addNewInfo()" [disabled]="kemlService.disableAddNewNewInfo()">
           <svg width="32" height="24">
             <rect class="svg-dis" width="30" height="12" x="1" y="6" stroke-width="0.8" fill="none"></rect>
             <line class="svg-dis" x1="7" x2="7" y1="6" y2="18" stroke-width="0.8"></line>
           </svg>
         </button>
-        <button class="tool-button" title="Add information link" (click)="detailsService.openLinkCreationDialog()" [disabled]="modelIOService.disableLinkCreation()">
+        <button class="tool-button" title="Add information link" (click)="detailsService.openLinkCreationDialog()" [disabled]="kemlService.disableLinkCreation()">
           Link
         </button>
       </div>
@@ -75,11 +75,11 @@
         <svg #svg id="svg" style="border: 1px solid black;" width="1500" height="5000" overflow="scroll">
           <g arrow-markers></g>
           <g transform="translate(750,0)">
-            <g text-area-svg [(text)]="modelIOService.conversation.title" [singleEdit]="true" [w]="600" [h]="25" [x]="0" [y]="0"></g>
-            <g authorG [author]="modelIOService.conversation.author"></g>
-            <g cp *ngFor="let convP of modelIOService.conversation.conversationPartners" [conversationPartner]="convP" (openDetails)="detailsService.openConversationPartnerDetails(convP)"></g>
-            <g preknowG *ngFor="let pre of modelIOService.conversation.author.preknowledge" [info]="pre" (chooseInfo)="detailsService.openInfoDetails(pre)" (chooseInfoLink)="detailsService.openLinkDetails($event)"></g>
-            <g msgG *ngFor="let m of modelIOService.conversation.author.messages" [msg]="m" [msgTiming]="m.timing" (chooseMsg)="detailsService.openMessageDetails(m)" (chooseInfo)="detailsService.openInfoDetails($event)" (chooseInfoLink)="detailsService.openLinkDetails($event)"></g>
+            <g text-area-svg [(text)]="kemlService.conversation.title" [singleEdit]="true" [w]="600" [h]="25" [x]="0" [y]="0"></g>
+            <g authorG [author]="kemlService.conversation.author"></g>
+            <g cp *ngFor="let convP of kemlService.conversation.conversationPartners" [conversationPartner]="convP" (openDetails)="detailsService.openConversationPartnerDetails(convP)"></g>
+            <g preknowG *ngFor="let pre of kemlService.conversation.author.preknowledge" [info]="pre" (chooseInfo)="detailsService.openInfoDetails(pre)" (chooseInfoLink)="detailsService.openLinkDetails($event)"></g>
+            <g msgG *ngFor="let m of kemlService.conversation.author.messages" [msg]="m" [msgTiming]="m.timing" (chooseMsg)="detailsService.openMessageDetails(m)" (chooseInfo)="detailsService.openInfoDetails($event)" (chooseInfoLink)="detailsService.openLinkDetails($event)"></g>
           </g>
         </svg>
       </div>

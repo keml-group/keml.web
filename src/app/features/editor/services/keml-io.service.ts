@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {ModelIOService} from "@app/features/editor/services/model-io.service";
+import {KemlService} from "@app/features/editor/services/keml.service";
 import {Conversation} from "@app/shared/keml/models/core/conversation";
 import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
 import {JsonFixer} from "@app/shared/keml/models/json2core/json-fixer";
@@ -15,13 +15,13 @@ export class KEMLIOService {
   // it delegates the conversation
 
   constructor(
-    public modelIOService: ModelIOService
+    public kemlService: KemlService
   ) {}
 
   newKEML(): Conversation {
     const conv = new Conversation();
     LayoutHelper.positionConversationPartners(conv.conversationPartners)
-    this.modelIOService.assignConversation(conv) ;
+    this.kemlService.assignConversation(conv) ;
     return conv;
   }
 
@@ -36,13 +36,13 @@ export class KEMLIOService {
     LayoutHelper.timeMessages(conv.author.messages)
     LayoutHelper.positionInfos(conv.author.preknowledge, conv.author.messages);
 
-    this.modelIOService.assignConversation(conv) ;
+    this.kemlService.assignConversation(conv) ;
     return conv;
   }
 
   convFromLlmMessages(llmMsgs: LLMMessage[]): Conversation {
     let conversation = LlmConversationCreator.convFromLlmMessages(llmMsgs)
-    this.modelIOService.assignConversation(conversation) ;
+    this.kemlService.assignConversation(conversation) ;
     return conversation;
   }
 

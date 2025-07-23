@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output, TemplateRef, ViewChild} from '@angular/core';
 import {Information, Preknowledge, ReceiveMessage} from "@app/shared/keml/models/core/msg-info";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {ModelIOService} from "@app/features/editor/services/model-io.service";
+import {KemlService} from "@app/features/editor/services/keml.service";
 import { PreknowledgeComponent } from '../../../preknowledge/preknowledge.component';
 import { MsgComponent } from '../../../msg/msg.component';
 import { InfoInnerComponent } from '../../info-inner/info-inner.component';
@@ -26,10 +26,10 @@ export class InfoChoiceComponent {
 
   constructor(
     private dialog: MatDialog,
-    public modelIOService: ModelIOService,
+    public kemlService: KemlService,
   ) {
-    this.receives = this.modelIOService.getReceives()
-    this.preknowledges = this.modelIOService.conversation.author.preknowledge;
+    this.receives = this.kemlService.getReceives()
+    this.preknowledges = this.kemlService.conversation.author.preknowledge;
   }
 
   openChoice(event: Event) {

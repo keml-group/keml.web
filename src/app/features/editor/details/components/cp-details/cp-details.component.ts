@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef } from "@angular/material/dialog";
-import { ModelIOService } from "@app/features/editor/services/model-io.service";
+import { KemlService } from "@app/features/editor/services/keml.service";
 import { ConversationPartner } from "@app/shared/keml/models/core/conversation-partner";
 
 @Component({
@@ -17,9 +17,9 @@ export class ConversationPartnerDetailsComponent {
 
   constructor(
     public dialogRef: MatDialogRef<ConversationPartnerDetailsComponent>,
-    private modelIOService: ModelIOService
+    private kemlService: KemlService
   ) {
-    this.cps = modelIOService.getConversationPartners();
+    this.cps = kemlService.getConversationPartners();
   }
 
   closeMe(): void {
@@ -27,28 +27,28 @@ export class ConversationPartnerDetailsComponent {
   }
 
   moveLeft() {
-    this.modelIOService.moveConversationPartnerLeft(this.cp);
+    this.kemlService.moveConversationPartnerLeft(this.cp);
   }
 
   disableMoveLeft(): boolean {
-    return this.modelIOService.disableMoveConversationPartnerLeft(this.cp);
+    return this.kemlService.disableMoveConversationPartnerLeft(this.cp);
   }
 
   moveRight() {
-    this.modelIOService.moveConversationPartnerRight(this.cp);
+    this.kemlService.moveConversationPartnerRight(this.cp);
   }
 
   disableMoveRight(): boolean {
-    return this.modelIOService.disableMoveConversationPartnerRight(this.cp)
+    return this.kemlService.disableMoveConversationPartnerRight(this.cp)
   }
 
   deleteMe() {
-    this.modelIOService.deleteConversationPartner(this.cp);
+    this.kemlService.deleteConversationPartner(this.cp);
     this.dialogRef.close();
   }
 
   duplicateMe(): void {
-    const newCp = this.modelIOService.duplicateConversationPartner(this.cp);
+    const newCp = this.kemlService.duplicateConversationPartner(this.cp);
     if (newCp) {
       //change current perspective to duplicate:
       this.cp = newCp

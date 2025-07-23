@@ -4,7 +4,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { MatIcon } from '@angular/material/icon';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { ModelIOService } from "@app/features/editor/services/model-io.service";
+import { KemlService } from "@app/features/editor/services/keml.service";
 import { IoService } from "@app/core/services/io.service";
 import { DetailsService } from "@app/features/editor/details/services/details.service";
 import { ChatGptConv2LlmMessages } from "@app/features/editor/fromLLM/utils/chat-gpt-conv2-llm-messages";
@@ -34,7 +34,7 @@ export class EditorComponent {
   constructor(
     public detailsService: DetailsService,
     public kemlIOService: KEMLIOService,
-    public modelIOService: ModelIOService,
+    public kemlService: KemlService,
     private simulationService: SimulationService,
     private ioService: IoService,
     private dialog: MatDialog,
@@ -99,7 +99,7 @@ export class EditorComponent {
   }
 
   saveKeml() {
-    const jsonString = this.kemlIOService.saveKEML(this.modelIOService.conversation);
+    const jsonString = this.kemlIOService.saveKEML(this.kemlService.conversation);
     const contentBlob = new Blob([jsonString], {type: 'application/json'});
     this.ioService.saveFile(contentBlob, 'keml.json');
   }
@@ -114,28 +114,28 @@ export class EditorComponent {
   }
 
   openSimulation() {
-    this.simulationService.openSimulationDialog(this.modelIOService.conversation)
+    this.simulationService.openSimulationDialog(this.kemlService.conversation)
   }
 
   addConversationPartner() {
-    const cp = this.modelIOService.addNewConversationPartner();
+    const cp = this.kemlService.addNewConversationPartner();
     this.detailsService.openConversationPartnerDetails(cp)
   }
 
   addMessage(isSend: boolean) {
-    const msg = this.modelIOService.addNewMessage(isSend);
+    const msg = this.kemlService.addNewMessage(isSend);
     if (msg)
       this.detailsService.openMessageDetails(msg);
   }
 
   addNewInfo() {
-    const newInfo = this.modelIOService.addNewNewInfo()
+    const newInfo = this.kemlService.addNewNewInfo()
     if (newInfo)
       this.detailsService.openInfoDetails(newInfo);
   }
 
   addPreknowledge() {
-    const pre = this.modelIOService.addNewPreknowledge();
+    const pre = this.kemlService.addNewPreknowledge();
     this.detailsService.openInfoDetails(pre);
   }
 

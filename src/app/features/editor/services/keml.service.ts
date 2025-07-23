@@ -18,7 +18,7 @@ import {MsgPositionChangeService} from "@app/features/editor/services/msg-positi
 @Injectable({
   providedIn: 'root'
 })
-export class ModelIOService {
+export class KemlService {
 
   public conversation!: Conversation;
 

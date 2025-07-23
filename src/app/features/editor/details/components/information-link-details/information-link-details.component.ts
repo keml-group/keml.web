@@ -3,7 +3,7 @@ import { NgIf, NgFor } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import {MatDialogRef} from "@angular/material/dialog";
 import { FormsModule } from '@angular/forms';
-import {ModelIOService} from "@app/features/editor/services/model-io.service";
+import {KemlService} from "@app/features/editor/services/keml.service";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
 import {Information, InformationLink, Preknowledge} from "@app/shared/keml/models/core/msg-info";
 import { InfoChoiceComponent } from '@app/shared/keml/components/helper/choices/info-choice/info-choice.component';
@@ -28,7 +28,7 @@ export class InformationLinkDetailsComponent {
 
   constructor(
     public dialogRef: MatDialogRef<InformationLinkDetailsComponent>,
-    public modelIOService: ModelIOService,
+    public kemlService: KemlService,
   ) { }
 
   closeMe() {
@@ -36,12 +36,12 @@ export class InformationLinkDetailsComponent {
   }
 
   deleteMe() {
-    this.modelIOService.deleteLink(this.infoLink!);
+    this.kemlService.deleteLink(this.infoLink!);
     this.dialogRef.close();
   }
 
   duplicateMe(): void {
-    this.modelIOService.duplicateLink(this.infoLink!);
+    this.kemlService.duplicateLink(this.infoLink!);
     this.dialogRef.close();
     // todo open duplicate details (?)
   }
@@ -49,7 +49,7 @@ export class InformationLinkDetailsComponent {
   //only for create view
   createMe(): void {
     if (this.src && this.target && this.type) {
-      this.modelIOService.addInformationLink(this.src, this.target, this.type, this.text)
+      this.kemlService.addInformationLink(this.src, this.target, this.type, this.text)
       this.dialogRef.close();
     }
   }
