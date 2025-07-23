@@ -15,7 +15,7 @@
   <label class="form-label">Timing</label>
   <div class="timing">
     <button class="tool-button" title="Move up"
-            (click)="moveUp()"
+            (click)="kemlService.moveMessageUp(msg)"
             [disabled]="kemlService.disableMoveUp(msg)">
       <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
     </button>
@@ -24,7 +24,7 @@
            (input)="handleTimingChange($event)"
     />
     <button class="tool-button" title="Move down"
-            (click)="moveDown()"
+            (click)="kemlService.moveMessageDown(msg)"
             [disabled]="kemlService.disableMoveDown(msg)">
       <mat-icon aria-hidden="false" fontIcon="arrow_forward"></mat-icon>
     </button>

@@ -47,19 +47,6 @@ export class MsgDetailsComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  moveUp() {
-    this.kemlService.moveMessageUp(this.msg);
-  }
-
-  moveDown() {
-    this.kemlService.moveMessageDown(this.msg);
-  }
-
-  handleTimingChange(event: Event) {
-    const value = InputHandler.getNewValueFromEvent(event)
-    this.kemlService.changeMessagePos(this.msg, value);
-  }
-
   deleteMe() {
     this.kemlService.deleteMessage(this.msg);
     this.dialogRef.close();
@@ -73,6 +60,11 @@ export class MsgDetailsComponent implements OnInit {
     }
   }
 
+  handleTimingChange(event: Event) {
+    const value = InputHandler.getNewValueFromEvent(event)
+    this.kemlService.changeMessagePos(this.msg, value);
+  }
+  
   addNewInfo() {
     if (this.receiveMsg) {
       const newInfo = this.kemlService.addNewNewInfo(this.receiveMsg)
