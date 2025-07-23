@@ -17,29 +17,13 @@ export class ConversationPartnerDetailsComponent {
 
   constructor(
     public dialogRef: MatDialogRef<ConversationPartnerDetailsComponent>,
-    private kemlService: KemlService
+    public kemlService: KemlService
   ) {
     this.cps = kemlService.getConversationPartners();
   }
 
   closeMe(): void {
     this.dialogRef.close();
-  }
-
-  moveLeft() {
-    this.kemlService.moveConversationPartnerLeft(this.cp);
-  }
-
-  disableMoveLeft(): boolean {
-    return this.kemlService.disableMoveConversationPartnerLeft(this.cp);
-  }
-
-  moveRight() {
-    this.kemlService.moveConversationPartnerRight(this.cp);
-  }
-
-  disableMoveRight(): boolean {
-    return this.kemlService.disableMoveConversationPartnerRight(this.cp)
   }
 
   deleteMe() {
