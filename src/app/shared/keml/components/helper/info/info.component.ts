@@ -12,7 +12,6 @@ import {SVGAccessService, DraggableComponent, Dragger} from "ngx-svg-graphics";
 })
 export class InfoComponent extends DraggableComponent<Information> implements OnInit {
   @Input() info!: Information;
-  @Output() chooseInfo = new EventEmitter<Information>();
   @Output() chooseInfoLink = new EventEmitter<InformationLink>();
 
   constructor(
