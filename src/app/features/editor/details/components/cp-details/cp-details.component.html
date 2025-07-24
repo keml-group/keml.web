@@ -6,11 +6,15 @@
 
   <label class="form-label">Position</label>
   <div class="position">
-    <button class="tool-button" title="Move left" (click)="moveLeft()" [disabled]="disableMoveLeft()">
+    <button class="tool-button" title="Move left"
+            (click)="kemlService.moveConversationPartnerLeft(cp)"
+            [disabled]="kemlService.disableMoveConversationPartnerLeft(cp)">
       <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
     </button>
     <label>{{cps.indexOf(cp)}}</label>
-    <button class="tool-button" title="Move right" (click)="moveRight()" [disabled]="disableMoveRight()">
+    <button class="tool-button" title="Move right"
+            (click)="kemlService.moveConversationPartnerRight(cp)"
+            [disabled]="kemlService.disableMoveConversationPartnerRight(cp)">
       <mat-icon aria-hidden="false" fontIcon="arrow_forward"></mat-icon>
     </button>
   </div>

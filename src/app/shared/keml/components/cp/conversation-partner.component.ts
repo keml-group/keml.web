@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import { TextAreaSvgComponent } from '@app/core/features/svg-base-components/text-area-svg/text-area-svg.component';
-import { PersonSvgComponent } from '@app/core/features/svg-base-components/person-svg/person-svg.component';
+import { TextAreaSvgComponent } from '@app/shared/keml/components/helper/svg-base-components/text-area-svg/text-area-svg.component';
+import { PersonSvgComponent } from '@app/shared/keml/components/helper/svg-base-components/person-svg/person-svg.component';
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
 
 @Component({

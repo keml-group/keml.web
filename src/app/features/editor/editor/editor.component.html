@@ -1,30 +1,23 @@
 <div class="editor" id="editor">
   <div class="file-handling">
-    <input id="openKEML" type="file" class="file-upload" style="display: none" (change)="loadKeml($event)" (click)="clearElem($event)">
-    <input id="openChatGptConv" type="file" class="file-upload" style="display: none" (change)="startWithMsgs($event)" (click)="clearElem($event)">
-    <input id="openChatGptConvList" type="file" class="file-upload" style="display: none" (change)="startWithAllConvs($event)" (click)="clearElem($event)">
+    <input id="openKEML" type="file" class="file-upload" style="display: none" (change)="kemlIOService.loadKEMLfromFile($event)" (click)="InputHandler.clearElem($event)">
+    <input id="openChatGptConvList" type="file" class="file-upload" style="display: none" (change)="conversationPickService.startWithAllConvs($event)" (click)="InputHandler.clearElem($event)">
     <mat-toolbar class="file-level-bar">
-      <button class="file-level-button" (click)="newConversation()">
+      <button class="file-level-button" (click)="kemlIOService.newKEML()">
         <mat-icon aria-hidden="false" fontIcon="insert_drive_file" ></mat-icon>
         New
       </button>
       <button class="file-level-button"
               [matTooltip]="'Upload your complete conv.json'"
-              (click)="newFromChatGptList()">
+              (click)="newFromChatGPTList()">
         <mat-icon aria-hidden="false" fontIcon="insert_drive_file" ></mat-icon>
         From ChatGPT List
-      </button>
-      <button class="file-level-button"
-              [matTooltip]="'Upload a single element of conv.json'"
-              (click)="newFromChatGpt()">
-        <mat-icon aria-hidden="false" fontIcon="insert_drive_file" ></mat-icon>
-        From ChatGPT
       </button>
       <button class="file-level-button" (click)="openKeml()">
         <mat-icon aria-hidden="false" fontIcon="file_upload" ></mat-icon>
         Open KEML
       </button>
-      <button class="file-level-button" (click)="saveKeml()">
+      <button class="file-level-button" (click)="kemlIOService.saveKEML()">
         <mat-icon aria-hidden="false" fontIcon="file_download" ></mat-icon>
         Save KEML
       </button>
@@ -50,10 +43,10 @@
             <g person [w]="20" [h]="35" [stroke]="'orange'"></g>
           </svg>
         </button>
-        <button class="tool-button" title="Add send message" (click)="addMessage(true)" [disabled]="modelIOService.disableAddNewMessage()">
+        <button class="tool-button" title="Add send message" (click)="addMessage(true)" [disabled]="kemlService.disableAddNewMessage()">
           <mat-icon aria-hidden="false" fontIcon="arrow_forward"></mat-icon>
         </button>
-        <button class="tool-button" title="Add receive message" (click)="addMessage(false)" [disabled]="modelIOService.disableAddNewMessage()">
+        <button class="tool-button" title="Add receive message" (click)="addMessage(false)" [disabled]="kemlService.disableAddNewMessage()">
           <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
         </button>
         <button class="tool-button" title="Add preknowledge" (click)="addPreknowledge()">
@@ -61,13 +54,13 @@
             <g database [w]="32" [h]="9" [fill]="'white'" [stroke]="'orange'" [strokewidth]="1.5"></g>
           </svg>
         </button>
-        <button class="tool-button" title="Add new information" (click)="addNewInfo()" [disabled]="modelIOService.disableAddNewNewInfo()">
+        <button class="tool-button" title="Add new information" (click)="addNewInfo()" [disabled]="kemlService.disableAddNewNewInfo()">
           <svg width="32" height="24">
             <rect class="svg-dis" width="30" height="12" x="1" y="6" stroke-width="0.8" fill="none"></rect>
             <line class="svg-dis" x1="7" x2="7" y1="6" y2="18" stroke-width="0.8"></line>
           </svg>
         </button>
-        <button class="tool-button" title="Add information link" (click)="detailsService.openLinkCreationDialog()" [disabled]="modelIOService.disableLinkCreation()">
+        <button class="tool-button" title="Add information link" (click)="detailsService.openLinkCreationDialog()" [disabled]="kemlService.disableLinkCreation()">
           Link
         </button>
       </div>
@@ -75,11 +68,11 @@
         <svg #svg id="svg" style="border: 1px solid black;" width="1500" height="5000" overflow="scroll">
           <g arrow-markers></g>
           <g transform="translate(750,0)">
-            <g text-area-svg [(text)]="conversation.title" [singleEdit]="true" [w]="600" [h]="25" [x]="0" [y]="0"></g>
-            <g authorG [author]="conversation.author"></g>
-            <g cp *ngFor="let convP of conversation.conversationPartners" [conversationPartner]="convP" (openDetails)="detailsService.openConversationPartnerDetails(convP)"></g>
-            <g preknowG *ngFor="let pre of conversation.author.preknowledge" [info]="pre" (chooseInfo)="detailsService.openInfoDetails(pre)" (chooseInfoLink)="detailsService.openLinkDetails($event)"></g>
-            <g msgG *ngFor="let m of conversation.author.messages" [msg]="m" [msgTiming]="m.timing" (chooseMsg)="detailsService.openMessageDetails(m)" (chooseInfo)="detailsService.openInfoDetails($event)" (chooseInfoLink)="detailsService.openLinkDetails($event)"></g>
+            <g text-area-svg [(text)]="kemlService.conversation.title" [singleEdit]="true" [w]="600" [h]="25" [x]="0" [y]="0"></g>
+            <g authorG [author]="kemlService.conversation.author"></g>
+            <g cp *ngFor="let convP of kemlService.conversation.conversationPartners" [conversationPartner]="convP" (openDetails)="detailsService.openConversationPartnerDetails(convP)"></g>
+            <g preknowG *ngFor="let pre of kemlService.conversation.author.preknowledge" [info]="pre" (chooseElem)="detailsService.openInfoDetails(pre)" (chooseInfoLink)="detailsService.openLinkDetails($event)"></g>
+            <g msgG *ngFor="let m of kemlService.conversation.author.messages" [msg]="m" [msgTiming]="m.timing" (chooseMsg)="detailsService.openMessageDetails(m)" (chooseInfo)="detailsService.openInfoDetails($event)" (chooseInfoLink)="detailsService.openLinkDetails($event)"></g>
           </g>
         </svg>
       </div>

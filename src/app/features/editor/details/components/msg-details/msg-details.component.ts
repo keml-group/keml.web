@@ -6,9 +6,10 @@ import {MatDialogRef} from "@angular/material/dialog";
 import { MatTooltip } from '@angular/material/tooltip';
 import {Information, Message, ReceiveMessage, SendMessage} from "@app/shared/keml/models/core/msg-info";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
-import {ModelIOService} from "@app/features/editor/services/model-io.service";
+import {KemlService} from "@app/features/editor/services/keml.service";
 import { InfoChoiceComponent } from '@app/shared/keml/components/helper/choices/info-choice/info-choice.component';
 import { InfoInnerComponent } from '@app/shared/keml/components/helper/info-inner/info-inner.component';
+import {InputHandler} from "@app/core/utils/input-handler";
 
 
 @Component({
@@ -26,13 +27,12 @@ export class MsgDetailsComponent implements OnInit {
   sendMsg?: SendMessage;
   receiveMsg?: ReceiveMessage;
 
-  changedTiming: number = 0;
 
   constructor(
     public dialogRef: MatDialogRef<MsgDetailsComponent>,
-    public modelIOService: ModelIOService,
+    public kemlService: KemlService,
   ) {
-    this.cps = this.modelIOService.getConversationPartners();
+    this.cps = this.kemlService.getConversationPartners();
   }
 
   ngOnInit() {
@@ -41,51 +41,33 @@ export class MsgDetailsComponent implements OnInit {
     } else {
       this.receiveMsg = (this.msg as ReceiveMessage)
     }
-    this.changedTiming = this.msg.timing
   }
 
   closeMe(): void {
     this.dialogRef.close();
   }
 
-  moveUp() {
-    this.modelIOService.moveMessageUp(this.msg);
-    this.changedTiming = this.msg.timing
-  }
-
-  disableMoveUp(): boolean {
-    return this.modelIOService.disableMoveUp(this.msg);
-  }
-
-  moveDown() {
-    this.modelIOService.moveMessageDown(this.msg);
-    this.changedTiming = this.msg.timing
-  }
-
-  disableMoveDown(): boolean {
-    return this.modelIOService.disableMoveDown(this.msg)
-  }
-
-  handleTimingChange() {
-    this.modelIOService.changeMessagePos(this.msg, this.changedTiming);
-  }
-
   deleteMe() {
-    this.modelIOService.deleteMessage(this.msg);
+    this.kemlService.deleteMessage(this.msg);
     this.dialogRef.close();
   }
 
   duplicateMe(): void {
-    const newM = this.modelIOService.duplicateMessage(this.msg);
+    const newM = this.kemlService.duplicateMessage(this.msg);
     if (newM) {
       this.dialogRef.close();
       this.openOtherDetails.emit(newM);
     }
   }
 
+  handleTimingChange(event: Event) {
+    const value = InputHandler.getNewValueFromEvent(event)
+    this.kemlService.changeMessagePos(this.msg, value);
+  }
+
   addNewInfo() {
     if (this.receiveMsg) {
-      const newInfo = this.modelIOService.addNewNewInfo(this.receiveMsg)
+      const newInfo = this.kemlService.addNewNewInfo(this.receiveMsg)
       if (newInfo)
         this.dialogRef.close();
         this.openInfoDetails.emit(newInfo);
@@ -94,12 +76,6 @@ export class MsgDetailsComponent implements OnInit {
 
   chooseInfo(info: Information){
     this.openInfoDetails.emit(info)
-  }
-
-  repeatAnInfo(info: Information) {
-    if (this.receiveMsg) {
-      this.modelIOService.addRepetition(this.receiveMsg, info)
-    }
   }
 
 }

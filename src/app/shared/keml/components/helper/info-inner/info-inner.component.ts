@@ -1,8 +1,8 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import { NgIf } from '@angular/common';
 import {Information, NewInformation} from "@app/shared/keml/models/core/msg-info";
-import { DatabaseSvgComponent } from '@app/core/features/svg-base-components/database-svg/database-svg.component';
-import { TextAreaSvgComponent } from '@app/core/features/svg-base-components/text-area-svg/text-area-svg.component';
+import { DatabaseSvgComponent } from '@app/shared/keml/components/helper/svg-base-components/database-svg/database-svg.component';
+import { TextAreaSvgComponent } from '@app/shared/keml/components/helper/svg-base-components/text-area-svg/text-area-svg.component';
 import { IsInstrSvgComponent } from '../is-instr-svg/is-instr-svg.component';
 import {TrustComponent} from "@app/shared/keml/components/helper/trust/trust.component";
 

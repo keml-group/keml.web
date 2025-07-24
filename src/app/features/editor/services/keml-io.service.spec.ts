@@ -1,9 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 
-import {Ref, Referencable} from "emfular";
-import { ModelIOService } from './model-io.service';
-import {Conversation} from "@app/shared/keml/models/core/conversation";
+import { KEMLIOService } from './keml-io.service';
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+import {Ref, Referencable} from "emfular";
 import {
   InformationLink,
   Message,
@@ -12,16 +11,21 @@ import {
   ReceiveMessage,
   SendMessage
 } from "@app/shared/keml/models/core/msg-info";
-import {Author} from "@app/shared/keml/models/core/author";
+import {LayoutHelper} from "@app/features/editor/utils/layout-helper";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
-import {LayoutHelper} from "../utils/layout-helper";
+import {Author} from "@app/shared/keml/models/core/author";
+import {Conversation} from "@app/shared/keml/models/core/conversation";
 
-describe('ModelIOService', () => {
-  let service: ModelIOService;
+describe('KEMLIOService', () => {
+  let service: KEMLIOService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ModelIOService);
+    service = TestBed.inject(KEMLIOService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
   });
 
   it('should be created', () => {
@@ -123,7 +127,7 @@ describe('ModelIOService', () => {
     let msg1 = new ReceiveMessage(cp1, 1, "m1", "msg1long",
       undefined, undefined, false,
       new Ref('//@author/@messages.1', 'http://www.unikoblenz.de/keml#//ReceiveMessage')
-  )
+    )
     let msgs: Message[] = [msg0, msg1]
     let newInfo0 = new NewInformation(msg1, "ni0", true,
       undefined, undefined, undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
@@ -221,21 +225,5 @@ describe('ModelIOService', () => {
     }
     compareLinks(resultLink0, infoLink0)
     compareLinks(resultLink1, infoLink1)
-  })
-
-  it('should change a new info\'s source', () => {
-    let cp = new ConversationPartner()
-    let msg1 = new ReceiveMessage(cp, 0, "rec1")
-    let msg2 = new ReceiveMessage(cp, 1, "rec2")
-    let newInfo = new NewInformation(msg2, 'newInfo', false)
-    expect(msg1.generates.length).toEqual(0)
-    expect(msg2.generates.length).toEqual(1)
-    expect(newInfo.source).toEqual(msg2)
-
-    // call to test:
-    service.changeInfoSource(newInfo, msg1)
-    expect(msg1.generates.length).toEqual(1)
-    expect(msg2.generates.length).toEqual(0)
-    expect(newInfo.source).toEqual(msg1)
   })
 });

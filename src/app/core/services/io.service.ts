@@ -26,4 +26,14 @@ export class IoService {
     document.body.removeChild(link);
   }
 
+  saveModel(model: string, title: string) {
+    const contentBlob = new Blob([model], {type: 'application/json'});
+    this.saveFile(contentBlob, title+'.json');
+  }
+
+  saveSVG(svgContent: SVGElement, title: string) {
+    const contentBlob = new Blob([svgContent.outerHTML], {type: 'image/svg+xml'});
+    this.saveFile(contentBlob, title+'.svg');
+  }
+
 }

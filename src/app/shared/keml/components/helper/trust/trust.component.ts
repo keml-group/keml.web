@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {TrustColorer} from "@app/core/utils/trust-colorer";
+import {TrustColorer} from "@app/shared/keml/utils/trust-colorer";
 import {NumberDisplayer} from "@app/core/utils/number-displayer";
 
 @Component({

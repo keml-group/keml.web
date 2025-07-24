@@ -14,14 +14,20 @@
 
   <label class="form-label">Timing</label>
   <div class="timing">
-    <button class="tool-button" title="Move up" (click)="moveUp()" [disabled]="disableMoveUp()">
+    <button class="tool-button" title="Move up"
+            (click)="kemlService.moveMessageUp(msg)"
+            [disabled]="kemlService.disableMoveUp(msg)">
       <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
     </button>
-    <label>{{msg.timing}}</label>
-    <button class="tool-button" title="Move down" (click)="moveDown()" [disabled]="disableMoveDown()">
+    <input type="number" min="0"
+           [ngModel]="msg.timing"
+           (input)="handleTimingChange($event)"
+    />
+    <button class="tool-button" title="Move down"
+            (click)="kemlService.moveMessageDown(msg)"
+            [disabled]="kemlService.disableMoveDown(msg)">
       <mat-icon aria-hidden="false" fontIcon="arrow_forward"></mat-icon>
     </button>
-    <input type="number" (change)="handleTimingChange()" [(ngModel)]="changedTiming" />
   </div>
 
   <label *ngIf="receiveMsg" class="form-label">Generated information</label>
@@ -42,14 +48,14 @@
   <label *ngIf="receiveMsg" class="form-label">Repeated information</label>
   <div class="row" *ngIf="receiveMsg">
     <div class="column">
-      <info-choice (infoChange)="repeatAnInfo($event)" [showInfo]="false">
+      <info-choice (infoChange)="kemlService.addRepetition(receiveMsg, $event)" [showInfo]="false">
       </info-choice>
     </div>
     <div class="column">
       <svg width="200" height="100" *ngFor="let info of receiveMsg.repeats">
         <g info-inner [info]="info"  (click)="chooseInfo(info)">
         </g>
-        <foreignObject height="20" width="20" x="100" y="80" (click)="modelIOService.deleteRepetition(receiveMsg, info)">
+        <foreignObject height="20" width="20" x="100" y="80" (click)="kemlService.deleteRepetition(receiveMsg, info)">
           <mat-icon fontIcon="delete" style="color: orange" [matTooltip]="'Delete repetition'"></mat-icon>
         </foreignObject>
       </svg>
@@ -59,14 +65,14 @@
   <label *ngIf="sendMsg" class="form-label">Used information</label>
   <div class="row" *ngIf="sendMsg">
     <div class="column">
-      <info-choice (infoChange)="modelIOService.addUsage(sendMsg, $event)" [showInfo]="false">
+      <info-choice (infoChange)="kemlService.addUsage(sendMsg, $event)" [showInfo]="false">
       </info-choice>
     </div>
     <div class="column">
       <svg width="200" height="100" *ngFor="let info of sendMsg.uses">
         <g info-inner [info]="info"  (click)="chooseInfo(info)">
         </g>
-        <foreignObject height="20" width="20" x="100" y="80" (click)="modelIOService.deleteUsage(sendMsg, info)">
+        <foreignObject height="20" width="20" x="100" y="80" (click)="kemlService.deleteUsage(sendMsg, info)">
           <mat-icon fontIcon="delete" style="color: orange" [matTooltip]="'Delete usage'"></mat-icon>
         </foreignObject>
       </svg>

@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
 import {
   Information,
   InformationLink,
@@ -10,72 +9,28 @@ import {
 } from "@app/shared/keml/models/core/msg-info";
 import {Conversation} from "@app/shared/keml/models/core/conversation";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
-import {JsonFixer} from "@app/shared/keml/models/json2core/json-fixer";
 import {LayoutHelper} from "../utils/layout-helper";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
 import {Author} from "@app/shared/keml/models/core/author";
 import {ListUpdater} from "@app/core/utils/list-updater";
-import {LLMMessage} from "../fromLLM/models/llmmessage";
 import {MsgPositionChangeService} from "@app/features/editor/services/msg-position-change.service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class ModelIOService {
+export class KemlService {
 
-  conversation!: Conversation;
+  public conversation!: Conversation;
 
   constructor(
     private msgPositionChangeService: MsgPositionChangeService,
   ) {
-    console.log("ModelIOService constructed");
-    this.newKEML();
+    this.conversation = new Conversation();
+    LayoutHelper.positionConversationPartners(this.conversation.conversationPartners)
   }
 
-  loadKEML(json: string): Conversation {
-    let convJson =  <ConversationJson>JSON.parse(json);
-    JsonFixer.prepareJsonInfoLinkSources(convJson);
-    JsonFixer.addMissingSupplementType(convJson);
-
-    let conv = Conversation.fromJSON(convJson);
-    LayoutHelper.positionConversationPartners(conv.conversationPartners)
-    LayoutHelper.timeMessages(conv.author.messages)
-    LayoutHelper.positionInfos(conv.author.preknowledge, conv.author.messages);
-
-    this.conversation = conv;
-    return conv;
-  }
-
-  newKEML(): Conversation {
-    const conv = new Conversation();
-    LayoutHelper.positionConversationPartners(conv.conversationPartners)
-    this.conversation = conv;
-    return conv;
-  }
-
-  convFromLlmMessages(llmMsgs: LLMMessage[]): Conversation {
-    let cp = new ConversationPartner('LLM')
-    const conv = new Conversation('From model', new Author(), [cp]);
-    LayoutHelper.positionConversationPartners(conv.conversationPartners)
-    for( let i=0; i < llmMsgs.length; i++) {
-      let msg = this.createMsg(llmMsgs[i], cp, i)
-      conv.author.messages.push(msg)
-    }
-    this.conversation = conv;
-    return conv;
-  }
-
-  private createMsg(llmMsg: LLMMessage,counterPart: ConversationPartner, index: number): Message {
-    return Message.newMessage(ModelIOService.isSend(llmMsg), counterPart, index, llmMsg.message, llmMsg.message)
-  }
-
-  private static isSend(llmMsg: LLMMessage): boolean {
-    return llmMsg.author != 'LLM'
-  }
-
-  saveKEML(conv: Conversation): string {
-    let convJson = conv.toJson()
-    return JSON.stringify(convJson);
+  assignConversation(conversation: Conversation) {
+    this.conversation = conversation;
   }
 
   getAuthor(): Author {
