@@ -1,17 +1,13 @@
 import {ConversationPartner} from "./conversation-partner";
-import {
-  MessageJson,
-  ReceiveMessageJson,
-  SendMessageJson,
-} from "@app/shared/keml/models/json/sequence-diagram-models";
+import {MessageJson, ReceiveMessageJson, SendMessageJson,} from "@app/shared/keml/models/json/sequence-diagram-models";
 import {
   InformationJson,
-  PreknowledgeJson,
-  NewInformationJson,
-  InformationLinkType,
   InformationLinkJson,
+  InformationLinkType,
+  NewInformationJson,
+  PreknowledgeJson,
 } from "@app/shared/keml/models/json/knowledge-models";
-import {Ref, Referencable, Deserializer} from "emfular";
+import {Deserializer, Ref, Referencable} from "emfular";
 import {ListUpdater} from "@app/core/utils/list-updater";
 import {BoundingBox, PositionHelper} from "ngx-svg-graphics";
 
@@ -348,10 +344,37 @@ export class Preknowledge extends Information {
 export class InformationLink extends Referencable {
   static readonly eClass = 'http://www.unikoblenz.de/keml#//InformationLink'
 
-  source: Information;
-  target: Information;
-  type: InformationLinkType;
-  linkText?: string;
+  private _source?: Information;
+  get source(): Information {
+    return this._source!!; //todo
+  }
+  set source(source: Information) {
+    this._source = source;
+  }
+
+  private _target?: Information;
+  get target(): Information {
+    return this._target!!;
+  }
+  set target(target: Information) {
+    this._target = target;
+  }
+
+  private _type: InformationLinkType = InformationLinkType.SUPPLEMENT;
+  get type(): InformationLinkType {
+    return this._type;
+  }
+  set type(type: InformationLinkType) {
+    this._type = type;
+  }
+
+  private _linkText?: string;
+  get linkText(): string | undefined {
+    return this._linkText;
+  }
+  set linkText(linkText: string | undefined) {
+    this._linkText = linkText;
+  }
 
   constructor(source: Information, target: Information, type: InformationLinkType, linkText?: string,
               ref?: Ref, deserializer?: Deserializer, jsonOpt?: InformationLinkJson
