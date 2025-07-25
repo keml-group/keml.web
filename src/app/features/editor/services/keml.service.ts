@@ -12,7 +12,7 @@ import {ConversationPartner} from "@app/shared/keml/models/core/conversation-par
 import {LayoutHelper} from "../utils/layout-helper";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
 import {Author} from "@app/shared/keml/models/core/author";
-import {ListUpdater} from "@app/core/utils/list-updater";
+import {ListUpdater} from "emfular";
 import {MsgPositionChangeService} from "@app/features/editor/services/msg-position-change.service";
 
 @Injectable({

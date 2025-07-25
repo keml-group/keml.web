@@ -8,7 +8,7 @@ import {
   PreknowledgeJson,
 } from "@app/shared/keml/models/json/knowledge-models";
 import {Deserializer, Ref, Referencable} from "emfular";
-import {ListUpdater} from "@app/core/utils/list-updater";
+import {ListUpdater} from "emfular";
 import {BoundingBox, PositionHelper} from "ngx-svg-graphics";
 
 export abstract class Message extends Referencable {
