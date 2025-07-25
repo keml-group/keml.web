@@ -24,6 +24,7 @@
     ],
     "baseUrl": ".", //https://medium.com/@aleksanderkolata/angular-tips-01-get-rid-of-long-relative-import-paths-398c5926ecd4
     "paths": {
+      "emfular": ["../../../EMFular/dist/emfular"], //https://medium.com/@joosep.parts/create-an-angular-14-library-use-it-locally-when-developing-and-publish-the-package-to-npm-689ca2efdea8
       "@env/*": ["./environments/*"],
       "@app/*": ["./src/app/*"],
     },
