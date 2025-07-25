@@ -431,8 +431,6 @@ export class InformationLink extends Referencable {
       this.target = target;
       this.type = type;
       this.linkText = linkText;
-      this.source.addCauses(this)
-      this.target.targetedBy.push(this)
     }
   }
 
