@@ -176,8 +176,19 @@ export abstract class Information extends Referencable {
   feltTrustImmediately: number | undefined;
   feltTrustAfterwards: number | undefined;
 
-  causes: InformationLink[];
+  private _causes: InformationLink[] = [];
+  get causes(): InformationLink[] {
+    return this._causes;
+  }
   static readonly causesPrefix: string = 'causes'
+  addCauses(link: InformationLink) {
+    ListUpdater.addToList(link, this._causes)
+    link.source = this
+  }
+  removeCauses(link: InformationLink) {
+    this.removeFromListChild(link, this._causes)
+  }
+
   targetedBy: InformationLink[]; //todo avoid?
 
   isUsedOn: SendMessage[];
@@ -202,7 +213,7 @@ export abstract class Information extends Referencable {
       this.feltTrustAfterwards = json.feltTrustAfterwards;
       //todo actually, causes should exist on the json, however, it is missing and we hence set it manually:
       let causesRefs = Deserializer.createRefList(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass? c.eClass : InformationLink.eClass))
-      this.causes = causesRefs.map(r => deserializer.getOrCreate<InformationLink>(r))
+      this._causes = causesRefs.map(r => deserializer.getOrCreate<InformationLink>(r))
       this.targetedBy = json.targetedBy? json.targetedBy.map(r =>  deserializer.getOrCreate(r)) : []
       this.isUsedOn = json.isUsedOn? json.isUsedOn.map(r => deserializer.getOrCreate<SendMessage>(r)): []
       this.repeatedBy = json.repeatedBy? json.repeatedBy.map(r => deserializer.getOrCreate<ReceiveMessage>(r)): []
@@ -214,20 +225,12 @@ export abstract class Information extends Referencable {
       this.currentTrust = currentTrust;
       this.feltTrustImmediately = feltTrustImmediately;
       this.feltTrustAfterwards = feltTrustAfterwards;
-      this.causes = causes? causes : [];
+      this._causes = causes? causes : [];
       this.targetedBy = targetedBy? targetedBy: [];
       this.isUsedOn = isUsedOn ? isUsedOn : [];
       this.repeatedBy = repeatedBy? repeatedBy: [];
     }
-    this.listChildren.set(Information.causesPrefix, this.causes)
-  }
-
-  addCauses(link: InformationLink) {
-    ListUpdater.addToList(link, this.causes)
-    link.source = this
-  }
-  removeCauses(link: InformationLink) {
-    this.removeFromListChild(link, this.causes)
+    this.listChildren.set(Information.causesPrefix, this._causes)
   }
 
   addTargetedBy(link: InformationLink) {
@@ -428,7 +431,7 @@ export class InformationLink extends Referencable {
       this.target = target;
       this.type = type;
       this.linkText = linkText;
-      this.source.causes.push(this)
+      this.source.addCauses(this)
       this.target.targetedBy.push(this)
     }
   }
@@ -444,7 +447,7 @@ export class InformationLink extends Referencable {
   }
 
   override destruct() {
-    ListUpdater.removeFromList(this, this.source.causes)
+    this.source.removeCauses(this)
     ListUpdater.removeFromList(this, this.target.targetedBy)
     super.destruct();
   }
