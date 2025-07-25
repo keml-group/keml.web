@@ -227,12 +227,7 @@ export abstract class Information extends Referencable {
     link.source = this
   }
   removeCauses(link: InformationLink) {
-    //todo only trigger if link.source != this?
-    if(link.source != this) {
-      ListUpdater.removeFromList(link, this.causes)
-    } else {
-      console.log("Cannot remove from causes, since the link currently comes from me")
-    }
+    this.removeFromListChild(link, this.causes)
   }
 
   addTargetedBy(link: InformationLink) {
@@ -240,11 +235,7 @@ export abstract class Information extends Referencable {
     link.target = this
   }
   removeTargetedBy(link: InformationLink) {
-    if(link.target != this) {
-      ListUpdater.removeFromList(link, this.targetedBy)
-    } else {
-      console.log("Cannot remove link from targetedBy, since I am the tree parent")
-    }
+    this.removeFromListChild(link, this.targetedBy)
   }
 
   abstract duplicate(): Information;
