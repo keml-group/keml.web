@@ -311,7 +311,7 @@ export class KemlService {
   }
 
   addNewPreknowledge(): Preknowledge {
-    const preknowledge: Preknowledge = new Preknowledge("New preknowledge", false, LayoutHelper.bbForPreknowledge(LayoutHelper.positionForNewPreknowledge), [], [], [], [], 0.5, 0.5, 0.5, 0.5);
+    const preknowledge: Preknowledge = new Preknowledge("New preknowledge", false, LayoutHelper.bbForPreknowledge(LayoutHelper.positionForNewPreknowledge), [], [], 0.5, 0.5, 0.5, 0.5);
     this.conversation.author.preknowledge.push(preknowledge);
     return preknowledge;
   }
@@ -324,7 +324,7 @@ export class KemlService {
   addNewNewInfo(causeMsg?: ReceiveMessage): NewInformation | undefined {
     let source = causeMsg? causeMsg : this.getFirstReceive()
     if (source) {
-      return new NewInformation(source, 'New Information', false, LayoutHelper.bbForNewInfo(source.generates.length), [], [], [], [], 0.5, 0.5, 0.5, 0.5);
+      return new NewInformation(source, 'New Information', false, LayoutHelper.bbForNewInfo(source.generates.length), [], [], 0.5, 0.5, 0.5, 0.5);
     } else {
       console.error('No receive messages found');
       return undefined;

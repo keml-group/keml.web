@@ -9,7 +9,7 @@ import {
 } from "@app/shared/keml/models/json/knowledge-models";
 import {Deserializer, Ref, Referencable} from "emfular";
 import {ListUpdater} from "emfular";
-import {BoundingBox, PositionHelper} from "ngx-svg-graphics";
+import {BoundingBox, Positionable, PositionHelper} from "ngx-svg-graphics";
 
 export abstract class Message extends Referencable {
   static eClass = 'http://www.unikoblenz.de/keml#//Message'
@@ -166,7 +166,7 @@ export class ReceiveMessage extends Message {
 }
 
 
-export abstract class Information extends Referencable {
+export abstract class Information extends Referencable implements Positionable {
 
   message: string;
   isInstruction: boolean;
@@ -205,7 +205,7 @@ export abstract class Information extends Referencable {
   repeatedBy: ReceiveMessage[];
 
   protected constructor(ref: Ref, message: string, isInstruction: boolean = false,
-              position?: BoundingBox, causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [],
+              position?: BoundingBox, isUsedOn: SendMessage[] = [],
               repeatedBy: ReceiveMessage[] = [], initialTrust?: number,
               currentTrust?: number, feltTrustImmediately?: number,
               feltTrustAfterwards?: number, deserializer?: Deserializer, jsonOpt?: InformationJson
@@ -235,8 +235,6 @@ export abstract class Information extends Referencable {
       this.currentTrust = currentTrust;
       this.feltTrustImmediately = feltTrustImmediately;
       this.feltTrustAfterwards = feltTrustAfterwards;
-      //this._causes = causes? causes : [];
-      //this.targetedBy = targetedBy? targetedBy: [];
       this.isUsedOn = isUsedOn ? isUsedOn : [];
       this.repeatedBy = repeatedBy? repeatedBy: [];
     }
@@ -289,12 +287,12 @@ export class NewInformation extends Information {
 
   constructor(source: ReceiveMessage,
               message: string, isInstruction: boolean = false, position?: BoundingBox,
-              causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
+              isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
               initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number , feltTrustAfterwards?: number,
               ref?: Ref, deserializer?: Deserializer, jsonOpt?: NewInformationJson
   ) {
     let refC = Ref.createRef(NewInformation.eClass, ref)
-    super(refC, message, isInstruction, position, causes, targetedBy, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
+    super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
     if(deserializer) {
       let json: NewInformationJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
       //todo this works against a bug in the used json lib: it computes the necessary source if it is not present
@@ -306,7 +304,7 @@ export class NewInformation extends Information {
   }
 
   override duplicate(): NewInformation {
-    return new NewInformation(this._source, 'Copy of ' + this.message, this.isInstruction, this.position, [], [], [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
+    return new NewInformation(this._source, 'Copy of ' + this.message, this.isInstruction, this.position, [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
   }
 
   // does both directions (source and generates)
@@ -340,12 +338,12 @@ export class Preknowledge extends Information {
   static readonly eClass: string = 'http://www.unikoblenz.de/keml#//PreKnowledge';
 
   constructor(message: string = 'Preknowledge', isInstruction: boolean = false, position?: BoundingBox,
-              causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
+              isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
               initialTrust?: number, currentTrust?: number,
               feltTrustImmediately?: number, feltTrustAfterwards?: number,
               ref?: Ref, deserializer?: Deserializer, jsonOpt?: PreknowledgeJson) {
     let refC = Ref.createRef(Preknowledge.eClass, ref)
-    super(refC, message, isInstruction, position, causes, targetedBy, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
+    super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
   }
 
   timeInfo(): number {
@@ -359,7 +357,7 @@ export class Preknowledge extends Information {
   }
 
   override duplicate(): Preknowledge {
-    return new Preknowledge('Copy of ' + this.message, this.isInstruction, this.position, [], [], [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
+    return new Preknowledge('Copy of ' + this.message, this.isInstruction, this.position, [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
   }
 
   override toJson(): PreknowledgeJson {
