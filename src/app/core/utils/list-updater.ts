@@ -13,4 +13,17 @@ export class ListUpdater {
     return false;
   }
 
+  public static addToList<T>(elem: T, list: T[]) {
+    if(!list) {
+      return false;
+    }
+    const index = list.indexOf(elem);
+    if(index > -1) {
+      return false;
+    } else {
+      list.push(elem);
+      return true;
+    }
+  }
+
 }

@@ -223,6 +223,11 @@ export abstract class Information extends Referencable {
     this.listChildren.set(Information.causesPrefix, this.causes)
   }
 
+  addCauses(link: InformationLink) {
+    ListUpdater.addToList(link, this.causes)
+    link.source = this
+  }
+
   abstract duplicate(): Information;
 
   toJson(): InformationJson {
@@ -349,7 +354,11 @@ export class InformationLink extends Referencable {
     return this._source!!; //todo
   }
   set source(source: Information) {
-    this._source = source;
+    let oldSource = this._source;
+    if (oldSource != source){
+      this._source = source;
+      source.addCauses(this)
+    }
   }
 
   private _target?: Information;
