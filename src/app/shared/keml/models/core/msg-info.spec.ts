@@ -154,7 +154,7 @@ describe('Msg-Info (models)', () => {
     expect(p0.targetedBy.length).toEqual(0)
   })
 
-  it('should delete an info that is a link source completely (also deletes the link)', () => {
+  it('source destruction: should delete an info that is a link source completely (also deletes the link)', () => {
     let p0 = new Preknowledge('p0')
     let p1 = new Preknowledge('p1')
     let link = new InformationLink(p1, p0, InformationLinkType.SUPPORT)
@@ -164,7 +164,7 @@ describe('Msg-Info (models)', () => {
     expect(p0.targetedBy.length).toEqual(0)
   })
 
-  it('should delete an info that is a link target completely (also deletes the link)', () => {
+  it('target destruction: should delete an info that is a link target completely (also deletes the link)', () => {
     let p0 = new Preknowledge('p0')
     let p1 = new Preknowledge('p1')
     let link = new InformationLink(p1, p0, InformationLinkType.SUPPORT)
