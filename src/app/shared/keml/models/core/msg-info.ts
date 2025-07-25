@@ -183,7 +183,6 @@ export abstract class Information extends Referencable {
   isUsedOn: SendMessage[];
   repeatedBy: ReceiveMessage[];
 
-
   protected constructor(ref: Ref, message: string, isInstruction: boolean = false,
               position?: BoundingBox, causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [],
               repeatedBy: ReceiveMessage[] = [], initialTrust?: number,
@@ -286,6 +285,10 @@ export class NewInformation extends Information {
   static eClass: string = 'http://www.unikoblenz.de/keml#//NewInformation'
   private _source!: ReceiveMessage;
 
+  override getTreeParent() {
+    return this._source;
+  }
+
   constructor(source: ReceiveMessage,
               message: string, isInstruction: boolean = false, position?: BoundingBox,
               causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
@@ -380,6 +383,9 @@ export class InformationLink extends Referencable {
       source.addCauses(this)
       oldSource?.removeCauses(this)
     }
+  }
+  override getTreeParent(): Information | undefined {
+    return this._source;
   }
 
   private _target?: Information;
