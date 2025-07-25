@@ -227,6 +227,26 @@ export abstract class Information extends Referencable {
     ListUpdater.addToList(link, this.causes)
     link.source = this
   }
+  removeCauses(link: InformationLink) {
+    //todo only trigger if link.source != this?
+    if(link.source != this) {
+      ListUpdater.removeFromList(link, this.causes)
+    } else {
+      console.log("Cannot remove from causes, since the link currently comes from me")
+    }
+  }
+
+  addTargetedBy(link: InformationLink) {
+    ListUpdater.addToList(link, this.targetedBy)
+    link.target = this
+  }
+  removeTargetedBy(link: InformationLink) {
+    if(link.target != this) {
+      ListUpdater.removeFromList(link, this.targetedBy)
+    } else {
+      console.log("Cannot remove link from targetedBy, since I am the tree parent")
+    }
+  }
 
   abstract duplicate(): Information;
 
@@ -358,6 +378,7 @@ export class InformationLink extends Referencable {
     if (oldSource != source){
       this._source = source;
       source.addCauses(this)
+      oldSource?.removeCauses(this)
     }
   }
 
@@ -366,7 +387,11 @@ export class InformationLink extends Referencable {
     return this._target!!;
   }
   set target(target: Information) {
-    this._target = target;
+    let oldTarget = this._target;
+    if (oldTarget != target){
+      this._target = target;
+      target.addTargetedBy(this);
+    }
   }
 
   private _type: InformationLinkType = InformationLinkType.SUPPLEMENT;
