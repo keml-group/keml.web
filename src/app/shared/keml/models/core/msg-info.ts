@@ -129,6 +129,9 @@ export class ReceiveMessage extends Message {
     return this._repeats;
   }
   addRepetition(info: Information) {
+    if(!Information.isRepetitionAllowed(this, info)) {
+      throw new ReferenceError("Repetition is only allowed to an earlier information")
+    }
     if(ListUpdater.addToList(info, this._repeats)) {
       info.addRepeatedBy(this)
     }
@@ -200,7 +203,7 @@ export abstract class Information extends Referencable implements Positionable {
   feltTrustImmediately: number | undefined;
   feltTrustAfterwards: number | undefined;
 
-  abstract getTiming(): number;
+  abstract getTiming(): number | undefined;
 
   private _causes: InformationLink[] = [];
   get causes(): InformationLink[] {
@@ -249,9 +252,13 @@ export abstract class Information extends Referencable implements Positionable {
   //todo
   static isRepetitionAllowed(msg: ReceiveMessage, info: Information): boolean {
     //only allow the repetition if it connects to an earlier info
-    return (info.getTiming() < msg.timing)
+    let infoTiming = info.getTiming()
+    return (infoTiming == undefined || infoTiming < msg.timing)
   }
   addRepeatedBy(msg: ReceiveMessage) {
+    if(!Information.isRepetitionAllowed(msg, this)) {
+      throw new ReferenceError("Repetition is only allowed to an earlier information")
+    }
     if(ListUpdater.addToList(msg, this._repeatedBy)) {
       msg.addRepetition(this);
     }
@@ -343,8 +350,8 @@ export class NewInformation extends Information {
     return this._source;
   }
 
-  override getTiming(): number {
-    return this._source.timing
+  override getTiming(): number | undefined {
+    return this._source?.timing
   }
 
   constructor(source: ReceiveMessage,
