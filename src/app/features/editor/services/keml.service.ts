@@ -262,8 +262,7 @@ export class KemlService {
   }
 
   deleteRepetition(rec: ReceiveMessage, info: Information) {
-    ListUpdater.removeFromList(info, rec.repeats)
-    ListUpdater.removeFromList(rec, info.repeatedBy)
+    rec.removeRepetition(info)
   }
 
   addUsage(send: SendMessage, info: Information) {
