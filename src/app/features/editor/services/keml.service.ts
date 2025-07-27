@@ -53,7 +53,7 @@ export class KemlService {
     return cp;
   }
 
-  disableMoveConversationPartnerRight(cp: ConversationPartner): boolean {
+  isMoveConversationPartnerRightDisabled(cp: ConversationPartner): boolean {
     const cps = this.conversation.conversationPartners;
     const pos = cps.indexOf(cp);
     return pos == -1 || pos+1 >= cps.length;
@@ -62,14 +62,14 @@ export class KemlService {
   moveConversationPartnerRight(cp: ConversationPartner) {
     const cps = this.conversation.conversationPartners;
     const pos = cps.indexOf(cp);
-    if (!this.disableMoveConversationPartnerRight(cp)) {
+    if (!this.isMoveConversationPartnerRightDisabled(cp)) {
       cps[pos] = cps[pos+1];
       cps[pos + 1] = cp;
       LayoutHelper.positionConversationPartners(cps);
     }
   }
 
-  disableMoveConversationPartnerLeft(cp: ConversationPartner): boolean {
+  isMoveConversationPartnerLeftDisabled(cp: ConversationPartner): boolean {
     const pos = this.conversation.conversationPartners.indexOf(cp);
     return pos <= 0;
   }
@@ -77,7 +77,7 @@ export class KemlService {
   moveConversationPartnerLeft(cp: ConversationPartner) {
     const cps = this.conversation.conversationPartners;
     const pos = cps.indexOf(cp);
-    if (!this.disableMoveConversationPartnerLeft(cp)) {
+    if (!this.isMoveConversationPartnerLeftDisabled(cp)) {
       cps[pos] = cps[pos-1];
       cps[pos-1] = cp;
       LayoutHelper.positionConversationPartners(cps);
@@ -121,7 +121,7 @@ export class KemlService {
     this.msgPositionChangeService.notifyPositionChangeMessage( msg)
   }
 
-  disableMoveUp(msg: Message): boolean {
+  isMoveUpDisabled(msg: Message): boolean {
     return msg.timing<=0;
   }
 
@@ -136,7 +136,7 @@ export class KemlService {
     this.msgPositionChangeService.notifyPositionChangeMessage(msg)
   }
 
-  disableMoveDown(msg: Message): boolean {
+  isMoveDownDisabled(msg: Message): boolean {
     return msg.timing>=this.conversation.author.messages.length-1;
   }
 
@@ -217,7 +217,7 @@ export class KemlService {
     }
   }
 
-  disableAddNewMessage(): boolean {
+  isAddNewMessageDisabled(): boolean {
     return this.conversation.conversationPartners.length <= 0;
   }
 
@@ -291,9 +291,8 @@ export class KemlService {
     return preknowledge;
   }
 
-  disableAddNewNewInfo(): boolean {
-    const rec = this.getFirstReceive();
-    return !rec;
+  isAddNewNewInfoDisabled(): boolean {
+    return !this.getFirstReceive();
   }
 
   addNewNewInfo(causeMsg?: ReceiveMessage): NewInformation | undefined {
@@ -311,7 +310,7 @@ export class KemlService {
   }
   //***************** information links ********************
 
-  disableLinkCreation() {
+  isLinkCreationDisabled() {
     let size = this.conversation.author.preknowledge.length;
     if (size >=2)
       return false;

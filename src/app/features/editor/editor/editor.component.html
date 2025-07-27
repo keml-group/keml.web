@@ -43,10 +43,10 @@
             <g person [w]="20" [h]="35" [stroke]="'orange'"></g>
           </svg>
         </button>
-        <button class="tool-button" title="Add send message" (click)="addMessage(true)" [disabled]="kemlService.disableAddNewMessage()">
+        <button class="tool-button" title="Add send message" (click)="addMessage(true)" [disabled]="kemlService.isAddNewMessageDisabled()">
           <mat-icon aria-hidden="false" fontIcon="arrow_forward"></mat-icon>
         </button>
-        <button class="tool-button" title="Add receive message" (click)="addMessage(false)" [disabled]="kemlService.disableAddNewMessage()">
+        <button class="tool-button" title="Add receive message" (click)="addMessage(false)" [disabled]="kemlService.isAddNewMessageDisabled()">
           <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
         </button>
         <button class="tool-button" title="Add preknowledge" (click)="addPreknowledge()">
@@ -54,13 +54,13 @@
             <g database [w]="32" [h]="9" [fill]="'white'" [stroke]="'orange'" [strokewidth]="1.5"></g>
           </svg>
         </button>
-        <button class="tool-button" title="Add new information" (click)="addNewInfo()" [disabled]="kemlService.disableAddNewNewInfo()">
+        <button class="tool-button" title="Add new information" (click)="addNewInfo()" [disabled]="kemlService.isAddNewNewInfoDisabled()">
           <svg width="32" height="24">
             <rect class="svg-dis" width="30" height="12" x="1" y="6" stroke-width="0.8" fill="none"></rect>
             <line class="svg-dis" x1="7" x2="7" y1="6" y2="18" stroke-width="0.8"></line>
           </svg>
         </button>
-        <button class="tool-button" title="Add information link" (click)="detailsService.openLinkCreationDialog()" [disabled]="kemlService.disableLinkCreation()">
+        <button class="tool-button" title="Add information link" (click)="detailsService.openLinkCreationDialog()" [disabled]="kemlService.isLinkCreationDisabled()">
           Link
         </button>
       </div>
