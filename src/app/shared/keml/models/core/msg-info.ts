@@ -130,7 +130,7 @@ export class ReceiveMessage extends Message {
   }
   addRepetition(info: Information) {
     if(!Information.isRepetitionAllowed(this, info)) {
-      throw new ReferenceError("Repetition is only allowed to an earlier information")
+      throw new RangeError("Repetition is only allowed to an earlier information")
     }
     if(ListUpdater.addToList(info, this._repeats)) {
       info.addRepeatedBy(this)
@@ -249,7 +249,6 @@ export abstract class Information extends Referencable implements Positionable {
   get repeatedBy(): ReceiveMessage[] {
     return this._repeatedBy;
   }
-  //todo
   static isRepetitionAllowed(msg: ReceiveMessage, info: Information): boolean {
     //only allow the repetition if it connects to an earlier info
     let infoTiming = info.getTiming()
@@ -257,7 +256,7 @@ export abstract class Information extends Referencable implements Positionable {
   }
   addRepeatedBy(msg: ReceiveMessage) {
     if(!Information.isRepetitionAllowed(msg, this)) {
-      throw new ReferenceError("Repetition is only allowed to an earlier information")
+      throw new RangeError("Repetition is only allowed to an earlier information")
     }
     if(ListUpdater.addToList(msg, this._repeatedBy)) {
       msg.addRepetition(this);

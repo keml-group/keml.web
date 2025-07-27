@@ -246,19 +246,7 @@ export class KemlService {
   }
 
   addRepetition(rec: ReceiveMessage, info: Information) {
-    //only add the repetition if it connects to an earlier info (either preknowledge or older new info
-    const msgTime = rec.timing
-    const infoTime = (info as NewInformation).source?.timing
-    if (!infoTime || infoTime < msgTime ) {
-      if(rec.repeats.indexOf(info) == -1 ) {
-        rec.repeats.push(info)
-      }
-      if(info.repeatedBy.indexOf(rec) == -1) {
-        info.repeatedBy.push(rec)
-      }
-    } else {
-      console.log('No repetition allowed')
-    }
+    rec.addRepetition(info) //todo handle error, maybe alert?
   }
 
   deleteRepetition(rec: ReceiveMessage, info: Information) {
