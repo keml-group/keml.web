@@ -254,23 +254,11 @@ export class KemlService {
   }
 
   addUsage(send: SendMessage, info: Information) {
-    const infoInd = send.uses.indexOf(info)
-    if (infoInd > -1) {
-      console.log('Usage already exists')
-    } else {
-      send.uses.push(info)
-    }
-    const msgInd = info.isUsedOn.indexOf(send)
-    if (msgInd > -1) {
-      console.log('Used on already exists')
-    } else {
-      info.isUsedOn.push(send)
-    }
+    send.addUsage(info)
   }
 
   deleteUsage(send: SendMessage, info: Information) {
-    ListUpdater.removeFromList(info, send.uses)
-    ListUpdater.removeFromList(send, info.isUsedOn)
+    send.removeUsage(info)
   }
   //************** Infos ************************
 
