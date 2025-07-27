@@ -329,12 +329,7 @@ export class KemlService {
   }
 
   addInformationLink(src: Information, target: Information, type: InformationLinkType = InformationLinkType.SUPPLEMENT, text?: string): InformationLink {
-    return new InformationLink(
-      src,
-      target,
-      type,
-      text
-    );
+    return new InformationLink(src, target, type, text);
   }
 
   deleteLink(link: InformationLink) {
@@ -342,9 +337,7 @@ export class KemlService {
   }
 
   duplicateLink(link: InformationLink) {
-    const newLink = new InformationLink(link.source, link.target, link.type, link.linkText)
-    link.source.causes.splice(link.source.causes.indexOf(link),0, newLink);
-    link.target.targetedBy.splice(link.target.targetedBy.indexOf(link), 0, newLink);
-  }
+    new InformationLink(link.source, link.target, link.type, link.linkText)
+ }
 
 }
