@@ -96,7 +96,7 @@ export class LayoutHelper {
   static positionPreknowledge(pre: Preknowledge[]) {
     pre.forEach(p => {
       if (p.position.w < 7 ) {
-        let timing = p.timeInfo()
+        let timing = p.getTiming()
         p.position = this.bbForPreknowledge(LayoutHelper.computeMessageY(timing))
       }
     })

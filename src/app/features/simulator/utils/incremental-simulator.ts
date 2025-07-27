@@ -80,7 +80,7 @@ export class IncrementalSimulator {
   private findNewPreknowledges(send: SendMessage): Preknowledge[] {
     let pres: Preknowledge[] = send.uses.filter(use =>  ! (use as NewInformation).source)
       .map(u => (u as Preknowledge))
-    return pres.filter(pre =>  pre.timeInfo() == send.timing)
+    return pres.filter(pre =>  pre.getTiming() == send.timing)
   }
 
   private copyPreknowledge(pre: Preknowledge): Preknowledge {

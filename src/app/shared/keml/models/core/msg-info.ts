@@ -200,6 +200,8 @@ export abstract class Information extends Referencable implements Positionable {
   feltTrustImmediately: number | undefined;
   feltTrustAfterwards: number | undefined;
 
+  abstract getTiming(): number;
+
   private _causes: InformationLink[] = [];
   get causes(): InformationLink[] {
     return this._causes;
@@ -246,13 +248,8 @@ export abstract class Information extends Referencable implements Positionable {
   }
   //todo
   static isRepetitionAllowed(msg: ReceiveMessage, info: Information): boolean {
-    //only add the repetition if it connects to an earlier info (either preknowledge or older new info
-    const msgTime = msg.timing
-    let infoTime = (info as NewInformation).source?.timing
-    if (!infoTime) {
-      infoTime = (info as Preknowledge).timeInfo() //todo
-    }
-    return (!infoTime || infoTime < msgTime)
+    //only allow the repetition if it connects to an earlier info
+    return (info.getTiming() < msg.timing)
   }
   addRepeatedBy(msg: ReceiveMessage) {
     if(ListUpdater.addToList(msg, this._repeatedBy)) {
@@ -346,6 +343,10 @@ export class NewInformation extends Information {
     return this._source;
   }
 
+  override getTiming(): number {
+    return this._source.timing
+  }
+
   constructor(source: ReceiveMessage,
               message: string, isInstruction: boolean = false, position?: BoundingBox,
               isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
@@ -407,7 +408,7 @@ export class Preknowledge extends Information {
     super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
   }
 
-  timeInfo(): number {
+  getTiming(): number {
     let timing;
     if (this.isUsedOn?.length >0) {
       timing = Math.min(...this.isUsedOn.map(send => send.timing));

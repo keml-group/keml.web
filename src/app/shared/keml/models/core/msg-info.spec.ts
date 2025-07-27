@@ -201,9 +201,9 @@ describe('Msg-Info (models)', () => {
     m3.uses.push(pre3)
     pre3.isUsedOn.push(m3)
 
-    expect(pre0.timeInfo()).toEqual(0)
-    expect(pre1.timeInfo()).toEqual(0)
-    expect(pre2.timeInfo()).toEqual(2)
-    expect(pre3.timeInfo()).toEqual(6)
+    expect(pre0.getTiming()).toEqual(0)
+    expect(pre1.getTiming()).toEqual(0)
+    expect(pre2.getTiming()).toEqual(2)
+    expect(pre3.getTiming()).toEqual(6)
   })
 });
