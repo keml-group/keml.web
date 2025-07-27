@@ -124,7 +124,20 @@ export class ReceiveMessage extends Message {
   static override readonly eClass: string = 'http://www.unikoblenz.de/keml#//ReceiveMessage'
   static readonly generatesPrefix: string = 'generates';
   generates: NewInformation[] = [];
-  repeats: Information[] = [];
+  _repeats: Information[] = [];
+  get repeats(): Information[] {
+    return this._repeats;
+  }
+  addRepetition(info: Information) {
+    if(ListUpdater.addToList(info, this._repeats)) {
+      info.addRepeatedBy(this)
+    }
+  }
+  removeRepetition(info: Information) {
+    if(ListUpdater.removeFromList(info, this._repeats)) {
+      info.removeRepeatedBy(this)
+    }
+  }
   isInterrupted: boolean = false;
 
   constructor(
@@ -143,15 +156,14 @@ export class ReceiveMessage extends Message {
       let json: ReceiveMessageJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
       let generatesRefs = Deserializer.createRefList(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates?.map(g => g.eClass? g.eClass: NewInformation.eClass))
       this.generates = generatesRefs.map(g => deserializer.getOrCreate(g))
-      let reps = json.repeats?.map(r => deserializer.getOrCreate<NewInformation>(r))
-      this.repeats = reps ? reps : []
+      json.repeats?.map(r => this.addRepetition(deserializer.getOrCreate<NewInformation>(r)))
       this.isInterrupted = json.isInterrupted;
     } else {
       this.generates = generates ? generates : [];
       generates?.forEach(info => {
         info.source = this
       })
-      this.repeats = repeats;
+      repeats.map(r => this.addRepetition(r));
       this.isInterrupted = isInterrupted;
     }
     this.listChildren.set(ReceiveMessage.generatesPrefix, this.generates)
@@ -228,7 +240,30 @@ export abstract class Information extends Referencable implements Positionable {
     }
   }
 
-  repeatedBy: ReceiveMessage[];
+  private _repeatedBy: ReceiveMessage[] = [];
+  get repeatedBy(): ReceiveMessage[] {
+    return this._repeatedBy;
+  }
+  //todo
+  static isRepetitionAllowed(msg: ReceiveMessage, info: Information): boolean {
+    //only add the repetition if it connects to an earlier info (either preknowledge or older new info
+    const msgTime = msg.timing
+    let infoTime = (info as NewInformation).source?.timing
+    if (!infoTime) {
+      infoTime = (info as Preknowledge).timeInfo() //todo
+    }
+    return (!infoTime || infoTime < msgTime)
+  }
+  addRepeatedBy(msg: ReceiveMessage) {
+    if(ListUpdater.addToList(msg, this._repeatedBy)) {
+      msg.addRepetition(this);
+    }
+  }
+  removeRepeatedBy(msg: ReceiveMessage) {
+    if(ListUpdater.removeFromList(msg, this._repeatedBy)) {
+      msg.removeRepetition(this)
+    }
+  }
 
   protected constructor(ref: Ref, message: string, isInstruction: boolean = false,
               position?: BoundingBox, isUsedOn: SendMessage[] = [],
@@ -250,9 +285,9 @@ export abstract class Information extends Referencable implements Positionable {
       //todo actually, causes should exist on the json, however, it is missing and we hence set it manually:
       let causesRefs = Deserializer.createRefList(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass? c.eClass : InformationLink.eClass))
       causesRefs.map(r => deserializer.getOrCreate<InformationLink>(r))
-      json.targetedBy? json.targetedBy.map(r =>  deserializer.getOrCreate(r)) : []
+      json.targetedBy?.map(r =>  deserializer.getOrCreate(r))
       json.isUsedOn?.map(r => this.addIsUsedOn(deserializer.getOrCreate<SendMessage>(r)))
-      this.repeatedBy = json.repeatedBy? json.repeatedBy.map(r => deserializer.getOrCreate<ReceiveMessage>(r)): []
+      json.repeatedBy?.map(r => this.addRepeatedBy(deserializer.getOrCreate<ReceiveMessage>(r)))
     } else {
       this.message = message;
       this.isInstruction = isInstruction;
@@ -262,7 +297,7 @@ export abstract class Information extends Referencable implements Positionable {
       this.feltTrustImmediately = feltTrustImmediately;
       this.feltTrustAfterwards = feltTrustAfterwards;
       isUsedOn?.map(u => this.addIsUsedOn(u))
-      this.repeatedBy = repeatedBy? repeatedBy: [];
+      repeatedBy?.map(m => this.addRepeatedBy(m));
     }
     this.listChildren.set(Information.causesPrefix, this._causes)
   }
