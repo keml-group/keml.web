@@ -54,8 +54,7 @@ export class IncrementalSimulator {
     let pres = this.findNewPreknowledges(send)
     this.incrementalConv.author.preknowledge.push(...pres.map(p => this.copyPreknowledge(p)))
     let uses = send.uses.map(u => this.infoConnections.get(u.gId)!)
-    uses.map(u => u.isUsedOn.push(msg))
-    msg.uses = uses
+    uses.map(u => u.addIsUsedOn(msg))
     await this.linkStep(pres)
  }
 

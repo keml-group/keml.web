@@ -186,14 +186,15 @@ describe('TrustComputator', () => {
   })
 
   it('should adapt the current trusts', () => {
-    let pre0 = new Preknowledge('pre0',
-      false, undefined, undefined, undefined, undefined, undefined,
+    let pre0 = new Preknowledge(
+      'pre0', false, undefined,
+      undefined, undefined,
       0.5, 0 )
     let pre1 = new Preknowledge('pre1',
-      false, undefined, undefined, undefined, undefined, undefined,
+      false, undefined, undefined, undefined,
       0.5, 0 )
     let pre2 = new Preknowledge('pre2',
-      false, undefined, undefined, undefined, undefined, undefined,
+      false, undefined, undefined, undefined,
       0.5, 0 )
     let pres = [pre0, pre1, pre2]
 

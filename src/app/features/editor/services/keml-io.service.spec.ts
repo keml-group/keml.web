@@ -66,10 +66,10 @@ describe('KEMLIOService', () => {
       "      } ]\n"+
       "    } ]\n"
     let pre0 = new Preknowledge('pre0',
-      false, undefined, undefined, undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
+      false, undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
       new Ref('//@author/@preknowledge.0', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
     let pre1 = new Preknowledge('pre1',
-      false, undefined, undefined, undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
+      false, undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
       new Ref('//@author/@preknowledge.1', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
 
     let preknowledge = [pre0, pre1]
@@ -130,10 +130,10 @@ describe('KEMLIOService', () => {
     )
     let msgs: Message[] = [msg0, msg1]
     let newInfo0 = new NewInformation(msg1, "ni0", true,
-      undefined, undefined, undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
+      undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
       new Ref('//@author/@messages.1/@generates.0', 'http://www.unikoblenz.de/keml#//NewInformation'))
     let newInfo1 = new NewInformation(msg1, "ni1",
-      false,undefined, undefined, undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
+      false,undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
       new Ref('//@author/@messages.1/@generates.1', 'http://www.unikoblenz.de/keml#//NewInformation'))
 
     LayoutHelper.initializeInfoPos(msgs)

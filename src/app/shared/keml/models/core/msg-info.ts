@@ -71,7 +71,20 @@ export abstract class Message extends Referencable {
 
 export class SendMessage extends Message {
   static override readonly eClass: string = 'http://www.unikoblenz.de/keml#//SendMessage'
-  uses: Information[];
+  private _uses: Information[] = [];
+  get uses(): Information[] {
+    return this._uses;
+  }
+  addUsage(info: Information) {
+    if (ListUpdater.addToList(info, this._uses)) {
+      info.addIsUsedOn(this)
+    }
+  }
+  removeUsage(info: Information) {
+    if (ListUpdater.removeFromList(info, this._uses)) {
+      info.removeIsUsedOn(this)
+    }
+  }
 
   constructor(
     counterPart: ConversationPartner,
@@ -86,10 +99,9 @@ export class SendMessage extends Message {
     if (deserializer) {
       //deserializer.put(this) // already done in super
       let json: SendMessageJson = jsonOpt ? jsonOpt : deserializer?.getJsonFromTree(ref!.$ref);
-      let uses = json.uses? json.uses : []
-      this.uses = uses.map(u => deserializer.getOrCreate(u))
+      json.uses?.map(u => this.addUsage(deserializer.getOrCreate(u)))
     } else {
-      this.uses = uses
+      uses.map(u => this.addUsage(u))
     }
   }
 
@@ -201,7 +213,21 @@ export abstract class Information extends Referencable implements Positionable {
     this.removeFromListChild(link, this._targetedBy)
   }
 
-  isUsedOn: SendMessage[];
+  private _isUsedOn: SendMessage[] = [];
+  get isUsedOn(): SendMessage[] {
+    return this._isUsedOn;
+  }
+  addIsUsedOn(send: SendMessage){
+    if (ListUpdater.addToList(send, this._isUsedOn)) {
+      send.addUsage(this);
+    }
+  }
+  removeIsUsedOn(send: SendMessage){
+    if (ListUpdater.removeFromList(send, this._isUsedOn)) {
+      send.removeUsage(this)
+    }
+  }
+
   repeatedBy: ReceiveMessage[];
 
   protected constructor(ref: Ref, message: string, isInstruction: boolean = false,
@@ -225,7 +251,7 @@ export abstract class Information extends Referencable implements Positionable {
       let causesRefs = Deserializer.createRefList(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass? c.eClass : InformationLink.eClass))
       causesRefs.map(r => deserializer.getOrCreate<InformationLink>(r))
       json.targetedBy? json.targetedBy.map(r =>  deserializer.getOrCreate(r)) : []
-      this.isUsedOn = json.isUsedOn? json.isUsedOn.map(r => deserializer.getOrCreate<SendMessage>(r)): []
+      json.isUsedOn?.map(r => this.addIsUsedOn(deserializer.getOrCreate<SendMessage>(r)))
       this.repeatedBy = json.repeatedBy? json.repeatedBy.map(r => deserializer.getOrCreate<ReceiveMessage>(r)): []
     } else {
       this.message = message;
@@ -235,7 +261,7 @@ export abstract class Information extends Referencable implements Positionable {
       this.currentTrust = currentTrust;
       this.feltTrustImmediately = feltTrustImmediately;
       this.feltTrustAfterwards = feltTrustAfterwards;
-      this.isUsedOn = isUsedOn ? isUsedOn : [];
+      isUsedOn?.map(u => this.addIsUsedOn(u))
       this.repeatedBy = repeatedBy? repeatedBy: [];
     }
     this.listChildren.set(Information.causesPrefix, this._causes)
