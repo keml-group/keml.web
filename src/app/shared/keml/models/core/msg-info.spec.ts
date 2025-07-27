@@ -1,4 +1,4 @@
-import {InformationLink, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "./msg-info";
+import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "./msg-info";
 import {InformationLinkJson, InformationLinkType, NewInformationJson, PreknowledgeJson} from "@app/shared/keml/models/json/knowledge-models";
 import {ConversationPartner} from "./conversation-partner";
 import {ReceiveMessageJson, SendMessageJson} from "@app/shared/keml/models/json/sequence-diagram-models";
@@ -10,6 +10,41 @@ describe('Msg-Info (models)', () => {
     let preknowledge = new Preknowledge()
      preknowledge.prepare('fantasy')
     expect (preknowledge.getRef()).toEqual(new Ref('fantasy', Preknowledge.eClass));
+  })
+
+  it('should determine the correct timing of a new info', () => {
+    let cp = new ConversationPartner('cp')
+    let rec = new ReceiveMessage(cp, 5)
+    let newInfo = new NewInformation(rec, 'info1')
+    expect(newInfo.getTiming()).toEqual(5)
+    rec.timing = 0
+    expect(newInfo.getTiming()).toEqual(0)
+    //todo undefined is on the signature but only possible on current creation
+  })
+
+  it('should determine the correct timing of a preknowledge', () => {
+    let pre0 = new Preknowledge('pre0')
+    expect(pre0.getTiming()).toEqual(0)
+    let cp = new ConversationPartner('cp')
+    let send = new SendMessage(cp, 4)
+    pre0.addIsUsedOn(send)
+    expect(pre0.getTiming()).toEqual(4)
+  })
+
+  it('should determine if a repetition is allowed', () => {
+    let cp = new ConversationPartner('cp')
+    let rec = new ReceiveMessage(cp, 5)
+    let newInfo = new NewInformation(rec, 'info1')
+    let pre0 = new Preknowledge('pre0')
+    let pre1 = new Preknowledge('pre1')
+    let send3 = new SendMessage(cp, 3)
+    pre0.addIsUsedOn(send3)
+    expect(Information.isRepetitionAllowed(rec, newInfo)).toBe(false)
+    expect(Information.isRepetitionAllowed(rec, pre1)).toBe(true)
+    expect(Information.isRepetitionAllowed(rec, pre0)).toBe(true)
+    rec.timing = 1
+    expect(Information.isRepetitionAllowed(rec, pre0)).toBe(false)
+    expect(Information.isRepetitionAllowed(rec, pre1)).toBe(true)
   })
 
   it('should serialize a send msg', () => {
