@@ -16,22 +16,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: build project
-      uses: ./.github/actions/buildAndPackage
+      - uses: actions/checkout@v3 # Necessary to access local action
+      - name: build project
+        uses: ./.github/actions/buildAndPackage
 #************** interact with the web-editor repository *****************
-    - name: Set up Git repository to push
-      uses: actions/checkout@v4
-      with:
-        repository: keml-group/web-editor
-        ref: main
-        path: webeditor
-        token: ${{secrets.WEB_EDITOR_ACCESS}}
-    - run: cp -r ./dist/docs ./webeditor #this causes a folder docs under webeditor
-    - name: Add and commit to main
-      run: |
-        cd webeditor
-        git config --global user.name 'publish-bot'
-        git config --global user.email 'publish-bot@keml-group.github.io'
-        RES=$(git status)
-        COMP="nothing to commit, working tree clean"
-        if [[ "$RES" != *"$COMP"* ]]; then git add docs; git commit -m "[Bot] Update to ${{ github.sha }}"; git push; else echo "Nothing to push"; fi
+      - name: Set up Git repository to push
+        uses: actions/checkout@v4
+        with:
+          repository: keml-group/web-editor
+          ref: main
+          path: webeditor
+          token: ${{secrets.WEB_EDITOR_ACCESS}}
+      - run: cp -r ./dist/docs ./webeditor #this causes a folder docs under webeditor
+      - name: Add and commit to main
+        run: |
+          cd webeditor
+          git config --global user.name 'publish-bot'
+          git config --global user.email 'publish-bot@keml-group.github.io'
+          RES=$(git status)
+          COMP="nothing to commit, working tree clean"
+          if [[ "$RES" != *"$COMP"* ]]; then git add docs; git commit -m "[Bot] Update to ${{ github.sha }}"; git push; else echo "Nothing to push"; fi
