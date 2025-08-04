@@ -1,19 +1,15 @@
 import {ConversationPartner} from "./conversation-partner";
-import {
-  MessageJson,
-  ReceiveMessageJson,
-  SendMessageJson,
-} from "@app/shared/keml/models/json/sequence-diagram-models";
+import {MessageJson, ReceiveMessageJson, SendMessageJson,} from "@app/shared/keml/models/json/sequence-diagram-models";
 import {
   InformationJson,
-  PreknowledgeJson,
-  NewInformationJson,
-  InformationLinkType,
   InformationLinkJson,
+  InformationLinkType,
+  NewInformationJson,
+  PreknowledgeJson,
 } from "@app/shared/keml/models/json/knowledge-models";
-import {Ref, Referencable, Deserializer} from "emfular";
-import {ListUpdater} from "@app/core/utils/list-updater";
-import {BoundingBox, PositionHelper} from "ngx-svg-graphics";
+import {Deserializer, Ref, Referencable} from "emfular";
+import {ListUpdater} from "emfular";
+import {BoundingBox, Positionable, PositionHelper} from "ngx-svg-graphics";
 
 export abstract class Message extends Referencable {
   static eClass = 'http://www.unikoblenz.de/keml#//Message'
@@ -75,7 +71,20 @@ export abstract class Message extends Referencable {
 
 export class SendMessage extends Message {
   static override readonly eClass: string = 'http://www.unikoblenz.de/keml#//SendMessage'
-  uses: Information[];
+  private _uses: Information[] = [];
+  get uses(): Information[] {
+    return this._uses;
+  }
+  addUsage(info: Information) {
+    if (ListUpdater.addToList(info, this._uses)) {
+      info.addIsUsedOn(this)
+    }
+  }
+  removeUsage(info: Information) {
+    if (ListUpdater.removeFromList(info, this._uses)) {
+      info.removeIsUsedOn(this)
+    }
+  }
 
   constructor(
     counterPart: ConversationPartner,
@@ -90,10 +99,9 @@ export class SendMessage extends Message {
     if (deserializer) {
       //deserializer.put(this) // already done in super
       let json: SendMessageJson = jsonOpt ? jsonOpt : deserializer?.getJsonFromTree(ref!.$ref);
-      let uses = json.uses? json.uses : []
-      this.uses = uses.map(u => deserializer.getOrCreate(u))
+      json.uses?.map(u => this.addUsage(deserializer.getOrCreate(u)))
     } else {
-      this.uses = uses
+      uses.map(u => this.addUsage(u))
     }
   }
 
@@ -116,7 +124,23 @@ export class ReceiveMessage extends Message {
   static override readonly eClass: string = 'http://www.unikoblenz.de/keml#//ReceiveMessage'
   static readonly generatesPrefix: string = 'generates';
   generates: NewInformation[] = [];
-  repeats: Information[] = [];
+  _repeats: Information[] = [];
+  get repeats(): Information[] {
+    return this._repeats;
+  }
+  addRepetition(info: Information) {
+    if(!Information.isRepetitionAllowed(this, info)) {
+      throw new RangeError("Repetition is only allowed to an earlier information")
+    }
+    if(ListUpdater.addToList(info, this._repeats)) {
+      info.addRepeatedBy(this)
+    }
+  }
+  removeRepetition(info: Information) {
+    if(ListUpdater.removeFromList(info, this._repeats)) {
+      info.removeRepeatedBy(this)
+    }
+  }
   isInterrupted: boolean = false;
 
   constructor(
@@ -135,15 +159,14 @@ export class ReceiveMessage extends Message {
       let json: ReceiveMessageJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
       let generatesRefs = Deserializer.createRefList(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates?.map(g => g.eClass? g.eClass: NewInformation.eClass))
       this.generates = generatesRefs.map(g => deserializer.getOrCreate(g))
-      let reps = json.repeats?.map(r => deserializer.getOrCreate<NewInformation>(r))
-      this.repeats = reps ? reps : []
+      json.repeats?.map(r => this.addRepetition(deserializer.getOrCreate<NewInformation>(r)))
       this.isInterrupted = json.isInterrupted;
     } else {
       this.generates = generates ? generates : [];
       generates?.forEach(info => {
         info.source = this
       })
-      this.repeats = repeats;
+      repeats.map(r => this.addRepetition(r));
       this.isInterrupted = isInterrupted;
     }
     this.listChildren.set(ReceiveMessage.generatesPrefix, this.generates)
@@ -170,7 +193,7 @@ export class ReceiveMessage extends Message {
 }
 
 
-export abstract class Information extends Referencable {
+export abstract class Information extends Referencable implements Positionable {
 
   message: string;
   isInstruction: boolean;
@@ -180,16 +203,73 @@ export abstract class Information extends Referencable {
   feltTrustImmediately: number | undefined;
   feltTrustAfterwards: number | undefined;
 
-  causes: InformationLink[];
+  abstract getTiming(): number | undefined;
+
+  private _causes: InformationLink[] = [];
+  get causes(): InformationLink[] {
+    return this._causes;
+  }
   static readonly causesPrefix: string = 'causes'
-  targetedBy: InformationLink[]; //todo avoid?
+  addCauses(link: InformationLink) {
+    ListUpdater.addToList(link, this._causes)
+    link.source = this
+  }
+  removeCauses(link: InformationLink) {
+    this.removeFromListChild(link, this._causes)
+  }
 
-  isUsedOn: SendMessage[];
-  repeatedBy: ReceiveMessage[];
+  private _targetedBy: InformationLink[] = []; //todo avoid?
+  get targetedBy(): InformationLink[] {
+    return this._targetedBy;
+  }
+  addTargetedBy(link: InformationLink) {
+    ListUpdater.addToList(link, this._targetedBy)
+    link.target = this
+  }
+  removeTargetedBy(link: InformationLink) {
+    this.removeFromListChild(link, this._targetedBy)
+  }
 
+  private _isUsedOn: SendMessage[] = [];
+  get isUsedOn(): SendMessage[] {
+    return this._isUsedOn;
+  }
+  addIsUsedOn(send: SendMessage){
+    if (ListUpdater.addToList(send, this._isUsedOn)) {
+      send.addUsage(this);
+    }
+  }
+  removeIsUsedOn(send: SendMessage){
+    if (ListUpdater.removeFromList(send, this._isUsedOn)) {
+      send.removeUsage(this)
+    }
+  }
+
+  private _repeatedBy: ReceiveMessage[] = [];
+  get repeatedBy(): ReceiveMessage[] {
+    return this._repeatedBy;
+  }
+  static isRepetitionAllowed(msg: ReceiveMessage, info: Information): boolean {
+    //only allow the repetition if it connects to an earlier info
+    let infoTiming = info.getTiming()
+    return (infoTiming == undefined || infoTiming < msg.timing)
+  }
+  addRepeatedBy(msg: ReceiveMessage) {
+    if(!Information.isRepetitionAllowed(msg, this)) {
+      throw new RangeError("Repetition is only allowed to an earlier information")
+    }
+    if(ListUpdater.addToList(msg, this._repeatedBy)) {
+      msg.addRepetition(this);
+    }
+  }
+  removeRepeatedBy(msg: ReceiveMessage) {
+    if(ListUpdater.removeFromList(msg, this._repeatedBy)) {
+      msg.removeRepetition(this)
+    }
+  }
 
   protected constructor(ref: Ref, message: string, isInstruction: boolean = false,
-              position?: BoundingBox, causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [],
+              position?: BoundingBox, isUsedOn: SendMessage[] = [],
               repeatedBy: ReceiveMessage[] = [], initialTrust?: number,
               currentTrust?: number, feltTrustImmediately?: number,
               feltTrustAfterwards?: number, deserializer?: Deserializer, jsonOpt?: InformationJson
@@ -207,10 +287,10 @@ export abstract class Information extends Referencable {
       this.feltTrustAfterwards = json.feltTrustAfterwards;
       //todo actually, causes should exist on the json, however, it is missing and we hence set it manually:
       let causesRefs = Deserializer.createRefList(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass? c.eClass : InformationLink.eClass))
-      this.causes = causesRefs.map(r => deserializer.getOrCreate<InformationLink>(r))
-      this.targetedBy = json.targetedBy? json.targetedBy.map(r =>  deserializer.getOrCreate(r)) : []
-      this.isUsedOn = json.isUsedOn? json.isUsedOn.map(r => deserializer.getOrCreate<SendMessage>(r)): []
-      this.repeatedBy = json.repeatedBy? json.repeatedBy.map(r => deserializer.getOrCreate<ReceiveMessage>(r)): []
+      causesRefs.map(r => deserializer.getOrCreate<InformationLink>(r))
+      json.targetedBy?.map(r =>  deserializer.getOrCreate(r))
+      json.isUsedOn?.map(r => this.addIsUsedOn(deserializer.getOrCreate<SendMessage>(r)))
+      json.repeatedBy?.map(r => this.addRepeatedBy(deserializer.getOrCreate<ReceiveMessage>(r)))
     } else {
       this.message = message;
       this.isInstruction = isInstruction;
@@ -219,13 +299,12 @@ export abstract class Information extends Referencable {
       this.currentTrust = currentTrust;
       this.feltTrustImmediately = feltTrustImmediately;
       this.feltTrustAfterwards = feltTrustAfterwards;
-      this.causes = causes? causes : [];
-      this.targetedBy = targetedBy? targetedBy: [];
-      this.isUsedOn = isUsedOn ? isUsedOn : [];
-      this.repeatedBy = repeatedBy? repeatedBy: [];
+      isUsedOn?.map(u => this.addIsUsedOn(u))
+      repeatedBy?.map(m => this.addRepeatedBy(m));
     }
-    this.listChildren.set(Information.causesPrefix, this.causes)
+    this.listChildren.set(Information.causesPrefix, this._causes)
   }
+
 
   abstract duplicate(): Information;
 
@@ -253,6 +332,7 @@ export abstract class Information extends Referencable {
     this.isUsedOn.forEach((send: SendMessage) => {
       ListUpdater.removeFromList(this, send.uses)
     })
+
     this.targetedBy.forEach((link: InformationLink) => {
       link.destruct()
     })
@@ -265,14 +345,22 @@ export class NewInformation extends Information {
   static eClass: string = 'http://www.unikoblenz.de/keml#//NewInformation'
   private _source!: ReceiveMessage;
 
+  override getTreeParent() {
+    return this._source;
+  }
+
+  override getTiming(): number | undefined {
+    return this._source?.timing
+  }
+
   constructor(source: ReceiveMessage,
               message: string, isInstruction: boolean = false, position?: BoundingBox,
-              causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
+              isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
               initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number , feltTrustAfterwards?: number,
               ref?: Ref, deserializer?: Deserializer, jsonOpt?: NewInformationJson
   ) {
     let refC = Ref.createRef(NewInformation.eClass, ref)
-    super(refC, message, isInstruction, position, causes, targetedBy, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
+    super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
     if(deserializer) {
       let json: NewInformationJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
       //todo this works against a bug in the used json lib: it computes the necessary source if it is not present
@@ -284,7 +372,7 @@ export class NewInformation extends Information {
   }
 
   override duplicate(): NewInformation {
-    return new NewInformation(this._source, 'Copy of ' + this.message, this.isInstruction, this.position, [], [], [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
+    return new NewInformation(this._source, 'Copy of ' + this.message, this.isInstruction, this.position, [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
   }
 
   // does both directions (source and generates)
@@ -318,15 +406,15 @@ export class Preknowledge extends Information {
   static readonly eClass: string = 'http://www.unikoblenz.de/keml#//PreKnowledge';
 
   constructor(message: string = 'Preknowledge', isInstruction: boolean = false, position?: BoundingBox,
-              causes: InformationLink[] = [], targetedBy: InformationLink[] = [], isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
+              isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
               initialTrust?: number, currentTrust?: number,
               feltTrustImmediately?: number, feltTrustAfterwards?: number,
               ref?: Ref, deserializer?: Deserializer, jsonOpt?: PreknowledgeJson) {
     let refC = Ref.createRef(Preknowledge.eClass, ref)
-    super(refC, message, isInstruction, position, causes, targetedBy, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
+    super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
   }
 
-  timeInfo(): number {
+  getTiming(): number {
     let timing;
     if (this.isUsedOn?.length >0) {
       timing = Math.min(...this.isUsedOn.map(send => send.timing));
@@ -337,7 +425,7 @@ export class Preknowledge extends Information {
   }
 
   override duplicate(): Preknowledge {
-    return new Preknowledge('Copy of ' + this.message, this.isInstruction, this.position, [], [], [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
+    return new Preknowledge('Copy of ' + this.message, this.isInstruction, this.position, [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
   }
 
   override toJson(): PreknowledgeJson {
@@ -348,10 +436,51 @@ export class Preknowledge extends Information {
 export class InformationLink extends Referencable {
   static readonly eClass = 'http://www.unikoblenz.de/keml#//InformationLink'
 
-  source: Information;
-  target: Information;
-  type: InformationLinkType;
-  linkText?: string;
+  private _source?: Information;
+  get source(): Information {
+    return this._source!!; //todo
+  }
+  set source(source: Information) {
+    let oldSource = this._source;
+    if (oldSource != source){
+      this._source = source;
+      source.addCauses(this)
+      oldSource?.removeCauses(this)
+    }
+  }
+
+  override getTreeParent(): Information | undefined {
+    return this._source;
+  }
+
+  private _target?: Information;
+  get target(): Information {
+    return this._target!!;
+  }
+  set target(target: Information) {
+    let oldTarget = this._target;
+    if (oldTarget != target){
+      this._target = target;
+      target.addTargetedBy(this);
+      oldTarget?.removeTargetedBy(this);
+    }
+  }
+
+  private _type: InformationLinkType = InformationLinkType.SUPPLEMENT;
+  get type(): InformationLinkType {
+    return this._type;
+  }
+  set type(type: InformationLinkType) {
+    this._type = type;
+  }
+
+  private _linkText?: string;
+  get linkText(): string | undefined {
+    return this._linkText;
+  }
+  set linkText(linkText: string | undefined) {
+    this._linkText = linkText;
+  }
 
   constructor(source: Information, target: Information, type: InformationLinkType, linkText?: string,
               ref?: Ref, deserializer?: Deserializer, jsonOpt?: InformationLinkJson
@@ -374,8 +503,6 @@ export class InformationLink extends Referencable {
       this.target = target;
       this.type = type;
       this.linkText = linkText;
-      this.source.causes.push(this)
-      this.target.targetedBy.push(this)
     }
   }
 

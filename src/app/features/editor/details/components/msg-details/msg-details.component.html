@@ -16,7 +16,7 @@
   <div class="timing">
     <button class="tool-button" title="Move up"
             (click)="kemlService.moveMessageUp(msg)"
-            [disabled]="kemlService.disableMoveUp(msg)">
+            [disabled]="kemlService.isMoveUpDisabled(msg)">
       <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
     </button>
     <input type="number" min="0"
@@ -25,7 +25,7 @@
     />
     <button class="tool-button" title="Move down"
             (click)="kemlService.moveMessageDown(msg)"
-            [disabled]="kemlService.disableMoveDown(msg)">
+            [disabled]="kemlService.isMoveDownDisabled(msg)">
       <mat-icon aria-hidden="false" fontIcon="arrow_forward"></mat-icon>
     </button>
   </div>

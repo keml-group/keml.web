@@ -54,8 +54,7 @@ export class IncrementalSimulator {
     let pres = this.findNewPreknowledges(send)
     this.incrementalConv.author.preknowledge.push(...pres.map(p => this.copyPreknowledge(p)))
     let uses = send.uses.map(u => this.infoConnections.get(u.gId)!)
-    uses.map(u => u.isUsedOn.push(msg))
-    msg.uses = uses
+    uses.map(u => u.addIsUsedOn(msg))
     await this.linkStep(pres)
  }
 
@@ -81,7 +80,7 @@ export class IncrementalSimulator {
   private findNewPreknowledges(send: SendMessage): Preknowledge[] {
     let pres: Preknowledge[] = send.uses.filter(use =>  ! (use as NewInformation).source)
       .map(u => (u as Preknowledge))
-    return pres.filter(pre =>  pre.timeInfo() == send.timing)
+    return pres.filter(pre =>  pre.getTiming() == send.timing)
   }
 
   private copyPreknowledge(pre: Preknowledge): Preknowledge {
@@ -89,8 +88,6 @@ export class IncrementalSimulator {
       pre.message,
       pre.isInstruction,
       pre.position,
-      [],
-      [],
       [],
       [],
       pre.initialTrust,
@@ -108,8 +105,6 @@ export class IncrementalSimulator {
       newInfo.message,
       newInfo.isInstruction,
       newInfo.position,
-      [],
-      [],
       [],
       [],
       newInfo.initialTrust,

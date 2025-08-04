@@ -12,7 +12,7 @@ import {ConversationPartner} from "@app/shared/keml/models/core/conversation-par
 import {LayoutHelper} from "../utils/layout-helper";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
 import {Author} from "@app/shared/keml/models/core/author";
-import {ListUpdater} from "@app/core/utils/list-updater";
+import {ListUpdater} from "emfular";
 import {MsgPositionChangeService} from "@app/features/editor/services/msg-position-change.service";
 
 @Injectable({
@@ -53,7 +53,7 @@ export class KemlService {
     return cp;
   }
 
-  disableMoveConversationPartnerRight(cp: ConversationPartner): boolean {
+  isMoveConversationPartnerRightDisabled(cp: ConversationPartner): boolean {
     const cps = this.conversation.conversationPartners;
     const pos = cps.indexOf(cp);
     return pos == -1 || pos+1 >= cps.length;
@@ -62,14 +62,14 @@ export class KemlService {
   moveConversationPartnerRight(cp: ConversationPartner) {
     const cps = this.conversation.conversationPartners;
     const pos = cps.indexOf(cp);
-    if (!this.disableMoveConversationPartnerRight(cp)) {
+    if (!this.isMoveConversationPartnerRightDisabled(cp)) {
       cps[pos] = cps[pos+1];
       cps[pos + 1] = cp;
       LayoutHelper.positionConversationPartners(cps);
     }
   }
 
-  disableMoveConversationPartnerLeft(cp: ConversationPartner): boolean {
+  isMoveConversationPartnerLeftDisabled(cp: ConversationPartner): boolean {
     const pos = this.conversation.conversationPartners.indexOf(cp);
     return pos <= 0;
   }
@@ -77,7 +77,7 @@ export class KemlService {
   moveConversationPartnerLeft(cp: ConversationPartner) {
     const cps = this.conversation.conversationPartners;
     const pos = cps.indexOf(cp);
-    if (!this.disableMoveConversationPartnerLeft(cp)) {
+    if (!this.isMoveConversationPartnerLeftDisabled(cp)) {
       cps[pos] = cps[pos-1];
       cps[pos-1] = cp;
       LayoutHelper.positionConversationPartners(cps);
@@ -121,7 +121,7 @@ export class KemlService {
     this.msgPositionChangeService.notifyPositionChangeMessage( msg)
   }
 
-  disableMoveUp(msg: Message): boolean {
+  isMoveUpDisabled(msg: Message): boolean {
     return msg.timing<=0;
   }
 
@@ -136,7 +136,7 @@ export class KemlService {
     this.msgPositionChangeService.notifyPositionChangeMessage(msg)
   }
 
-  disableMoveDown(msg: Message): boolean {
+  isMoveDownDisabled(msg: Message): boolean {
     return msg.timing>=this.conversation.author.messages.length-1;
   }
 
@@ -217,7 +217,7 @@ export class KemlService {
     }
   }
 
-  disableAddNewMessage(): boolean {
+  isAddNewMessageDisabled(): boolean {
     return this.conversation.conversationPartners.length <= 0;
   }
 
@@ -246,44 +246,19 @@ export class KemlService {
   }
 
   addRepetition(rec: ReceiveMessage, info: Information) {
-    //only add the repetition if it connects to an earlier info (either preknowledge or older new info
-    const msgTime = rec.timing
-    const infoTime = (info as NewInformation).source?.timing
-    if (!infoTime || infoTime < msgTime ) {
-      if(rec.repeats.indexOf(info) == -1 ) {
-        rec.repeats.push(info)
-      }
-      if(info.repeatedBy.indexOf(rec) == -1) {
-        info.repeatedBy.push(rec)
-      }
-    } else {
-      console.log('No repetition allowed')
-    }
+    rec.addRepetition(info) //todo handle error, maybe alert?
   }
 
   deleteRepetition(rec: ReceiveMessage, info: Information) {
-    ListUpdater.removeFromList(info, rec.repeats)
-    ListUpdater.removeFromList(rec, info.repeatedBy)
+    rec.removeRepetition(info)
   }
 
   addUsage(send: SendMessage, info: Information) {
-    const infoInd = send.uses.indexOf(info)
-    if (infoInd > -1) {
-      console.log('Usage already exists')
-    } else {
-      send.uses.push(info)
-    }
-    const msgInd = info.isUsedOn.indexOf(send)
-    if (msgInd > -1) {
-      console.log('Used on already exists')
-    } else {
-      info.isUsedOn.push(send)
-    }
+    send.addUsage(info)
   }
 
   deleteUsage(send: SendMessage, info: Information) {
-    ListUpdater.removeFromList(info, send.uses)
-    ListUpdater.removeFromList(send, info.isUsedOn)
+    send.removeUsage(info)
   }
   //************** Infos ************************
 
@@ -311,20 +286,19 @@ export class KemlService {
   }
 
   addNewPreknowledge(): Preknowledge {
-    const preknowledge: Preknowledge = new Preknowledge("New preknowledge", false, LayoutHelper.bbForPreknowledge(LayoutHelper.positionForNewPreknowledge), [], [], [], [], 0.5, 0.5, 0.5, 0.5);
+    const preknowledge: Preknowledge = new Preknowledge("New preknowledge", false, LayoutHelper.bbForPreknowledge(LayoutHelper.positionForNewPreknowledge), [], [], 0.5, 0.5, 0.5, 0.5);
     this.conversation.author.preknowledge.push(preknowledge);
     return preknowledge;
   }
 
-  disableAddNewNewInfo(): boolean {
-    const rec = this.getFirstReceive();
-    return !rec;
+  isAddNewNewInfoDisabled(): boolean {
+    return !this.getFirstReceive();
   }
 
   addNewNewInfo(causeMsg?: ReceiveMessage): NewInformation | undefined {
     let source = causeMsg? causeMsg : this.getFirstReceive()
     if (source) {
-      return new NewInformation(source, 'New Information', false, LayoutHelper.bbForNewInfo(source.generates.length), [], [], [], [], 0.5, 0.5, 0.5, 0.5);
+      return new NewInformation(source, 'New Information', false, LayoutHelper.bbForNewInfo(source.generates.length), [], [], 0.5, 0.5, 0.5, 0.5);
     } else {
       console.error('No receive messages found');
       return undefined;
@@ -336,7 +310,7 @@ export class KemlService {
   }
   //***************** information links ********************
 
-  disableLinkCreation() {
+  isLinkCreationDisabled() {
     let size = this.conversation.author.preknowledge.length;
     if (size >=2)
       return false;
@@ -354,12 +328,7 @@ export class KemlService {
   }
 
   addInformationLink(src: Information, target: Information, type: InformationLinkType = InformationLinkType.SUPPLEMENT, text?: string): InformationLink {
-    return new InformationLink(
-      src,
-      target,
-      type,
-      text
-    );
+    return new InformationLink(src, target, type, text);
   }
 
   deleteLink(link: InformationLink) {
@@ -367,9 +336,7 @@ export class KemlService {
   }
 
   duplicateLink(link: InformationLink) {
-    const newLink = new InformationLink(link.source, link.target, link.type, link.linkText)
-    link.source.causes.splice(link.source.causes.indexOf(link),0, newLink);
-    link.target.targetedBy.splice(link.target.targetedBy.indexOf(link), 0, newLink);
-  }
+    new InformationLink(link.source, link.target, link.type, link.linkText)
+ }
 
 }

@@ -65,11 +65,13 @@ describe('KEMLIOService', () => {
       "        }\n" +
       "      } ]\n"+
       "    } ]\n"
-    let pre0 = new Preknowledge('pre0',
-      false, undefined, undefined, undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
+    let pre0 = new Preknowledge(
+      'pre0', false, undefined,
+      undefined, undefined, 0.5, 0.5, undefined, undefined,
       new Ref('//@author/@preknowledge.0', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
-    let pre1 = new Preknowledge('pre1',
-      false, undefined, undefined, undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
+    let pre1 = new Preknowledge(
+      'pre1', false, undefined,
+      undefined, undefined, 0.5, 0.5, undefined, undefined,
       new Ref('//@author/@preknowledge.1', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
 
     let preknowledge = [pre0, pre1]
@@ -122,18 +124,16 @@ describe('KEMLIOService', () => {
       "   } ]\n"
     let msg0 = new SendMessage(cp0,0, "m0", "msg0long", [pre0],
       new Ref('//@author/@messages.0', 'http://www.unikoblenz.de/keml#//SendMessage'))
-    //todo
-    pre0.isUsedOn.push(msg0)
     let msg1 = new ReceiveMessage(cp1, 1, "m1", "msg1long",
       undefined, undefined, false,
       new Ref('//@author/@messages.1', 'http://www.unikoblenz.de/keml#//ReceiveMessage')
     )
     let msgs: Message[] = [msg0, msg1]
     let newInfo0 = new NewInformation(msg1, "ni0", true,
-      undefined, undefined, undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
+      undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
       new Ref('//@author/@messages.1/@generates.0', 'http://www.unikoblenz.de/keml#//NewInformation'))
     let newInfo1 = new NewInformation(msg1, "ni1",
-      false,undefined, undefined, undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
+      false,undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
       new Ref('//@author/@messages.1/@generates.1', 'http://www.unikoblenz.de/keml#//NewInformation'))
 
     LayoutHelper.initializeInfoPos(msgs)
