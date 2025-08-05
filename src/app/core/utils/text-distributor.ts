@@ -59,7 +59,6 @@ export class TextDistributor {
   // if a single word is too long for a line, cut it early enough to have three dots afterwards
   static limitSingleWord(word: string, w: number): string {
     let maxSize = this.determineHowManyChars(w)
-
     if (word.length > maxSize) {
       let ending = '...'
       // care for far too short width:
@@ -71,5 +70,22 @@ export class TextDistributor {
     } else {
       return word
     }
+  }
+
+  // adapts input words array in place by removing all those that are taken into the result
+  static takeNextLine(words: string[], w: number): string {
+    if (words?.length > 0) {
+      let res = this.limitSingleWord(words[0], w)
+      let i = 1;
+      let maxSize = this.determineHowManyChars(w)
+      let testRes = res + ' ' + words[i]
+      while (testRes.length <= maxSize && i < words.length-1) {
+        res = testRes
+        i++
+        testRes = res + ' ' + words[i]
+      }
+      words.splice(0, i)
+      return res;
+    } else return ''
   }
 }

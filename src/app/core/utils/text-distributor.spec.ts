@@ -6,7 +6,7 @@ describe('TextDistributor', () => {
     expect(new TextDistributor()).toBeTruthy();
   });
 
-
+  //**************** limitSingleWord ***********
   it('Should limit a single word that is far too long', () => {
     expect(
       TextDistributor.limitSingleWord(
@@ -34,6 +34,36 @@ describe('TextDistributor', () => {
     ).toEqual('ThisIsNOTTooLong');
   })
 
+  // *************** takeNextLine *****************
+  it('Should read a whole line and change the input words array', () => {
+    let words: string[] = []
+    expect(
+      TextDistributor.takeNextLine(words, 20)
+    ).toEqual('')
+  })
+
+  it('Should read a whole line and change the input words array by removing three words', () => {
+    let words: string[] = ['Lorem','ipsum', 'dolor', 'sit', 'amet,', 'consetetur', 'sadipscing', 'elitr,']
+    expect(
+      TextDistributor.takeNextLine(words, 210)
+    ).toEqual('Lorem ipsum dolor sit amet,')
+    expect(words).toEqual(
+      ['consetetur', 'sadipscing', 'elitr,']
+    )
+  })
+
+  it('Should read a whole line with a too long first word and change the input words array by removing it', () => {
+    let words: string[] = ['TooLongWordLongerLongerLongerLongerLonger', 'consetetur', 'sadipscing', 'elitr,']
+    expect(
+      TextDistributor.takeNextLine(words, 200)
+    ).toEqual('TooLongWordLongerLonger...')
+    expect(words).toEqual(
+      ['consetetur', 'sadipscing', 'elitr,']
+    )
+  })
+
+
+  // ******************* distributeText *****************
   var bb: BoundingBox = {
     x: 20,
     y: 40,
