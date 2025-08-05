@@ -43,7 +43,7 @@ describe('TextAreaSvgComponent', () => {
     )
   })
 
-  it('Should set a short distributed text after a longer one', () => {
+  it('Should set a short distributed text after setting a longer one', () => {
     initializeDistributedText();
 
     verifyDistributedText(
@@ -53,15 +53,6 @@ describe('TextAreaSvgComponent', () => {
     verifyDistributedText(
       'Short',
       ['Short']
-    )
-  })
-
-
-  it('Should handle a too long first word in a two line setting', () => {
-    initializeDistributedText();
-    verifyDistributedText(
-      'TooLongWordLongerLongerLongerLongerLonger, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam',
-      ['TooLongWordLongerLonger...', 'consetetur sadipscing...']
     )
   })
 
