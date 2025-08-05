@@ -50,8 +50,7 @@ export class TextAreaSvgComponent implements OnChanges {
 
   distributeText(){
     this.distributedText = TextDistributor.distributeText(
-      this.text,
-      {x: this.x, y: this.y, w: this.w, h: this.h}
+      this.text, this.w, this.h
     )
   }
 
