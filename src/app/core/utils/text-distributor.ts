@@ -14,7 +14,7 @@ export class TextDistributor {
   // if a single word is too long for a line, cut it early enough to have three dots afterwards
   // if you need to indicate that there is more text after the last complete word, also use three dots, but after a break
   static distributeText(text: string, area: BoundingBox): string[] {
-    let distributedText: (string |undefined )[] = [];
+    let distributedText: string[] = [];
 
     let broken = text?.split(' ')
     let maxLines = this.determineLines(area.h)
@@ -32,7 +32,7 @@ export class TextDistributor {
       // we need to indicate that there is more text - this could be the 4 signs to many...
       distributedText[maxLines - 1] +=' ...'
     }
-    return distributedText.filter(w => w != undefined)
+    return distributedText.filter(w => w != '')
   }
 
   // if a single word is too long for a line, cut it early enough to have three dots afterwards
@@ -52,7 +52,7 @@ export class TextDistributor {
   }
 
   // adapts input words array in place by removing all those that are taken into the result
-  static takeNextLine(words: string[], w: number): string | undefined {
+  static takeNextLine(words: string[], w: number): string {
     if (words?.length > 0) {
       let res = this.limitSingleWord(words[0], w)
       let i = 1;
@@ -65,6 +65,6 @@ export class TextDistributor {
       }
       words.splice(0, i)
       return res;
-    } else return undefined
+    } else return ''
   }
 }

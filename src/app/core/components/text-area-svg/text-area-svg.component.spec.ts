@@ -39,7 +39,7 @@ describe('TextAreaSvgComponent', () => {
 
     verifyDistributedText(
       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam',
-      ['Lorem ipsum dolor sit', 'amet, consetetur...']
+      ['Lorem ipsum dolor sit', 'amet, consetetur ...']
     )
   })
 
@@ -48,7 +48,7 @@ describe('TextAreaSvgComponent', () => {
 
     verifyDistributedText(
       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam',
-      ['Lorem ipsum dolor sit', 'amet, consetetur...']
+      ['Lorem ipsum dolor sit', 'amet, consetetur ...']
     ) //first set two lines, next set a shorter one
     verifyDistributedText(
       'Short',

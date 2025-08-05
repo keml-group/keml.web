@@ -87,10 +87,10 @@ describe('TextDistributor', () => {
     )
   })
 
-  it('Should create an empty text', () => {
-    var text = '   '
+  it('Should transfer the empty string into an empty list', () => {
+    var text = ''
     expect(TextDistributor.distributeText(text, bb)).toEqual(
-      ['   ']
+      []
     )
   })
 
