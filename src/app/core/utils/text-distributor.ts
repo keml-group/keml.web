@@ -2,10 +2,6 @@ import {BoundingBox} from "ngx-svg-graphics";
 
 export class TextDistributor {
 
-  private static determineLengthInBBB(words: string): number {
-    return words.length*7.6
-  }
-
   private static determineHowManyChars(w: number): number {
     return Math.floor(w/7.6)
   }
