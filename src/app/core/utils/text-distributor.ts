@@ -2,8 +2,16 @@ import {BoundingBox} from "ngx-svg-graphics";
 
 export class TextDistributor {
 
+  private static determineLengthInBBB(words: string): number {
+    return words.length*7.6
+  }
+
+  private static determineHowManyChars(w: number): number {
+    return Math.floor(w/7.6)
+  }
+
   private static determineOneLineBB(words: string): BoundingBox {
-    return {x: 0, y:0, w: words.length*7.6, h: 20 }
+    return {x: 0, y:0, w: this.determineLengthInBBB(words), h: 20 }
   }
 
   // idea: distribute words over lines,
@@ -46,5 +54,22 @@ export class TextDistributor {
       }
     }
     return distributedText
+  }
+
+  // if a single word is too long for a line, cut it early enough to have three dots afterwards
+  static limitSingleWord(word: string, w: number): string {
+    let maxSize = this.determineHowManyChars(w)
+
+    if (word.length > maxSize) {
+      let ending = '...'
+      // care for far too short width:
+      if (maxSize <= 3) {
+        return ending.substring(0, maxSize)
+      } else {
+        return word.substring(0, maxSize-3)+'...'
+      }
+    } else {
+      return word
+    }
   }
 }

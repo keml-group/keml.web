@@ -6,6 +6,34 @@ describe('TextDistributor', () => {
     expect(new TextDistributor()).toBeTruthy();
   });
 
+
+  it('Should limit a single word that is far too long', () => {
+    expect(
+      TextDistributor.limitSingleWord(
+        'ThisIsAFarTOOLongWordWordWord',
+        200
+      )
+    ).toEqual('ThisIsAFarTOOLongWordWo...');
+  })
+
+  it('Should limit a single word in a case with less than 3 chars space', () => {
+    expect(
+      TextDistributor.limitSingleWord(
+        'ThisIsAFarTOOLongWordWordWord',
+        20
+      )
+    ).toEqual('..');
+  })
+
+  it('Should limit a single word that is short enough', () => {
+    expect(
+      TextDistributor.limitSingleWord(
+        'ThisIsNOTTooLong',
+        200
+      )
+    ).toEqual('ThisIsNOTTooLong');
+  })
+
   var bb: BoundingBox = {
     x: 20,
     y: 40,
