@@ -62,6 +62,15 @@ describe('TextDistributor', () => {
     )
   })
 
+  it('Should read a whole line with a too long second word and change the input words array by removing the first word only', () => {
+    let words: string[] = ['Short','TooLongWordLongerLongerLongerLongerLonger', 'consetetur', 'sadipscing', 'elitr,']
+    expect(
+      TextDistributor.takeNextLine(words, 200)
+    ).toEqual('Short')
+    expect(words).toEqual(
+      ['TooLongWordLongerLongerLongerLongerLonger','consetetur', 'sadipscing', 'elitr,']
+    )
+  })
 
   // ******************* distributeText *****************
   var bb: BoundingBox = {
