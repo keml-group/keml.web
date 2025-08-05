@@ -10,7 +10,7 @@ import { MsgComponent } from '@app/shared/keml/components/msg/msg.component';
 import { PreknowledgeComponent } from '@app/shared/keml/components/preknowledge/preknowledge.component';
 import { ConversationPartnerComponent } from '@app/shared/keml/components/cp/conversation-partner.component';
 import { AuthorComponent } from '@app/shared/keml/components/author/author.component';
-import { TextAreaSvgComponent } from '@app/core/components/text-area-svg/text-area-svg.component';
+import { TextAreaSvgComponent } from "ngx-svg-graphics";
 import { DatabaseSvgComponent } from '@app/shared/keml/components/helper/svg-base-components/database-svg/database-svg.component';
 import { PersonSvgComponent } from '@app/shared/keml/components/helper/svg-base-components/person-svg/person-svg.component';
 import {SimulationService} from "@app/features/simulator/services/simulation.service";

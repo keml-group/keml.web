@@ -7,7 +7,7 @@ import {AuthorComponent} from "@app/shared/keml/components/author/author.compone
 import {ConversationPartnerComponent} from "@app/shared/keml/components/cp/conversation-partner.component";
 import {MsgComponent} from "@app/shared/keml/components/msg/msg.component";
 import {PreknowledgeComponent} from "@app/shared/keml/components/preknowledge/preknowledge.component";
-import {TextAreaSvgComponent} from "@app/core/components/text-area-svg/text-area-svg.component";
+import {TextAreaSvgComponent} from "ngx-svg-graphics";
 import {SimulationService} from "../../services/simulation.service";
 import {MatToolbar} from "@angular/material/toolbar";
 import {TrustComputator} from "../../utils/trust-computator";

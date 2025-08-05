@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {Message} from "@app/shared/keml/models/core/msg-info";
-import { TextAreaSvgComponent } from '@app/core/components/text-area-svg/text-area-svg.component';
+import { TextAreaSvgComponent } from "ngx-svg-graphics";
 import { NgIf } from '@angular/common';
 import {ArrowBetweenBoxesComponent} from "ngx-svg-graphics";
 

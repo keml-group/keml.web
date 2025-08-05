@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Information, NewInformation, InformationLink} from "@app/shared/keml/models/core/msg-info";
-import { TextAreaSvgComponent } from '@app/core/components/text-area-svg/text-area-svg.component';
+import { TextAreaSvgComponent } from "ngx-svg-graphics";
 import { IsInstrSvgComponent } from '../is-instr-svg/is-instr-svg.component';
 import {SVGAccessService, DraggableComponent, Dragger} from "ngx-svg-graphics";
 
