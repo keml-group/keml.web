@@ -1,5 +1,3 @@
-import {BoundingBox} from "ngx-svg-graphics";
-
 export class TextDistributor {
 
   private static determineHowManyChars(w: number): number {
@@ -13,18 +11,18 @@ export class TextDistributor {
   // idea: distribute words over lines,
   // if a single word is too long for a line, cut it early enough to have three dots afterwards
   // if you need to indicate that there is more text after the last complete word, also use three dots, but after a break
-  static distributeText(text: string, area: BoundingBox): string[] {
+  static distributeText(text: string, w: number, h: number): string[] {
     let distributedText: string[] = [];
 
     let broken = text?.split(' ')
-    let maxLines = this.determineLines(area.h)
+    let maxLines = this.determineLines(h)
     if (maxLines <= 0) {
       console.error('Text area too low for text ' + text)
       distributedText = ['...']
     }
     for (let i = 0; i < maxLines; i++) {
       if (broken.length > 0) {
-        distributedText[i] = this.takeNextLine(broken, area.w)
+        distributedText[i] = this.takeNextLine(broken, w)
       }
     }
     // now deal with last line: here we need special care for adding ... if necessary

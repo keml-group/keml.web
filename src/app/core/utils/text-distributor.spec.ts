@@ -1,5 +1,4 @@
 import { TextDistributor } from './text-distributor';
-import {BoundingBox} from "ngx-svg-graphics";
 
 describe('TextDistributor', () => {
   it('should create an instance', () => {
@@ -73,30 +72,24 @@ describe('TextDistributor', () => {
   })
 
   // ******************* distributeText *****************
-  var bb: BoundingBox = {
-    x: 20,
-    y: 40,
-    w: 200,
-    h: 50,
-  }
 
   it('Should return a two line distributed text', () => {
     var text = 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam'
-    expect(TextDistributor.distributeText(text, bb)).toEqual(
+    expect(TextDistributor.distributeText(text, 200, 50)).toEqual(
       ['Lorem ipsum dolor sit', 'amet, consetetur ...']
     )
   })
 
   it('Should transfer the empty string into an empty list', () => {
     var text = ''
-    expect(TextDistributor.distributeText(text, bb)).toEqual(
+    expect(TextDistributor.distributeText(text, 200, 50)).toEqual(
       []
     )
   })
 
   it('Should cut a word that is too long for a line', () => {
     var text =       'TooLongWordLongerLongerLongerLongerLonger, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam'
-    expect(TextDistributor.distributeText(text, bb)).toEqual(
+    expect(TextDistributor.distributeText(text, 200, 50)).toEqual(
       ['TooLongWordLongerLonger...', 'consetetur sadipscing ...']
     )
   })
