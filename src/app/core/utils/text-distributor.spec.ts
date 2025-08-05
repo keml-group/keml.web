@@ -35,7 +35,7 @@ describe('TextDistributor', () => {
   })
 
   // *************** takeNextLine *****************
-  it('Should read a whole line and change the input words array', () => {
+  it('Should read an empty line and change the input words array', () => {
     let words: string[] = []
     expect(
       TextDistributor.takeNextLine(words, 20)
@@ -83,7 +83,7 @@ describe('TextDistributor', () => {
   it('Should return a two line distributed text', () => {
     var text = 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam'
     expect(TextDistributor.distributeText(text, bb)).toEqual(
-      ['Lorem ipsum dolor sit', 'amet, consetetur...']
+      ['Lorem ipsum dolor sit', 'amet, consetetur ...']
     )
   })
 
@@ -97,7 +97,7 @@ describe('TextDistributor', () => {
   it('Should cut a word that is too long for a line', () => {
     var text =       'TooLongWordLongerLongerLongerLongerLonger, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam'
     expect(TextDistributor.distributeText(text, bb)).toEqual(
-      ['TooLongWordLongerLonger...', 'consetetur sadipscing...']
+      ['TooLongWordLongerLonger...', 'consetetur sadipscing ...']
     )
   })
 });
