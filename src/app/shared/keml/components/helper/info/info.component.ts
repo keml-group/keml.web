@@ -1,17 +1,19 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Information, NewInformation, InformationLink} from "@app/shared/keml/models/core/msg-info";
-import { TextAreaSvgComponent } from "ngx-svg-graphics";
-import { IsInstrSvgComponent } from '../is-instr-svg/is-instr-svg.component';
+import {Information, InformationLink} from "@app/shared/keml/models/core/msg-info";
 import {SVGAccessService, DraggableComponent, Dragger} from "ngx-svg-graphics";
+import {InfoInnerComponent} from "@app/shared/keml/components/helper/info-inner/info-inner.component";
+import {InformationLinkComponent} from "@app/shared/keml/components/information-link/information-link.component";
+import {NgForOf} from "@angular/common";
 
 @Component({
     selector: '[infoG]',
     templateUrl: './info.component.svg',
     styleUrl: './info.component.css',
-    imports: [IsInstrSvgComponent, TextAreaSvgComponent]
+  imports: [InfoInnerComponent, InformationLinkComponent, NgForOf]
 })
 export class InfoComponent extends DraggableComponent<Information> implements OnInit {
   @Input() info!: Information;
+  @Input() showTrust = false;
   @Output() chooseInfoLink = new EventEmitter<InformationLink>();
 
   constructor(
@@ -24,21 +26,6 @@ export class InfoComponent extends DraggableComponent<Information> implements On
     this.elem = this.info;
     this.elemDragger = new Dragger(this.elem);
   }
-
-  // todo later use color here, then this is main method
-  getConvPartnerName(): string {
-    const source = (this.info as NewInformation).source
-    if(source ) {
-      return source.counterPart.name; //todo use color
-    } else return 'author'; //give colors here already, currently we use the template vehicle
-  }
-
-  // todo
-  computeTextColor():string {
-    const name = this.getConvPartnerName();
-    return name == 'LLM'? '#ccffff' : '#ffff99'
-  }
-
 
   public clickInfo(event: MouseEvent) {
     this.clickElem(event)

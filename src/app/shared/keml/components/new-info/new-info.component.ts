@@ -14,6 +14,5 @@ import {ArrowBetweenBoxesComponent} from "ngx-svg-graphics";
 })
 export class NewInfoComponent extends InfoComponent {
   @Input() override info!: NewInformation;
-  @Input() showTrust = false;
 
 }

@@ -13,6 +13,4 @@ import { InformationLinkComponent } from '../information-link/information-link.c
 })
 export class PreknowledgeComponent extends InfoComponent {
   @Input() override info!: Preknowledge;
-  @Input() showTrust = false;
-
 }
