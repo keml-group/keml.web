@@ -190,14 +190,22 @@ describe('Msg-Info (models)', () => {
     expect(p0.targetedBy.length).toEqual(0)
   })
 
-  it('source destruction: should delete an info that is a link source completely (also deletes the link)', () => {
+  it('source destruction: should delete an info that is a link source for two links completely (also deletes the links)', () => {
     let p0 = new Preknowledge('p0')
     let p1 = new Preknowledge('p1')
-    let link = new InformationLink(p1, p0, InformationLinkType.SUPPORT)
-    expect(p0.targetedBy.length).toEqual(1)
+    let p2 = new Preknowledge('p2')
 
-    p1.destruct()
-    expect(p0.targetedBy.length).toEqual(0)
+    let link1 = new InformationLink( p0, p1, InformationLinkType.SUPPORT)
+    let link2 = new InformationLink( p0, p2, InformationLinkType.SUPPLEMENT)
+    expect(p0.causes.length).toEqual(2)
+    expect(p1.targetedBy.length).toEqual(1)
+    expect(p2.targetedBy.length).toEqual(1)
+
+    p0.destruct()
+
+    expect(p0.causes.length).toEqual(0)
+    expect(p1.targetedBy.length).toEqual(0)
+    expect(p2.targetedBy.length).toEqual(0)
   })
 
   it('target destruction: should delete an info that is a link target of two links completely (also deletes the links)', () => {
@@ -206,14 +214,15 @@ describe('Msg-Info (models)', () => {
     let p2 = new Preknowledge('p2')
     let link1 = new InformationLink(p1, p0, InformationLinkType.SUPPORT)
     let link2 = new InformationLink(p2, p0, InformationLinkType.SUPPLEMENT)
+    expect(p0.targetedBy.length).toEqual(2)
     expect(p1.causes.length).toEqual(1)
     expect(p2.causes.length).toEqual(1)
-    expect(p0.targetedBy.length).toEqual(2)
 
     p0.destruct()
+
+    expect(p0.targetedBy.length).toEqual(0)
     expect(p1.causes.length).toEqual(0)
     expect(p2.causes.length).toEqual(0)
-    expect(p0.targetedBy.length).toEqual(0)
   })
 
   it('should time a preknowledge correctly', () => {
