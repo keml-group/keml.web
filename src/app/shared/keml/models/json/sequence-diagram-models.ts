@@ -11,12 +11,11 @@ export interface ConversationJson {
 interface LifeLineJson {
   name: string;
   xPosition: number; //int todo
-  eClass: string;
+  eClass: string; //not there on CPs, see old examples - why is it suppressed? Because it is clear?
 }
 
 export interface ConversationPartnerJson extends LifeLineJson {
   color?: number; // todo
-  $ref?: string; //only for parsing, not clean
 }
 
 export interface AuthorJson extends LifeLineJson {
