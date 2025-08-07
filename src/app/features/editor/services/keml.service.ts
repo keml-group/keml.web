@@ -14,6 +14,7 @@ import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models
 import {Author} from "@app/shared/keml/models/core/author";
 import {ListUpdater} from "emfular";
 import {MsgPositionChangeService} from "@app/features/editor/services/msg-position-change.service";
+import {AlertService} from "@app/core/services/alert.service";
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,7 @@ export class KemlService {
 
   constructor(
     private msgPositionChangeService: MsgPositionChangeService,
+    private alertService: AlertService,
   ) {
     this.conversation = new Conversation();
     LayoutHelper.positionConversationPartners(this.conversation.conversationPartners)
@@ -162,6 +164,7 @@ export class KemlService {
     const msgs = this.conversation.author.messages
     if (newPos >= msgs.length) {
       let errormsg = 'Position should not be more than ' + msgs.length
+      this.alertService.alert(errormsg)
       console.error(errormsg)
       throw errormsg;
     }

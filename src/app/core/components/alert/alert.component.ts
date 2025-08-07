@@ -12,15 +12,12 @@ import {MatIcon} from "@angular/material/icon";
 })
 export class AlertComponent {
 
-  public message: string;
+  public message!: string;
 
   constructor(
-    msg: string,
     public dialogRef: MatDialogRef<AlertComponent>
-  ) {
-    this.message = msg;
-  }
-  
+  ) {}
+
   closeMe(): void {
     this.dialogRef.close();
   }
