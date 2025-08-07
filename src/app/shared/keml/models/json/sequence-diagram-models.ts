@@ -5,7 +5,7 @@ export interface ConversationJson {
   eClass: string;
   title: string;
   author: AuthorJson;
-  conversationPartners: (ConversationPartnerJson)[];
+  conversationPartners: ConversationPartnerJson[];
 }
 
 interface LifeLineJson {
@@ -36,8 +36,8 @@ export interface SendMessageJson extends MessageJson {
 }
 
 export interface ReceiveMessageJson extends MessageJson {
-  generates: (NewInformationJson)[];
-  repeats?: (Ref)[];
+  generates: NewInformationJson[];
+  repeats?: Ref[];
   isInterrupted: boolean;
 }
 
