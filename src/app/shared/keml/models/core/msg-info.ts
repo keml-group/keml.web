@@ -331,10 +331,9 @@ export abstract class Information extends Referencable implements Positionable {
       ListUpdater.removeFromList(this, send.uses)
     })
 
-    this.targetedBy.forEach((link: InformationLink) => {
-      link.destruct()
-    })
-    this.targetedBy.splice(0, this.targetedBy.length)
+    ListUpdater.destructAllFromChangingList(this.targetedBy)
+
+
     super.destruct();
   }
 }
