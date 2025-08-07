@@ -1,6 +1,6 @@
 import {Ref} from "emfular";
 import {Author} from "@app/shared/keml/models/core/author";
-import {Message, NewInformation, Preknowledge, ReceiveMessage} from "@app/shared/keml/models/core/msg-info";
+import {Message, ReceiveMessage} from "@app/shared/keml/models/core/msg-info";
 import {ConversationJson, ReceiveMessageJson,} from '@app/shared/keml/models/json/sequence-diagram-models'
 import {Conversation} from "@app/shared/keml/models/core/conversation";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
@@ -59,7 +59,6 @@ export class JsonFixer {
             let ref = new Ref(infoPath, EClasses.NewInformation)
             newInfo.causes?.forEach(infoLink => infoLink.source = ref)
           })
-
         }
       }
     )
