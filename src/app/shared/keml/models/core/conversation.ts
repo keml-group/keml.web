@@ -3,11 +3,11 @@ import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
 import {Deserializer, Ref, Referencable} from "emfular";
 import {KEMLConstructorPointers} from "@app/shared/keml/models/json2core/keml-constructor-pointers";
+import {EClasses} from "@app/shared/keml/models/eclasses";
 
 
 export class Conversation extends Referencable {
   static readonly ownPath: string = '/'
-  static readonly eClass ='http://www.unikoblenz.de/keml#//Conversation';
   title: string;
   static readonly authorPrefix = 'author';
   author: Author;
@@ -20,15 +20,15 @@ export class Conversation extends Referencable {
     conversationPartners: ConversationPartner[] = [],
     deserializer?: Deserializer,
   ) {
-    let ref = new Ref(Conversation.ownPath, Conversation.eClass)
+    let ref = new Ref(Conversation.ownPath, EClasses.Conversation)
     super(ref);
     if (deserializer) {
       let convJson: ConversationJson = deserializer.getJsonFromTree(this.ref.$ref)
       deserializer.put(this)
       this.title = convJson.title;
-      const authorRef = Deserializer.createSingleRef(Conversation.ownPath, Conversation.authorPrefix, Author.eClass)
+      const authorRef = Deserializer.createSingleRef(Conversation.ownPath, Conversation.authorPrefix, EClasses.Author)
       this.author = deserializer.getOrCreate<Author>(authorRef);
-      const cpRefs: Ref[] = Deserializer.createRefList(Conversation.ownPath, Conversation.conversationPartnersPrefix, convJson.conversationPartners.map(_ => ConversationPartner.eClass))
+      const cpRefs: Ref[] = Deserializer.createRefList(Conversation.ownPath, Conversation.conversationPartnersPrefix, convJson.conversationPartners.map(_ => EClasses.ConversationPartner))
       this.conversationPartners = cpRefs.map( cp => deserializer.getOrCreate<ConversationPartner>(cp))
     } else {
       this.title = title;
@@ -44,7 +44,7 @@ export class Conversation extends Referencable {
     let cps = this.conversationPartners.map(x => x.toJson())
 
     return {
-      eClass: Conversation.eClass,
+      eClass: this.ref.eClass,
       title: this.title,
       conversationPartners: cps,
       author: this.author.toJson(),

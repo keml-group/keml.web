@@ -3,9 +3,10 @@ import {Message} from "./msg-info";
 import {AuthorJson} from "@app/shared/keml/models/json/sequence-diagram-models"
 import {Preknowledge} from "./msg-info";
 import {Deserializer, Ref} from "emfular";
+import {EClasses} from "@app/shared/keml/models/eclasses";
 
 export class Author extends LifeLine{
-  static readonly eClass = "http://www.unikoblenz.de/keml#//Author";
+  static readonly eClass = EClasses.Author;
   static readonly preknowledgePrefix: string = 'preknowledge';
   preknowledge: Preknowledge[];
   static readonly messagesPrefix: string = 'messages';
@@ -19,7 +20,7 @@ export class Author extends LifeLine{
       super(authorJson.name, authorJson.xPosition, refC)
       deserializer.put(this)
       //compute and use refs for all tree children:
-      let preknowledgeRefs = Deserializer.createRefList(ref!.$ref, Author.preknowledgePrefix, authorJson.preknowledge? authorJson.preknowledge.map(_ => Preknowledge.eClass): [])
+      let preknowledgeRefs = Deserializer.createRefList(ref!.$ref, Author.preknowledgePrefix, authorJson.preknowledge? authorJson.preknowledge.map(_ => EClasses.Preknowledge): [])
       this.preknowledge = preknowledgeRefs.map(r => deserializer.getOrCreate<Preknowledge>(r));
       let messageRefs = Deserializer.createRefList(ref!.$ref, Author.messagesPrefix, authorJson.messages.map(r => r.eClass))
       this.messages = messageRefs.map(r => deserializer.getOrCreate<Message>(r));

@@ -4,6 +4,7 @@ import {Message, NewInformation, Preknowledge, ReceiveMessage} from "@app/shared
 import {ConversationJson, ReceiveMessageJson,} from '@app/shared/keml/models/json/sequence-diagram-models'
 import {Conversation} from "@app/shared/keml/models/core/conversation";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
+import {EClasses} from "@app/shared/keml/models/eclasses";
 
 export class JsonFixer {
 
@@ -39,7 +40,7 @@ export class JsonFixer {
           Ref.computePrefix(authorPrefix, Author.preknowledgePrefix),
           index
         ),
-        Preknowledge.eClass
+        EClasses.Preknowledge
       )
       p.causes?.forEach(link =>
         link.source = ref
@@ -55,7 +56,7 @@ export class JsonFixer {
             let infoPath = Ref.mixWithIndex(
               Ref.computePrefix(msgPath, ReceiveMessage.generatesPrefix),
               index2)
-            let ref = new Ref(infoPath, NewInformation.eClass)
+            let ref = new Ref(infoPath, EClasses.NewInformation)
             newInfo.causes?.forEach(infoLink => infoLink.source = ref)
           })
 

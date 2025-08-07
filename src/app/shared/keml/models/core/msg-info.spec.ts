@@ -3,13 +3,14 @@ import {InformationLinkJson, InformationLinkType, NewInformationJson, Preknowled
 import {ConversationPartner} from "./conversation-partner";
 import {ReceiveMessageJson, SendMessageJson} from "@app/shared/keml/models/json/sequence-diagram-models";
 import {Ref} from "emfular";
+import {EClasses} from "@app/shared/keml/models/eclasses";
 
 describe('Msg-Info (models)', () => {
 
   it('should prepare the information serialization for getRef', () => {
     let preknowledge = new Preknowledge()
      preknowledge.prepare('fantasy')
-    expect (preknowledge.getRef()).toEqual(new Ref('fantasy', Preknowledge.eClass));
+    expect (preknowledge.getRef()).toEqual(new Ref('fantasy', EClasses.Preknowledge));
   })
 
   it('should determine the correct timing of a new info', () => {
@@ -51,7 +52,7 @@ describe('Msg-Info (models)', () => {
     let cp = new ConversationPartner()
     let msg = new SendMessage(cp, 0, "sendContent")
     let msgJson: SendMessageJson = {
-      eClass: SendMessage.eClass,
+      eClass: EClasses.SendMessage,
       content: "sendContent",
       originalContent: undefined,
       timing: 0,
@@ -65,7 +66,7 @@ describe('Msg-Info (models)', () => {
     let cp = new ConversationPartner()
     let msg = new ReceiveMessage(cp, 1, "receiveContent")
     let msgJson: ReceiveMessageJson = {
-      eClass: ReceiveMessage.eClass,
+      eClass: EClasses.ReceiveMessage,
       content: "receiveContent",
       originalContent: undefined,
       timing: 1,
@@ -83,7 +84,7 @@ describe('Msg-Info (models)', () => {
     let preknowledgeJson : PreknowledgeJson = {
       causes: [],
       currentTrust: undefined,
-      eClass: Preknowledge.eClass,
+      eClass: EClasses.Preknowledge,
       position: {x: 0, y: 0, w: 5, h: 5},
       feltTrustAfterwards: undefined,
       feltTrustImmediately: undefined,
@@ -105,7 +106,7 @@ describe('Msg-Info (models)', () => {
       source: msg.getRef(),
       causes: [],
       currentTrust: undefined,
-      eClass: NewInformation.eClass,
+      eClass: EClasses.NewInformation,
       feltTrustAfterwards: undefined,
       feltTrustImmediately: undefined,
       initialTrust: undefined,
@@ -130,50 +131,50 @@ describe('Msg-Info (models)', () => {
     // ***** candidates **********
     let infoLink_new_new = new InformationLink(newInfo1, newInfo2, InformationLinkType.SUPPLEMENT, 'text')
     let infoLink_new_new_Json: InformationLinkJson = {
-      eClass: InformationLink.eClass,
+      eClass: EClasses.InformationLink,
       linkText: "text",
-      source: new Ref('', NewInformation.eClass),
-      target: new Ref('', NewInformation.eClass),
+      source: new Ref('', EClasses.NewInformation),
+      target: new Ref('', EClasses.NewInformation),
       type: InformationLinkType.SUPPLEMENT
     }
     expect(infoLink_new_new.toJson()).toEqual(infoLink_new_new_Json);
 
     let infoLink_new_pre = new InformationLink(newInfo1, preknowledge1, InformationLinkType.STRONG_ATTACK, 'text')
     let infoLink_new_pre_Json: InformationLinkJson = {
-      eClass: InformationLink.eClass,
+      eClass: EClasses.InformationLink,
       linkText: "text",
-      source: new Ref('', NewInformation.eClass),
-      target: new Ref('', Preknowledge.eClass),
+      source: new Ref('', EClasses.NewInformation),
+      target: new Ref('', EClasses.Preknowledge),
       type: InformationLinkType.STRONG_ATTACK
     }
     expect(infoLink_new_pre.toJson()).toEqual(infoLink_new_pre_Json);
 
     let infoLink_pre_new = new InformationLink(preknowledge1, newInfo1, InformationLinkType.SUPPORT)
     let infoLink_pre_new_Json: InformationLinkJson = {
-      eClass: InformationLink.eClass,
+      eClass: EClasses.InformationLink,
       linkText: undefined,
-      source: new Ref('', Preknowledge.eClass),
-      target: new Ref('', NewInformation.eClass),
+      source: new Ref('', EClasses.Preknowledge),
+      target: new Ref('', EClasses.NewInformation),
       type: InformationLinkType.SUPPORT
     }
     expect(infoLink_pre_new.toJson()).toEqual(infoLink_pre_new_Json);
 
     let infoLink_pre_pre = new InformationLink(preknowledge1, preknowledge2, InformationLinkType.STRONG_SUPPORT)
     let infoLink_pre_pre_Json: InformationLinkJson = {
-      eClass: InformationLink.eClass,
+      eClass: EClasses.InformationLink,
       linkText: undefined,
-      source: new Ref('', Preknowledge.eClass),
-      target: new Ref('', Preknowledge.eClass),
+      source: new Ref('', EClasses.Preknowledge),
+      target: new Ref('', EClasses.Preknowledge),
       type: InformationLinkType.STRONG_SUPPORT
     }
     expect(infoLink_pre_pre.toJson()).toEqual(infoLink_pre_pre_Json);
 
     let infoLink_pre_pre_2 = new InformationLink(preknowledge1, preknowledge2, InformationLinkType.ATTACK)
     let infoLink_pre_pre_2_Json: InformationLinkJson = {
-      eClass: InformationLink.eClass,
+      eClass: EClasses.InformationLink,
       linkText: undefined,
-      source: new Ref('', Preknowledge.eClass),
-      target: new Ref('', Preknowledge.eClass),
+      source: new Ref('', EClasses.Preknowledge),
+      target: new Ref('', EClasses.Preknowledge),
       type: InformationLinkType.ATTACK
     }
     expect(infoLink_pre_pre_2.toJson()).toEqual(infoLink_pre_pre_2_Json);

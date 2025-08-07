@@ -14,6 +14,7 @@ import {
   SendMessage
 } from "@app/shared/keml/models/core/msg-info";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
+import {EClasses} from "@app/shared/keml/models/eclasses";
 
 
 export class KEMLConstructorPointers {
@@ -23,50 +24,50 @@ export class KEMLConstructorPointers {
 
     //create function pointers (!arrow functions (!) to have deserializercontext as this) for all existing types:
     const authorFun: ConstructorPointerFor<Author> = ($ref:string) => (deserializer: Deserializer) => {
-      let ref = new Ref($ref, Author.eClass)
+      let ref = new Ref($ref, EClasses.Author)
       return new Author( undefined, 0, [], [], ref, deserializer)
     }
-    constructorPointers.set(Author.eClass, authorFun)
+    constructorPointers.set(EClasses.Author, authorFun)
 
     const convPartnerFun:ConstructorPointerFor<ConversationPartner> = ($ref: string) => (deserializer: Deserializer ) => {
-      let ref = new Ref($ref, ConversationPartner.eClass)
+      let ref = new Ref($ref, EClasses.ConversationPartner)
       return new ConversationPartner(undefined, 0, ref, deserializer)
     }
-    constructorPointers.set(ConversationPartner.eClass, convPartnerFun)
+    constructorPointers.set(EClasses.ConversationPartner, convPartnerFun)
 
     const preknowledgeFun: ConstructorPointerFor<Preknowledge> = ($ref: string) => (deserializer: Deserializer ) => {
-      let ref = new Ref($ref, Preknowledge.eClass)
+      let ref = new Ref($ref, EClasses.Preknowledge)
       return new Preknowledge(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
         ref, deserializer)
     }
-    constructorPointers.set(Preknowledge.eClass, preknowledgeFun)
+    constructorPointers.set(EClasses.Preknowledge, preknowledgeFun)
 
     const newInfoFun: ConstructorPointerFor<NewInformation> = ($ref: string) => (deserializer: Deserializer ) => {
-      let ref = new Ref($ref, NewInformation.eClass)
+      let ref = new Ref($ref, EClasses.NewInformation)
       //todo not nice source
       let dummySource = new ReceiveMessage(new ConversationPartner(), 0)
       return new NewInformation(dummySource, '', undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, ref, deserializer)
     }
-    constructorPointers.set(NewInformation.eClass, newInfoFun)
+    constructorPointers.set(EClasses.NewInformation, newInfoFun)
 
     const sendMessageFun: ConstructorPointerFor<SendMessage> = ($ref: string) => (deserializer: Deserializer ) => {
-      let ref: Ref = new Ref($ref, SendMessage.eClass)
+      let ref: Ref = new Ref($ref, EClasses.SendMessage)
       return new SendMessage(new ConversationPartner(), 0, undefined, undefined, undefined, ref, deserializer)
     }
-    constructorPointers.set(SendMessage.eClass, sendMessageFun)
+    constructorPointers.set(EClasses.SendMessage, sendMessageFun)
 
     const receiveMessageFun: ConstructorPointerFor<ReceiveMessage> = ($ref: string) => (deserializer: Deserializer ) => {
-      let ref: Ref = new Ref($ref, ReceiveMessage.eClass)
+      let ref: Ref = new Ref($ref, EClasses.ReceiveMessage)
       return new ReceiveMessage(new ConversationPartner(), 0, undefined, undefined, undefined, undefined, undefined, ref, deserializer)
     }
-    constructorPointers.set(ReceiveMessage.eClass, receiveMessageFun)
+    constructorPointers.set(EClasses.ReceiveMessage, receiveMessageFun)
 
     const informationLinkFun: ConstructorPointerFor<InformationLink> = ($ref: string) => (deserializer: Deserializer ) => {
-      let ref: Ref = new Ref($ref, InformationLink.eClass)
+      let ref: Ref = new Ref($ref, EClasses.InformationLink)
       let dummyInfo = new Preknowledge()
       return new InformationLink(dummyInfo, dummyInfo, InformationLinkType.SUPPLEMENT, undefined, ref, deserializer)
     }
-    constructorPointers.set(InformationLink.eClass, informationLinkFun)
+    constructorPointers.set(EClasses.InformationLink, informationLinkFun)
 
     return constructorPointers
   }

@@ -10,9 +10,9 @@ import {
 import {Deserializer, Ref, Referencable} from "emfular";
 import {ListUpdater} from "emfular";
 import {BoundingBox, Positionable, PositionHelper} from "ngx-svg-graphics";
+import {EClasses} from "@app/shared/keml/models/eclasses";
 
 export abstract class Message extends Referencable {
-  static eClass = 'http://www.unikoblenz.de/keml#//Message'
   counterPart: ConversationPartner;
   timing: number = 0;
   content: string;
@@ -70,7 +70,6 @@ export abstract class Message extends Referencable {
 }
 
 export class SendMessage extends Message {
-  static override readonly eClass: string = 'http://www.unikoblenz.de/keml#//SendMessage'
   private _uses: Information[] = [];
   get uses(): Information[] {
     return this._uses;
@@ -94,7 +93,7 @@ export class SendMessage extends Message {
     uses: Information[] = [],
     ref?: Ref, deserializer?: Deserializer, jsonOpt?: SendMessageJson,
   ) {
-    let refC = Ref.createRef(SendMessage.eClass, ref)
+    let refC = Ref.createRef(EClasses.SendMessage, ref)
     super(refC, counterPart, timing, content, originalContent, deserializer, jsonOpt);
     if (deserializer) {
       //deserializer.put(this) // already done in super
@@ -121,7 +120,6 @@ export class SendMessage extends Message {
 }
 
 export class ReceiveMessage extends Message {
-  static override readonly eClass: string = 'http://www.unikoblenz.de/keml#//ReceiveMessage'
   static readonly generatesPrefix: string = 'generates';
   generates: NewInformation[] = [];
   _repeats: Information[] = [];
@@ -153,11 +151,11 @@ export class ReceiveMessage extends Message {
     isInterrupted: boolean = false,
     ref?: Ref, deserializer?: Deserializer, jsonOpt?: ReceiveMessageJson,
   ) {
-    let refC = Ref.createRef(ReceiveMessage.eClass, ref)
+    let refC = Ref.createRef(EClasses.ReceiveMessage, ref)
     super(refC, counterPart, timing, content ? content : "New receive content", originalContent, deserializer, jsonOpt);
     if (deserializer) {
       let json: ReceiveMessageJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
-      let generatesRefs = Deserializer.createRefList(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates?.map(g => g.eClass? g.eClass: NewInformation.eClass))
+      let generatesRefs = Deserializer.createRefList(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates?.map(g => g.eClass? g.eClass: EClasses.NewInformation))
       this.generates = generatesRefs.map(g => deserializer.getOrCreate(g))
       json.repeats?.map(r => this.addRepetition(deserializer.getOrCreate<NewInformation>(r)))
       this.isInterrupted = json.isInterrupted;
@@ -286,7 +284,7 @@ export abstract class Information extends Referencable implements Positionable {
       this.feltTrustImmediately = json.feltTrustImmediately;
       this.feltTrustAfterwards = json.feltTrustAfterwards;
       //todo actually, causes should exist on the json, however, it is missing and we hence set it manually:
-      let causesRefs = Deserializer.createRefList(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass? c.eClass : InformationLink.eClass))
+      let causesRefs = Deserializer.createRefList(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass? c.eClass : EClasses.InformationLink))
       causesRefs.map(r => deserializer.getOrCreate<InformationLink>(r))
       json.targetedBy?.map(r =>  deserializer.getOrCreate(r))
       json.isUsedOn?.map(r => this.addIsUsedOn(deserializer.getOrCreate<SendMessage>(r)))
@@ -342,7 +340,6 @@ export abstract class Information extends Referencable implements Positionable {
 }
 
 export class NewInformation extends Information {
-  static eClass: string = 'http://www.unikoblenz.de/keml#//NewInformation'
   private _source!: ReceiveMessage;
 
   override getTreeParent() {
@@ -359,12 +356,12 @@ export class NewInformation extends Information {
               initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number , feltTrustAfterwards?: number,
               ref?: Ref, deserializer?: Deserializer, jsonOpt?: NewInformationJson
   ) {
-    let refC = Ref.createRef(NewInformation.eClass, ref)
+    let refC = Ref.createRef(EClasses.NewInformation, ref)
     super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
     if(deserializer) {
       let json: NewInformationJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
       //todo this works against a bug in the used json lib: it computes the necessary source if it is not present
-      let src = json.source? json.source : new Ref(Ref.getParentAddress(ref!.$ref), ReceiveMessage.eClass)
+      let src = json.source? json.source : new Ref(Ref.getParentAddress(ref!.$ref), EClasses.ReceiveMessage)
       this._source = deserializer.getOrCreate(src)
     } else {
       this.source = source
@@ -403,14 +400,12 @@ export class NewInformation extends Information {
 
 export class Preknowledge extends Information {
 
-  static readonly eClass: string = 'http://www.unikoblenz.de/keml#//PreKnowledge';
-
   constructor(message: string = 'Preknowledge', isInstruction: boolean = false, position?: BoundingBox,
               isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
               initialTrust?: number, currentTrust?: number,
               feltTrustImmediately?: number, feltTrustAfterwards?: number,
               ref?: Ref, deserializer?: Deserializer, jsonOpt?: PreknowledgeJson) {
-    let refC = Ref.createRef(Preknowledge.eClass, ref)
+    let refC = Ref.createRef(EClasses.Preknowledge, ref)
     super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
   }
 
@@ -434,7 +429,6 @@ export class Preknowledge extends Information {
 }
 
 export class InformationLink extends Referencable {
-  static readonly eClass = 'http://www.unikoblenz.de/keml#//InformationLink'
 
   private _source?: Information;
   get source(): Information {
@@ -485,7 +479,7 @@ export class InformationLink extends Referencable {
   constructor(source: Information, target: Information, type: InformationLinkType, linkText?: string,
               ref?: Ref, deserializer?: Deserializer, jsonOpt?: InformationLinkJson
   ) {
-    let refC = Ref.createRef(InformationLink.eClass, ref)
+    let refC = Ref.createRef(EClasses.InformationLink, ref)
     super(refC);
     if(deserializer) {
       deserializer.put(this)
@@ -508,7 +502,7 @@ export class InformationLink extends Referencable {
 
   toJson(): InformationLinkJson {
     return {
-      eClass: InformationLink.eClass,
+      eClass: EClasses.InformationLink,
       source: this.source.getRef(),
       target: this.target.getRef(),
       type: this.type,
