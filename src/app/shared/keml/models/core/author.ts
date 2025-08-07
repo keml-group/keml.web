@@ -6,7 +6,6 @@ import {Deserializer, Ref} from "emfular";
 import {EClasses} from "@app/shared/keml/models/eclasses";
 
 export class Author extends LifeLine{
-  static readonly eClass = EClasses.Author;
   static readonly preknowledgePrefix: string = 'preknowledge';
   preknowledge: Preknowledge[];
   static readonly messagesPrefix: string = 'messages';
@@ -14,7 +13,7 @@ export class Author extends LifeLine{
 
   constructor(name = 'Author', xPosition: number = 0, preknowledge: Preknowledge[] = [], messages: Message[] = [],
               ref?: Ref, deserializer?: Deserializer) {
-    let refC = Ref.createRef(Author.eClass, ref)
+    let refC = Ref.createRef(EClasses.Author, ref)
     if (deserializer) {
       let authorJson: AuthorJson = deserializer?.getJsonFromTree(ref!.$ref)
       super(authorJson.name, authorJson.xPosition, refC)
@@ -35,7 +34,6 @@ export class Author extends LifeLine{
 
   toJson(): AuthorJson {
     return {
-      eClass: Author.eClass,
       name: this.name,
       xPosition: this.xPosition,
       messages: this.messages.map(m => m.toJson()),

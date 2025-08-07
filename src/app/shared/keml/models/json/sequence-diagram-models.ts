@@ -11,7 +11,6 @@ export interface ConversationJson {
 interface LifeLineJson {
   name: string;
   xPosition: number; //int todo
-  eClass: string; //not there on CPs, see old examples - why is it suppressed? Because it is clear?
 }
 
 export interface ConversationPartnerJson extends LifeLineJson {

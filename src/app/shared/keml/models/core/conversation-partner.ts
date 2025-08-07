@@ -5,8 +5,6 @@ import {EClasses} from "@app/shared/keml/models/eclasses";
 
 export class ConversationPartner extends LifeLine {
 
-    static readonly eClass = 'http://www.unikoblenz.de/keml#//ConversationPartner';
-
     constructor(name: string = 'NewPartner', xPosition?: number, ref?: Ref, deserializer?: Deserializer) {
       let refC = Ref.createRef(EClasses.ConversationPartner, ref)
       if(deserializer) {
@@ -20,7 +18,6 @@ export class ConversationPartner extends LifeLine {
 
     toJson(): ConversationPartnerJson {
       return {
-        eClass: EClasses.ConversationPartner,
         name: this.name,
         xPosition: this.xPosition,
       }
