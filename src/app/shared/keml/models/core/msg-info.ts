@@ -332,9 +332,7 @@ export abstract class Information extends Referencable implements Positionable {
     })
 
     ListUpdater.destructAllFromChangingList(this.targetedBy)
-    while (this.targetedBy.length>0) {
-      this.targetedBy[0].destruct()
-    }
+
 
     super.destruct();
   }
