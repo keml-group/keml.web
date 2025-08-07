@@ -14,7 +14,7 @@ export class AlertService {
   alert(msg: string) {
     const dialogRef = this.dialog.open(
       AlertComponent,
-      {width: '40%', height: '20%'}
+      {width: '20%', height: '30%'}
     )
     dialogRef.componentInstance.message = msg;
   }
