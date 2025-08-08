@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AlertComponent } from './alert.component';
+import {NO_ERRORS_SCHEMA} from "@angular/core";
+import {MatDialogRef} from "@angular/material/dialog";
+import {MatIcon} from "@angular/material/icon";
 
 describe('AlertComponent', () => {
   let component: AlertComponent;
@@ -8,7 +11,11 @@ describe('AlertComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AlertComponent]
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+      ],
+      imports: [MatIcon, AlertComponent]
     })
     .compileComponents();
 
