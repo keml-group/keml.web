@@ -8,7 +8,7 @@ import {ConversationPartnerComponent} from "@app/shared/keml/components/cp/conve
 import {MsgComponent} from "@app/shared/keml/components/msg/msg.component";
 import {PreknowledgeComponent} from "@app/shared/keml/components/preknowledge/preknowledge.component";
 import {TextAreaSvgComponent} from "ngx-svg-graphics";
-import {SimulationService} from "../../services/simulation.service";
+import {SimulationDialogueService} from "../../services/simulation-dialogue.service";
 import {MatToolbar} from "@angular/material/toolbar";
 import {TrustComputator} from "../../utils/trust-computator";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
@@ -47,7 +47,7 @@ export class SimulatorComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<SimulatorComponent>,
-    public simulationService: SimulationService,
+    public simulationService: SimulationDialogueService,
     private alertService: AlertService,
   ) {}
 

@@ -13,7 +13,7 @@ import { AuthorComponent } from '@app/shared/keml/components/author/author.compo
 import { TextAreaSvgComponent } from "ngx-svg-graphics";
 import { DatabaseSvgComponent } from '@app/shared/keml/components/helper/svg-base-components/database-svg/database-svg.component';
 import { PersonSvgComponent } from '@app/shared/keml/components/helper/svg-base-components/person-svg/person-svg.component';
-import {SimulationService} from "@app/features/simulator/services/simulation.service";
+import {SimulationDialogueService} from "@app/features/simulator/services/simulation-dialogue.service";
 import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-markers/arrow-markers.component";
 import {KEMLIOService} from "@app/features/editor/services/keml-io.service";
 import {InputHandler} from "@app/core/utils/input-handler";
@@ -35,7 +35,7 @@ export class EditorComponent {
     public kemlIOService: KEMLIOService,
     public kemlService: KemlService,
     public conversationPickService: ConversationPickService,
-    private simulationService: SimulationService,
+    private simulationService: SimulationDialogueService,
     private ioService: IoService,
   ) {
     this.kemlIOService.newKEML();

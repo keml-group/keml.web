@@ -11,7 +11,7 @@ import {TrustComputator} from "@app/features/simulator/utils/trust-computator";
 @Injectable({
   providedIn: 'root'
 })
-export class SimulationService {
+export class SimulationDialogueService {
 
   constructor(
     private dialog: MatDialog,
