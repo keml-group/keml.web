@@ -3,6 +3,7 @@ import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessa
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+import {AlertService} from "@app/core/services/alert.service";
 
 export class TrustComputator {
 
@@ -42,8 +43,9 @@ export class TrustComputator {
       // abort if no info was eliminated on a pass:
       if (remaining == toVisit.length) {
         let msg = 'Endless loops of '+ toVisit.length +' nodes - please check the InformationLinks' //todo highlight graphically?
-        console.error(msg) //todo how could we use our alert service here? Instead of catch of higher levels
-        throw(new Error(msg))
+        AlertService.instance.alert(msg)
+        //console.error(msg) //todo how could we use our alert service here? Instead of catch of higher levels
+        return
       }
     }
   }

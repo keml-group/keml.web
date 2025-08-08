@@ -7,9 +7,13 @@ import {AlertComponent} from "@app/core/components/alert/alert.component";
 })
 export class AlertService {
 
+  static instance: AlertService;
   constructor(
     private dialog: MatDialog,
-    ) { }
+  ) {
+    AlertService.instance = this;
+  }
+
 
   alert(msg: string) {
     const dialogRef = this.dialog.open(
