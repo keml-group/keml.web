@@ -73,8 +73,8 @@ export class SimulatorComponent implements OnInit {
   }
 
   simulateIncrementally() {
-    this.incrementalSimulator = new IncrementalSimulator(this.simulationInputs, this.conversation)
-    this.incrementalSimulator.simulate()
+    this.incrementalSimulator = new IncrementalSimulator()
+    this.incrementalSimulator.simulate(this.simulationInputs, this.conversation)
       .then(() => {
         TrustComputator.computeCurrentTrusts(this.conversation, this.simulationInputs);
         this.incrementalSimulator = undefined;
