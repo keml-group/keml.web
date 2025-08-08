@@ -15,6 +15,7 @@ import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
 import {IncrementalSimulator} from "@app/features/simulator/utils/incremental-simulator";
 import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-markers/arrow-markers.component";
+import {AlertService} from "@app/core/services/alert.service";
 
 @Component({
     selector: 'app-simulator',
@@ -47,13 +48,20 @@ export class SimulatorComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<SimulatorComponent>,
     public simulationService: SimulationService,
+    private alertService: AlertService,
   ) {}
 
   ngOnInit() {
     this.conversation.conversationPartners.forEach(cp => {
       this.simulationInputs.defaultsPerCp.set(cp, undefined)
     })
-    TrustComputator.computeCurrentTrusts(this.conversation, this.simulationInputs)
+    try {
+      TrustComputator.computeCurrentTrusts(this.conversation, this.simulationInputs)
+    } catch (e) {
+      if ((e instanceof Error)) {
+        this.alertService.alert(e.message)
+      }
+    }
   }
 
   close() {

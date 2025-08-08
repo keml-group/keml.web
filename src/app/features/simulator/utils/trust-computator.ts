@@ -42,8 +42,8 @@ export class TrustComputator {
       // abort if no info was eliminated on a pass:
       if (remaining == toVisit.length) {
         let msg = 'Endless loops of '+ toVisit.length +' nodes - please check the InformationLinks' //todo highlight graphically?
-        console.error(msg)
-        throw(msg)
+        console.error(msg) //todo how could we use our alert service here? Instead of catch of higher levels
+        throw(new Error(msg))
       }
     }
   }
