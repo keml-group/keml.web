@@ -13,7 +13,7 @@ import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs
 import {Injectable} from "@angular/core";
 
 @Injectable()
-export class IncrementalSimulator {
+export class IncrementalSimulationService {
 
   simulationInputs: SimulationInputs = {defaultsPerCp: new Map()};
   completeConv: Conversation = new Conversation();

@@ -13,7 +13,7 @@ import {MatToolbar} from "@angular/material/toolbar";
 import {TrustComputator} from "../../utils/trust-computator";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
-import {IncrementalSimulator} from "@app/features/simulator/utils/incremental-simulator";
+import {IncrementalSimulationService} from "@app/features/simulator/utils/incremental-simulation.service";
 import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-markers/arrow-markers.component";
 import {AlertService} from "@app/core/services/alert.service";
 
@@ -43,7 +43,7 @@ export class SimulatorComponent implements OnInit {
     preknowledgeDefault: undefined,
     defaultsPerCp: new Map<ConversationPartner, number|undefined>()
   };
-  incrementalSimulator?: IncrementalSimulator
+  incrementalSimulator?: IncrementalSimulationService
 
   constructor(
     public dialogRef: MatDialogRef<SimulatorComponent>,
@@ -73,7 +73,7 @@ export class SimulatorComponent implements OnInit {
   }
 
   simulateIncrementally() {
-    this.incrementalSimulator = new IncrementalSimulator()
+    this.incrementalSimulator = new IncrementalSimulationService()
     this.incrementalSimulator.simulate(this.simulationInputs, this.conversation)
       .then(() => {
         TrustComputator.computeCurrentTrusts(this.conversation, this.simulationInputs);
