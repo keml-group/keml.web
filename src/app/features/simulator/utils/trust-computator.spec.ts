@@ -182,7 +182,7 @@ describe('TrustComputator', () => {
     new InformationLink(p2, p1, InformationLinkType.STRONG_ATTACK)
     let auth = new Author('auth', 0, [p0, p1, p2])
     let conv = new Conversation('cycle', auth)
-    expect(() => TrustComputator.computeCurrentTrusts(conv)).toThrow('Endless loops of 2 nodes - please check the InformationLinks')
+    expect(() => TrustComputator.computeCurrentTrusts(conv)).toThrow(Error('Endless loops of 2 nodes - please check the InformationLinks'))
   })
 
   it('should adapt the current trusts', () => {
