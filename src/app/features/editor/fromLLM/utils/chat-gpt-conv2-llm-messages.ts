@@ -11,11 +11,6 @@ export class ChatGptConv2LlmMessages {
     return convJson.map(entry => entry['title'])
   }
 
-  static parseConversation(conv: string): LLMMessage[] {
-    let convJson = JSON.parse(conv);
-    return this.parseConversationJSON(convJson)
-  }
-
   static parseConversationJSON(convJson: any): LLMMessage[] {
     return this.parseMessageMapping(convJson['mapping'], convJson['current_node'])
   }
