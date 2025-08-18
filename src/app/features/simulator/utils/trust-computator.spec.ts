@@ -7,10 +7,18 @@ import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models
 import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
 import {JsonFixer} from "@app/shared/keml/models/json2core/json-fixer";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
+import {TestBed} from "@angular/core/testing";
 
 describe('TrustComputator', () => {
-  it('should create an instance', () => {
-    expect(new TrustComputator()).toBeTruthy();
+  let service : TrustComputator;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({})
+    service = TestBed.inject(TrustComputator);
+  })
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
   });
 
   let p0: Preknowledge;

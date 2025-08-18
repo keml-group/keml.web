@@ -4,8 +4,18 @@ import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
 import {AlertService} from "@app/core/services/alert.service";
+import {Injectable} from "@angular/core";
 
+@Injectable({
+  providedIn: 'root'
+})
 export class TrustComputator {
+
+  constructor(private alertServ: AlertService) {
+    TrustComputator.alertService = alertServ;
+  }
+
+  static alertService: AlertService
 
   static generalDefault: number = 0.5
   static preknowledgeDefault: number = 1.0
@@ -43,7 +53,7 @@ export class TrustComputator {
       // abort if no info was eliminated on a pass:
       if (remaining == toVisit.length) {
         let msg = 'Endless loops of '+ toVisit.length +' nodes - please check the InformationLinks' //todo highlight graphically?
-        AlertService.instance.alert(msg)
+        this.alertService.alert(msg)
         //console.error(msg) //todo how could we use our alert service here? Instead of catch of higher levels
         return
       }
