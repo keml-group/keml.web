@@ -1,4 +1,4 @@
-import {TrustComputator} from './trust-computator';
+import {TrustComputationService} from './trust-computation.service';
 import {Conversation} from "@app/shared/keml/models/core/conversation";
 import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "@app/shared/keml/models/core/msg-info";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
@@ -7,10 +7,18 @@ import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models
 import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
 import {JsonFixer} from "@app/shared/keml/models/json2core/json-fixer";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
+import {TestBed} from "@angular/core/testing";
 
-describe('TrustComputator', () => {
-  it('should create an instance', () => {
-    expect(new TrustComputator()).toBeTruthy();
+describe('TrustComputationService', () => {
+  let service : TrustComputationService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({})
+    service = TestBed.inject(TrustComputationService);
+  })
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
   });
 
   let p0: Preknowledge;
@@ -27,26 +35,26 @@ describe('TrustComputator', () => {
   it('should compute the score of a single Link correctly', () => {
       let l0 = new InformationLink(p2, p0, InformationLinkType.STRONG_ATTACK)
       //let l1 = new InformationLink(p1, p0, InformationLinkType.SUPPORT)
-      expect(TrustComputator.score(l0)).toEqual(undefined)
+      expect(service.score(l0)).toEqual(undefined)
       p2.currentTrust = 0.5
-      expect(TrustComputator.score(l0)).toEqual(-0.5)
+      expect(service.score(l0)).toEqual(-0.5)
       l0.type = InformationLinkType.SUPPORT
-      expect(TrustComputator.score(l0)).toEqual(0.25)
+      expect(service.score(l0)).toEqual(0.25)
       l0.type = InformationLinkType.SUPPLEMENT
-      expect(TrustComputator.score(l0)).toEqual(0)
+      expect(service.score(l0)).toEqual(0)
    }
   )
 
   it('should compute the argumentation score of a single node correctly', () => {
       new InformationLink(p2, p0, InformationLinkType.ATTACK)
       new InformationLink(p1, p0, InformationLinkType.STRONG_SUPPORT)
-      expect(TrustComputator.computeArgumentationScore(p1)).toEqual(0)
-      expect(TrustComputator.computeArgumentationScore(p2)).toEqual(0)
-      expect(TrustComputator.computeArgumentationScore(p0)).toEqual(undefined)
+      expect(service.computeArgumentationScore(p1)).toEqual(0)
+      expect(service.computeArgumentationScore(p2)).toEqual(0)
+      expect(service.computeArgumentationScore(p0)).toEqual(undefined)
       p1.currentTrust = 0.5
-      expect(TrustComputator.computeArgumentationScore(p0)).toEqual(undefined)
+      expect(service.computeArgumentationScore(p0)).toEqual(undefined)
       p2.currentTrust = 0.5
-      expect(TrustComputator.computeArgumentationScore(p0)).toEqual(0.25)
+      expect(service.computeArgumentationScore(p0)).toEqual(0.25)
     }
   )
 
@@ -55,11 +63,11 @@ describe('TrustComputator', () => {
     let r1 = new ReceiveMessage(cp, 1)
     let r2 = new ReceiveMessage(cp, 3)
     let info = new Preknowledge('info')
-    expect(TrustComputator.computeRepetitionScore(info, 0)).toEqual(0)
-    expect(TrustComputator.computeRepetitionScore(info, 1)).toEqual(0)
+    expect(service.computeRepetitionScore(info, 0)).toEqual(0)
+    expect(service.computeRepetitionScore(info, 1)).toEqual(0)
     info.repeatedBy.push(r1, r2)
-    expect(TrustComputator.computeRepetitionScore(info, 2)).toEqual(1)
-    expect(TrustComputator.computeRepetitionScore(info, 4)).toEqual(0.5)
+    expect(service.computeRepetitionScore(info, 2)).toEqual(1)
+    expect(service.computeRepetitionScore(info, 4)).toEqual(0.5)
   })
 
   it('should determineInitialTrustForInfo correctly', () => {
@@ -75,31 +83,31 @@ describe('TrustComputator', () => {
     }
     // no entries, hence real defaults should be used:
     expect(
-      TrustComputator.determineInitialTrustForInfo(p0, simInputs)
-    ).toEqual(TrustComputator.preknowledgeDefault) //1.0
+      service.determineInitialTrustForInfo(p0, simInputs)
+    ).toEqual(TrustComputationService.preknowledgeDefault) //1.0
     expect(
-      TrustComputator.determineInitialTrustForInfo(newInfo1, simInputs)
-    ).toEqual(TrustComputator.generalDefault) //0.5
+      service.determineInitialTrustForInfo(newInfo1, simInputs)
+    ).toEqual(TrustComputationService.generalDefault) //0.5
     expect(
-      TrustComputator.determineInitialTrustForInfo(newInfo2, simInputs)
-    ).toEqual(TrustComputator.generalDefault) //0.5
+      service.determineInitialTrustForInfo(newInfo2, simInputs)
+    ).toEqual(TrustComputationService.generalDefault) //0.5
 
     defByPartner.set(cp0, 0.1)
     defByPartner.set(cp1, 0.2)
     simInputs.preknowledgeDefault = 0.3
     expect(
-      TrustComputator.determineInitialTrustForInfo(p0, simInputs)
+      service.determineInitialTrustForInfo(p0, simInputs)
     ).toEqual(0.3)
     expect(
-      TrustComputator.determineInitialTrustForInfo(newInfo1, simInputs)
+      service.determineInitialTrustForInfo(newInfo1, simInputs)
     ).toEqual(0.1)
     expect(
-      TrustComputator.determineInitialTrustForInfo(newInfo2, simInputs)
+      service.determineInitialTrustForInfo(newInfo2, simInputs)
     ).toEqual(0.2)
     //now use initial trust:
     newInfo2.initialTrust = 0.8
     expect(
-      TrustComputator.determineInitialTrustForInfo(newInfo2, simInputs)
+      service.determineInitialTrustForInfo(newInfo2, simInputs)
     ).toEqual(0.8)
   })
 
@@ -110,26 +118,26 @@ describe('TrustComputator', () => {
     }
     new InformationLink(p2, p0, InformationLinkType.STRONG_ATTACK)
     new InformationLink(p1, p0, InformationLinkType.SUPPORT)
-    expect(TrustComputator.computeTrust(p0, recLength, simInputs)).toEqual(undefined)
-    expect(TrustComputator.computeTrust(p1, recLength, simInputs)).toEqual(1.0)
-    expect(TrustComputator.computeTrust(p2, recLength, simInputs)).toEqual(1.0)
+    expect(service.computeTrust(p0, recLength, simInputs)).toEqual(undefined)
+    expect(service.computeTrust(p1, recLength, simInputs)).toEqual(1.0)
+    expect(service.computeTrust(p2, recLength, simInputs)).toEqual(1.0)
 
     p1.currentTrust = 0.5 //on p0 +0.25 by Support
     p2.currentTrust = 0.4 //on p0 -0.4 by Strong Attack
-    expect(TrustComputator.computeTrust(p1, recLength, simInputs)).toEqual(1.0)
-    expect(TrustComputator.computeTrust(p2, recLength, simInputs)).toEqual(1.0)
+    expect(service.computeTrust(p1, recLength, simInputs)).toEqual(1.0)
+    expect(service.computeTrust(p2, recLength, simInputs)).toEqual(1.0)
 
-    expect(TrustComputator.computeArgumentationScore(p0)).toBeCloseTo(-0.15, 0.00000001)
-    expect(TrustComputator.computeRepetitionScore(p0, recLength)).toEqual(0)
+    expect(service.computeArgumentationScore(p0)).toBeCloseTo(-0.15, 0.00000001)
+    expect(service.computeRepetitionScore(p0, recLength)).toEqual(0)
     expect(p0.initialTrust).toEqual(undefined)
-    expect(TrustComputator.determineInitialTrustForInfo(p0, simInputs)).toEqual(1.0)
+    expect(service.determineInitialTrustForInfo(p0, simInputs)).toEqual(1.0)
 
     // weight = 2
-    expect(TrustComputator.computeTrust(p0, recLength, simInputs)).toBeCloseTo(0.7, 0.000000001)
+    expect(service.computeTrust(p0, recLength, simInputs)).toBeCloseTo(0.7, 0.000000001)
     simInputs.weight = 1
-    expect(TrustComputator.computeTrust(p0, recLength, simInputs)).toBeCloseTo(0.85, 0.000000001)
+    expect(service.computeTrust(p0, recLength, simInputs)).toBeCloseTo(0.85, 0.000000001)
     simInputs.weight = 3
-    expect(TrustComputator.computeTrust(p0, recLength, simInputs)).toBeCloseTo(0.55, 0.000000001)
+    expect(service.computeTrust(p0, recLength, simInputs)).toBeCloseTo(0.55, 0.000000001)
   })
 
   it('should return undefined on a node\'s trust computation if no initial trust exists on it', () => {
@@ -165,12 +173,12 @@ describe('TrustComputator', () => {
       '}'
     let convJson =  <ConversationJson>JSON.parse(json);
     let conv = Conversation.fromJSON(convJson);
-    // TrustComputator.computeCurrentTrusts(conv)
+    // service.computeCurrentTrusts(conv)
 
     let pres = conv.author.preknowledge
     let pre0 = pres[0]
 
-    TrustComputator.computeTrust(pre0, 2)
+    service.computeTrust(pre0, 2)
     // cannot use normal expect since actually, initial and current trust cannot be undefined
     expect(pre0.initialTrust == undefined).toEqual(true)
     expect(pre0.currentTrust == undefined).toEqual(true)
@@ -182,7 +190,7 @@ describe('TrustComputator', () => {
     new InformationLink(p2, p1, InformationLinkType.STRONG_ATTACK)
     let auth = new Author('auth', 0, [p0, p1, p2])
     let conv = new Conversation('cycle', auth)
-    expect(() => TrustComputator.computeCurrentTrusts(conv)).toThrow('Endless loops of 2 nodes - please check the InformationLinks')
+    expect(() => service.computeCurrentTrusts(conv)).toThrow(Error('Endless loops of 2 nodes - please check the InformationLinks'))
   })
 
   it('should adapt the current trusts', () => {
@@ -215,7 +223,7 @@ describe('TrustComputator', () => {
 
     function verify() {
       //call to test:
-      TrustComputator.computeCurrentTrusts(conv)
+      service.computeCurrentTrusts(conv)
 
       for (let [info, num] of expectations) {
         expect(info.currentTrust).toEqual(num)
@@ -275,7 +283,7 @@ describe('TrustComputator', () => {
     let conv = new Conversation()
     conv.author.preknowledge = [p0, p1]
     new InformationLink(p0, p1, InformationLinkType.ATTACK)
-    TrustComputator.computeCurrentTrusts(conv)
+    service.computeCurrentTrusts(conv)
     expect(p0.currentTrust).toEqual(1.0)
     expect(p1.currentTrust).toEqual(0)
   } )
@@ -972,7 +980,7 @@ describe('TrustComputator', () => {
     JsonFixer.prepareJsonInfoLinkSources(convJson);
     JsonFixer.addMissingSupplementType(convJson);
     let conv = Conversation.fromJSON(convJson)
-    TrustComputator.computeCurrentTrusts(conv)
+    service.computeCurrentTrusts(conv)
     expect(conv.author.preknowledge[0].currentTrust).toEqual(1.0)
   })
 });

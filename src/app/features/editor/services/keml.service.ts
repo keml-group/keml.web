@@ -14,6 +14,7 @@ import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models
 import {Author} from "@app/shared/keml/models/core/author";
 import {ListUpdater} from "emfular";
 import {MsgPositionChangeService} from "@app/features/editor/services/msg-position-change.service";
+import {AlertService} from "@app/core/services/alert.service";
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,7 @@ export class KemlService {
 
   constructor(
     private msgPositionChangeService: MsgPositionChangeService,
+    private alertService: AlertService,
   ) {
     this.conversation = new Conversation();
     LayoutHelper.positionConversationPartners(this.conversation.conversationPartners)
@@ -162,8 +164,8 @@ export class KemlService {
     const msgs = this.conversation.author.messages
     if (newPos >= msgs.length) {
       let errormsg = 'Position should not be more than ' + msgs.length
-      console.error(errormsg)
-      throw errormsg;
+      this.alertService.alert(errormsg)
+      return;
     }
     if(affectedMsgs > 0) { // new pos is further down -> just move all msgs starting from msg timing+1 up until affectedMsgs reached
       this.moveMessagesUp(msg.timing+1, newPos + 1)
@@ -212,7 +214,7 @@ export class KemlService {
       msgs.push(newMsg);
       return newMsg;
     } else {
-      console.error('No conversation partners found');
+      this.alertService.alert('No conversation partners found');
       return undefined;
     }
   }
@@ -239,7 +241,7 @@ export class KemlService {
   private msgPosFitsTiming(msg: Message): boolean {
     const msgs = this.conversation.author.messages
     if (msgs.indexOf(msg) != msg.timing) {
-      console.error('Position and msg timing do not fit for ' + msg );
+      this.alertService.alert('Position and msg timing do not fit for the message with content \'' + msg.content );
       return false;
     }
     return true;
@@ -300,7 +302,7 @@ export class KemlService {
     if (source) {
       return new NewInformation(source, 'New Information', false, LayoutHelper.bbForNewInfo(source.generates.length), [], [], 0.5, 0.5, 0.5, 0.5);
     } else {
-      console.error('No receive messages found');
+      this.alertService.alert('No receive messages found');
       return undefined;
     }
   }

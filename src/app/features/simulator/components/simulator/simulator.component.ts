@@ -8,13 +8,14 @@ import {ConversationPartnerComponent} from "@app/shared/keml/components/cp/conve
 import {MsgComponent} from "@app/shared/keml/components/msg/msg.component";
 import {PreknowledgeComponent} from "@app/shared/keml/components/preknowledge/preknowledge.component";
 import {TextAreaSvgComponent} from "ngx-svg-graphics";
-import {SimulationService} from "../../services/simulation.service";
+import {SimulationDialogueService} from "../../services/simulation-dialogue.service";
 import {MatToolbar} from "@angular/material/toolbar";
-import {TrustComputator} from "../../utils/trust-computator";
+import {TrustComputationService} from "../../services/trust-computation.service";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
-import {IncrementalSimulator} from "@app/features/simulator/utils/incremental-simulator";
+import {IncrementalSimulationService} from "@app/features/simulator/services/incremental-simulation.service";
 import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-markers/arrow-markers.component";
+import {AlertService} from "@app/core/services/alert.service";
 
 @Component({
     selector: 'app-simulator',
@@ -31,6 +32,7 @@ import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-ma
         NgIf,
         ArrowMarkersComponent
     ],
+  providers: [IncrementalSimulationService],
     templateUrl: './simulator.component.html',
     styleUrl: './simulator.component.css'
 })
@@ -42,18 +44,27 @@ export class SimulatorComponent implements OnInit {
     preknowledgeDefault: undefined,
     defaultsPerCp: new Map<ConversationPartner, number|undefined>()
   };
-  incrementalSimulator?: IncrementalSimulator
+  showIncremental: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<SimulatorComponent>,
-    public simulationService: SimulationService,
+    public simulationDialogueService: SimulationDialogueService,
+    private alertService: AlertService,
+    public incrementalSimulationService: IncrementalSimulationService,
+    private trustComputationService: TrustComputationService,
   ) {}
 
   ngOnInit() {
     this.conversation.conversationPartners.forEach(cp => {
       this.simulationInputs.defaultsPerCp.set(cp, undefined)
     })
-    TrustComputator.computeCurrentTrusts(this.conversation, this.simulationInputs)
+    try {
+      this.trustComputationService.computeCurrentTrusts(this.conversation, this.simulationInputs)
+    } catch (e) {
+      if ((e instanceof Error)) {
+        this.alertService.alert(e.message)
+      }
+    }
   }
 
   close() {
@@ -61,16 +72,20 @@ export class SimulatorComponent implements OnInit {
   }
 
   manageSimulationInputs() {
-    this.simulationService.openSimulationInputDetails(this.conversation, this.simulationInputs)
+    this.simulationDialogueService.openSimulationInputDetails(this.conversation, this.simulationInputs)
   }
 
   simulateIncrementally() {
-    this.incrementalSimulator = new IncrementalSimulator(this.simulationInputs, this.conversation)
-    this.incrementalSimulator.simulate()
+    this.showIncremental = true;
+    this.incrementalSimulationService.simulate(this.simulationInputs, this.conversation)
       .then(() => {
-        TrustComputator.computeCurrentTrusts(this.conversation, this.simulationInputs);
-        this.incrementalSimulator = undefined;
+        this.trustComputationService.computeCurrentTrusts(this.conversation, this.simulationInputs);
+        this.showIncremental = false;
       })
+  }
+
+  pauseAndResume(): void {
+    this.incrementalSimulationService.pauseAndResume()
   }
 
 }

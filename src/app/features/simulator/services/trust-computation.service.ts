@@ -3,14 +3,22 @@ import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessa
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+import {AlertService} from "@app/core/services/alert.service";
+import {Injectable} from "@angular/core";
 
-export class TrustComputator {
+@Injectable({
+  providedIn: 'root'
+})
+export class TrustComputationService {
+
+  constructor(private alertService: AlertService) {}
+
 
   static generalDefault: number = 0.5
   static preknowledgeDefault: number = 1.0
   static weightDefault: number = 2;
 
-  static computeCurrentTrusts(conv: Conversation, simulationInputs?: SimulationInputs) {
+  computeCurrentTrusts(conv: Conversation, simulationInputs?: SimulationInputs) {
     let pres: Preknowledge[] = conv.author.preknowledge
     let receives = conv.author.messages.filter(m => !m.isSend())
       .map(m => m as ReceiveMessage)
@@ -20,7 +28,7 @@ export class TrustComputator {
     )
   }
 
-  static computeCTFromKnowledge(pres: Preknowledge[], newInfos: NewInformation[], recSize: number,
+  computeCTFromKnowledge(pres: Preknowledge[], newInfos: NewInformation[], recSize: number,
                                 simulationInputs?: SimulationInputs,
                                 ) {
     let toVisit: Information[] = newInfos
@@ -42,17 +50,18 @@ export class TrustComputator {
       // abort if no info was eliminated on a pass:
       if (remaining == toVisit.length) {
         let msg = 'Endless loops of '+ toVisit.length +' nodes - please check the InformationLinks' //todo highlight graphically?
-        console.error(msg)
-        throw(msg)
+        this.alertService.alert(msg)
+        //console.error(msg) //todo how could we use our alert service here? Instead of catch of higher levels
+        throw new Error(msg)
       }
     }
   }
 
-  static computeTrust(info: Information, recSize: number, simulationInputs?: SimulationInputs): number | undefined {
+  computeTrust(info: Information, recSize: number, simulationInputs?: SimulationInputs): number | undefined {
     let argScore = this.computeArgumentationScore(info)
     if (argScore != undefined) {
       let initial = this.determineInitialTrustForInfo(info, simulationInputs)
-      let weight = simulationInputs?.weight ? simulationInputs?.weight: this.weightDefault
+      let weight = simulationInputs?.weight ? simulationInputs?.weight: TrustComputationService.weightDefault
       return this.truncTo1(
         initial +
         this.computeRepetitionScore(info, recSize) +
@@ -62,7 +71,7 @@ export class TrustComputator {
     return undefined
   }
 
-  static determineInitialTrustForInfo(info: Information, simulationInputs?: SimulationInputs): number {
+  determineInitialTrustForInfo(info: Information, simulationInputs?: SimulationInputs): number {
     if (info.initialTrust != undefined) {
       return info.initialTrust
     }
@@ -70,27 +79,27 @@ export class TrustComputator {
     if (newInfo.source) {
       let src: ConversationPartner = newInfo.source.counterPart
       let res = simulationInputs?.defaultsPerCp?.get(src)
-      return res? res : this.generalDefault
+      return res? res : TrustComputationService.generalDefault
     } else {
       let res = simulationInputs?.preknowledgeDefault
-      return res? res : this.preknowledgeDefault
+      return res? res : TrustComputationService.preknowledgeDefault
     }
   }
 
-  private static truncTo1(score: number): number {
+  private truncTo1(score: number): number {
     if(score <-1) return -1
     if (score>1) return 1
     return score
   }
 
-  static computeRepetitionScore(info: Information, recSize: number): number {
+  computeRepetitionScore(info: Information, recSize: number): number {
     if(!recSize)
       return 0;
     else
       return info.repeatedBy.length/recSize
   }
 
-  static computeArgumentationScore(info: Information): number | undefined {
+  computeArgumentationScore(info: Information): number | undefined {
     let scores: (number | undefined)[] = info.targetedBy.map(link => this.score(link))
     if(scores.length == 0)
       return 0
@@ -102,14 +111,14 @@ export class TrustComputator {
     return res
   }
 
-  static score(link: InformationLink): number | undefined {
+  score(link: InformationLink): number | undefined {
     if (link.source.currentTrust == undefined) {
       return undefined
     }
     return link.source.currentTrust*this.factorFromLinkType(link.type)
   }
 
-  private static factorFromLinkType(linkType: InformationLinkType): number {
+  private factorFromLinkType(linkType: InformationLinkType): number {
     switch (linkType) {
       case InformationLinkType.SUPPLEMENT:
         return 0;

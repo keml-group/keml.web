@@ -8,32 +8,44 @@ import {
   ReceiveMessage,
   SendMessage
 } from "@app/shared/keml/models/core/msg-info";
-import {TrustComputator} from "@app/features/simulator/utils/trust-computator";
+import {TrustComputationService} from "@app/features/simulator/services/trust-computation.service";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
+import {Injectable} from "@angular/core";
 
-export class IncrementalSimulator {
+@Injectable()
+export class IncrementalSimulationService {
 
-  simulationInputs: SimulationInputs;
-  completeConv: Conversation
-  incrementalConv: Conversation
+  simulationInputs: SimulationInputs = {defaultsPerCp: new Map()};
+  completeConv: Conversation = new Conversation();
+  incrementalConv: Conversation = this.completeConv
 
   msgConnections: Map<string, Message> = new Map<string, Message>();
   infoConnections: Map<string, Information> = new Map<string, Information>();
 
-  constructor(simulationInputs: SimulationInputs, conv: Conversation) {
+  pauseRequested: boolean = false;
+
+  constructor(
+    private trustComputationService: TrustComputationService,
+  ) {
+  }
+
+  private prepare(simulationInputs: SimulationInputs, conv: Conversation) {
     this.simulationInputs = simulationInputs;
     this.completeConv = conv;
     let author = new Author(conv.author.name, conv.author.xPosition)
     this.incrementalConv = new Conversation(conv.title, author, conv.conversationPartners)
+    this.msgConnections = new Map<string, Message>();
+    this.infoConnections = new Map<string, Information>();
   }
 
-  async simulate() {
-    for (let msg of this.completeConv.author.messages) {
+  async simulate(simulationInputs: SimulationInputs, conv: Conversation) {
+    this.prepare(simulationInputs, conv);
+    for (let msg of this.completeConv!.author.messages) {
       await this.step(msg)
     }
   }
 
-  async step(msg: Message) {
+  private async step(msg: Message) {
     if(msg.isSend())
       await this.stepSend((msg as SendMessage))
     else
@@ -46,7 +58,7 @@ export class IncrementalSimulator {
     2) add "new" Preknowledges and all isUsedOn of the send
     3) add relationships of new preknowledges (linkStep)
    */
-  async stepSend(send: SendMessage) {
+  private async stepSend(send: SendMessage) {
     let msg = new SendMessage(send.counterPart, send.timing, send.content, send.originalContent)
     this.msgConnections.set(send.gId, msg)
     this.incrementalConv.author.messages.push(msg)
@@ -64,7 +76,7 @@ export class IncrementalSimulator {
    2) add generated new infos and repetitions of the current rec
    3) add relationships of those new infos (linkStep)
    */
-  async stepReceive(rec: ReceiveMessage) {
+  private async stepReceive(rec: ReceiveMessage) {
     let msg = new ReceiveMessage(rec.counterPart, rec.timing, rec.content, rec.originalContent)
     this.msgConnections.set(rec.gId, msg)
     this.incrementalConv.author.messages.push(msg)
@@ -125,15 +137,26 @@ export class IncrementalSimulator {
   }
 
   private async linkStep(infos: Information[]) {
-    TrustComputator.computeCurrentTrusts(this.incrementalConv, this.simulationInputs)
+    this.trustComputationService.computeCurrentTrusts(this.incrementalConv, this.simulationInputs)
     await this.sleep(500)
     // set links:
     infos.map(info => this.addLinks(info))
     await this.sleep(100)
-    TrustComputator.computeCurrentTrusts(this.incrementalConv, this.simulationInputs)
+    this.trustComputationService.computeCurrentTrusts(this.incrementalConv, this.simulationInputs)
   }
 
-  private sleep(ms: number) {
+  private async sleep(ms: number) {
+    await this.waitIfPaused()
     return new Promise(resolve => setTimeout(resolve, ms))
+  }
+
+  private async waitIfPaused(): Promise<void> {
+    while (this.pauseRequested) {
+      await new Promise(resolve => setTimeout(resolve, 100)); // Check every 100ms
+    }
+  }
+
+  pauseAndResume(): void {
+    this.pauseRequested = !this.pauseRequested;
   }
 }
