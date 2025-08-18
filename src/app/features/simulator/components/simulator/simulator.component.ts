@@ -10,7 +10,7 @@ import {PreknowledgeComponent} from "@app/shared/keml/components/preknowledge/pr
 import {TextAreaSvgComponent} from "ngx-svg-graphics";
 import {SimulationDialogueService} from "../../services/simulation-dialogue.service";
 import {MatToolbar} from "@angular/material/toolbar";
-import {TrustComputator} from "../../utils/trust-computator";
+import {TrustComputationService} from "../../utils/trust-computation.service";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
 import {IncrementalSimulationService} from "@app/features/simulator/services/incremental-simulation.service";
@@ -51,7 +51,7 @@ export class SimulatorComponent implements OnInit {
     public simulationDialogueService: SimulationDialogueService,
     private alertService: AlertService,
     public incrementalSimulationService: IncrementalSimulationService,
-    private trustComputationService: TrustComputator,
+    private trustComputationService: TrustComputationService,
   ) {}
 
   ngOnInit() {

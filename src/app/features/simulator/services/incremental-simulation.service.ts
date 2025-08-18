@@ -8,7 +8,7 @@ import {
   ReceiveMessage,
   SendMessage
 } from "@app/shared/keml/models/core/msg-info";
-import {TrustComputator} from "@app/features/simulator/utils/trust-computator";
+import {TrustComputationService} from "@app/features/simulator/utils/trust-computation.service";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 import {Injectable} from "@angular/core";
 
@@ -25,7 +25,7 @@ export class IncrementalSimulationService {
   pauseRequested: boolean = false;
 
   constructor(
-    private trustComputationService: TrustComputator,
+    private trustComputationService: TrustComputationService,
   ) {
   }
 

@@ -9,7 +9,7 @@ import {Injectable} from "@angular/core";
 @Injectable({
   providedIn: 'root'
 })
-export class TrustComputator {
+export class TrustComputationService {
 
   constructor(private alertService: AlertService) {}
 
@@ -61,7 +61,7 @@ export class TrustComputator {
     let argScore = this.computeArgumentationScore(info)
     if (argScore != undefined) {
       let initial = this.determineInitialTrustForInfo(info, simulationInputs)
-      let weight = simulationInputs?.weight ? simulationInputs?.weight: TrustComputator.weightDefault
+      let weight = simulationInputs?.weight ? simulationInputs?.weight: TrustComputationService.weightDefault
       return this.truncTo1(
         initial +
         this.computeRepetitionScore(info, recSize) +
@@ -79,10 +79,10 @@ export class TrustComputator {
     if (newInfo.source) {
       let src: ConversationPartner = newInfo.source.counterPart
       let res = simulationInputs?.defaultsPerCp?.get(src)
-      return res? res : TrustComputator.generalDefault
+      return res? res : TrustComputationService.generalDefault
     } else {
       let res = simulationInputs?.preknowledgeDefault
-      return res? res : TrustComputator.preknowledgeDefault
+      return res? res : TrustComputationService.preknowledgeDefault
     }
   }
 

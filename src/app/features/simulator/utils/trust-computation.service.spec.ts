@@ -1,4 +1,4 @@
-import {TrustComputator} from './trust-computator';
+import {TrustComputationService} from './trust-computation.service';
 import {Conversation} from "@app/shared/keml/models/core/conversation";
 import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "@app/shared/keml/models/core/msg-info";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
@@ -9,12 +9,12 @@ import {JsonFixer} from "@app/shared/keml/models/json2core/json-fixer";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 import {TestBed} from "@angular/core/testing";
 
-describe('TrustComputator', () => {
-  let service : TrustComputator;
+describe('TrustComputationService', () => {
+  let service : TrustComputationService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({})
-    service = TestBed.inject(TrustComputator);
+    service = TestBed.inject(TrustComputationService);
   })
 
   it('should be created', () => {
@@ -84,13 +84,13 @@ describe('TrustComputator', () => {
     // no entries, hence real defaults should be used:
     expect(
       service.determineInitialTrustForInfo(p0, simInputs)
-    ).toEqual(TrustComputator.preknowledgeDefault) //1.0
+    ).toEqual(TrustComputationService.preknowledgeDefault) //1.0
     expect(
       service.determineInitialTrustForInfo(newInfo1, simInputs)
-    ).toEqual(TrustComputator.generalDefault) //0.5
+    ).toEqual(TrustComputationService.generalDefault) //0.5
     expect(
       service.determineInitialTrustForInfo(newInfo2, simInputs)
-    ).toEqual(TrustComputator.generalDefault) //0.5
+    ).toEqual(TrustComputationService.generalDefault) //0.5
 
     defByPartner.set(cp0, 0.1)
     defByPartner.set(cp1, 0.2)

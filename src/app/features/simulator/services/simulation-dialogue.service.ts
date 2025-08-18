@@ -6,7 +6,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {InfoTrustDetailsComponent} from "@app/features/simulator/components/info-trust-details/info-trust-details.component";
 import {SimulationInputDetails} from "@app/features/simulator/components/simulation-input-details/simulation-input-details.component";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
-import {TrustComputator} from "@app/features/simulator/utils/trust-computator";
+import {TrustComputationService} from "@app/features/simulator/utils/trust-computation.service";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class SimulationDialogueService {
 
   constructor(
     private dialog: MatDialog,
-    private trustComputationService: TrustComputator,
+    private trustComputationService: TrustComputationService,
   ) { }
 
   openSimulationDialog(conversation: Conversation) {
