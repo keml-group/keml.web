@@ -39,7 +39,7 @@ export class SimulationDialogueService {
       }
     )
     dialogRef.componentInstance.info = info
-    dialogRef.componentInstance.infoChanged.subscribe(i => {
+    dialogRef.componentInstance.infoChanged.subscribe(_ => {
       TrustComputator.computeCurrentTrusts(conversation, simulationInputs)
     })
   }
