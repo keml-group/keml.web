@@ -8,7 +8,7 @@ import {
   ReceiveMessage,
   SendMessage
 } from "@app/shared/keml/models/core/msg-info";
-import {TrustComputationService} from "@app/features/simulator/utils/trust-computation.service";
+import {TrustComputationService} from "@app/features/simulator/services/trust-computation.service";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 import {Injectable} from "@angular/core";
 
