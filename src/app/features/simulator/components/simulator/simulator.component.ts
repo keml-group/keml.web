@@ -83,4 +83,8 @@ export class SimulatorComponent implements OnInit {
       })
   }
 
+  pauseAndResume(): void {
+    this.incrementalSimulationService.pauseAndResume()
+  }
+
 }

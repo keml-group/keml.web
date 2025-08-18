@@ -11,6 +11,10 @@
     <mat-icon aria-hidden="false" fontIcon="autorenew" ></mat-icon>
     Simulate Incrementally
   </button>
+  <button class="file-level-button" (click)="pauseAndResume()">
+    <mat-icon aria-hidden="false" fontIcon="pause" ></mat-icon>
+    Pause/Resume
+  </button>
 </mat-toolbar>
 <div style="width: 1500px; height: 1000px; overflow: auto;">
   <svg #simulation id="svg" style="border: 1px solid black;" width="1500" height="5000" overflow="scroll">

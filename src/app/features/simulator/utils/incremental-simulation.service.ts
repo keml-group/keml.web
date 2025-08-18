@@ -22,11 +22,15 @@ export class IncrementalSimulationService {
   msgConnections: Map<string, Message> = new Map<string, Message>();
   infoConnections: Map<string, Information> = new Map<string, Information>();
 
+  pauseRequested: boolean = false;
+
   private prepare(simulationInputs: SimulationInputs, conv: Conversation) {
     this.simulationInputs = simulationInputs;
     this.completeConv = conv;
     let author = new Author(conv.author.name, conv.author.xPosition)
     this.incrementalConv = new Conversation(conv.title, author, conv.conversationPartners)
+    this.msgConnections = new Map<string, Message>();
+    this.infoConnections = new Map<string, Information>();
   }
 
   async simulate(simulationInputs: SimulationInputs, conv: Conversation) {
@@ -136,7 +140,18 @@ export class IncrementalSimulationService {
     TrustComputator.computeCurrentTrusts(this.incrementalConv, this.simulationInputs)
   }
 
-  private sleep(ms: number) {
+  private async sleep(ms: number) {
+    await this.waitIfPaused()
     return new Promise(resolve => setTimeout(resolve, ms))
+  }
+
+  private async waitIfPaused(): Promise<void> {
+    while (this.pauseRequested) {
+      await new Promise(resolve => setTimeout(resolve, 100)); // Check every 100ms
+    }
+  }
+
+  pauseAndResume(): void {
+    this.pauseRequested = !this.pauseRequested;
   }
 }
