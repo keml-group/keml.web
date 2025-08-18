@@ -24,6 +24,11 @@ export class IncrementalSimulationService {
 
   pauseRequested: boolean = false;
 
+  constructor(
+    private trustComputationService: TrustComputator,
+  ) {
+  }
+
   private prepare(simulationInputs: SimulationInputs, conv: Conversation) {
     this.simulationInputs = simulationInputs;
     this.completeConv = conv;
@@ -132,12 +137,12 @@ export class IncrementalSimulationService {
   }
 
   private async linkStep(infos: Information[]) {
-    TrustComputator.computeCurrentTrusts(this.incrementalConv, this.simulationInputs)
+    this.trustComputationService.computeCurrentTrusts(this.incrementalConv, this.simulationInputs)
     await this.sleep(500)
     // set links:
     infos.map(info => this.addLinks(info))
     await this.sleep(100)
-    TrustComputator.computeCurrentTrusts(this.incrementalConv, this.simulationInputs)
+    this.trustComputationService.computeCurrentTrusts(this.incrementalConv, this.simulationInputs)
   }
 
   private async sleep(ms: number) {

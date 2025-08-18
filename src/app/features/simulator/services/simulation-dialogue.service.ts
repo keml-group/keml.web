@@ -15,6 +15,7 @@ export class SimulationDialogueService {
 
   constructor(
     private dialog: MatDialog,
+    private trustComputationService: TrustComputator,
   ) { }
 
   openSimulationDialog(conversation: Conversation) {
@@ -40,7 +41,7 @@ export class SimulationDialogueService {
     )
     dialogRef.componentInstance.info = info
     dialogRef.componentInstance.infoChanged.subscribe(_ => {
-      TrustComputator.computeCurrentTrusts(conversation, simulationInputs)
+      this.trustComputationService.computeCurrentTrusts(conversation, simulationInputs)
     })
   }
 
@@ -54,6 +55,7 @@ export class SimulationDialogueService {
       }
     )
     dialogRef.componentInstance.simulationInputs = simulationInputs
-    dialogRef.componentInstance.recomputeWith.subscribe( sim =>  TrustComputator.computeCurrentTrusts(conversation, sim))
+    dialogRef.componentInstance.recomputeWith.subscribe( sim =>
+      this.trustComputationService.computeCurrentTrusts(conversation, sim))
   }
 }

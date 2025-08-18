@@ -11,17 +11,14 @@ import {Injectable} from "@angular/core";
 })
 export class TrustComputator {
 
-  constructor(private alertServ: AlertService) {
-    TrustComputator.alertService = alertServ;
-  }
+  constructor(private alertService: AlertService) {}
 
-  static alertService: AlertService
 
   static generalDefault: number = 0.5
   static preknowledgeDefault: number = 1.0
   static weightDefault: number = 2;
 
-  static computeCurrentTrusts(conv: Conversation, simulationInputs?: SimulationInputs) {
+  computeCurrentTrusts(conv: Conversation, simulationInputs?: SimulationInputs) {
     let pres: Preknowledge[] = conv.author.preknowledge
     let receives = conv.author.messages.filter(m => !m.isSend())
       .map(m => m as ReceiveMessage)
@@ -31,7 +28,7 @@ export class TrustComputator {
     )
   }
 
-  static computeCTFromKnowledge(pres: Preknowledge[], newInfos: NewInformation[], recSize: number,
+  computeCTFromKnowledge(pres: Preknowledge[], newInfos: NewInformation[], recSize: number,
                                 simulationInputs?: SimulationInputs,
                                 ) {
     let toVisit: Information[] = newInfos
@@ -60,11 +57,11 @@ export class TrustComputator {
     }
   }
 
-  static computeTrust(info: Information, recSize: number, simulationInputs?: SimulationInputs): number | undefined {
+  computeTrust(info: Information, recSize: number, simulationInputs?: SimulationInputs): number | undefined {
     let argScore = this.computeArgumentationScore(info)
     if (argScore != undefined) {
       let initial = this.determineInitialTrustForInfo(info, simulationInputs)
-      let weight = simulationInputs?.weight ? simulationInputs?.weight: this.weightDefault
+      let weight = simulationInputs?.weight ? simulationInputs?.weight: TrustComputator.weightDefault
       return this.truncTo1(
         initial +
         this.computeRepetitionScore(info, recSize) +
@@ -74,7 +71,7 @@ export class TrustComputator {
     return undefined
   }
 
-  static determineInitialTrustForInfo(info: Information, simulationInputs?: SimulationInputs): number {
+  determineInitialTrustForInfo(info: Information, simulationInputs?: SimulationInputs): number {
     if (info.initialTrust != undefined) {
       return info.initialTrust
     }
@@ -82,27 +79,27 @@ export class TrustComputator {
     if (newInfo.source) {
       let src: ConversationPartner = newInfo.source.counterPart
       let res = simulationInputs?.defaultsPerCp?.get(src)
-      return res? res : this.generalDefault
+      return res? res : TrustComputator.generalDefault
     } else {
       let res = simulationInputs?.preknowledgeDefault
-      return res? res : this.preknowledgeDefault
+      return res? res : TrustComputator.preknowledgeDefault
     }
   }
 
-  private static truncTo1(score: number): number {
+  private truncTo1(score: number): number {
     if(score <-1) return -1
     if (score>1) return 1
     return score
   }
 
-  static computeRepetitionScore(info: Information, recSize: number): number {
+  computeRepetitionScore(info: Information, recSize: number): number {
     if(!recSize)
       return 0;
     else
       return info.repeatedBy.length/recSize
   }
 
-  static computeArgumentationScore(info: Information): number | undefined {
+  computeArgumentationScore(info: Information): number | undefined {
     let scores: (number | undefined)[] = info.targetedBy.map(link => this.score(link))
     if(scores.length == 0)
       return 0
@@ -114,14 +111,14 @@ export class TrustComputator {
     return res
   }
 
-  static score(link: InformationLink): number | undefined {
+  score(link: InformationLink): number | undefined {
     if (link.source.currentTrust == undefined) {
       return undefined
     }
     return link.source.currentTrust*this.factorFromLinkType(link.type)
   }
 
-  private static factorFromLinkType(linkType: InformationLinkType): number {
+  private factorFromLinkType(linkType: InformationLinkType): number {
     switch (linkType) {
       case InformationLinkType.SUPPLEMENT:
         return 0;

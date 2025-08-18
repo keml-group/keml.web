@@ -51,6 +51,7 @@ export class SimulatorComponent implements OnInit {
     public simulationDialogueService: SimulationDialogueService,
     private alertService: AlertService,
     public incrementalSimulationService: IncrementalSimulationService,
+    private trustComputationService: TrustComputator,
   ) {}
 
   ngOnInit() {
@@ -58,7 +59,7 @@ export class SimulatorComponent implements OnInit {
       this.simulationInputs.defaultsPerCp.set(cp, undefined)
     })
     try {
-      TrustComputator.computeCurrentTrusts(this.conversation, this.simulationInputs)
+      this.trustComputationService.computeCurrentTrusts(this.conversation, this.simulationInputs)
     } catch (e) {
       if ((e instanceof Error)) {
         this.alertService.alert(e.message)
@@ -78,7 +79,7 @@ export class SimulatorComponent implements OnInit {
     this.showIncremental = true;
     this.incrementalSimulationService.simulate(this.simulationInputs, this.conversation)
       .then(() => {
-        TrustComputator.computeCurrentTrusts(this.conversation, this.simulationInputs);
+        this.trustComputationService.computeCurrentTrusts(this.conversation, this.simulationInputs);
         this.showIncremental = false;
       })
   }
