@@ -3,7 +3,7 @@ import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessa
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
-import {AlertService} from "@app/core/services/alert.service";
+import {AlertService} from "ngx-emfular-helper";
 import {Injectable} from "@angular/core";
 
 @Injectable({

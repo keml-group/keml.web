@@ -9,7 +9,7 @@ import {ConversationPartner} from "@app/shared/keml/models/core/conversation-par
 import {KemlService} from "@app/features/editor/services/keml.service";
 import { InfoChoiceComponent } from '@app/shared/keml/components/helper/choices/info-choice/info-choice.component';
 import { InfoInnerComponent } from '@app/shared/keml/components/helper/info-inner/info-inner.component';
-import {InputHandler} from "@app/core/utils/input-handler";
+import { InputHandler} from "ngx-emfular-helper";
 
 
 @Component({

@@ -4,7 +4,6 @@ import { MatIcon } from '@angular/material/icon';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { KemlService } from "@app/features/editor/services/keml.service";
-import { IoService } from "@app/core/services/io.service";
 import { DetailsService } from "@app/features/editor/details/services/details.service";
 import { MsgComponent } from '@app/shared/keml/components/msg/msg.component';
 import { PreknowledgeComponent } from '@app/shared/keml/components/preknowledge/preknowledge.component';
@@ -16,8 +15,8 @@ import { PersonSvgComponent } from '@app/shared/keml/components/helper/svg-base-
 import {SimulationDialogueService} from "@app/features/simulator/services/simulation-dialogue.service";
 import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-markers/arrow-markers.component";
 import {KEMLIOService} from "@app/features/editor/services/keml-io.service";
-import {InputHandler} from "@app/core/utils/input-handler";
 import {ConversationPickService} from "@app/features/editor/fromLLM/services/conversation-pick.service";
+import {IoService, InputHandler} from "ngx-emfular-helper";
 
 
 @Component({

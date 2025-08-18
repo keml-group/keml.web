@@ -6,7 +6,7 @@ import {JsonFixer} from "@app/shared/keml/models/json2core/json-fixer";
 import {LayoutHelper} from "@app/features/editor/utils/layout-helper";
 import {LLMMessage} from "@app/features/editor/fromLLM/models/llmmessage";
 import {LlmConversationCreator} from "@app/features/editor/fromLLM/utils/llm-conversation-creator";
-import {IoService} from "@app/core/services/io.service";
+import {IoService} from "ngx-emfular-helper";
 
 @Injectable({
   providedIn: 'root'
@@ -57,7 +57,7 @@ export class KEMLIOService {
   saveKEML() {
     const conv = this.kemlService.conversation;
     const jsonString = JSON.stringify(conv.toJson());
-    this.ioService.saveModel(jsonString, conv.title)
+    this.ioService.saveJson(jsonString, conv.title)
   }
 
 }

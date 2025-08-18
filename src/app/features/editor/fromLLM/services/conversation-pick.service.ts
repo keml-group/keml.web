@@ -5,7 +5,7 @@ import {
 import {ChatGptConv2LlmMessages} from "@app/features/editor/fromLLM/utils/chat-gpt-conv2-llm-messages";
 import {MatDialog} from "@angular/material/dialog";
 import {KEMLIOService} from "@app/features/editor/services/keml-io.service";
-import {IoService} from "@app/core/services/io.service";
+import {IoService} from "ngx-emfular-helper";
 
 @Injectable({
   providedIn: 'root'

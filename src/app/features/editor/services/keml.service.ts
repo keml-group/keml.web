@@ -14,7 +14,7 @@ import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models
 import {Author} from "@app/shared/keml/models/core/author";
 import {ListUpdater} from "emfular";
 import {MsgPositionChangeService} from "@app/features/editor/services/msg-position-change.service";
-import {AlertService} from "@app/core/services/alert.service";
+import {AlertService} from "ngx-emfular-helper";
 
 @Injectable({
   providedIn: 'root'

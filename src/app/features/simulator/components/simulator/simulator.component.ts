@@ -15,7 +15,7 @@ import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
 import {IncrementalSimulationService} from "@app/features/simulator/services/incremental-simulation.service";
 import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-markers/arrow-markers.component";
-import {AlertService} from "@app/core/services/alert.service";
+import {AlertService} from "ngx-emfular-helper";
 
 @Component({
     selector: 'app-simulator',
