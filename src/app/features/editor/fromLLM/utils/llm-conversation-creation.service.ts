@@ -4,8 +4,12 @@ import {ConversationPartner} from "@app/shared/keml/models/core/conversation-par
 import {Author} from "@app/shared/keml/models/core/author";
 import {LayoutHelper} from "@app/features/editor/utils/layout-helper";
 import {Message} from "@app/shared/keml/models/core/msg-info";
+import {Injectable} from "@angular/core";
 
-export class LlmConversationCreator {
+@Injectable({
+  providedIn: 'root'
+})
+export class LlmConversationCreationService {
 
   static convFromLlmMessages(llmMsgs: LLMMessage[]): Conversation {
     let cp = new ConversationPartner('LLM')
