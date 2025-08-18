@@ -4,7 +4,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { KemlService } from "@app/features/editor/services/keml.service";
-import { DetailsService } from "@app/features/editor/details/services/details.service";
+import { DetailsService } from "@app/features/editor/details/details.service";
 import { MsgComponent } from '@app/shared/keml/components/msg/msg.component';
 import { PreknowledgeComponent } from '@app/shared/keml/components/preknowledge/preknowledge.component';
 import { ConversationPartnerComponent } from '@app/shared/keml/components/cp/conversation-partner.component';
