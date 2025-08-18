@@ -55,7 +55,7 @@ export class TrustComputator {
         let msg = 'Endless loops of '+ toVisit.length +' nodes - please check the InformationLinks' //todo highlight graphically?
         this.alertService.alert(msg)
         //console.error(msg) //todo how could we use our alert service here? Instead of catch of higher levels
-        return
+        throw new Error(msg)
       }
     }
   }
