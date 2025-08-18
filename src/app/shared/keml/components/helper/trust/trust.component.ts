@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {TrustColorer} from "@app/shared/keml/utils/trust-colorer";
-import {NumberDisplayer} from "@app/core/utils/number-displayer";
+import {NumberDisplayer} from "@app/shared/keml/utils/number-displayer";
 
 @Component({
     selector: '[trust-svg]',
