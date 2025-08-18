@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { Message, ReceiveMessage, Information, NewInformation, InformationLink} from "@app/shared/keml/models/core/msg-info";
 import { KemlService } from "@app/features/editor/services/keml.service";
 import { MsgOverviewComponent } from '@app/shared/keml/components/helper/msg-overview/msg-overview.component';
-import { MsgChoiceComponent } from '@app/shared/keml/components/helper/choices/msg-choice/msg-choice.component';
+import { MsgChoiceComponent } from '@app/shared/keml/components/helper/msg-choice/msg-choice.component';
 import { IsInstrSvgComponent } from "@app/shared/keml/components/helper/is-instr-svg/is-instr-svg.component";
 import {LinkOverview} from "@app/shared/keml/components/helper/link-overview/link-overview.component";
 import {
