@@ -3,15 +3,15 @@
   <mat-icon aria-hidden="false" fontIcon="close" (click)="close()"></mat-icon>
 </button>
 <mat-toolbar class="file-level-bar">
-  <button class="file-level-button" (click)="manageSimulationInputs()">
+  <button class="file-level-button" (click)="manageSimulationInputs()" [disabled]="showIncremental">
     <mat-icon aria-hidden="false" fontIcon="build" ></mat-icon>
     Manage Simulation Inputs
   </button>
-  <button class="file-level-button" (click)="simulateIncrementally()">
+  <button class="file-level-button" (click)="simulateIncrementally()" [disabled]="showIncremental" >
     <mat-icon aria-hidden="false" fontIcon="autorenew" ></mat-icon>
     Simulate Incrementally
   </button>
-  <button class="file-level-button" (click)="pauseAndResume()">
+  <button class="file-level-button" (click)="pauseAndResume()" [disabled]="!showIncremental">
     <mat-icon aria-hidden="false" fontIcon="pause" ></mat-icon>
     Pause/Resume
   </button>

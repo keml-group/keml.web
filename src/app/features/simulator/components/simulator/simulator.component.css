@@ -12,6 +12,19 @@ file-level-bar{
 .file-level-button:hover {
   box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 }
+.file-level-button:disabled,
+.file-level-button[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+  .svg-dis{
+    stroke: #666666;
+  }
+  .mat-icon{
+    color: #666666;
+    background: transparent;
+  }
+}
 
 .mat-icon{
   color: orange;
