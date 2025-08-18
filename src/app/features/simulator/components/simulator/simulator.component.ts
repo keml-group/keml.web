@@ -32,6 +32,7 @@ import {AlertService} from "@app/core/services/alert.service";
         NgIf,
         ArrowMarkersComponent
     ],
+  providers: [IncrementalSimulationService],
     templateUrl: './simulator.component.html',
     styleUrl: './simulator.component.css'
 })
@@ -43,12 +44,13 @@ export class SimulatorComponent implements OnInit {
     preknowledgeDefault: undefined,
     defaultsPerCp: new Map<ConversationPartner, number|undefined>()
   };
-  incrementalSimulator?: IncrementalSimulationService
+  showIncremental: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<SimulatorComponent>,
-    public simulationService: SimulationDialogueService,
+    public simulationDialogueService: SimulationDialogueService,
     private alertService: AlertService,
+    public incrementalSimulationService: IncrementalSimulationService,
   ) {}
 
   ngOnInit() {
@@ -69,15 +71,15 @@ export class SimulatorComponent implements OnInit {
   }
 
   manageSimulationInputs() {
-    this.simulationService.openSimulationInputDetails(this.conversation, this.simulationInputs)
+    this.simulationDialogueService.openSimulationInputDetails(this.conversation, this.simulationInputs)
   }
 
   simulateIncrementally() {
-    this.incrementalSimulator = new IncrementalSimulationService()
-    this.incrementalSimulator.simulate(this.simulationInputs, this.conversation)
+    this.showIncremental = true;
+    this.incrementalSimulationService.simulate(this.simulationInputs, this.conversation)
       .then(() => {
         TrustComputator.computeCurrentTrusts(this.conversation, this.simulationInputs);
-        this.incrementalSimulator = undefined;
+        this.showIncremental = false;
       })
   }
 
