@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import {
   ConversationPickerComponent
-} from "@app/features/editor/fromLLM/conversation-picker/conversation-picker.component";
-import {ChatGptConv2LlmMessages} from "@app/features/editor/fromLLM/utils/chat-gpt-conv2-llm-messages";
+} from "@app/features/editor/fromLLM/conversationpicking/conversation-picker/conversation-picker.component";
+import {ChatGptConv2LlmMessages} from "@app/features/editor/fromLLM/chatGPT2llm/chat-gpt-conv2-llm-messages";
 import {MatDialog} from "@angular/material/dialog";
 import {KEMLIOService} from "@app/features/editor/services/keml-io.service";
 import {IoService} from "ngx-emfular-helper";

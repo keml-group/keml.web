@@ -4,8 +4,8 @@ import {Conversation} from "@app/shared/keml/models/core/conversation";
 import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
 import {JsonFixer} from "@app/shared/keml/models/json2core/json-fixer";
 import {LayoutHelper} from "@app/features/editor/utils/layout-helper";
-import {LLMMessage} from "@app/features/editor/fromLLM/models/llmmessage";
-import {LlmConversationCreationService} from "@app/features/editor/fromLLM/utils/llm-conversation-creation.service";
+import {LLMMessage} from "@app/features/editor/fromLLM/llm2keml/llmmessage";
+import {LlmConversationCreationService} from "@app/features/editor/fromLLM/llm2keml/llm-conversation-creation.service";
 import {IoService} from "ngx-emfular-helper";
 
 @Injectable({

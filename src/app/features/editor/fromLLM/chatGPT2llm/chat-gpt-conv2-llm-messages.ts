@@ -1,5 +1,5 @@
-import {LLMMessage, LLMMessageAuthorType} from "@app/features/editor/fromLLM/models/llmmessage";
-import {ChatGptAuthor, ChatGptMessage} from "@app/features/editor/fromLLM/models/chat-gpt-message";
+import {LLMMessage, LLMMessageAuthorType} from "@app/features/editor/fromLLM/llm2keml/llmmessage";
+import {ChatGptAuthor, ChatGptMessage} from "@app/features/editor/fromLLM/chatGPT2llm/chat-gpt-message";
 
 export class ChatGptConv2LlmMessages {
 

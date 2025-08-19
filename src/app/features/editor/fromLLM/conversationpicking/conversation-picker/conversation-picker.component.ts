@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ChatGptConv2LlmMessages} from "@app/features/editor/fromLLM/utils/chat-gpt-conv2-llm-messages";
+import {ChatGptConv2LlmMessages} from "@app/features/editor/fromLLM/chatGPT2llm/chat-gpt-conv2-llm-messages";
 import {MatDialogRef} from "@angular/material/dialog";
 import {MatIcon} from "@angular/material/icon";
 import {NgFor} from "@angular/common";
