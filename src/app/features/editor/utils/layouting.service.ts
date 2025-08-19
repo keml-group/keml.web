@@ -42,13 +42,7 @@ export class LayoutingService {
     } else {return LayoutingService.distanceToFirstCP;}
   }
 
-  static timeMessages(msgs: Message[]) {
-    msgs.forEach((msg, i) => {
-      msg.timing = i
-    })
-  }
-
-  static  computeMessageY(timing: number): number {
+  static computeMessageY(timing: number): number {
     return LayoutingService.distanceToFirstMessage+LayoutingService.distanceBetweenMessages*timing;
   }
 

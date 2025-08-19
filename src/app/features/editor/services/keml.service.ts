@@ -47,10 +47,16 @@ export class KemlService {
 
     let conv = Conversation.fromJSON(convJson);
     LayoutingService.positionConversationPartners(conv.conversationPartners)
-    LayoutingService.timeMessages(conv.author.messages)
+    KemlService.timeMessages(conv.author.messages)
     LayoutingService.positionInfos(conv.author.preknowledge, conv.author.messages);
     this.conversation = conv;
     return conv;
+  }
+
+  static timeMessages(msgs: Message[]) {
+    msgs.forEach((msg, i) => {
+      msg.timing = i
+    })
   }
 
   getTitle(): string {
