@@ -1,5 +1,5 @@
 export class LLMMessage {
-  author: string;
+  author: LLMMessageAuthorType;
   message: string;
 
   constructor(author: LLMMessageAuthorType, message: string) {
