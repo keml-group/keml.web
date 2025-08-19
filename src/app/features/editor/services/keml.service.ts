@@ -15,6 +15,7 @@ import {Author} from "@app/shared/keml/models/core/author";
 import {ListUpdater} from "emfular";
 import {MsgPositionChangeService} from "@app/features/editor/services/msg-position-change.service";
 import {AlertService} from "ngx-emfular-helper";
+import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
 
 @Injectable({
   providedIn: 'root'
@@ -35,8 +36,16 @@ export class KemlService {
     this.conversation = new Conversation(title);
   }
 
+  serializeConversation(): ConversationJson {
+    return this.conversation.toJson()
+  }
+
   assignConversation(conversation: Conversation) {
     this.conversation = conversation;
+  }
+
+  getTitle(): string {
+    return this.conversation.title;
   }
 
   getAuthor(): Author {

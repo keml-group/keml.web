@@ -40,9 +40,8 @@ export class KEMLIOService {
   }
 
   saveKEML() {
-    const conv = this.kemlService.conversation;
-    const jsonString = JSON.stringify(conv.toJson());
-    this.ioService.saveJson(jsonString, conv.title)
+    const jsonString = JSON.stringify(this.kemlService.serializeConversation());
+    this.ioService.saveJson(jsonString, this.kemlService.getTitle())
   }
 
 }
