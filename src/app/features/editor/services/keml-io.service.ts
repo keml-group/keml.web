@@ -18,13 +18,6 @@ export class KEMLIOService {
     private ioService: IoService,
   ) {}
 
-  newKEML(): Conversation {
-    const conv = new Conversation();
-    LayoutingService.positionConversationPartners(conv.conversationPartners)
-    this.kemlService.assignConversation(conv) ;
-    return conv;
-  }
-
   loadKEMLfromFile(event: Event) {
     this.ioService.loadStringFromFile(event).then(txt => {
       //todo insert detection code for wrong files (no json, not appropriately structured

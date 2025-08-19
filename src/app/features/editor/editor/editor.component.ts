@@ -37,7 +37,7 @@ export class EditorComponent {
     private simulationService: SimulationDialogueService,
     private ioService: IoService,
   ) {
-    this.kemlIOService.newKEML();
+    this.kemlService.newConversation();
   }
 
   //todo: handling of foreign objects leads to errors, will need self-written method
