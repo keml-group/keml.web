@@ -1,5 +1,5 @@
-import {LLMMessage, LLMMessageAuthorType} from "@app/features/editor/fromLLM/llm2keml/llm.models";
-import {ChatGptAuthor, ChatGptMessage} from "@app/features/editor/fromLLM/chatGPT2llm/chat-gpt.models";
+import {LLMMessage, LLMMessageAuthorType} from "@app/features/fromLLM/llm2keml/llm.models";
+import {ChatGptAuthor, ChatGptMessage} from "@app/features/fromLLM/chatGPT2llm/chat-gpt.models";
 import {Injectable} from "@angular/core";
 
 @Injectable({

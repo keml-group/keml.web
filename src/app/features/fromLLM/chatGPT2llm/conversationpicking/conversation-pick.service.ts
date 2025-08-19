@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import {
   ConversationPickerComponent
-} from "@app/features/editor/fromLLM/chatGPT2llm/conversationpicking/conversation-picker/conversation-picker.component";
+} from "@app/features/fromLLM/chatGPT2llm/conversationpicking/conversation-picker/conversation-picker.component";
 import {MatDialog} from "@angular/material/dialog";
 import {IoService} from "ngx-emfular-helper";
-import {Llm2KemlService} from "@app/features/editor/fromLLM/llm2keml/llm-2-keml.service";
+import {Llm2KemlService} from "@app/features/fromLLM/llm2keml/llm-2-keml.service";
 
 @Injectable({
   providedIn: 'root'

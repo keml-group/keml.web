@@ -1,4 +1,4 @@
-import {LLMMessage, LLMMessageAuthorType} from "@app/features/editor/fromLLM/llm2keml/llm.models";
+import {LLMMessage, LLMMessageAuthorType} from "@app/features/fromLLM/llm2keml/llm.models";
 import {Injectable} from "@angular/core";
 import {KemlService} from "@app/features/editor/services/keml.service";
 

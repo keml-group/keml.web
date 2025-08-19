@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ChatGpt2LlmService} from "@app/features/editor/fromLLM/chatGPT2llm/chat-gpt-2-llm.service";
+import {ChatGpt2LlmService} from "@app/features/fromLLM/chatGPT2llm/chat-gpt-2-llm.service";
 import {MatDialogRef} from "@angular/material/dialog";
 import {MatIcon} from "@angular/material/icon";
 import {NgFor} from "@angular/common";
-import {LLMMessage} from "@app/features/editor/fromLLM/llm2keml/llm.models";
+import {LLMMessage} from "@app/features/fromLLM/llm2keml/llm.models";
 
 @Component({
     selector: 'app-conversation-picker',
