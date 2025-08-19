@@ -1,12 +1,12 @@
-import { LlmConversationCreationService } from './llm-conversation-creation.service';
+import { Llm2KemlService } from './llm-2-keml.service';
 import {TestBed} from "@angular/core/testing";
 
 describe('LlmConversationCreationService', () => {
-  let service: LlmConversationCreationService;
+  let service: Llm2KemlService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(LlmConversationCreationService);
+    service = TestBed.inject(Llm2KemlService);
   });
 
   it('should be created', () => {

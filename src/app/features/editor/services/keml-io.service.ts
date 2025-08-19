@@ -4,8 +4,8 @@ import {Conversation} from "@app/shared/keml/models/core/conversation";
 import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
 import {JsonFixer} from "@app/shared/keml/models/json2core/json-fixer";
 import {LayoutHelper} from "@app/features/editor/utils/layout-helper";
-import {LLMMessage} from "@app/features/editor/fromLLM/llm2keml/llmmessage";
-import {LlmConversationCreationService} from "@app/features/editor/fromLLM/llm2keml/llm-conversation-creation.service";
+import {LLMMessage} from "@app/features/editor/fromLLM/llm2keml/llm.models";
+import {Llm2KemlService} from "@app/features/editor/fromLLM/llm2keml/llm-2-keml.service";
 import {IoService} from "ngx-emfular-helper";
 
 @Injectable({
@@ -49,7 +49,7 @@ export class KEMLIOService {
   }
 
   convFromLlmMessages(llmMsgs: LLMMessage[]): Conversation {
-    let conversation = LlmConversationCreationService.convFromLlmMessages(llmMsgs)
+    let conversation = Llm2KemlService.convFromLlmMessages(llmMsgs)
     this.kemlService.assignConversation(conversation) ;
     return conversation;
   }

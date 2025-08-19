@@ -1,4 +1,4 @@
-import {LLMMessage, LLMMessageAuthorType} from './llmmessage';
+import {LLMMessage, LLMMessageAuthorType} from './llm.models';
 
 describe('LLMMessage', () => {
   it('should create an instance', () => {

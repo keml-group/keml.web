@@ -1,4 +1,4 @@
-import {LLMMessage} from "@app/features/editor/fromLLM/llm2keml/llmmessage";
+import {LLMMessage} from "@app/features/editor/fromLLM/llm2keml/llm.models";
 import {Conversation} from "@app/shared/keml/models/core/conversation";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
 import {Author} from "@app/shared/keml/models/core/author";
@@ -9,7 +9,7 @@ import {Injectable} from "@angular/core";
 @Injectable({
   providedIn: 'root'
 })
-export class LlmConversationCreationService {
+export class Llm2KemlService {
 
   static convFromLlmMessages(llmMsgs: LLMMessage[]): Conversation {
     let cp = new ConversationPartner('LLM')
