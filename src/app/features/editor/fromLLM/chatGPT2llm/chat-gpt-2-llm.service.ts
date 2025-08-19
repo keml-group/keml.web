@@ -1,7 +1,11 @@
 import {LLMMessage, LLMMessageAuthorType} from "@app/features/editor/fromLLM/llm2keml/llm.models";
 import {ChatGptAuthor, ChatGptMessage} from "@app/features/editor/fromLLM/chatGPT2llm/chat-gpt.models";
+import {Injectable} from "@angular/core";
 
-export class ChatGpt2Llm {
+@Injectable({
+  providedIn: 'root'
+})
+export class ChatGpt2LlmService {
 
   static separateConvs(convs: string): any[] {
     return (JSON.parse(convs) as any[]);
