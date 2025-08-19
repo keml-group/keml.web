@@ -3,7 +3,7 @@ import {KemlService} from "@app/features/editor/services/keml.service";
 import {Conversation} from "@app/shared/keml/models/core/conversation";
 import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
 import {JsonFixer} from "@app/shared/keml/models/json2core/json-fixer";
-import {LayoutHelper} from "@app/features/editor/utils/layout-helper";
+import {LayoutingService} from "@app/features/editor/utils/layouting.service";
 import {IoService} from "ngx-emfular-helper";
 
 @Injectable({
@@ -20,7 +20,7 @@ export class KEMLIOService {
 
   newKEML(): Conversation {
     const conv = new Conversation();
-    LayoutHelper.positionConversationPartners(conv.conversationPartners)
+    LayoutingService.positionConversationPartners(conv.conversationPartners)
     this.kemlService.assignConversation(conv) ;
     return conv;
   }
@@ -38,9 +38,9 @@ export class KEMLIOService {
     JsonFixer.addMissingSupplementType(convJson);
 
     let conv = Conversation.fromJSON(convJson);
-    LayoutHelper.positionConversationPartners(conv.conversationPartners)
-    LayoutHelper.timeMessages(conv.author.messages)
-    LayoutHelper.positionInfos(conv.author.preknowledge, conv.author.messages);
+    LayoutingService.positionConversationPartners(conv.conversationPartners)
+    LayoutingService.timeMessages(conv.author.messages)
+    LayoutingService.positionInfos(conv.author.preknowledge, conv.author.messages);
 
     this.kemlService.assignConversation(conv) ;
     return conv;

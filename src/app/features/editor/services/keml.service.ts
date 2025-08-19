@@ -9,7 +9,7 @@ import {
 } from "@app/shared/keml/models/core/msg-info";
 import {Conversation} from "@app/shared/keml/models/core/conversation";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
-import {LayoutHelper} from "../utils/layout-helper";
+import {LayoutingService} from "../utils/layouting.service";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
 import {Author} from "@app/shared/keml/models/core/author";
 import {ListUpdater} from "emfular";
@@ -28,7 +28,7 @@ export class KemlService {
     private alertService: AlertService,
   ) {
     this.conversation = new Conversation();
-    LayoutHelper.positionConversationPartners(this.conversation.conversationPartners)
+    LayoutingService.positionConversationPartners(this.conversation.conversationPartners)
   }
 
   newConversation(title?: string) {
@@ -53,7 +53,7 @@ export class KemlService {
     const cps = this.conversation.conversationPartners;
     const cp: ConversationPartner = new ConversationPartner(
       name? name : 'New Partner',
-      LayoutHelper.nextConversationPartnerPosition(cps[cps.length-1]?.xPosition), //todo
+      LayoutingService.nextConversationPartnerPosition(cps[cps.length-1]?.xPosition), //todo
     );
     cps.push(cp);
     return cp;
@@ -71,7 +71,7 @@ export class KemlService {
     if (!this.isMoveConversationPartnerRightDisabled(cp)) {
       cps[pos] = cps[pos+1];
       cps[pos + 1] = cp;
-      LayoutHelper.positionConversationPartners(cps);
+      LayoutingService.positionConversationPartners(cps);
     }
   }
 
@@ -86,7 +86,7 @@ export class KemlService {
     if (!this.isMoveConversationPartnerLeftDisabled(cp)) {
       cps[pos] = cps[pos-1];
       cps[pos-1] = cp;
-      LayoutHelper.positionConversationPartners(cps);
+      LayoutingService.positionConversationPartners(cps);
     }
   }
 
@@ -110,7 +110,7 @@ export class KemlService {
       0 //todo how would we later compute a good position?
     )
     cps.splice(pos+1, 0, newCp);
-    LayoutHelper.positionConversationPartners(cps); // complete re-positioning
+    LayoutingService.positionConversationPartners(cps); // complete re-positioning
     return newCp;
   }
 
@@ -279,7 +279,7 @@ export class KemlService {
   duplicateInfo(info: Information): Information {
     const infos = this.getRightInfoList(info)
     const newInfo = info.duplicate()
-    newInfo.position = LayoutHelper.bbForInfoDuplication(info)
+    newInfo.position = LayoutingService.bbForInfoDuplication(info)
     infos.push(newInfo); //todo position right after current info?
     return newInfo;
   }
@@ -294,7 +294,7 @@ export class KemlService {
   }
 
   addNewPreknowledge(): Preknowledge {
-    const preknowledge: Preknowledge = new Preknowledge("New preknowledge", false, LayoutHelper.bbForPreknowledge(LayoutHelper.positionForNewPreknowledge), [], [], 0.5, 0.5, 0.5, 0.5);
+    const preknowledge: Preknowledge = new Preknowledge("New preknowledge", false, LayoutingService.bbForPreknowledge(LayoutingService.positionForNewPreknowledge), [], [], 0.5, 0.5, 0.5, 0.5);
     this.conversation.author.preknowledge.push(preknowledge);
     return preknowledge;
   }
@@ -306,7 +306,7 @@ export class KemlService {
   addNewNewInfo(causeMsg?: ReceiveMessage): NewInformation | undefined {
     let source = causeMsg? causeMsg : this.getFirstReceive()
     if (source) {
-      return new NewInformation(source, 'New Information', false, LayoutHelper.bbForNewInfo(source.generates.length), [], [], 0.5, 0.5, 0.5, 0.5);
+      return new NewInformation(source, 'New Information', false, LayoutingService.bbForNewInfo(source.generates.length), [], [], 0.5, 0.5, 0.5, 0.5);
     } else {
       this.alertService.alert('No receive messages found');
       return undefined;

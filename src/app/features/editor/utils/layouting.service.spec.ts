@@ -1,22 +1,30 @@
-import { LayoutHelper } from './layout-helper';
+import { LayoutingService } from './layouting.service';
 import {Preknowledge, SendMessage} from "@app/shared/keml/models/core/msg-info";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
 import {BoundingBox} from "ngx-svg-graphics";
+import {TestBed} from "@angular/core/testing";
 
-describe('LayoutHelper', () => {
-  it('should create an instance', () => {
-    expect(new LayoutHelper()).toBeTruthy();
+describe('LayoutingService', () => {
+  let service: LayoutingService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(LayoutingService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
   });
 
   it('should positionPreknowledge correctly', () => {
     let cp = new ConversationPartner('cp0')
     let s1 = new SendMessage(cp, 1, 's1')
-    let s1BB = LayoutHelper.bbForPreknowledge(LayoutHelper.computeMessageY(1))
+    let s1BB = LayoutingService.bbForPreknowledge(LayoutingService.computeMessageY(1))
     let s2 = new SendMessage(cp, 2, 's2')
-    let s2BB = LayoutHelper.bbForPreknowledge(LayoutHelper.computeMessageY(2))
+    let s2BB = LayoutingService.bbForPreknowledge(LayoutingService.computeMessageY(2))
     let s7 = new SendMessage(cp, 7, 's7')
-    let s7BB = LayoutHelper.bbForPreknowledge(LayoutHelper.computeMessageY(7))
-    let defaultBB = LayoutHelper.bbForPreknowledge(LayoutHelper.computeMessageY(0))
+    let s7BB = LayoutingService.bbForPreknowledge(LayoutingService.computeMessageY(7))
+    let defaultBB = LayoutingService.bbForPreknowledge(LayoutingService.computeMessageY(0))
 
     let p0 = new Preknowledge('p0', false, undefined, [s7, s2])
     let p0BB: BoundingBox = {x: -20, y: -50, h: 50, w:200}
@@ -57,22 +65,21 @@ describe('LayoutHelper', () => {
     }
 
     let t0: Preknowledge[] = []
-    LayoutHelper.positionPreknowledge(t0)
+    LayoutingService.positionPreknowledge(t0)
     expect(t0).toEqual([])
 
     let t1 = [p0, p0wbb, p1, p2, p3, p3wbb, p4]
-    LayoutHelper.positionPreknowledge(t1)
+    LayoutingService.positionPreknowledge(t1)
     expect(t1).toEqual(allOrdered)
     verifyAll()
 
     let t2 = [p4, p3wbb, p3, p2, p1, p0wbb, p0]
-    LayoutHelper.positionPreknowledge(t2)
+    LayoutingService.positionPreknowledge(t2)
     expect(t2).toEqual(allOrdered43)
     verifyAll()
 
     let t3 = [p3wbb, p1, p4]
-    LayoutHelper.positionPreknowledge(t3)
+    LayoutingService.positionPreknowledge(t3)
     expect(t3).toEqual([p1, p4, p3wbb])
-
   })
 });

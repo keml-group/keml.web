@@ -4,8 +4,12 @@
 import {ConversationPartner} from '@app/shared/keml/models/core/conversation-partner';
 import {Message, ReceiveMessage, Preknowledge, Information} from "@app/shared/keml/models/core/msg-info";
 import {BoundingBox} from "ngx-svg-graphics";
+import {Injectable} from "@angular/core";
 
-export class LayoutHelper {
+@Injectable({
+  providedIn: 'root'
+})
+export class LayoutingService {
   // distance to first partner should be bigger than distance in between:
   static distanceToFirstCP: number = 300;
   static distanceBetweenCP: number = 150;
@@ -28,14 +32,14 @@ export class LayoutHelper {
  */
   static positionConversationPartners(convPartners: ConversationPartner[]) {
     for (let i = 0; i < convPartners.length; i++) {
-      convPartners[i].xPosition = LayoutHelper.distanceToFirstCP + i * LayoutHelper.distanceBetweenCP;
+      convPartners[i].xPosition = LayoutingService.distanceToFirstCP + i * LayoutingService.distanceBetweenCP;
     }
   }
 
   static nextConversationPartnerPosition(positionBefore?: number): number {
     if(positionBefore) {
-      return positionBefore + LayoutHelper.distanceBetweenCP;
-    } else {return LayoutHelper.distanceToFirstCP;}
+      return positionBefore + LayoutingService.distanceBetweenCP;
+    } else {return LayoutingService.distanceToFirstCP;}
   }
 
   static timeMessages(msgs: Message[]) {
@@ -45,7 +49,7 @@ export class LayoutHelper {
   }
 
   static  computeMessageY(timing: number): number {
-    return LayoutHelper.distanceToFirstMessage+LayoutHelper.distanceBetweenMessages*timing;
+    return LayoutingService.distanceToFirstMessage+LayoutingService.distanceBetweenMessages*timing;
   }
 
   static initializeInfoPos(messages: Message[]) {
@@ -61,18 +65,18 @@ export class LayoutHelper {
 
   static bbForNewInfo(index: number): BoundingBox {
     return {
-      x: LayoutHelper.newInfoX - LayoutHelper.distanceBetweenInfos * index,
-      y: LayoutHelper.distanceBetweenInfos * index,
-      w: LayoutHelper.infoBoxWidth,
-      h: LayoutHelper.infoBoxHeight
+      x: LayoutingService.newInfoX - LayoutingService.distanceBetweenInfos * index,
+      y: LayoutingService.distanceBetweenInfos * index,
+      w: LayoutingService.infoBoxWidth,
+      h: LayoutingService.infoBoxHeight
     }
   }
 
   static bbForInfoDuplication(info: Information): BoundingBox {
     let pos = info.position
     return {
-      x: pos.x - LayoutHelper.distanceBetweenInfos,
-      y: pos.y + LayoutHelper.distanceBetweenInfos,
+      x: pos.x - LayoutingService.distanceBetweenInfos,
+      y: pos.y + LayoutingService.distanceBetweenInfos,
       w: pos.w,
       h: pos.h
     }
@@ -80,10 +84,10 @@ export class LayoutHelper {
 
   static bbForPreknowledge(y: number): BoundingBox {
     return {
-      x: LayoutHelper.preknowledgeX,
+      x: LayoutingService.preknowledgeX,
       y: y,
-      w: LayoutHelper.infoBoxWidth,
-      h: LayoutHelper.infoBoxHeight
+      w: LayoutingService.infoBoxWidth,
+      h: LayoutingService.infoBoxHeight
     }
   }
 
@@ -97,7 +101,7 @@ export class LayoutHelper {
     pre.forEach(p => {
       if (p.position.w < 7 ) {
         let timing = p.getTiming()
-        p.position = this.bbForPreknowledge(LayoutHelper.computeMessageY(timing))
+        p.position = this.bbForPreknowledge(LayoutingService.computeMessageY(timing))
       }
     })
     pre.sort((a, b) => {

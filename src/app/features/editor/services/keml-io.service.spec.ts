@@ -11,7 +11,7 @@ import {
   ReceiveMessage,
   SendMessage
 } from "@app/shared/keml/models/core/msg-info";
-import {LayoutHelper} from "@app/features/editor/utils/layout-helper";
+import {LayoutingService} from "@app/features/editor/utils/layouting.service";
 import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
 import {Author} from "@app/shared/keml/models/core/author";
 import {Conversation} from "@app/shared/keml/models/core/conversation";
@@ -75,7 +75,7 @@ describe('KEMLIOService', () => {
       new Ref('//@author/@preknowledge.1', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
 
     let preknowledge = [pre0, pre1]
-    LayoutHelper.positionPreknowledge(preknowledge)
+    LayoutingService.positionPreknowledge(preknowledge)
 
     let newInfo0Str = "{\n" +
       "        \"message\" : \"ni0\",\n" +
@@ -136,7 +136,7 @@ describe('KEMLIOService', () => {
       false,undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
       new Ref('//@author/@messages.1/@generates.1', 'http://www.unikoblenz.de/keml#//NewInformation'))
 
-    LayoutHelper.initializeInfoPos(msgs)
+    LayoutingService.initializeInfoPos(msgs)
 
     let infoLink0 = new InformationLink(newInfo0, pre0, InformationLinkType.SUPPLEMENT, undefined, new Ref('//@author/@messages.1/@generates.0/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink')) // necessary to test JsonFixer.addMissingSupplementType
     let infoLink1 = new InformationLink(pre1, newInfo1, InformationLinkType.STRONG_ATTACK, undefined, new Ref( '//@author/@preknowledge.1/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink'))

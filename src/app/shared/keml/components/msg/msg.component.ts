@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {InformationLink, Message, SendMessage, ReceiveMessage, Information} from "@app/shared/keml/models/core/msg-info";
-import {LayoutHelper} from "@app/features/editor/utils/layout-helper";
+import {LayoutingService} from "@app/features/editor/utils/layouting.service";
 import {ArrowType} from "@app/shared/keml/models/arrow-heads";
 import { NewInfoComponent } from '@app/shared/keml/components/new-info/new-info.component';
 import { NgIf, NgFor } from '@angular/common';
@@ -53,7 +53,7 @@ export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   computeY(): number {
-    return LayoutHelper.computeMessageY(this.msgTiming);
+    return LayoutingService.computeMessageY(this.msgTiming);
   }
 
   clickMsg() {
