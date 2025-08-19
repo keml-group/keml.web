@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ChatGptConv2LlmMessages} from "@app/features/editor/fromLLM/chatGPT2llm/chat-gpt-conv2-llm-messages";
+import {ChatGpt2Llm} from "@app/features/editor/fromLLM/chatGPT2llm/chat-gpt-2-llm";
 import {MatDialogRef} from "@angular/material/dialog";
 import {MatIcon} from "@angular/material/icon";
 import {NgFor} from "@angular/common";
@@ -22,7 +22,7 @@ export class ConversationPickerComponent implements OnInit {
 
 
   ngOnInit() {
-    this.titles = ChatGptConv2LlmMessages.getTitlesFromJsonArray(this.texts)
+    this.titles = ChatGpt2Llm.getTitlesFromJsonArray(this.texts)
   }
 
   chooseConversation(index: number) {

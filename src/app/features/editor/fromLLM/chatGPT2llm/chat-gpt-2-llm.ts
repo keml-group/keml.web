@@ -1,7 +1,7 @@
 import {LLMMessage, LLMMessageAuthorType} from "@app/features/editor/fromLLM/llm2keml/llmmessage";
-import {ChatGptAuthor, ChatGptMessage} from "@app/features/editor/fromLLM/chatGPT2llm/chat-gpt-message";
+import {ChatGptAuthor, ChatGptMessage} from "@app/features/editor/fromLLM/chatGPT2llm/chat-gpt.models";
 
-export class ChatGptConv2LlmMessages {
+export class ChatGpt2Llm {
 
   static separateConvs(convs: string): any[] {
     return (JSON.parse(convs) as any[]);

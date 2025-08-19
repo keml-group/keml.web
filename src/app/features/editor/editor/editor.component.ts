@@ -15,7 +15,7 @@ import { PersonSvgComponent } from '@app/shared/keml/components/helper/person-sv
 import {SimulationDialogueService} from "@app/features/simulator/services/simulation-dialogue.service";
 import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-markers/arrow-markers.component";
 import {KEMLIOService} from "@app/features/editor/services/keml-io.service";
-import {ConversationPickService} from "@app/features/editor/fromLLM/conversationpicking/conversation-pick.service";
+import {ConversationPickService} from "@app/features/editor/fromLLM/chatGPT2llm/conversationpicking/conversation-pick.service";
 import {IoService, InputHandler} from "ngx-emfular-helper";
 
 
