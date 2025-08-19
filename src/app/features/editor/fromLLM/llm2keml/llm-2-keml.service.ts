@@ -5,12 +5,24 @@ import {Author} from "@app/shared/keml/models/core/author";
 import {LayoutHelper} from "@app/features/editor/utils/layout-helper";
 import {Message} from "@app/shared/keml/models/core/msg-info";
 import {Injectable} from "@angular/core";
+import {KemlService} from "@app/features/editor/services/keml.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class Llm2KemlService {
 
+  constructor(
+    private kemlService: KemlService,
+  ) {}
+
+  convFromLlmMessages(llmMsgs: LLMMessage[]): Conversation {
+    let conversation = Llm2KemlService.convFromLlmMessages(llmMsgs)
+    this.kemlService.assignConversation(conversation) ;
+    return conversation;
+  }
+
+  //todo fall back to keml service! first just assign a simple conv, then add what is necessary via keml-service methods
   static convFromLlmMessages(llmMsgs: LLMMessage[]): Conversation {
     let cp = new ConversationPartner('LLM')
     const conv = new Conversation('From model', new Author(), [cp]);

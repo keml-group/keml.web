@@ -4,8 +4,8 @@ import {
 } from "@app/features/editor/fromLLM/chatGPT2llm/conversationpicking/conversation-picker/conversation-picker.component";
 import {ChatGpt2Llm} from "@app/features/editor/fromLLM/chatGPT2llm/chat-gpt-2-llm";
 import {MatDialog} from "@angular/material/dialog";
-import {KEMLIOService} from "@app/features/editor/services/keml-io.service";
 import {IoService} from "ngx-emfular-helper";
+import {Llm2KemlService} from "@app/features/editor/fromLLM/llm2keml/llm-2-keml.service";
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class ConversationPickService {
 
   constructor(
     private dialog: MatDialog,
-    private kemlIOService: KEMLIOService,
+    private llm2KemlService: Llm2KemlService,
     private ioService: IoService,
   ) { }
 
@@ -32,7 +32,7 @@ export class ConversationPickService {
     dialogRef.componentInstance.texts = jsons;
     dialogRef.componentInstance.chosenJson.subscribe(choice => {
       let msgs = ChatGpt2Llm.parseConversationJSON(choice)
-      this.kemlIOService.convFromLlmMessages(msgs)
+      this.llm2KemlService.convFromLlmMessages(msgs)
       dialogRef.componentInstance.chosenJson.unsubscribe()
     })
   }
