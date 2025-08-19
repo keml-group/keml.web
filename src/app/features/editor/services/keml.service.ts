@@ -16,6 +16,7 @@ import {ListUpdater} from "emfular";
 import {MsgPositionChangeService} from "@app/features/editor/services/msg-position-change.service";
 import {AlertService} from "ngx-emfular-helper";
 import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
+import {JsonFixer} from "@app/shared/keml/models/json2core/json-fixer";
 
 @Injectable({
   providedIn: 'root'
@@ -40,8 +41,16 @@ export class KemlService {
     return this.conversation.toJson()
   }
 
-  assignConversation(conversation: Conversation) {
-    this.conversation = conversation;
+  deserializeConversation(convJson: ConversationJson): Conversation {
+    JsonFixer.prepareJsonInfoLinkSources(convJson);
+    JsonFixer.addMissingSupplementType(convJson);
+
+    let conv = Conversation.fromJSON(convJson);
+    LayoutingService.positionConversationPartners(conv.conversationPartners)
+    LayoutingService.timeMessages(conv.author.messages)
+    LayoutingService.positionInfos(conv.author.preknowledge, conv.author.messages);
+    this.conversation = conv;
+    return conv;
   }
 
   getTitle(): string {

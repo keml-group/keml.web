@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import {KemlService} from "@app/features/editor/services/keml.service";
-import {Conversation} from "@app/shared/keml/models/core/conversation";
 import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
-import {JsonFixer} from "@app/shared/keml/models/json2core/json-fixer";
-import {LayoutingService} from "@app/features/editor/utils/layouting.service";
 import {IoService} from "ngx-emfular-helper";
 
 @Injectable({
@@ -21,22 +18,9 @@ export class KEMLIOService {
   loadKEMLfromFile(event: Event) {
     this.ioService.loadStringFromFile(event).then(txt => {
       //todo insert detection code for wrong files (no json, not appropriately structured
-      this.loadKEML(txt);
+      let convJson =  <ConversationJson>JSON.parse(txt);
+      this.kemlService.deserializeConversation(convJson);
     });
-  }
-
-  loadKEML(json: string): Conversation {
-    let convJson =  <ConversationJson>JSON.parse(json);
-    JsonFixer.prepareJsonInfoLinkSources(convJson);
-    JsonFixer.addMissingSupplementType(convJson);
-
-    let conv = Conversation.fromJSON(convJson);
-    LayoutingService.positionConversationPartners(conv.conversationPartners)
-    LayoutingService.timeMessages(conv.author.messages)
-    LayoutingService.positionInfos(conv.author.preknowledge, conv.author.messages);
-
-    this.kemlService.assignConversation(conv) ;
-    return conv;
   }
 
   saveKEML() {
