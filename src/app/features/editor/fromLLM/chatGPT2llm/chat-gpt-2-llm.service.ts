@@ -15,11 +15,11 @@ export class ChatGpt2LlmService {
     return convJson.map(entry => entry['title'])
   }
 
-  static parseConversationJSON(convJson: any): LLMMessage[] {
+  parseConversationJSON(convJson: any): LLMMessage[] {
     return this.parseMessageMapping(convJson['mapping'], convJson['current_node'])
   }
 
-  private static parseMessageMapping(mapping: any, startId: string): LLMMessage[] {
+  private parseMessageMapping(mapping: any, startId: string): LLMMessage[] {
     const res: LLMMessage[] = [];
     let currentId: string | undefined = startId;
     while (currentId !== undefined) {
@@ -44,7 +44,7 @@ export class ChatGpt2LlmService {
     return res.reverse();
   }
 
-  private static parseAuthor(author: ChatGptAuthor): LLMMessageAuthorType {
+  private parseAuthor(author: ChatGptAuthor): LLMMessageAuthorType {
     if (author.role == 'assistant') return LLMMessageAuthorType.LLM
     else return LLMMessageAuthorType.Author
   }

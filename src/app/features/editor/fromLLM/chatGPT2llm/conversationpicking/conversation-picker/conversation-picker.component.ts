@@ -3,6 +3,7 @@ import {ChatGpt2LlmService} from "@app/features/editor/fromLLM/chatGPT2llm/chat-
 import {MatDialogRef} from "@angular/material/dialog";
 import {MatIcon} from "@angular/material/icon";
 import {NgFor} from "@angular/common";
+import {LLMMessage} from "@app/features/editor/fromLLM/llm2keml/llm.models";
 
 @Component({
     selector: 'app-conversation-picker',
@@ -15,7 +16,7 @@ export class ConversationPickerComponent implements OnInit {
   @Input() convArray!: any;
   texts: any[] = [];
   titles: string[] = [];
-  @Output() chosenJson: EventEmitter<any> = new EventEmitter();
+  @Output() msgs: EventEmitter<LLMMessage[]> = new EventEmitter<LLMMessage[]>();
 
   constructor(
     private dialogRef: MatDialogRef<ConversationPickerComponent>,
@@ -29,7 +30,8 @@ export class ConversationPickerComponent implements OnInit {
   }
 
   chooseConversation(index: number) {
-    this.chosenJson.emit(this.texts[index])
+    let msgs = this.chatGpt2LlmService.parseConversationJSON(this.texts[index])
+    this.msgs.emit(msgs)
     this.dialogRef.close();
   }
 
