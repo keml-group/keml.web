@@ -30,13 +30,13 @@ export class LayoutingService {
  It currently assumes no meaningful xPosition but just fills this field
  It could later evaluate the current values and adjust them if things are not ok
  */
-  static positionConversationPartners(convPartners: ConversationPartner[]) {
+  positionConversationPartners(convPartners: ConversationPartner[]) {
     for (let i = 0; i < convPartners.length; i++) {
       convPartners[i].xPosition = LayoutingService.distanceToFirstCP + i * LayoutingService.distanceBetweenCP;
     }
   }
 
-  static nextConversationPartnerPosition(positionBefore?: number): number {
+  nextConversationPartnerPosition(positionBefore?: number): number {
     if(positionBefore) {
       return positionBefore + LayoutingService.distanceBetweenCP;
     } else {return LayoutingService.distanceToFirstCP;}

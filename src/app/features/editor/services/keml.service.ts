@@ -28,9 +28,10 @@ export class KemlService {
   constructor(
     private msgPositionChangeService: MsgPositionChangeService,
     private alertService: AlertService,
+    private layoutingService: LayoutingService,
   ) {
     this.conversation = new Conversation();
-    LayoutingService.positionConversationPartners(this.conversation.conversationPartners)
+    this.layoutingService.positionConversationPartners(this.conversation.conversationPartners)
   }
 
   newConversation(title?: string) {
@@ -46,7 +47,7 @@ export class KemlService {
     JsonFixer.addMissingSupplementType(convJson);
 
     let conv = Conversation.fromJSON(convJson);
-    LayoutingService.positionConversationPartners(conv.conversationPartners)
+    this.layoutingService.positionConversationPartners(conv.conversationPartners)
     KemlService.timeMessages(conv.author.messages)
     LayoutingService.positionInfos(conv.author.preknowledge, conv.author.messages);
     this.conversation = conv;
@@ -77,7 +78,7 @@ export class KemlService {
     const cps = this.conversation.conversationPartners;
     const cp: ConversationPartner = new ConversationPartner(
       name? name : 'New Partner',
-      LayoutingService.nextConversationPartnerPosition(cps[cps.length-1]?.xPosition), //todo
+      this.layoutingService.nextConversationPartnerPosition(cps[cps.length-1]?.xPosition), //todo
     );
     cps.push(cp);
     return cp;
@@ -95,7 +96,7 @@ export class KemlService {
     if (!this.isMoveConversationPartnerRightDisabled(cp)) {
       cps[pos] = cps[pos+1];
       cps[pos + 1] = cp;
-      LayoutingService.positionConversationPartners(cps);
+      this.layoutingService.positionConversationPartners(cps);
     }
   }
 
@@ -110,7 +111,7 @@ export class KemlService {
     if (!this.isMoveConversationPartnerLeftDisabled(cp)) {
       cps[pos] = cps[pos-1];
       cps[pos-1] = cp;
-      LayoutingService.positionConversationPartners(cps);
+      this.layoutingService.positionConversationPartners(cps);
     }
   }
 
@@ -134,7 +135,7 @@ export class KemlService {
       0 //todo how would we later compute a good position?
     )
     cps.splice(pos+1, 0, newCp);
-    LayoutingService.positionConversationPartners(cps); // complete re-positioning
+    this.layoutingService.positionConversationPartners(cps); // complete re-positioning
     return newCp;
   }
 
