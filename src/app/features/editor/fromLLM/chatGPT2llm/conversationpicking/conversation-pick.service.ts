@@ -20,16 +20,16 @@ export class ConversationPickService {
 
   startWithAllConvs(event: Event) {
     this.ioService.loadStringFromFile(event).then( (txt: string) =>
-      this.openConversationPicker(ChatGpt2LlmService.separateConvs(txt))
+      this.openConversationPicker(txt)
     )
   }
 
-  openConversationPicker(jsons: any[]) {
+  private openConversationPicker(jsons: any) {
     const dialogRef = this.dialog.open(
       ConversationPickerComponent,
       {width: '40%', height: '80%'}
     )
-    dialogRef.componentInstance.texts = jsons;
+    dialogRef.componentInstance.convArray = jsons;
     dialogRef.componentInstance.chosenJson.subscribe(choice => {
       let msgs = ChatGpt2LlmService.parseConversationJSON(choice)
       this.llm2KemlService.convFromLlmMessages(msgs)

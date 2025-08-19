@@ -7,11 +7,11 @@ import {Injectable} from "@angular/core";
 })
 export class ChatGpt2LlmService {
 
-  static separateConvs(convs: string): any[] {
+  separateConvs(convs: string): any[] {
     return (JSON.parse(convs) as any[]);
   }
 
-  static getTitlesFromJsonArray(convJson: any[]) {
+  getTitlesFromJsonArray(convJson: any[]) {
     return convJson.map(entry => entry['title'])
   }
 

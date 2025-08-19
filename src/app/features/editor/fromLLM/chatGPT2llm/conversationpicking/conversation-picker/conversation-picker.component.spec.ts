@@ -19,7 +19,7 @@ describe('ConversationPickerComponent', () => {
 
     fixture = TestBed.createComponent(ConversationPickerComponent);
     component = fixture.componentInstance;
-    component.texts = [];
+    component.convArray = "[]";
     fixture.detectChanges();
   });
 
