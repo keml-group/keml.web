@@ -31,6 +31,10 @@ export class KemlService {
     LayoutHelper.positionConversationPartners(this.conversation.conversationPartners)
   }
 
+  newConversation(title?: string) {
+    this.conversation = new Conversation(title);
+  }
+
   assignConversation(conversation: Conversation) {
     this.conversation = conversation;
   }
@@ -45,10 +49,10 @@ export class KemlService {
     return this.conversation.conversationPartners;
   }
 
-  addNewConversationPartner(): ConversationPartner {
+  addNewConversationPartner(name?: string): ConversationPartner {
     const cps = this.conversation.conversationPartners;
     const cp: ConversationPartner = new ConversationPartner(
-      'New Partner',
+      name? name : 'New Partner',
       LayoutHelper.nextConversationPartnerPosition(cps[cps.length-1]?.xPosition), //todo
     );
     cps.push(cp);
@@ -205,12 +209,14 @@ export class KemlService {
     this.moveMessagesDown(msg.timing +1, msgs.length)
   }
 
-  addNewMessage(isSend: boolean, counterPart?: ConversationPartner): Message | undefined {
+  addNewMessage(isSend: boolean, counterPart?: ConversationPartner, content?: string, originalContent?: string): Message | undefined {
     if (this.conversation.conversationPartners.length > 0) {
       const cp = counterPart ? counterPart : this.conversation.conversationPartners[0];
-      const content = isSend ? 'New send content' : 'New receive content';
+      const defaultContent = isSend ? 'New send content' : 'New receive content';
+      let cont = content ? content : defaultContent
+      let originalCont = originalContent ? originalContent : defaultContent
       const msgs = this.conversation.author.messages
-      const newMsg: Message = Message.newMessage(isSend, cp, msgs.length, content)
+      const newMsg: Message = Message.newMessage(isSend, cp, msgs.length, cont, originalCont)
       msgs.push(newMsg);
       return newMsg;
     } else {

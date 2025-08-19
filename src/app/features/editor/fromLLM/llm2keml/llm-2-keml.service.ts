@@ -1,9 +1,4 @@
 import {LLMMessage} from "@app/features/editor/fromLLM/llm2keml/llm.models";
-import {Conversation} from "@app/shared/keml/models/core/conversation";
-import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
-import {Author} from "@app/shared/keml/models/core/author";
-import {LayoutHelper} from "@app/features/editor/utils/layout-helper";
-import {Message} from "@app/shared/keml/models/core/msg-info";
 import {Injectable} from "@angular/core";
 import {KemlService} from "@app/features/editor/services/keml.service";
 
@@ -16,26 +11,17 @@ export class Llm2KemlService {
     private kemlService: KemlService,
   ) {}
 
-  convFromLlmMessages(llmMsgs: LLMMessage[]): Conversation {
-    let conversation = Llm2KemlService.convFromLlmMessages(llmMsgs)
-    this.kemlService.assignConversation(conversation) ;
-    return conversation;
-  }
-
-  //todo fall back to keml service! first just assign a simple conv, then add what is necessary via keml-service methods
-  static convFromLlmMessages(llmMsgs: LLMMessage[]): Conversation {
-    let cp = new ConversationPartner('LLM')
-    const conv = new Conversation('From model', new Author(), [cp]);
-    LayoutHelper.positionConversationPartners(conv.conversationPartners)
+  convFromLlmMessages(llmMsgs: LLMMessage[]): void {
+    this.kemlService.newConversation('From model')
+    let llm = this.kemlService.addNewConversationPartner('LLM')
     for( let i=0; i < llmMsgs.length; i++) {
-      let msg = this.createMsg(llmMsgs[i], cp, i)
-      conv.author.messages.push(msg)
+      this.kemlService.addNewMessage(
+        Llm2KemlService.isSend(llmMsgs[i]),
+        llm,
+        llmMsgs[i].message,
+        llmMsgs[i].message,
+      )
     }
-    return conv;
-  }
-
-  private static createMsg(llmMsg: LLMMessage,counterPart: ConversationPartner, index: number): Message {
-    return Message.newMessage(this.isSend(llmMsg), counterPart, index, llmMsg.message, llmMsg.message)
   }
 
   private static isSend(llmMsg: LLMMessage): boolean {
