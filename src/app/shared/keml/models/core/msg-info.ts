@@ -7,10 +7,9 @@ import {
   NewInformationJson,
   PreknowledgeJson,
 } from "@app/shared/keml/models/json/knowledge-models";
-import {Deserializer, Ref, Referencable} from "emfular";
-import {ListUpdater} from "emfular";
-import {BoundingBox, Positionable, PositionHelper} from "ngx-svg-graphics";
 import {EClasses} from "@app/shared/keml/models/eclasses";
+import {Deserializer, Ref, Referencable, ListUpdater} from "emfular";
+import {BoundingBox, Positionable, PositionHelper} from "ngx-svg-graphics";
 
 export abstract class Message extends Referencable {
   counterPart: ConversationPartner;
