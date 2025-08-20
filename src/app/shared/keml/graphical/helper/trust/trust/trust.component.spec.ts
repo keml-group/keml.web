@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TrustComponent } from './trust.component';
-import {NumberDisplayer} from "@app/shared/keml/utils/number-displayer";
+import {NumberDisplayer} from "@app/shared/keml/graphical/helper/trust/number-displayer";
 
 describe('TrustComponent', () => {
   let component: TrustComponent;
