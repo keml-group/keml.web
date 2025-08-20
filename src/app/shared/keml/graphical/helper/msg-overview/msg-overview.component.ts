@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {Message} from "@app/shared/keml/core/msg-info";
 import { TextAreaSvgComponent } from 'ngx-svg-graphics';
-import { PersonSvgComponent } from '@app/shared/keml/graphical/helper/person-svg/person-svg.component';
+import { PersonSvgComponent } from '@app/shared/keml/graphical/helper/base-svg/person-svg/person-svg.component';
 import { MsgInnerComponent } from '../msg-inner/msg-inner.component';
 
 @Component({
