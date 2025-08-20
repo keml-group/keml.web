@@ -7,8 +7,8 @@ import { MatTooltip } from '@angular/material/tooltip';
 import {Information, Message, ReceiveMessage, SendMessage} from "@app/shared/keml/core/msg-info";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {KemlService} from "@app/features/editor/services/keml.service";
-import { InfoChoiceComponent } from '@app/shared/keml/graphical/helper/info-choice/info-choice.component';
-import { InfoInnerComponent } from '@app/shared/keml/graphical/helper/info-inner/info-inner.component';
+import { InfoChoiceComponent } from '@app/shared/keml/graphical/helper/information/info-choice/info-choice.component';
+import { InfoInnerComponent } from '@app/shared/keml/graphical/helper/information/info-inner/info-inner.component';
 import { InputHandler} from "ngx-emfular-helper";
 
 

@@ -1,8 +1,8 @@
 import {Component, Input} from '@angular/core';
 import { NgFor } from '@angular/common';
 import {Preknowledge} from "@app/shared/keml/core/msg-info";
-import {InfoComponent} from "@app/shared/keml/graphical/helper/info/info.component";
-import { InfoInnerComponent } from '../helper/info-inner/info-inner.component';
+import {InfoComponent} from "@app/shared/keml/graphical/helper/information/info/info.component";
+import { InfoInnerComponent } from '@app/shared/keml/graphical/helper/information/info-inner/info-inner.component';
 import { InformationLinkComponent } from '../information-link/information-link.component';
 
 @Component({

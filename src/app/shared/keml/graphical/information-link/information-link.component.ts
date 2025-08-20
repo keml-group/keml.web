@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
-import {InfoComponent} from "@app/shared/keml/graphical/helper/info/info.component";
+import {InfoComponent} from "@app/shared/keml/graphical/helper/information/info/info.component";
 import {InformationLink} from "@app/shared/keml/core/msg-info";
 import {ArrowBetweenElemsComponent} from "ngx-svg-graphics";
 

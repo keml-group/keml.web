@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
-import {IsInstrSvgComponent} from "@app/shared/keml/graphical/helper/is-instr-svg/is-instr-svg.component";
+import {IsInstrSvgComponent} from "@app/shared/keml/graphical/helper/information/is-instr-svg/is-instr-svg.component";
 import {MatIcon} from "@angular/material/icon";
 import {MsgOverviewComponent} from "@app/shared/keml/graphical/helper/msg-overview/msg-overview.component";
 import {NgForOf} from "@angular/common";

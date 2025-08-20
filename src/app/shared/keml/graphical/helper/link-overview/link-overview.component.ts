@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {InformationLink} from "@app/shared/keml/core/msg-info";
-import {InfoInnerComponent} from "@app/shared/keml/graphical/helper/info-inner/info-inner.component";
+import {InfoInnerComponent} from "@app/shared/keml/graphical/helper/information/info-inner/info-inner.component";
 import {ArrowBetweenBoxesComponent} from "ngx-svg-graphics";
 
 @Component({
