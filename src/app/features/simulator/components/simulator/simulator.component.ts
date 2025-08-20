@@ -14,7 +14,7 @@ import {TrustComputationService} from "../../services/trust-computation.service"
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {IncrementalSimulationService} from "@app/features/simulator/services/incremental-simulation.service";
-import {ArrowMarkersComponent} from "@app/shared/keml/graphical/helper/arrow-markers/arrow-markers.component";
+import {ArrowMarkersComponent} from "@app/shared/keml/graphical/helper/arrow-styling/arrow-markers/arrow-markers.component";
 import {AlertService} from "ngx-emfular-helper";
 
 @Component({

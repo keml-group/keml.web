@@ -13,7 +13,7 @@ import { TextAreaSvgComponent } from "ngx-svg-graphics";
 import { DatabaseSvgComponent } from '@app/shared/keml/graphical/helper/database-svg/database-svg.component';
 import { PersonSvgComponent } from '@app/shared/keml/graphical/helper/person-svg/person-svg.component';
 import {SimulationDialogueService} from "@app/features/simulator/services/simulation-dialogue.service";
-import {ArrowMarkersComponent} from "@app/shared/keml/graphical/helper/arrow-markers/arrow-markers.component";
+import {ArrowMarkersComponent} from "@app/shared/keml/graphical/helper/arrow-styling/arrow-markers/arrow-markers.component";
 import {KEMLIOService} from "@app/features/editor/services/keml-io.service";
 import {ConversationPickService} from "@app/features/fromLLM/chatGPT2llm/conversationpicking/conversation-pick.service";
 import {IoService, InputHandler} from "ngx-emfular-helper";
