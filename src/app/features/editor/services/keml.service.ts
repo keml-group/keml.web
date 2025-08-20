@@ -9,7 +9,7 @@ import {
 } from "@app/shared/keml/core/msg-info";
 import {Conversation} from "@app/shared/keml/core/conversation";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
-import {LayoutingService} from "../utils/layouting.service";
+import {LayoutingService} from "./layouting.service";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {Author} from "@app/shared/keml/core/author";
 import {ListUpdater} from "emfular";

@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {InformationLink, Message, SendMessage, ReceiveMessage, Information} from "@app/shared/keml/core/msg-info";
-import {LayoutingService} from "@app/features/editor/utils/layouting.service";
+import {LayoutingService} from "@app/features/editor/services/layouting.service";
 import {ArrowType} from "@app/shared/keml/graphical/helper/arrow-styling/arrow.models";
 import { NewInfoComponent } from '@app/shared/keml/graphical/new-info/new-info.component';
 import { NgIf, NgFor } from '@angular/common';
