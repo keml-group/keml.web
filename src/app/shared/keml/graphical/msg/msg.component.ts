@@ -2,9 +2,9 @@ import {AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output
 import {InformationLink, Message, SendMessage, ReceiveMessage, Information} from "@app/shared/keml/models/core/msg-info";
 import {LayoutingService} from "@app/features/editor/utils/layouting.service";
 import {ArrowType} from "@app/shared/keml/models/arrow-heads";
-import { NewInfoComponent } from '@app/shared/keml/components/new-info/new-info.component';
+import { NewInfoComponent } from '@app/shared/keml/graphical/new-info/new-info.component';
 import { NgIf, NgFor } from '@angular/common';
-import { MsgInnerComponent } from '@app/shared/keml/components/helper/msg-inner/msg-inner.component';
+import { MsgInnerComponent } from '@app/shared/keml/graphical/helper/msg-inner/msg-inner.component';
 import {ArrowBetweenElemsComponent, SVGAccessService} from "ngx-svg-graphics";
 
 @Component({

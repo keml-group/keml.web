@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Information, InformationLink} from "@app/shared/keml/models/core/msg-info";
 import {SVGAccessService, DraggableComponent, Dragger} from "ngx-svg-graphics";
-import {InfoInnerComponent} from "@app/shared/keml/components/helper/info-inner/info-inner.component";
-import {InformationLinkComponent} from "@app/shared/keml/components/information-link/information-link.component";
+import {InfoInnerComponent} from "@app/shared/keml/graphical/helper/info-inner/info-inner.component";
+import {InformationLinkComponent} from "@app/shared/keml/graphical/information-link/information-link.component";
 import {NgForOf} from "@angular/common";
 
 @Component({

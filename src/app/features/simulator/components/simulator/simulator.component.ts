@@ -3,10 +3,10 @@ import {NgForOf, NgIf, NgTemplateOutlet} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {MatDialogRef} from "@angular/material/dialog";
 import {Conversation} from "@app/shared/keml/models/core/conversation";
-import {AuthorComponent} from "@app/shared/keml/components/author/author.component";
-import {ConversationPartnerComponent} from "@app/shared/keml/components/cp/conversation-partner.component";
-import {MsgComponent} from "@app/shared/keml/components/msg/msg.component";
-import {PreknowledgeComponent} from "@app/shared/keml/components/preknowledge/preknowledge.component";
+import {AuthorComponent} from "@app/shared/keml/graphical/author/author.component";
+import {ConversationPartnerComponent} from "@app/shared/keml/graphical/cp/conversation-partner.component";
+import {MsgComponent} from "@app/shared/keml/graphical/msg/msg.component";
+import {PreknowledgeComponent} from "@app/shared/keml/graphical/preknowledge/preknowledge.component";
 import {TextAreaSvgComponent} from "ngx-svg-graphics";
 import {SimulationDialogueService} from "../../services/simulation-dialogue.service";
 import {MatToolbar} from "@angular/material/toolbar";
@@ -14,7 +14,7 @@ import {TrustComputationService} from "../../services/trust-computation.service"
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
 import {IncrementalSimulationService} from "@app/features/simulator/services/incremental-simulation.service";
-import {ArrowMarkersComponent} from "@app/shared/keml/components/helper/arrow-markers/arrow-markers.component";
+import {ArrowMarkersComponent} from "@app/shared/keml/graphical/helper/arrow-markers/arrow-markers.component";
 import {AlertService} from "ngx-emfular-helper";
 
 @Component({

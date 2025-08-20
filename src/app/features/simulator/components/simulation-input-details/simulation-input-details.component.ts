@@ -6,7 +6,7 @@ import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs
 import {NgForOf} from "@angular/common";
 import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
 import {TrustComputationService} from "@app/features/simulator/services/trust-computation.service";
-import {TrustSliderComponent} from "@app/shared/keml/components/helper/trust-slider/trust-slider.component";
+import {TrustSliderComponent} from "@app/shared/keml/graphical/helper/trust-slider/trust-slider.component";
 
 @Component({
     selector: 'simulation-input-details',

@@ -6,13 +6,13 @@ import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { Message, ReceiveMessage, Information, NewInformation, InformationLink} from "@app/shared/keml/models/core/msg-info";
 import { KemlService } from "@app/features/editor/services/keml.service";
-import { MsgOverviewComponent } from '@app/shared/keml/components/helper/msg-overview/msg-overview.component';
-import { MsgChoiceComponent } from '@app/shared/keml/components/helper/msg-choice/msg-choice.component';
-import { IsInstrSvgComponent } from "@app/shared/keml/components/helper/is-instr-svg/is-instr-svg.component";
-import {LinkOverview} from "@app/shared/keml/components/helper/link-overview/link-overview.component";
+import { MsgOverviewComponent } from '@app/shared/keml/graphical/helper/msg-overview/msg-overview.component';
+import { MsgChoiceComponent } from '@app/shared/keml/graphical/helper/msg-choice/msg-choice.component';
+import { IsInstrSvgComponent } from "@app/shared/keml/graphical/helper/is-instr-svg/is-instr-svg.component";
+import {LinkOverview} from "@app/shared/keml/graphical/helper/link-overview/link-overview.component";
 import {
   TrustSliderComponent
-} from "@app/shared/keml/components/helper/trust-slider/trust-slider.component";
+} from "@app/shared/keml/graphical/helper/trust-slider/trust-slider.component";
 
 @Component({
     selector: 'info-details',

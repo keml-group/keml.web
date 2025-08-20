@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {InfoComponent} from "@app/shared/keml/components/helper/info/info.component";
+import {InfoComponent} from "@app/shared/keml/graphical/helper/info/info.component";
 import { NgFor } from '@angular/common';
 import {NewInformation} from "@app/shared/keml/models/core/msg-info";
 import {InfoInnerComponent} from "../helper/info-inner/info-inner.component";
