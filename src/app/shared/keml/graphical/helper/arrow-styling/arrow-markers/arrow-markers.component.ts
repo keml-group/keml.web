@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {ArrowHead} from "@app/shared/keml/graphical/helper/arrow-styling/arrow-heads";
+import {ArrowHead} from "@app/shared/keml/graphical/helper/arrow-styling/arrow.models";
 
 @Component({
     selector: '[arrow-markers]',
