@@ -1,8 +1,8 @@
 /* documents all layout specific choices (distances) so that we can work from that on
 * treats (0,0) as author position -> knowledge has a negative x, messages a positive x.
 */
-import {ConversationPartner} from '@app/shared/keml/models/core/conversation-partner';
-import {Message, ReceiveMessage, Preknowledge, Information} from "@app/shared/keml/models/core/msg-info";
+import {ConversationPartner} from '@app/shared/keml/core/conversation-partner';
+import {Message, ReceiveMessage, Preknowledge, Information} from "@app/shared/keml/core/msg-info";
 import {BoundingBox} from "ngx-svg-graphics";
 import {Injectable} from "@angular/core";
 

@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MsgComponent } from './msg.component';
 import {NO_ERRORS_SCHEMA} from "@angular/core";
-import {SendMessage} from "@app/shared/keml/models/core/msg-info";
-import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+import {SendMessage} from "@app/shared/keml/core/msg-info";
+import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 
 describe('SendComponent', () => {
   let component: MsgComponent;

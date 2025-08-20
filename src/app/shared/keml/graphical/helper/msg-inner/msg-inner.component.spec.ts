@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MsgInnerComponent } from './msg-inner.component';
 import {NO_ERRORS_SCHEMA} from "@angular/core";
-import {SendMessage} from "@app/shared/keml/models/core/msg-info";
-import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+import {SendMessage} from "@app/shared/keml/core/msg-info";
+import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 
 describe('MsgInnerComponent', () => {
   let component: MsgInnerComponent;

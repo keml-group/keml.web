@@ -1,9 +1,9 @@
 import {LifeLine} from "./life-line";
 import {Message} from "./msg-info";
-import {AuthorJson} from "@app/shared/keml/models/json/sequence-diagram-models"
+import {AuthorJson} from "@app/shared/keml/json/sequence-diagram-models"
 import {Preknowledge} from "./msg-info";
 import {Deserializer, Ref} from "emfular";
-import {EClasses} from "@app/shared/keml/models/eclasses";
+import {EClasses} from "@app/shared/keml/eclasses";
 
 export class Author extends LifeLine{
   static readonly preknowledgePrefix: string = 'preknowledge';

@@ -6,17 +6,17 @@ import {
   NewInformation,
   Preknowledge,
   ReceiveMessage, SendMessage,
-} from "@app/shared/keml/models/core/msg-info";
-import {Conversation} from "@app/shared/keml/models/core/conversation";
-import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+} from "@app/shared/keml/core/msg-info";
+import {Conversation} from "@app/shared/keml/core/conversation";
+import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {LayoutingService} from "../utils/layouting.service";
-import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
-import {Author} from "@app/shared/keml/models/core/author";
+import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
+import {Author} from "@app/shared/keml/core/author";
 import {ListUpdater} from "emfular";
 import {MsgPositionChangeService} from "@app/features/editor/services/msg-position-change.service";
 import {AlertService} from "ngx-emfular-helper";
-import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
-import {JsonFixer} from "@app/shared/keml/models/json2core/json-fixer";
+import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
+import {JsonFixer} from "@app/shared/keml/json2core/json-fixer";
 
 @Injectable({
   providedIn: 'root'

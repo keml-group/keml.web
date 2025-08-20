@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Author} from "../../models/core/author";
+import {Author} from "@app/shared/keml/core/author";
 import { TextAreaSvgComponent } from "ngx-svg-graphics";
 import { PersonSvgComponent } from '@app/shared/keml/graphical/helper/person-svg/person-svg.component';
 

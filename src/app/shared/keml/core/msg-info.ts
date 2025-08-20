@@ -1,13 +1,13 @@
 import {ConversationPartner} from "./conversation-partner";
-import {MessageJson, ReceiveMessageJson, SendMessageJson,} from "@app/shared/keml/models/json/sequence-diagram-models";
+import {MessageJson, ReceiveMessageJson, SendMessageJson,} from "@app/shared/keml/json/sequence-diagram-models";
 import {
   InformationJson,
   InformationLinkJson,
   InformationLinkType,
   NewInformationJson,
   PreknowledgeJson,
-} from "@app/shared/keml/models/json/knowledge-models";
-import {EClasses} from "@app/shared/keml/models/eclasses";
+} from "@app/shared/keml/json/knowledge-models";
+import {EClasses} from "@app/shared/keml/eclasses";
 import {Deserializer, Ref, Referencable, ListUpdater} from "emfular";
 import {BoundingBox, Positionable, PositionHelper} from "ngx-svg-graphics";
 

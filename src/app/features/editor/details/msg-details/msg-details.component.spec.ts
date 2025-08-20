@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MsgDetailsComponent } from './msg-details.component';
 import {MatDialogRef} from "@angular/material/dialog";
 import {MatIcon} from "@angular/material/icon";
-import {ReceiveMessage} from "@app/shared/keml/models/core/msg-info";
-import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+import {ReceiveMessage} from "@app/shared/keml/core/msg-info";
+import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {NO_ERRORS_SCHEMA} from "@angular/core";
 
 describe('MsgDetailsComponent', () => {

@@ -1,5 +1,5 @@
-import {Conversation} from "@app/shared/keml/models/core/conversation";
-import {Author} from "@app/shared/keml/models/core/author";
+import {Conversation} from "@app/shared/keml/core/conversation";
+import {Author} from "@app/shared/keml/core/author";
 import {
   Information, InformationLink,
   Message,
@@ -7,7 +7,7 @@ import {
   Preknowledge,
   ReceiveMessage,
   SendMessage
-} from "@app/shared/keml/models/core/msg-info";
+} from "@app/shared/keml/core/msg-info";
 import {TrustComputationService} from "@app/features/simulator/services/trust-computation.service";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 import {Injectable} from "@angular/core";

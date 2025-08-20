@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {ArrowHead, ArrowType} from "@app/shared/keml/models/arrow-heads";
+import {ArrowHead, ArrowType} from "@app/shared/keml/arrow-heads";
 import {ArrowStyleConfiguration, ArrowStyleConfigurationService} from "ngx-svg-graphics";
 
 @Injectable({

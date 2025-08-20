@@ -4,8 +4,8 @@ import { MatIcon } from '@angular/material/icon';
 import {MatDialogRef} from "@angular/material/dialog";
 import { FormsModule } from '@angular/forms';
 import {KemlService} from "@app/features/editor/services/keml.service";
-import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
-import {Information, InformationLink, Preknowledge} from "@app/shared/keml/models/core/msg-info";
+import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
+import {Information, InformationLink, Preknowledge} from "@app/shared/keml/core/msg-info";
 import { InfoChoiceComponent } from '@app/shared/keml/graphical/helper/info-choice/info-choice.component';
 
 @Component({

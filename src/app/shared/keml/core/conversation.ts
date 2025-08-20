@@ -1,9 +1,9 @@
 import {Author} from "./author";
 import {ConversationPartner} from "./conversation-partner";
-import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
+import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
 import {Deserializer, Ref, Referencable} from "emfular";
-import {KEMLConstructorPointers} from "@app/shared/keml/models/json2core/keml-constructor-pointers";
-import {EClasses} from "@app/shared/keml/models/eclasses";
+import {KEMLConstructorPointers} from "@app/shared/keml/json2core/keml-constructor-pointers";
+import {EClasses} from "@app/shared/keml/eclasses";
 
 
 export class Conversation extends Referencable {

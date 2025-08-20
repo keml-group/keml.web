@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PreknowledgeComponent } from './preknowledge.component';
 import {NO_ERRORS_SCHEMA} from "@angular/core";
-import {Preknowledge} from "@app/shared/keml/models/core/msg-info";
+import {Preknowledge} from "@app/shared/keml/core/msg-info";
 
 describe('PreknowledgeComponent', () => {
   let component: PreknowledgeComponent;

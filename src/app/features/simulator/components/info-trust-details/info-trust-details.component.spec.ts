@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InfoTrustDetailsComponent } from './info-trust-details.component';
 import {MatDialogRef} from "@angular/material/dialog";
-import {Preknowledge} from "@app/shared/keml/models/core/msg-info";
+import {Preknowledge} from "@app/shared/keml/core/msg-info";
 
 describe('InfoTrustDetailsComponent', () => {
   let component: InfoTrustDetailsComponent;

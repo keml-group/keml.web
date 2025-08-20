@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {ArrowHead} from "@app/shared/keml/models/arrow-heads";
+import {ArrowHead} from "@app/shared/keml/arrow-heads";
 
 @Component({
     selector: '[arrow-markers]',

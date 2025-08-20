@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConversationPartnerComponent } from './conversation-partner.component';
 import {NO_ERRORS_SCHEMA} from "@angular/core";
-import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 
 describe('ConversationPartnerComponent', () => {
   let component: ConversationPartnerComponent;

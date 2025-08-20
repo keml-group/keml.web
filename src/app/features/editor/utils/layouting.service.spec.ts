@@ -1,6 +1,6 @@
 import { LayoutingService } from './layouting.service';
-import {Preknowledge, SendMessage} from "@app/shared/keml/models/core/msg-info";
-import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+import {Preknowledge, SendMessage} from "@app/shared/keml/core/msg-info";
+import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {BoundingBox} from "ngx-svg-graphics";
 import {TestBed} from "@angular/core/testing";
 

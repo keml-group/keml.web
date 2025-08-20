@@ -1,4 +1,4 @@
-import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 
 export interface SimulationInputs {
   weight?: number;

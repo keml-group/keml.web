@@ -5,7 +5,7 @@ import {MatIcon} from "@angular/material/icon";
 import {MsgOverviewComponent} from "@app/shared/keml/graphical/helper/msg-overview/msg-overview.component";
 import {NgForOf} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {Information} from "@app/shared/keml/models/core/msg-info";
+import {Information} from "@app/shared/keml/core/msg-info";
 import {LinkOverview} from "@app/shared/keml/graphical/helper/link-overview/link-overview.component";
 import {TrustSliderComponent} from "@app/shared/keml/graphical/helper/trust-slider/trust-slider.component";
 

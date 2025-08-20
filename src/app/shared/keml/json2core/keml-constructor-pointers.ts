@@ -4,17 +4,17 @@ import {
   ConstructorPointers,
   ConstructorPointerFor
 } from "emfular";
-import {Author} from "@app/shared/keml/models/core/author";
-import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+import {Author} from "@app/shared/keml/core/author";
+import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {
   InformationLink,
   NewInformation,
   Preknowledge,
   ReceiveMessage,
   SendMessage
-} from "@app/shared/keml/models/core/msg-info";
-import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
-import {EClasses} from "@app/shared/keml/models/eclasses";
+} from "@app/shared/keml/core/msg-info";
+import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
+import {EClasses} from "@app/shared/keml/eclasses";
 
 
 export class KEMLConstructorPointers {

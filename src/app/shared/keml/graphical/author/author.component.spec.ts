@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AuthorComponent } from './author.component';
 import {NO_ERRORS_SCHEMA} from "@angular/core";
-import {Author} from "@app/shared/keml/models/core/author";
+import {Author} from "@app/shared/keml/core/author";
 
 describe('AuthorComponent', () => {
   let component: AuthorComponent;

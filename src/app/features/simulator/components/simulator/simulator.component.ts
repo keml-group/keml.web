@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {NgForOf, NgIf, NgTemplateOutlet} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {MatDialogRef} from "@angular/material/dialog";
-import {Conversation} from "@app/shared/keml/models/core/conversation";
+import {Conversation} from "@app/shared/keml/core/conversation";
 import {AuthorComponent} from "@app/shared/keml/graphical/author/author.component";
 import {ConversationPartnerComponent} from "@app/shared/keml/graphical/cp/conversation-partner.component";
 import {MsgComponent} from "@app/shared/keml/graphical/msg/msg.component";
@@ -12,7 +12,7 @@ import {SimulationDialogueService} from "../../services/simulation-dialogue.serv
 import {MatToolbar} from "@angular/material/toolbar";
 import {TrustComputationService} from "../../services/trust-computation.service";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
-import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {IncrementalSimulationService} from "@app/features/simulator/services/incremental-simulation.service";
 import {ArrowMarkersComponent} from "@app/shared/keml/graphical/helper/arrow-markers/arrow-markers.component";
 import {AlertService} from "ngx-emfular-helper";

@@ -4,7 +4,7 @@ import {MatDialogRef} from "@angular/material/dialog";
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { Message, ReceiveMessage, Information, NewInformation, InformationLink} from "@app/shared/keml/models/core/msg-info";
+import { Message, ReceiveMessage, Information, NewInformation, InformationLink} from "@app/shared/keml/core/msg-info";
 import { KemlService } from "@app/features/editor/services/keml.service";
 import { MsgOverviewComponent } from '@app/shared/keml/graphical/helper/msg-overview/msg-overview.component';
 import { MsgChoiceComponent } from '@app/shared/keml/graphical/helper/msg-choice/msg-choice.component';

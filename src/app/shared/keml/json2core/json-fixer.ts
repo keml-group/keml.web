@@ -1,10 +1,10 @@
 import {Ref} from "emfular";
-import {Author} from "@app/shared/keml/models/core/author";
-import {Message, ReceiveMessage} from "@app/shared/keml/models/core/msg-info";
-import {ConversationJson, ReceiveMessageJson,} from '@app/shared/keml/models/json/sequence-diagram-models'
-import {Conversation} from "@app/shared/keml/models/core/conversation";
-import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
-import {EClasses} from "@app/shared/keml/models/eclasses";
+import {Author} from "@app/shared/keml/core/author";
+import {Message, ReceiveMessage} from "@app/shared/keml/core/msg-info";
+import {ConversationJson, ReceiveMessageJson,} from '@app/shared/keml/json/sequence-diagram-models'
+import {Conversation} from "@app/shared/keml/core/conversation";
+import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
+import {EClasses} from "@app/shared/keml/eclasses";
 
 export class JsonFixer {
 

@@ -1,17 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 
 import { KemlService } from './keml.service';
-import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {
   InformationLink,
   Message,
   NewInformation, Preknowledge,
   ReceiveMessage, SendMessage,
-} from "@app/shared/keml/models/core/msg-info";
+} from "@app/shared/keml/core/msg-info";
 import {LayoutingService} from "@app/features/editor/utils/layouting.service";
-import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
-import {Author} from "@app/shared/keml/models/core/author";
-import {Conversation} from "@app/shared/keml/models/core/conversation";
+import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
+import {Author} from "@app/shared/keml/core/author";
+import {Conversation} from "@app/shared/keml/core/conversation";
 import {Referencable, Ref} from "emfular";
 
 describe('KEML-Service', () => {

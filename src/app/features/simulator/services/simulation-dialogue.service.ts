@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {Information} from "@app/shared/keml/models/core/msg-info";
-import {Conversation} from "@app/shared/keml/models/core/conversation";
+import {Information} from "@app/shared/keml/core/msg-info";
+import {Conversation} from "@app/shared/keml/core/conversation";
 import {SimulatorComponent} from "@app/features/simulator/components/simulator/simulator.component";
 import {MatDialog} from "@angular/material/dialog";
 import {InfoTrustDetailsComponent} from "@app/features/simulator/components/info-trust-details/info-trust-details.component";

@@ -3,7 +3,7 @@ import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef } from "@angular/material/dialog";
 import { KemlService } from "@app/features/editor/services/keml.service";
-import { ConversationPartner } from "@app/shared/keml/models/core/conversation-partner";
+import { ConversationPartner } from "@app/shared/keml/core/conversation-partner";
 
 @Component({
     selector: 'cp-details',

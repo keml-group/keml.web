@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { TextAreaSvgComponent } from "ngx-svg-graphics";
 import { PersonSvgComponent } from '@app/shared/keml/graphical/helper/person-svg/person-svg.component';
-import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 
 @Component({
     selector: '[cp]',

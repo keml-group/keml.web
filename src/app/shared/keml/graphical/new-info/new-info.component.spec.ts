@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NewInfoComponent } from './new-info.component';
 import {NO_ERRORS_SCHEMA} from "@angular/core";
-import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
-import {NewInformation, ReceiveMessage} from "@app/shared/keml/models/core/msg-info";
+import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
+import {NewInformation, ReceiveMessage} from "@app/shared/keml/core/msg-info";
 
 describe('NewInfoComponent', () => {
   let component: NewInfoComponent;

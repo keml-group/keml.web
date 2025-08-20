@@ -2,8 +2,8 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {InformationLinkComponent} from './information-link.component';
 import {NO_ERRORS_SCHEMA} from "@angular/core";
-import {InformationLink, Preknowledge} from "@app/shared/keml/models/core/msg-info";
-import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
+import {InformationLink, Preknowledge} from "@app/shared/keml/core/msg-info";
+import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 
 describe('InformationLinkComponent', () => {
   let component: InformationLinkComponent;

@@ -1,8 +1,8 @@
-import {Conversation} from "@app/shared/keml/models/core/conversation";
-import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "@app/shared/keml/models/core/msg-info";
-import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
+import {Conversation} from "@app/shared/keml/core/conversation";
+import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "@app/shared/keml/core/msg-info";
+import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
-import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
+import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {AlertService} from "ngx-emfular-helper";
 import {Injectable} from "@angular/core";
 

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SimulatorComponent } from './simulator.component';
 import {MatDialogRef} from "@angular/material/dialog";
-import {Conversation} from "../../../../shared/keml/models/core/conversation";
+import {Conversation} from "@app/shared/keml/core/conversation";
 
 describe('SimulatorComponent', () => {
   let component: SimulatorComponent;

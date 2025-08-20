@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { KEMLArrowStyleConfigurationService } from './kemlarrow-style-configuration.service';
-import {ArrowHead, ArrowType} from "@app/shared/keml/models/arrow-heads";
+import {ArrowHead, ArrowType} from "@app/shared/keml/arrow-heads";
 
 describe('KEMLArrowStyleConfigurationService', () => {
   let service: KEMLArrowStyleConfigurationService;

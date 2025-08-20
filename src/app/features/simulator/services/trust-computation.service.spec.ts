@@ -1,11 +1,11 @@
 import {TrustComputationService} from './trust-computation.service';
-import {Conversation} from "@app/shared/keml/models/core/conversation";
-import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "@app/shared/keml/models/core/msg-info";
-import {ConversationPartner} from "@app/shared/keml/models/core/conversation-partner";
-import {Author} from "@app/shared/keml/models/core/author";
-import {InformationLinkType} from "@app/shared/keml/models/json/knowledge-models";
-import {ConversationJson} from "@app/shared/keml/models/json/sequence-diagram-models";
-import {JsonFixer} from "@app/shared/keml/models/json2core/json-fixer";
+import {Conversation} from "@app/shared/keml/core/conversation";
+import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "@app/shared/keml/core/msg-info";
+import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
+import {Author} from "@app/shared/keml/core/author";
+import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
+import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
+import {JsonFixer} from "@app/shared/keml/json2core/json-fixer";
 import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
 import {TestBed} from "@angular/core/testing";
 

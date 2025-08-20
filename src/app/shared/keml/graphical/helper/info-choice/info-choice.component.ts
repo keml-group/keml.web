@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output, TemplateRef, ViewChild} from '@angular/core';
-import {Information, Preknowledge, ReceiveMessage} from "@app/shared/keml/models/core/msg-info";
+import {Information, Preknowledge, ReceiveMessage} from "@app/shared/keml/core/msg-info";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {KemlService} from "@app/features/editor/services/keml.service";
 import { PreknowledgeComponent } from '../../preknowledge/preknowledge.component';
