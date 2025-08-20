@@ -4,9 +4,9 @@ import {KemlService} from "@app/features/editor/services/keml.service";
 import {Message, ReceiveMessage, SendMessage} from "@app/shared/keml/core/msg-info";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {Author} from "@app/shared/keml/core/author";
-import { MsgComponent } from '../../msg/msg.component';
-import { ConversationPartnerComponent } from '../../cp/conversation-partner.component';
-import { AuthorComponent } from '../../author/author.component';
+import { MsgComponent } from '../../../msg/msg.component';
+import { ConversationPartnerComponent } from '../../../cp/conversation-partner.component';
+import { AuthorComponent } from '../../../author/author.component';
 import { MsgOverviewComponent } from '../msg-overview/msg-overview.component';
 import { NgIf, NgFor } from '@angular/common';
 

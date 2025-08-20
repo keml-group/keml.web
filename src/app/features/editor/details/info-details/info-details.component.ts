@@ -6,8 +6,8 @@ import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { Message, ReceiveMessage, Information, NewInformation, InformationLink} from "@app/shared/keml/core/msg-info";
 import { KemlService } from "@app/features/editor/services/keml.service";
-import { MsgOverviewComponent } from '@app/shared/keml/graphical/helper/msg-overview/msg-overview.component';
-import { MsgChoiceComponent } from '@app/shared/keml/graphical/helper/msg-choice/msg-choice.component';
+import { MsgOverviewComponent } from '@app/shared/keml/graphical/helper/messages/msg-overview/msg-overview.component';
+import { MsgChoiceComponent } from '@app/shared/keml/graphical/helper/messages/msg-choice/msg-choice.component';
 import { IsInstrSvgComponent } from "@app/shared/keml/graphical/helper/information/is-instr-svg/is-instr-svg.component";
 import {LinkOverview} from "@app/shared/keml/graphical/helper/link-overview/link-overview.component";
 import {

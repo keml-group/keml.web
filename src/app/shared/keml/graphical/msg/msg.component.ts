@@ -4,7 +4,7 @@ import {LayoutingService} from "@app/features/editor/utils/layouting.service";
 import {ArrowType} from "@app/shared/keml/graphical/helper/arrow-styling/arrow.models";
 import { NewInfoComponent } from '@app/shared/keml/graphical/new-info/new-info.component';
 import { NgIf, NgFor } from '@angular/common';
-import { MsgInnerComponent } from '@app/shared/keml/graphical/helper/msg-inner/msg-inner.component';
+import { MsgInnerComponent } from '@app/shared/keml/graphical/helper/messages/msg-inner/msg-inner.component';
 import {ArrowBetweenElemsComponent, SVGAccessService} from "ngx-svg-graphics";
 
 @Component({
