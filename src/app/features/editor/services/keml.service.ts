@@ -9,11 +9,11 @@ import {
 } from "@app/shared/keml/core/msg-info";
 import {Conversation} from "@app/shared/keml/core/conversation";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
-import {LayoutingService} from "./layouting.service";
+import {LayoutingService} from "../../../shared/keml/graphical/layouting.service";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {Author} from "@app/shared/keml/core/author";
 import {ListUpdater} from "emfular";
-import {MsgPositionChangeService} from "@app/features/editor/services/msg-position-change.service";
+import {MsgPositionChangeService} from "@app/shared/keml/graphical/msg-position-change.service";
 import {AlertService} from "ngx-emfular-helper";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
 import {JsonFixer} from "@app/shared/keml/json2core/json-fixer";

@@ -8,7 +8,7 @@ import {
   NewInformation, Preknowledge,
   ReceiveMessage, SendMessage,
 } from "@app/shared/keml/core/msg-info";
-import {LayoutingService} from "@app/features/editor/services/layouting.service";
+import {LayoutingService} from "@app/shared/keml/graphical/layouting.service";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {Author} from "@app/shared/keml/core/author";
 import {Conversation} from "@app/shared/keml/core/conversation";
