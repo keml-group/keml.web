@@ -3,7 +3,6 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SimulationInputs} from "@app/features/simulator/simulation-inputs";
 import {NgForOf} from "@angular/common";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
-import {TrustComputationService} from "@app/features/simulator/services/trust-computation.service";
 import {TrustSliderComponent} from "@app/shared/trust-slider/trust-slider.component";
 
 @Component({
@@ -24,8 +23,7 @@ export class SimulationInputDetails implements OnInit {
   partnerList: ConversationPartner[] = []
   defaultList: (number|undefined)[] = []
 
-  constructor(
-  ) {}
+  constructor() {}
 
   ngOnInit() {
     this.partnerList = Array.from(this.simulationInputs.defaultsPerCp.keys())
@@ -48,9 +46,5 @@ export class SimulationInputDetails implements OnInit {
     this.recomputeWith.emit(this.simulationInputs)
   }
 
-  closeMe() {
-    this.recomputeWith.emit(this.simulationInputs)
-  }
-
-  protected readonly TrustComputator = TrustComputationService;
+  protected readonly SimulationInputs = SimulationInputs;
 }

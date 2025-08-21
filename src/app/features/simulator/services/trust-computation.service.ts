@@ -12,12 +12,7 @@ import {Injectable} from "@angular/core";
 export class TrustComputationService {
 
   constructor(private alertService: AlertService) {}
-
-
-  static generalDefault: number = 0.5
-  static preknowledgeDefault: number = 1.0
-  static weightDefault: number = 2;
-
+  
   computeCurrentTrusts(conv: Conversation, simulationInputs?: SimulationInputs) {
     let pres: Preknowledge[] = conv.author.preknowledge
     let receives = conv.author.messages.filter(m => !m.isSend())
@@ -61,7 +56,7 @@ export class TrustComputationService {
     let argScore = this.computeArgumentationScore(info)
     if (argScore != undefined) {
       let initial = this.determineInitialTrustForInfo(info, simulationInputs)
-      let weight = simulationInputs?.weight ? simulationInputs?.weight: TrustComputationService.weightDefault
+      let weight = simulationInputs?.weight ? simulationInputs?.weight: SimulationInputs.weightDefault
       return this.truncTo1(
         initial +
         this.computeRepetitionScore(info, recSize) +
@@ -79,10 +74,10 @@ export class TrustComputationService {
     if (newInfo.source) {
       let src: ConversationPartner = newInfo.source.counterPart
       let res = simulationInputs?.defaultsPerCp?.get(src)
-      return res? res : TrustComputationService.generalDefault
+      return res? res : SimulationInputs.generalDefault //todo
     } else {
       let res = simulationInputs?.preknowledgeDefault
-      return res? res : TrustComputationService.preknowledgeDefault
+      return res? res : SimulationInputs.preknowledgeDefault //todo
     }
   }
 

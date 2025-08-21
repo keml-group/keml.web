@@ -81,13 +81,13 @@ describe('TrustComputationService', () => {
     // no entries, hence real defaults should be used:
     expect(
       service.determineInitialTrustForInfo(p0, simInputs)
-    ).toEqual(TrustComputationService.preknowledgeDefault) //1.0
+    ).toEqual(SimulationInputs.preknowledgeDefault) //1.0
     expect(
       service.determineInitialTrustForInfo(newInfo1, simInputs)
-    ).toEqual(TrustComputationService.generalDefault) //0.5
+    ).toEqual(SimulationInputs.generalDefault) //0.5
     expect(
       service.determineInitialTrustForInfo(newInfo2, simInputs)
-    ).toEqual(TrustComputationService.generalDefault) //0.5
+    ).toEqual(SimulationInputs.generalDefault) //0.5
 
     simInputs.setCp(cp0, 0.1)
     simInputs.setCp(cp1, 0.2)

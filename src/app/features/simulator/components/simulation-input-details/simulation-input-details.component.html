@@ -4,17 +4,17 @@
   <label class="form-label">Argumentation Weight</label>
   <div>
     <input type="number" name="aw" min="0" [attr.max]="1000" [ngModel]="simulationInputs.weight" (ngModelChange)="changeArgumentationWeight($event)">
-    <small> Default: {{TrustComputator.weightDefault}}</small>
+    <small> Default: {{SimulationInputs.weightDefault}}</small>
   </div>
 
   <label class="form-label">Preknowledge Default</label>
   <div>
     <trust-slider [trust]="simulationInputs.preknowledgeDefault" (trustChange)="changeDefaultForPre($event)"></trust-slider>
-    <small> Default: {{TrustComputator.preknowledgeDefault}}</small>
+    <small> Default: {{SimulationInputs.preknowledgeDefault}}</small>
   </div>
 
   <label class="form-label">Conversation Partner Defaults<br>
-  <small>Defaults: {{TrustComputator.generalDefault}}</small></label>
+  <small>Defaults: {{SimulationInputs.generalDefault}}</small></label>
   <div class="defaults-inner-form">
     <div *ngFor="let partner of partnerList; let  i = index">
       <trust-slider [trust]="defaultList[i]" (trustChange)="changeDefaultForCp(partner, i, $event)"></trust-slider>
