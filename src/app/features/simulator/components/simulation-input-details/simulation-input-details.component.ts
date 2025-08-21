@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {MatIcon} from "@angular/material/icon";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SimulationInputs} from "@app/features/simulator/simulation-inputs";
 import {NgForOf} from "@angular/common";
@@ -10,7 +9,6 @@ import {TrustSliderComponent} from "@app/shared/trust-slider/trust-slider.compon
 @Component({
     selector: 'simulation-input-details',
   imports: [
-    MatIcon,
     ReactiveFormsModule,
     FormsModule,
     NgForOf,
@@ -46,7 +44,7 @@ export class SimulationInputDetails implements OnInit {
 
   changeDefaultForCp(cp: ConversationPartner, i: number, val: (number| undefined)) {
     this.defaultList[i] = val;
-    this.simulationInputs.defaultsPerCp.set(cp, val)
+    this.simulationInputs.setCp(cp, val)
     this.recomputeWith.emit(this.simulationInputs)
   }
 

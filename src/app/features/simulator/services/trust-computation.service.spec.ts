@@ -77,10 +77,7 @@ describe('TrustComputationService', () => {
     let r2 = new ReceiveMessage(cp1, 2)
     let newInfo1 = new NewInformation(r1, 'm1')
     let newInfo2 = new NewInformation(r2, 'm2')
-    let defByPartner = new Map<ConversationPartner, number>()
-    let simInputs: SimulationInputs = {
-      defaultsPerCp: defByPartner,
-    }
+    let simInputs: SimulationInputs = new SimulationInputs()
     // no entries, hence real defaults should be used:
     expect(
       service.determineInitialTrustForInfo(p0, simInputs)
@@ -92,8 +89,8 @@ describe('TrustComputationService', () => {
       service.determineInitialTrustForInfo(newInfo2, simInputs)
     ).toEqual(TrustComputationService.generalDefault) //0.5
 
-    defByPartner.set(cp0, 0.1)
-    defByPartner.set(cp1, 0.2)
+    simInputs.setCp(cp0, 0.1)
+    simInputs.setCp(cp1, 0.2)
     simInputs.preknowledgeDefault = 0.3
     expect(
       service.determineInitialTrustForInfo(p0, simInputs)
@@ -112,10 +109,7 @@ describe('TrustComputationService', () => {
   })
 
   it('should evaluate a single node correctly', () => {
-    let defaults = new Map()
-    let simInputs: SimulationInputs = {
-      defaultsPerCp: defaults,
-    }
+    let simInputs: SimulationInputs = new SimulationInputs()
     new InformationLink(p2, p0, InformationLinkType.STRONG_ATTACK)
     new InformationLink(p1, p0, InformationLinkType.SUPPORT)
     expect(service.computeTrust(p0, recLength, simInputs)).toEqual(undefined)

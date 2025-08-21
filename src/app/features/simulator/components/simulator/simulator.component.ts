@@ -43,11 +43,7 @@ import {
 export class SimulatorComponent implements OnInit {
 
   @Input() conversation!: Conversation
-  simulationInputs: SimulationInputs = {
-    weight: undefined,
-    preknowledgeDefault: undefined,
-    defaultsPerCp: new Map<ConversationPartner, number|undefined>()
-  };
+  simulationInputs: SimulationInputs = new SimulationInputs()
   showIncremental: boolean = false;
 
   constructor(
@@ -59,9 +55,7 @@ export class SimulatorComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.conversation.conversationPartners.forEach(cp => {
-      this.simulationInputs.defaultsPerCp.set(cp, undefined)
-    })
+    this.simulationInputs.addCps(this.conversation.conversationPartners)
     try {
       this.trustComputationService.computeCurrentTrusts(this.conversation, this.simulationInputs)
     } catch (e) {

@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SimulationInputDetails } from './simulation-input-details.component';
 import {MatDialogRef} from "@angular/material/dialog";
+import {SimulationInputs} from "@app/features/simulator/simulation-inputs";
 
-describe('TrustDefaultDetailsComponent', () => {
+describe('SimulationInputDetails', () => {
   let component: SimulationInputDetails;
   let fixture: ComponentFixture<SimulationInputDetails>;
 
@@ -17,7 +18,7 @@ describe('TrustDefaultDetailsComponent', () => {
 
     fixture = TestBed.createComponent(SimulationInputDetails);
     component = fixture.componentInstance;
-    component.simulationInputs = {defaultsPerCp: new Map()}
+    component.simulationInputs = new SimulationInputs()
     fixture.detectChanges();
   });
 

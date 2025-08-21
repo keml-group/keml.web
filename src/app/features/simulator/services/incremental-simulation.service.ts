@@ -15,7 +15,7 @@ import {Injectable} from "@angular/core";
 @Injectable()
 export class IncrementalSimulationService {
 
-  simulationInputs: SimulationInputs = {defaultsPerCp: new Map()};
+  simulationInputs: SimulationInputs = new SimulationInputs();
   completeConv: Conversation = new Conversation();
   incrementalConv: Conversation = this.completeConv
 
@@ -26,8 +26,7 @@ export class IncrementalSimulationService {
 
   constructor(
     private trustComputationService: TrustComputationService,
-  ) {
-  }
+  ) {}
 
   private prepare(simulationInputs: SimulationInputs, conv: Conversation) {
     this.simulationInputs = simulationInputs;
