@@ -172,7 +172,7 @@ describe('TrustComputationService', () => {
     let pres = conv.author.preknowledge
     let pre0 = pres[0]
 
-    service.computeTrust(pre0, 2)
+    service.computeTrust(pre0, 2, new SimulationInputs())
     // cannot use normal expect since actually, initial and current trust cannot be undefined
     expect(pre0.initialTrust == undefined).toEqual(true)
     expect(pre0.currentTrust == undefined).toEqual(true)

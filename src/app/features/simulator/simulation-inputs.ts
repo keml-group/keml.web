@@ -6,14 +6,14 @@ export class SimulationInputs {
   static generalDefault: number = 0.5
 
   _weight: number = 0;
-  get weight() {
+  get weight(): number {
     return this._weight;
   }
   set weight(weight: number|undefined) {
     this._weight = weight? weight: SimulationInputs.weightDefault;
   }
   _preknowledgeDefault: number = 0;
-  get preknowledgeDefault() {
+  get preknowledgeDefault(): number {
     return this._preknowledgeDefault;
   }
   set preknowledgeDefault(preknowledgeDefault: number|undefined) {
@@ -37,5 +37,10 @@ export class SimulationInputs {
 
   setCp(cp: ConversationPartner, value: number|undefined) {
     this.defaultsPerCp.set(cp, value? value: SimulationInputs.generalDefault);
+  }
+
+  getCpOrDefault(cp: ConversationPartner): number {
+    let res = this.defaultsPerCp.get(cp);
+    return res? res: SimulationInputs.generalDefault;
   }
 }

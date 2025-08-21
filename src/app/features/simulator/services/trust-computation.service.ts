@@ -19,12 +19,12 @@ export class TrustComputationService {
       .map(m => m as ReceiveMessage)
     let newInfos: NewInformation[] = receives.flatMap(m => m.generates)
     this.computeCTFromKnowledge(pres, newInfos, receives.length,
-      simulationInputs
+      simulationInputs? simulationInputs: new SimulationInputs()
     )
   }
 
   computeCTFromKnowledge(pres: Preknowledge[], newInfos: NewInformation[], recSize: number,
-                                simulationInputs?: SimulationInputs,
+                                simulationInputs: SimulationInputs,
                                 ) {
     let toVisit: Information[] = newInfos
     toVisit.push(...pres)
@@ -51,32 +51,29 @@ export class TrustComputationService {
     }
   }
 
-  computeTrust(info: Information, recSize: number, simulationInputs?: SimulationInputs): number | undefined {
+  computeTrust(info: Information, recSize: number, simulationInputs: SimulationInputs): number | undefined {
     let argScore = this.computeArgumentationScore(info)
     if (argScore != undefined) {
       let initial = this.determineInitialTrustForInfo(info, simulationInputs)
-      let weight = simulationInputs?.weight ? simulationInputs?.weight: SimulationInputs.weightDefault
       return this.truncTo1(
         initial +
         this.computeRepetitionScore(info, recSize) +
-        weight*argScore
+        simulationInputs.weight*argScore
       )
     }
     return undefined
   }
 
-  determineInitialTrustForInfo(info: Information, simulationInputs?: SimulationInputs): number {
+  determineInitialTrustForInfo(info: Information, simulationInputs: SimulationInputs): number {
     if (info.initialTrust != undefined) {
       return info.initialTrust
     }
     let newInfo = info as NewInformation
     if (newInfo.source) {
       let src: ConversationPartner = newInfo.source.counterPart
-      let res = simulationInputs?.defaultsPerCp?.get(src)
-      return res? res : SimulationInputs.generalDefault //todo
+      return simulationInputs.getCpOrDefault(src)
     } else {
-      let res = simulationInputs?.preknowledgeDefault
-      return res? res : SimulationInputs.preknowledgeDefault //todo
+      return simulationInputs.preknowledgeDefault
     }
   }
 
