@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import {Information} from "@app/shared/keml/core/msg-info";
 import {Conversation} from "@app/shared/keml/core/conversation";
-import {SimulatorComponent} from "@app/features/simulator/components/simulator/simulator.component";
+import {SimulatorComponent} from "@app/features/simulator/simulator/simulator.component";
 import {MatDialog} from "@angular/material/dialog";
-import {InfoTrustDetailsComponent} from "@app/features/simulator/components/info-trust-details/info-trust-details.component";
+import {InfoTrustDetailsComponent} from "@app/features/simulator/info-trust-details/info-trust-details.component";
 import {TrustFallbacks} from "@app/features/simulator/trust-fallbacks";
-import {TrustComputationService} from "@app/features/simulator/services/trust-computation.service";
+import {TrustComputationService} from "@app/features/simulator/trust-computation.service";
 
 @Injectable({
   providedIn: 'root'

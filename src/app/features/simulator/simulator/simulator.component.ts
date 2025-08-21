@@ -8,16 +8,16 @@ import {ConversationPartnerComponent} from "@app/shared/keml/graphical/cp/conver
 import {MsgComponent} from "@app/shared/keml/graphical/msg/msg.component";
 import {PreknowledgeComponent} from "@app/shared/keml/graphical/preknowledge/preknowledge.component";
 import {TextAreaSvgComponent} from "ngx-svg-graphics";
-import {SimulationDialogueService} from "../../services/simulation-dialogue.service";
+import {SimulationDialogueService} from "../simulation-dialogue.service";
 import {MatToolbar} from "@angular/material/toolbar";
-import {TrustComputationService} from "../../services/trust-computation.service";
+import {TrustComputationService} from "../trust-computation.service";
 import {TrustFallbacks} from "@app/features/simulator/trust-fallbacks";
-import {IncrementalSimulationService} from "@app/features/simulator/services/incremental-simulation.service";
+import {IncrementalSimulationService} from "@app/features/simulator/incremental-simulation.service";
 import {ArrowMarkersComponent} from "@app/shared/keml/graphical/helper/arrow-styling/arrow-markers/arrow-markers.component";
 import {AlertService} from "ngx-emfular-helper";
 import {
   TrustFallbackControls
-} from "@app/features/simulator/components/trust-fallback-controls/trust-fallback-controls.component";
+} from "@app/features/simulator/trust-fallback-controls/trust-fallback-controls.component";
 
 @Component({
     selector: 'app-simulator',

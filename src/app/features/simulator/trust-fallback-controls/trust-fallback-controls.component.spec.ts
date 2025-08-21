@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {MatDialogRef} from "@angular/material/dialog";
 import {TrustFallbacks} from "@app/features/simulator/trust-fallbacks";
-import {TrustFallbackControls} from "@app/features/simulator/components/trust-fallback-controls/trust-fallback-controls.component";
+import {TrustFallbackControls} from "@app/features/simulator/trust-fallback-controls/trust-fallback-controls.component";
 
 describe('TrustFallbackControls', () => {
   let component: TrustFallbackControls;
