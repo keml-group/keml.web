@@ -8,7 +8,6 @@ import {ConversationPartnerComponent} from "@app/shared/keml/graphical/cp/conver
 import {MsgComponent} from "@app/shared/keml/graphical/msg/msg.component";
 import {PreknowledgeComponent} from "@app/shared/keml/graphical/preknowledge/preknowledge.component";
 import {TextAreaSvgComponent} from "ngx-svg-graphics";
-import {SimulationDialogueService} from "../simulation-dialogue.service";
 import {MatToolbar} from "@angular/material/toolbar";
 import {TrustComputationService} from "../trust-computation.service";
 import {TrustFallbacks} from "@app/features/simulator/trust-fallbacks";
@@ -18,6 +17,7 @@ import {AlertService} from "ngx-emfular-helper";
 import {
   TrustFallbackControls
 } from "@app/features/simulator/trust-fallback-controls/trust-fallback-controls.component";
+import {InfoTrustDetailsService} from "@app/features/simulator/info-trust-details.service";
 
 @Component({
     selector: 'app-simulator',
@@ -48,7 +48,7 @@ export class SimulatorComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<SimulatorComponent>,
-    public simulationDialogueService: SimulationDialogueService,
+    public infoTrustDetailsService: InfoTrustDetailsService,
     private alertService: AlertService,
     public incrementalSimulationService: IncrementalSimulationService,
     private trustComputationService: TrustComputationService,

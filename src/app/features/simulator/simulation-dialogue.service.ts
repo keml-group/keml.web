@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
-import {Information} from "@app/shared/keml/core/msg-info";
 import {Conversation} from "@app/shared/keml/core/conversation";
 import {SimulatorComponent} from "@app/features/simulator/simulator/simulator.component";
 import {MatDialog} from "@angular/material/dialog";
-import {InfoTrustDetailsComponent} from "@app/features/simulator/info-trust-details/info-trust-details.component";
-import {TrustFallbacks} from "@app/features/simulator/trust-fallbacks";
-import {TrustComputationService} from "@app/features/simulator/trust-computation.service";
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +10,6 @@ export class SimulationDialogueService {
 
   constructor(
     private dialog: MatDialog,
-    private trustComputationService: TrustComputationService,
   ) { }
 
   openSimulationDialog(conversation: Conversation) {
@@ -27,21 +22,6 @@ export class SimulationDialogueService {
       }
     )
     dialogRef.componentInstance.conversation = conversation
-  }
-
-  openInfoTrusts(info: Information, conversation: Conversation, simulationInputs: TrustFallbacks) {
-    const dialogRef = this.dialog.open(
-      InfoTrustDetailsComponent,
-      {
-        width: '80vw',
-        maxWidth: '100vw', //otherwise it is 80, see https://stackoverflow.com/questions/46034619/angular-material-2-how-to-overwrite-dialog-max-width-to-100vw
-        height: '100vh'
-      }
-    )
-    dialogRef.componentInstance.info = info
-    dialogRef.componentInstance.infoChanged.subscribe(_ => {
-      this.trustComputationService.computeCurrentTrusts(conversation, simulationInputs)
-    })
   }
 
 }
