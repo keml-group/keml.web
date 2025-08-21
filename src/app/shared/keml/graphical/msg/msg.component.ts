@@ -1,13 +1,9 @@
 import {
-  AfterViewInit,
   Component, computed,
-  EventEmitter, input,
-  Input, InputSignal,
-  OnChanges,
-  OnInit,
-  Output,
-  Signal, signal, effect,
-  SimpleChanges, WritableSignal
+  EventEmitter,
+  input, Input, InputSignal,
+  Signal, effect,
+  OnInit, Output, AfterViewInit,
 } from '@angular/core';
 import {InformationLink, Message, SendMessage, ReceiveMessage, Information} from "@app/shared/keml/core/msg-info";
 import {LayoutingService} from "@app/features/editor/services/layouting.service";
@@ -23,7 +19,7 @@ import {ArrowBetweenElemsComponent, SVGAccessService} from "ngx-svg-graphics";
     styleUrl: './msg.component.css',
     imports: [MsgInnerComponent, NgIf, NgFor, NewInfoComponent, ArrowBetweenElemsComponent]
 })
-export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
+export class MsgComponent implements OnInit, AfterViewInit {
   msgTiming: InputSignal<number> = input.required<number>(); //extra input that controls msgY
   @Input() msg!: Message;
   @Input() showInfos = true;
@@ -39,7 +35,7 @@ export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
 
   constructor(private svgAccessService: SVGAccessService) {
     effect(()=> {
-      console.log(`The current count is: ${this.msgY()}`);
+      this.svgAccessService.notifyPositionChange(this.msg.gId)
     });
   }
 
@@ -49,15 +45,6 @@ export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
     } else {
       this.receiveMsg = (this.msg as ReceiveMessage)
     }
-  }
-
-  ngOnChanges(_: SimpleChanges) {
-    if (this.msg.isSend()) {
-      this.sendMsg = (this.msg as SendMessage)
-    } else {
-      this.receiveMsg = (this.msg as ReceiveMessage)
-    }
-    this.svgAccessService.notifyPositionChange(this.msg.gId)
   }
 
   ngAfterViewInit() {
