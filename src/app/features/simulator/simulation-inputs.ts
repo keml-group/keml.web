@@ -5,21 +5,21 @@ export class SimulationInputs {
   static preknowledgeDefault: number = 1.0
   static generalDefault: number = 0.5
 
-  _weight: number = 0;
+  private _weight: number = 0;
   get weight(): number {
     return this._weight;
   }
   set weight(weight: number|undefined) {
     this._weight = weight? weight: SimulationInputs.weightDefault;
   }
-  _preknowledgeDefault: number = 0;
+  private _preknowledgeDefault: number = 0;
   get preknowledgeDefault(): number {
     return this._preknowledgeDefault;
   }
   set preknowledgeDefault(preknowledgeDefault: number|undefined) {
     this._preknowledgeDefault = preknowledgeDefault? preknowledgeDefault: SimulationInputs.preknowledgeDefault;
   }
-  defaultsPerCp: Map<ConversationPartner, number> = new Map();
+  private defaultsPerCp: Map<ConversationPartner, number> = new Map();
 
   constructor(weight?: number, preknowledgeDefault?: number, defaultsPerCp?: Map<ConversationPartner, number|undefined>) {
     this.weight = weight? weight : SimulationInputs.weightDefault;
@@ -42,5 +42,12 @@ export class SimulationInputs {
   getCpOrDefault(cp: ConversationPartner): number {
     let res = this.defaultsPerCp.get(cp);
     return res? res: SimulationInputs.generalDefault;
+  }
+
+  getDisplayableArraysOfCps(): [ConversationPartner[], number[]] {
+    return (
+      [Array.from(this.defaultsPerCp.keys()),
+      Array.from(this.defaultsPerCp.values())]
+    )
   }
 }

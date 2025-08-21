@@ -17,7 +17,7 @@
   <small>Defaults: {{SimulationInputs.generalDefault}}</small></label>
   <div class="defaults-inner-form">
     <div *ngFor="let partner of partnerList; let  i = index">
-      <trust-slider [trust]="defaultList[i]" (trustChange)="changeDefaultForCp(partner, i, $event)"></trust-slider>
+      <trust-slider [trust]="valueList[i]" (trustChange)="changeDefaultForCp(partner, i, $event)"></trust-slider>
       <label class="form-label">
         {{partner.name}}
       </label>

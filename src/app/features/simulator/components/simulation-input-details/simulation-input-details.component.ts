@@ -21,13 +21,14 @@ export class SimulationInputDetails implements OnInit {
   @Input() simulationInputs!: SimulationInputs
   @Output() recomputeWith: EventEmitter<SimulationInputs> = new EventEmitter<SimulationInputs>();
   partnerList: ConversationPartner[] = []
-  defaultList: (number|undefined)[] = []
+  valueList: (number|undefined)[] = []
 
   constructor() {}
 
   ngOnInit() {
-    this.partnerList = Array.from(this.simulationInputs.defaultsPerCp.keys())
-    this.defaultList = Array.from(this.simulationInputs.defaultsPerCp.values())
+    let [cps, numbers] = this.simulationInputs.getDisplayableArraysOfCps()
+    this.partnerList = cps
+    this.valueList = numbers
   }
 
   changeArgumentationWeight(val: (number| undefined)) {
@@ -41,7 +42,7 @@ export class SimulationInputDetails implements OnInit {
   }
 
   changeDefaultForCp(cp: ConversationPartner, i: number, val: (number| undefined)) {
-    this.defaultList[i] = val;
+    this.valueList[i] = val;
     this.simulationInputs.setCp(cp, val)
     this.recomputeWith.emit(this.simulationInputs)
   }
