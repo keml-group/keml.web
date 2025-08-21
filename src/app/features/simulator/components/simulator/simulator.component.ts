@@ -11,7 +11,7 @@ import {TextAreaSvgComponent} from "ngx-svg-graphics";
 import {SimulationDialogueService} from "../../services/simulation-dialogue.service";
 import {MatToolbar} from "@angular/material/toolbar";
 import {TrustComputationService} from "../../services/trust-computation.service";
-import {SimulationInputs} from "@app/features/simulator/simulation-inputs";
+import {TrustFallbacks} from "@app/features/simulator/trust-fallbacks";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {IncrementalSimulationService} from "@app/features/simulator/services/incremental-simulation.service";
 import {ArrowMarkersComponent} from "@app/shared/keml/graphical/helper/arrow-styling/arrow-markers/arrow-markers.component";
@@ -43,7 +43,7 @@ import {
 export class SimulatorComponent implements OnInit {
 
   @Input() conversation!: Conversation
-  simulationInputs: SimulationInputs = new SimulationInputs()
+  simulationInputs: TrustFallbacks = new TrustFallbacks()
   showIncremental: boolean = false;
 
   constructor(
@@ -65,7 +65,7 @@ export class SimulatorComponent implements OnInit {
     }
   }
 
-  recompute(_: SimulationInputs) {
+  recompute(_: TrustFallbacks) {
     this.trustComputationService.computeCurrentTrusts(this.conversation, this.simulationInputs)
   }
 

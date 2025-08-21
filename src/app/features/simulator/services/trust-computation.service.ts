@@ -1,7 +1,7 @@
 import {Conversation} from "@app/shared/keml/core/conversation";
 import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "@app/shared/keml/core/msg-info";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
-import {SimulationInputs} from "@app/features/simulator/simulation-inputs";
+import {TrustFallbacks} from "@app/features/simulator/trust-fallbacks";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {AlertService} from "ngx-emfular-helper";
 import {Injectable} from "@angular/core";
@@ -13,7 +13,7 @@ export class TrustComputationService {
 
   constructor(private alertService: AlertService) {}
 
-  computeCurrentTrusts(conv: Conversation, simulationInputs: SimulationInputs) {
+  computeCurrentTrusts(conv: Conversation, simulationInputs: TrustFallbacks) {
     let pres: Preknowledge[] = conv.author.preknowledge
     let receives = conv.author.messages.filter(m => !m.isSend())
       .map(m => m as ReceiveMessage)
@@ -22,7 +22,7 @@ export class TrustComputationService {
   }
 
   computeCTFromKnowledge(
-    pres: Preknowledge[], newInfos: NewInformation[], recSize: number, simulationInputs: SimulationInputs
+    pres: Preknowledge[], newInfos: NewInformation[], recSize: number, simulationInputs: TrustFallbacks
   ): void {
     let toVisit: Information[] = newInfos
     toVisit.push(...pres)
@@ -49,7 +49,7 @@ export class TrustComputationService {
     }
   }
 
-  computeTrust(info: Information, recSize: number, simulationInputs: SimulationInputs): number | undefined {
+  computeTrust(info: Information, recSize: number, simulationInputs: TrustFallbacks): number | undefined {
     let argScore = this.computeArgumentationScore(info)
     if (argScore != undefined) {
       let initial = this.determineInitialTrustForInfo(info, simulationInputs)
@@ -62,7 +62,7 @@ export class TrustComputationService {
     return undefined
   }
 
-  determineInitialTrustForInfo(info: Information, simulationInputs: SimulationInputs): number {
+  determineInitialTrustForInfo(info: Information, simulationInputs: TrustFallbacks): number {
     if (info.initialTrust != undefined) {
       return info.initialTrust
     }

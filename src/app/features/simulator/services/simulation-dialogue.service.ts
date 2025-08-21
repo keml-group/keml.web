@@ -4,7 +4,7 @@ import {Conversation} from "@app/shared/keml/core/conversation";
 import {SimulatorComponent} from "@app/features/simulator/components/simulator/simulator.component";
 import {MatDialog} from "@angular/material/dialog";
 import {InfoTrustDetailsComponent} from "@app/features/simulator/components/info-trust-details/info-trust-details.component";
-import {SimulationInputs} from "@app/features/simulator/simulation-inputs";
+import {TrustFallbacks} from "@app/features/simulator/trust-fallbacks";
 import {TrustComputationService} from "@app/features/simulator/services/trust-computation.service";
 
 @Injectable({
@@ -29,7 +29,7 @@ export class SimulationDialogueService {
     dialogRef.componentInstance.conversation = conversation
   }
 
-  openInfoTrusts(info: Information, conversation: Conversation, simulationInputs: SimulationInputs) {
+  openInfoTrusts(info: Information, conversation: Conversation, simulationInputs: TrustFallbacks) {
     const dialogRef = this.dialog.open(
       InfoTrustDetailsComponent,
       {

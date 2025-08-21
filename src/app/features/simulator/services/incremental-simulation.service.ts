@@ -9,13 +9,13 @@ import {
   SendMessage
 } from "@app/shared/keml/core/msg-info";
 import {TrustComputationService} from "@app/features/simulator/services/trust-computation.service";
-import {SimulationInputs} from "@app/features/simulator/simulation-inputs";
+import {TrustFallbacks} from "@app/features/simulator/trust-fallbacks";
 import {Injectable} from "@angular/core";
 
 @Injectable()
 export class IncrementalSimulationService {
 
-  simulationInputs: SimulationInputs = new SimulationInputs();
+  simulationInputs: TrustFallbacks = new TrustFallbacks();
   completeConv: Conversation = new Conversation();
   incrementalConv: Conversation = this.completeConv
 
@@ -28,7 +28,7 @@ export class IncrementalSimulationService {
     private trustComputationService: TrustComputationService,
   ) {}
 
-  private prepare(simulationInputs: SimulationInputs, conv: Conversation) {
+  private prepare(simulationInputs: TrustFallbacks, conv: Conversation) {
     this.simulationInputs = simulationInputs;
     this.completeConv = conv;
     let author = new Author(conv.author.name, conv.author.xPosition)
@@ -37,7 +37,7 @@ export class IncrementalSimulationService {
     this.infoConnections = new Map<string, Information>();
   }
 
-  async simulate(simulationInputs: SimulationInputs, conv: Conversation) {
+  async simulate(simulationInputs: TrustFallbacks, conv: Conversation) {
     this.prepare(simulationInputs, conv);
     for (let msg of this.completeConv!.author.messages) {
       await this.step(msg)

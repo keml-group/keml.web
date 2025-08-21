@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {SimulationInputs} from "@app/features/simulator/simulation-inputs";
+import {TrustFallbacks} from "@app/features/simulator/trust-fallbacks";
 import {NgForOf} from "@angular/common";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {TrustSliderComponent} from "@app/shared/trust-slider/trust-slider.component";
@@ -18,8 +18,8 @@ import {TrustSliderComponent} from "@app/shared/trust-slider/trust-slider.compon
 })
 export class SimulationInputDetails implements OnInit {
 
-  @Input() simulationInputs!: SimulationInputs
-  @Output() recomputeWith: EventEmitter<SimulationInputs> = new EventEmitter<SimulationInputs>();
+  @Input() simulationInputs!: TrustFallbacks
+  @Output() recomputeWith: EventEmitter<TrustFallbacks> = new EventEmitter<TrustFallbacks>();
   partnerList: ConversationPartner[] = []
   valueList: (number|undefined)[] = []
 
@@ -47,5 +47,5 @@ export class SimulationInputDetails implements OnInit {
     this.recomputeWith.emit(this.simulationInputs)
   }
 
-  protected readonly SimulationInputs = SimulationInputs;
+  protected readonly SimulationInputs = TrustFallbacks;
 }

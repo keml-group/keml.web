@@ -6,7 +6,7 @@ import {Author} from "@app/shared/keml/core/author";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
 import {JsonFixer} from "@app/shared/keml/json2core/json-fixer";
-import {SimulationInputs} from "@app/features/simulator/simulation-inputs";
+import {TrustFallbacks} from "@app/features/simulator/trust-fallbacks";
 import {TestBed} from "@angular/core/testing";
 
 describe('TrustComputationService', () => {
@@ -77,7 +77,7 @@ describe('TrustComputationService', () => {
     let r2 = new ReceiveMessage(cp1, 2)
     let newInfo1 = new NewInformation(r1, 'm1')
     let newInfo2 = new NewInformation(r2, 'm2')
-    let simInputs: SimulationInputs = new SimulationInputs()
+    let simInputs: TrustFallbacks = new TrustFallbacks()
     // no entries, hence real defaults should be used:
     expect(
       service.determineInitialTrustForInfo(p0, simInputs)
@@ -109,7 +109,7 @@ describe('TrustComputationService', () => {
   })
 
   it('should evaluate a single node correctly', () => {
-    let simInputs: SimulationInputs = new SimulationInputs()
+    let simInputs: TrustFallbacks = new TrustFallbacks()
     new InformationLink(p2, p0, InformationLinkType.STRONG_ATTACK)
     new InformationLink(p1, p0, InformationLinkType.SUPPORT)
     expect(service.computeTrust(p0, recLength, simInputs)).toEqual(undefined)
@@ -172,7 +172,7 @@ describe('TrustComputationService', () => {
     let pres = conv.author.preknowledge
     let pre0 = pres[0]
 
-    service.computeTrust(pre0, 2, new SimulationInputs())
+    service.computeTrust(pre0, 2, new TrustFallbacks())
     // cannot use normal expect since actually, initial and current trust cannot be undefined
     expect(pre0.initialTrust == undefined).toEqual(true)
     expect(pre0.currentTrust == undefined).toEqual(true)
@@ -184,7 +184,7 @@ describe('TrustComputationService', () => {
     new InformationLink(p2, p1, InformationLinkType.STRONG_ATTACK)
     let auth = new Author('auth', 0, [p0, p1, p2])
     let conv = new Conversation('cycle', auth)
-    expect(() => service.computeCurrentTrusts(conv, new SimulationInputs())).toThrow(Error('Endless loops of 2 nodes - please check the InformationLinks'))
+    expect(() => service.computeCurrentTrusts(conv, new TrustFallbacks())).toThrow(Error('Endless loops of 2 nodes - please check the InformationLinks'))
   })
 
   it('should adapt the current trusts', () => {
@@ -217,7 +217,7 @@ describe('TrustComputationService', () => {
 
     function verify() {
       //call to test:
-      service.computeCurrentTrusts(conv, new SimulationInputs())
+      service.computeCurrentTrusts(conv, new TrustFallbacks())
 
       for (let [info, num] of expectations) {
         expect(info.currentTrust).toEqual(num)
@@ -277,7 +277,7 @@ describe('TrustComputationService', () => {
     let conv = new Conversation()
     conv.author.preknowledge = [p0, p1]
     new InformationLink(p0, p1, InformationLinkType.ATTACK)
-    service.computeCurrentTrusts(conv, new SimulationInputs())
+    service.computeCurrentTrusts(conv, new TrustFallbacks())
     expect(p0.currentTrust).toEqual(1.0)
     expect(p1.currentTrust).toEqual(0)
   } )
@@ -974,7 +974,7 @@ describe('TrustComputationService', () => {
     JsonFixer.prepareJsonInfoLinkSources(convJson);
     JsonFixer.addMissingSupplementType(convJson);
     let conv = Conversation.fromJSON(convJson)
-    service.computeCurrentTrusts(conv, new SimulationInputs())
+    service.computeCurrentTrusts(conv, new TrustFallbacks())
     expect(conv.author.preknowledge[0].currentTrust).toEqual(1.0)
   })
 });
