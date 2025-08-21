@@ -9,7 +9,7 @@ import {
   SendMessage
 } from "@app/shared/keml/core/msg-info";
 import {TrustComputationService} from "@app/features/simulator/services/trust-computation.service";
-import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
+import {SimulationInputs} from "@app/features/simulator/simulation-inputs";
 import {Injectable} from "@angular/core";
 
 @Injectable()

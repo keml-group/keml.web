@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
 import {MatIcon} from "@angular/material/icon";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {SimulationInputs} from "@app/features/simulator/models/simulation-inputs";
+import {SimulationInputs} from "@app/features/simulator/simulation-inputs";
 import {NgForOf} from "@angular/common";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {TrustComputationService} from "@app/features/simulator/services/trust-computation.service";
