@@ -1,4 +1,14 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  AfterViewInit,
+  Component, computed,
+  EventEmitter, input,
+  Input, InputSignal,
+  OnChanges,
+  OnInit,
+  Output,
+  Signal, signal, effect,
+  SimpleChanges, WritableSignal
+} from '@angular/core';
 import {InformationLink, Message, SendMessage, ReceiveMessage, Information} from "@app/shared/keml/core/msg-info";
 import {LayoutingService} from "@app/features/editor/services/layouting.service";
 import {ArrowType} from "@app/shared/keml/graphical/helper/arrow-styling/arrow.models";
@@ -14,7 +24,7 @@ import {ArrowBetweenElemsComponent, SVGAccessService} from "ngx-svg-graphics";
     imports: [MsgInnerComponent, NgIf, NgFor, NewInfoComponent, ArrowBetweenElemsComponent]
 })
 export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
-  @Input() msgTiming!: number; //extra input to be used to detect changes
+  msgTiming: InputSignal<number> = input.required<number>(); //extra input that controls msgY
   @Input() msg!: Message;
   @Input() showInfos = true;
   @Input() showInfoTrusts = false;
@@ -25,9 +35,13 @@ export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
   receiveMsg?: ReceiveMessage;
   sendMsg?: SendMessage;
 
-  msgY: number = 0;
+  msgY: Signal<number> = computed(() => LayoutingService.computeMessageY(this.msgTiming()).valueOf());
 
-  constructor(private svgAccessService: SVGAccessService) { }
+  constructor(private svgAccessService: SVGAccessService) {
+    effect(()=> {
+      console.log(`The current count is: ${this.msgY()}`);
+    });
+  }
 
   ngOnInit() {
     if (this.msg.isSend()) {
@@ -35,7 +49,6 @@ export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
     } else {
       this.receiveMsg = (this.msg as ReceiveMessage)
     }
-    this.msgY = this.computeY()
   }
 
   ngOnChanges(_: SimpleChanges) {
@@ -44,16 +57,11 @@ export class MsgComponent implements OnInit, AfterViewInit, OnChanges {
     } else {
       this.receiveMsg = (this.msg as ReceiveMessage)
     }
-    this.msgY = this.computeY()
     this.svgAccessService.notifyPositionChange(this.msg.gId)
   }
 
   ngAfterViewInit() {
     this.svgAccessService.notifyPositionChange(this.msg.gId)
-  }
-
-  computeY(): number {
-    return LayoutingService.computeMessageY(this.msgTiming);
   }
 
   clickMsg() {
