@@ -80,10 +80,3 @@ h1 {
   box-sizing: inherit;
   position: relative;
 }
-
-.edit-tools{
-  width: 5rem;
-  height: 5rem;
-  flex-direction: column;
-  display: block;
-}
