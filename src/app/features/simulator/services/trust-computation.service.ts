@@ -12,7 +12,7 @@ import {Injectable} from "@angular/core";
 export class TrustComputationService {
 
   constructor(private alertService: AlertService) {}
-  
+
   computeCurrentTrusts(conv: Conversation, simulationInputs?: SimulationInputs) {
     let pres: Preknowledge[] = conv.author.preknowledge
     let receives = conv.author.messages.filter(m => !m.isSend())
@@ -46,7 +46,6 @@ export class TrustComputationService {
       if (remaining == toVisit.length) {
         let msg = 'Endless loops of '+ toVisit.length +' nodes - please check the InformationLinks' //todo highlight graphically?
         this.alertService.alert(msg)
-        //console.error(msg) //todo how could we use our alert service here? Instead of catch of higher levels
         throw new Error(msg)
       }
     }
