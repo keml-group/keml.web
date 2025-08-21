@@ -13,19 +13,17 @@ export class TrustComputationService {
 
   constructor(private alertService: AlertService) {}
 
-  computeCurrentTrusts(conv: Conversation, simulationInputs?: SimulationInputs) {
+  computeCurrentTrusts(conv: Conversation, simulationInputs: SimulationInputs) {
     let pres: Preknowledge[] = conv.author.preknowledge
     let receives = conv.author.messages.filter(m => !m.isSend())
       .map(m => m as ReceiveMessage)
     let newInfos: NewInformation[] = receives.flatMap(m => m.generates)
-    this.computeCTFromKnowledge(pres, newInfos, receives.length,
-      simulationInputs? simulationInputs: new SimulationInputs()
-    )
+    this.computeCTFromKnowledge(pres, newInfos, receives.length, simulationInputs)
   }
 
-  computeCTFromKnowledge(pres: Preknowledge[], newInfos: NewInformation[], recSize: number,
-                                simulationInputs: SimulationInputs,
-                                ) {
+  computeCTFromKnowledge(
+    pres: Preknowledge[], newInfos: NewInformation[], recSize: number, simulationInputs: SimulationInputs
+  ): void {
     let toVisit: Information[] = newInfos
     toVisit.push(...pres)
 

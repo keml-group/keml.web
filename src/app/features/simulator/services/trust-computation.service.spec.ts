@@ -184,7 +184,7 @@ describe('TrustComputationService', () => {
     new InformationLink(p2, p1, InformationLinkType.STRONG_ATTACK)
     let auth = new Author('auth', 0, [p0, p1, p2])
     let conv = new Conversation('cycle', auth)
-    expect(() => service.computeCurrentTrusts(conv)).toThrow(Error('Endless loops of 2 nodes - please check the InformationLinks'))
+    expect(() => service.computeCurrentTrusts(conv, new SimulationInputs())).toThrow(Error('Endless loops of 2 nodes - please check the InformationLinks'))
   })
 
   it('should adapt the current trusts', () => {
@@ -217,7 +217,7 @@ describe('TrustComputationService', () => {
 
     function verify() {
       //call to test:
-      service.computeCurrentTrusts(conv)
+      service.computeCurrentTrusts(conv, new SimulationInputs())
 
       for (let [info, num] of expectations) {
         expect(info.currentTrust).toEqual(num)
@@ -277,7 +277,7 @@ describe('TrustComputationService', () => {
     let conv = new Conversation()
     conv.author.preknowledge = [p0, p1]
     new InformationLink(p0, p1, InformationLinkType.ATTACK)
-    service.computeCurrentTrusts(conv)
+    service.computeCurrentTrusts(conv, new SimulationInputs())
     expect(p0.currentTrust).toEqual(1.0)
     expect(p1.currentTrust).toEqual(0)
   } )
@@ -974,7 +974,7 @@ describe('TrustComputationService', () => {
     JsonFixer.prepareJsonInfoLinkSources(convJson);
     JsonFixer.addMissingSupplementType(convJson);
     let conv = Conversation.fromJSON(convJson)
-    service.computeCurrentTrusts(conv)
+    service.computeCurrentTrusts(conv, new SimulationInputs())
     expect(conv.author.preknowledge[0].currentTrust).toEqual(1.0)
   })
 });
