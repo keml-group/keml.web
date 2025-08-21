@@ -7,14 +7,16 @@
     <small> Default: {{SimulationInputs.weightDefault}}</small>
   </div>
 
-  <label class="form-label">Preknowledge Default</label>
+  <label class="form-label">Preknowledge Fallback<br>
+      <small> Default: {{SimulationInputs.preknowledgeDefault}}</small>
+  </label>
   <div>
     <trust-slider [trust]="simulationInputs.preknowledgeDefault" (trustChange)="changeDefaultForPre($event)"></trust-slider>
-    <small> Default: {{SimulationInputs.preknowledgeDefault}}</small>
   </div>
 
-  <label class="form-label">Conversation Partner Defaults<br>
-  <small>Defaults: {{SimulationInputs.generalDefault}}</small></label>
+  <label class="form-label">Conversation Partner Fallbacks<br>
+    <small>Defaults: {{SimulationInputs.generalDefault}}</small>
+  </label>
   <div class="defaults-inner-form">
     <div *ngFor="let partner of partnerList; let  i = index">
       <trust-slider [trust]="valueList[i]" (trustChange)="changeDefaultForCp(partner, i, $event)"></trust-slider>
