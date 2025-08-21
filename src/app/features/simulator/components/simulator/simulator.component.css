@@ -70,3 +70,20 @@ h1 {
   Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
   "Segoe UI Symbol";
 }
+
+.editor-panel{
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: first;
+  box-sizing: inherit;
+  position: relative;
+}
+
+.edit-tools{
+  width: 5rem;
+  height: 5rem;
+  flex-direction: column;
+  display: block;
+}

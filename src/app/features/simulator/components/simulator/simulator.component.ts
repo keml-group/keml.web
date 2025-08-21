@@ -16,22 +16,26 @@ import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {IncrementalSimulationService} from "@app/features/simulator/services/incremental-simulation.service";
 import {ArrowMarkersComponent} from "@app/shared/keml/graphical/helper/arrow-styling/arrow-markers/arrow-markers.component";
 import {AlertService} from "ngx-emfular-helper";
+import {
+  SimulationInputDetails
+} from "@app/features/simulator/components/simulation-input-details/simulation-input-details.component";
 
 @Component({
     selector: 'app-simulator',
-    imports: [
-        MatIcon,
-        AuthorComponent,
-        ConversationPartnerComponent,
-        MsgComponent,
-        NgForOf,
-        PreknowledgeComponent,
-        TextAreaSvgComponent,
-        MatToolbar,
-        NgTemplateOutlet,
-        NgIf,
-        ArrowMarkersComponent
-    ],
+  imports: [
+    MatIcon,
+    AuthorComponent,
+    ConversationPartnerComponent,
+    MsgComponent,
+    NgForOf,
+    PreknowledgeComponent,
+    TextAreaSvgComponent,
+    MatToolbar,
+    NgTemplateOutlet,
+    NgIf,
+    ArrowMarkersComponent,
+    SimulationInputDetails
+  ],
   providers: [IncrementalSimulationService],
     templateUrl: './simulator.component.html',
     styleUrl: './simulator.component.css'
@@ -51,7 +55,7 @@ export class SimulatorComponent implements OnInit {
     public simulationDialogueService: SimulationDialogueService,
     private alertService: AlertService,
     public incrementalSimulationService: IncrementalSimulationService,
-    private trustComputationService: TrustComputationService,
+    public trustComputationService: TrustComputationService,
   ) {}
 
   ngOnInit() {
