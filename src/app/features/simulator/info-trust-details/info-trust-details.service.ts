@@ -4,7 +4,7 @@ import {TrustComputationService} from "@app/features/simulator/trust-computation
 import {Information} from "@app/shared/keml/core/msg-info";
 import {Conversation} from "@app/shared/keml/core/conversation";
 import {TrustFallbacks} from "@app/features/simulator/trust-fallbacks";
-import {InfoTrustDetailsComponent} from "@app/features/simulator/info-trust-details/info-trust-details.component";
+import {InfoTrustDetailsComponent} from "@app/features/simulator/info-trust-details/info-trust-details/info-trust-details.component";
 
 @Injectable({
   providedIn: 'root'

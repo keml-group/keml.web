@@ -17,7 +17,7 @@ import {AlertService} from "ngx-emfular-helper";
 import {
   TrustFallbackControls
 } from "@app/features/simulator/trust-fallback-controls/trust-fallback-controls.component";
-import {InfoTrustDetailsService} from "@app/features/simulator/info-trust-details.service";
+import {InfoTrustDetailsService} from "@app/features/simulator/info-trust-details/info-trust-details.service";
 
 @Component({
     selector: 'app-simulator',
