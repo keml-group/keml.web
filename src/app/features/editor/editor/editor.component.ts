@@ -14,7 +14,7 @@ import { DatabaseSvgComponent } from '@app/shared/keml/graphical/helper/base-svg
 import { PersonSvgComponent } from '@app/shared/keml/graphical/helper/base-svg/person-svg/person-svg.component';
 import {SimulationDialogueService} from "@app/features/simulator/services/simulation-dialogue.service";
 import {ArrowMarkersComponent} from "@app/shared/keml/graphical/helper/arrow-styling/arrow-markers/arrow-markers.component";
-import {KEMLIOService} from "@app/features/editor/services/keml-io.service";
+import {KEMLIOService} from "@app/features/editor/keml-io.service";
 import {ConversationPickService} from "@app/features/fromLLM/chatGPT2llm/conversationpicking/conversation-pick.service";
 import {IoService, InputHandler} from "ngx-emfular-helper";
 
