@@ -4,7 +4,6 @@ import {Conversation} from "@app/shared/keml/core/conversation";
 import {SimulatorComponent} from "@app/features/simulator/components/simulator/simulator.component";
 import {MatDialog} from "@angular/material/dialog";
 import {InfoTrustDetailsComponent} from "@app/features/simulator/components/info-trust-details/info-trust-details.component";
-import {SimulationInputDetails} from "@app/features/simulator/components/simulation-input-details/simulation-input-details.component";
 import {SimulationInputs} from "@app/features/simulator/simulation-inputs";
 import {TrustComputationService} from "@app/features/simulator/services/trust-computation.service";
 
@@ -45,17 +44,4 @@ export class SimulationDialogueService {
     })
   }
 
-  openSimulationInputDetails(conversation: Conversation, simulationInputs: SimulationInputs) {
-    const dialogRef = this.dialog.open(
-      SimulationInputDetails,
-      {
-        width: '80vw',
-        maxWidth: '100vw', //otherwise it is 80, see https://stackoverflow.com/questions/46034619/angular-material-2-how-to-overwrite-dialog-max-width-to-100vw
-        height: '100vh'
-      }
-    )
-    dialogRef.componentInstance.simulationInputs = simulationInputs
-    dialogRef.componentInstance.recomputeWith.subscribe( sim =>
-      this.trustComputationService.computeCurrentTrusts(conversation, sim))
-  }
 }

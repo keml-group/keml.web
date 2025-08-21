@@ -71,17 +71,12 @@ export class SimulatorComponent implements OnInit {
     }
   }
 
-
   recompute(_: SimulationInputs) {
     this.trustComputationService.computeCurrentTrusts(this.conversation, this.simulationInputs)
   }
 
   close() {
     this.dialogRef.close();
-  }
-
-  manageSimulationInputs() {
-    this.simulationDialogueService.openSimulationInputDetails(this.conversation, this.simulationInputs)
   }
 
   simulateIncrementally() {
