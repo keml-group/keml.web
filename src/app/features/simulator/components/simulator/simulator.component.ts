@@ -12,13 +12,12 @@ import {SimulationDialogueService} from "../../services/simulation-dialogue.serv
 import {MatToolbar} from "@angular/material/toolbar";
 import {TrustComputationService} from "../../services/trust-computation.service";
 import {TrustFallbacks} from "@app/features/simulator/trust-fallbacks";
-import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {IncrementalSimulationService} from "@app/features/simulator/services/incremental-simulation.service";
 import {ArrowMarkersComponent} from "@app/shared/keml/graphical/helper/arrow-styling/arrow-markers/arrow-markers.component";
 import {AlertService} from "ngx-emfular-helper";
 import {
-  SimulationInputDetails
-} from "@app/features/simulator/components/simulation-input-details/simulation-input-details.component";
+  TrustFallbackControls
+} from "@app/features/simulator/components/trust-fallback-controls/trust-fallback-controls.component";
 
 @Component({
     selector: 'app-simulator',
@@ -34,7 +33,8 @@ import {
     NgTemplateOutlet,
     NgIf,
     ArrowMarkersComponent,
-    SimulationInputDetails
+    TrustFallbackControls,
+    TrustFallbackControls
   ],
   providers: [IncrementalSimulationService],
     templateUrl: './simulator.component.html',
@@ -43,7 +43,7 @@ import {
 export class SimulatorComponent implements OnInit {
 
   @Input() conversation!: Conversation
-  simulationInputs: TrustFallbacks = new TrustFallbacks()
+  trustFallbacks: TrustFallbacks = new TrustFallbacks()
   showIncremental: boolean = false;
 
   constructor(
@@ -55,9 +55,9 @@ export class SimulatorComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.simulationInputs.addCps(this.conversation.conversationPartners)
+    this.trustFallbacks.addCps(this.conversation.conversationPartners)
     try {
-      this.trustComputationService.computeCurrentTrusts(this.conversation, this.simulationInputs)
+      this.trustComputationService.computeCurrentTrusts(this.conversation, this.trustFallbacks)
     } catch (e) {
       if ((e instanceof Error)) {
         this.alertService.alert(e.message)
@@ -66,7 +66,7 @@ export class SimulatorComponent implements OnInit {
   }
 
   recompute(_: TrustFallbacks) {
-    this.trustComputationService.computeCurrentTrusts(this.conversation, this.simulationInputs)
+    this.trustComputationService.computeCurrentTrusts(this.conversation, this.trustFallbacks)
   }
 
   close() {
@@ -75,9 +75,9 @@ export class SimulatorComponent implements OnInit {
 
   simulateIncrementally() {
     this.showIncremental = true;
-    this.incrementalSimulationService.simulate(this.simulationInputs, this.conversation)
+    this.incrementalSimulationService.simulate(this.trustFallbacks, this.conversation)
       .then(() => {
-        this.trustComputationService.computeCurrentTrusts(this.conversation, this.simulationInputs);
+        this.trustComputationService.computeCurrentTrusts(this.conversation, this.trustFallbacks);
         this.showIncremental = false;
       })
   }

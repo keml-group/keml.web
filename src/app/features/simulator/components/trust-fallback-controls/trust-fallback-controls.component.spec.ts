@@ -1,24 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SimulationInputDetails } from './simulation-input-details.component';
 import {MatDialogRef} from "@angular/material/dialog";
 import {TrustFallbacks} from "@app/features/simulator/trust-fallbacks";
+import {TrustFallbackControls} from "@app/features/simulator/components/trust-fallback-controls/trust-fallback-controls.component";
 
-describe('SimulationInputDetails', () => {
-  let component: SimulationInputDetails;
-  let fixture: ComponentFixture<SimulationInputDetails>;
+describe('TrustFallbackControls', () => {
+  let component: TrustFallbackControls;
+  let fixture: ComponentFixture<TrustFallbackControls>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       providers: [
         { provide: MatDialogRef, useValue: {} },
       ],
-      imports: [SimulationInputDetails]
+      imports: [TrustFallbackControls]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SimulationInputDetails);
+    fixture = TestBed.createComponent(TrustFallbackControls);
     component = fixture.componentInstance;
-    component.simulationInputs = new TrustFallbacks()
+    component.trustFallbacks = new TrustFallbacks()
     fixture.detectChanges();
   });
 

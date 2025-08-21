@@ -3,7 +3,7 @@
 <div class="defaults-form">
   <label class="form-label">Argumentation Weight</label>
   <div>
-    <input type="number" name="aw" min="0" [attr.max]="1000" [ngModel]="simulationInputs.weight" (ngModelChange)="changeArgumentationWeight($event)">
+    <input type="number" name="aw" min="0" [attr.max]="1000" [ngModel]="trustFallbacks.weight" (ngModelChange)="changeArgumentationWeight($event)">
     <small> Default: {{SimulationInputs.weightDefault}}</small>
   </div>
 
@@ -11,7 +11,7 @@
       <small> Default: {{SimulationInputs.preknowledgeDefault}}</small>
   </label>
   <div>
-    <trust-slider [trust]="simulationInputs.preknowledgeDefault" (trustChange)="changeDefaultForPre($event)"></trust-slider>
+    <trust-slider [trust]="trustFallbacks.preknowledgeDefault" (trustChange)="changeDefaultForPre($event)"></trust-slider>
   </div>
 
   <label class="form-label">Conversation Partner Fallbacks<br>
