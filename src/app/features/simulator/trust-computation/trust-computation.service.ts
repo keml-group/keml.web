@@ -1,7 +1,7 @@
 import {Conversation} from "@app/shared/keml/core/conversation";
 import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "@app/shared/keml/core/msg-info";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
-import {TrustFallbacks} from "@app/features/simulator/trust-fallbacks";
+import {TrustFallbacks} from "@app/features/simulator/trust-computation/trust-fallbacks";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {AlertService} from "ngx-emfular-helper";
 import {Injectable} from "@angular/core";

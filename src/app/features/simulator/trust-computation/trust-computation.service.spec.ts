@@ -6,7 +6,7 @@ import {Author} from "@app/shared/keml/core/author";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
 import {JsonFixer} from "@app/shared/keml/json2core/json-fixer";
-import {TrustFallbacks} from "@app/features/simulator/trust-fallbacks";
+import {TrustFallbacks} from "@app/features/simulator/trust-computation/trust-fallbacks";
 import {TestBed} from "@angular/core/testing";
 
 describe('TrustComputationService', () => {
