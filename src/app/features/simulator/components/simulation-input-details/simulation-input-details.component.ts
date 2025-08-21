@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {MatDialogRef} from "@angular/material/dialog";
 import {MatIcon} from "@angular/material/icon";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SimulationInputs} from "@app/features/simulator/simulation-inputs";
@@ -28,7 +27,6 @@ export class SimulationInputDetails implements OnInit {
   defaultList: (number|undefined)[] = []
 
   constructor(
-    private dialogRef: MatDialogRef<SimulationInputDetails>,
   ) {}
 
   ngOnInit() {
@@ -49,12 +47,11 @@ export class SimulationInputDetails implements OnInit {
   changeDefaultForCp(cp: ConversationPartner, i: number, val: (number| undefined)) {
     this.defaultList[i] = val;
     this.simulationInputs.defaultsPerCp.set(cp, val)
-    console.log("Change cp default")
     this.recomputeWith.emit(this.simulationInputs)
   }
 
   closeMe() {
-    this.dialogRef.close();
+    this.recomputeWith.emit(this.simulationInputs)
   }
 
   protected readonly TrustComputator = TrustComputationService;

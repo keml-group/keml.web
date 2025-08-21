@@ -17,8 +17,9 @@
   </button>
 </mat-toolbar>
 <div class="editor-panel">
-  <simulation-input-details [simulationInputs]="simulationInputs" (recomputeWith)="trustComputationService.computeCurrentTrusts(conversation, $event)">
-
+  <simulation-input-details
+    [simulationInputs]="simulationInputs"
+    (recomputeWith)="recompute($event)">
   </simulation-input-details>
   <div style="width: 1500px; height: 1000px; overflow: auto;">
     <svg #simulation id="svg" style="border: 1px solid black;" width="1500" height="5000" overflow="scroll">

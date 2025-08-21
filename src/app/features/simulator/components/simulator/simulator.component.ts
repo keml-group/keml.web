@@ -55,7 +55,7 @@ export class SimulatorComponent implements OnInit {
     public simulationDialogueService: SimulationDialogueService,
     private alertService: AlertService,
     public incrementalSimulationService: IncrementalSimulationService,
-    public trustComputationService: TrustComputationService,
+    private trustComputationService: TrustComputationService,
   ) {}
 
   ngOnInit() {
@@ -69,6 +69,11 @@ export class SimulatorComponent implements OnInit {
         this.alertService.alert(e.message)
       }
     }
+  }
+
+
+  recompute(_: SimulationInputs) {
+    this.trustComputationService.computeCurrentTrusts(this.conversation, this.simulationInputs)
   }
 
   close() {
