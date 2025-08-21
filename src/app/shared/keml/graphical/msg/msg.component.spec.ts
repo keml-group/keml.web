@@ -1,12 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MsgComponent } from './msg.component';
-import {NO_ERRORS_SCHEMA} from "@angular/core";
+import {ComponentRef, input, NO_ERRORS_SCHEMA} from "@angular/core";
 import {SendMessage} from "@app/shared/keml/core/msg-info";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 
 describe('SendComponent', () => {
   let component: MsgComponent;
+  let componentRef: ComponentRef<MsgComponent>;
   let fixture: ComponentFixture<MsgComponent>;
 
   beforeEach(async () => {
@@ -18,8 +19,9 @@ describe('SendComponent', () => {
 
     fixture = TestBed.createComponent(MsgComponent);
     component = fixture.componentInstance;
-    component.msgTiming = 5
-    component.msg = new SendMessage(new ConversationPartner(), component.msgTiming,'msg')
+    component.msg = new SendMessage(new ConversationPartner(), 5,'msg')
+    componentRef = fixture.componentRef;
+    componentRef.setInput('msgTiming', component.msg.timing);
     fixture.detectChanges();
   });
 
