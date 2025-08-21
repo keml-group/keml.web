@@ -1,0 +1,37 @@
+<h2 style="align-self: center">Trust Computation Controls</h2>
+
+<div class="defaults-form">
+  <label class="form-label">Argumentation Weight</label>
+  <div>
+    <input type="number" name="aw" min="0" [attr.max]="1000" [ngModel]="trustFallbacks.weight" (ngModelChange)="changeArgumentationWeight($event)">
+    <small> Default: {{SimulationInputs.weightDefault}}</small>
+  </div>
+
+  <label class="form-label">Preknowledge Fallback<br>
+      <small> Default: {{SimulationInputs.preknowledgeDefault}}</small>
+  </label>
+  <div>
+    <trust-slider [trust]="trustFallbacks.preknowledgeDefault" (trustChange)="changeDefaultForPre($event)"></trust-slider>
+  </div>
+
+  <label class="form-label">Conversation Partner Fallbacks<br>
+    <small>Defaults: {{SimulationInputs.generalDefault}}</small>
+  </label>
+  <div class="defaults-inner-form">
+    <div *ngFor="let partner of partnerList; let  i = index">
+      <trust-slider [trust]="valueList[i]" (trustChange)="changeDefaultForCp(partner, i, $event)"></trust-slider>
+      <label class="form-label">
+        {{partner.name}}
+      </label>
+    </div>
+  </div>
+
+</div>
+
+<!--
+<div class="row">
+  <button class="tool-button-text" (click)="closeMe()">
+    <mat-icon aria-hidden="false" fontIcon="check"></mat-icon>
+    Ok
+  </button>
+</div> -->

@@ -1,0 +1,38 @@
+import { Injectable } from '@angular/core';
+import {
+  ConversationPickerComponent
+} from "@app/features/fromLLM/chatGPT2llm/conversationpicking/conversation-picker/conversation-picker.component";
+import {MatDialog} from "@angular/material/dialog";
+import {IoService} from "ngx-emfular-helper";
+import {Llm2KemlService} from "@app/features/fromLLM/llm2keml/llm-2-keml.service";
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ConversationPickService {
+
+  constructor(
+    private dialog: MatDialog,
+    private llm2KemlService: Llm2KemlService,
+    private ioService: IoService,
+  ) { }
+
+  startWithAllConvs(event: Event) {
+    this.ioService.loadStringFromFile(event).then( (txt: string) =>
+      this.openConversationPicker(txt)
+    )
+  }
+
+  private openConversationPicker(jsons: any) {
+    const dialogRef = this.dialog.open(
+      ConversationPickerComponent,
+      {width: '40%', height: '80%'}
+    )
+    dialogRef.componentInstance.convArray = jsons;
+    dialogRef.componentInstance.msgs.subscribe(msgs => {
+      this.llm2KemlService.convFromLlmMessages(msgs)
+      dialogRef.componentInstance.msgs.unsubscribe()
+    })
+  }
+
+}

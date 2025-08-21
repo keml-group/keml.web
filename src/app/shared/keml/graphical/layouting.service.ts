@@ -1,0 +1,106 @@
+/* documents all layout specific choices (distances) so that we can work from that on
+* treats (0,0) as author position -> knowledge has a negative x, messages a positive x.
+*/
+import {ConversationPartner} from '@app/shared/keml/core/conversation-partner';
+import {Message, ReceiveMessage, Preknowledge, Information} from "@app/shared/keml/core/msg-info";
+import {BoundingBox} from "ngx-svg-graphics";
+import {Injectable} from "@angular/core";
+
+@Injectable({
+  providedIn: 'root'
+})
+export class LayoutingService {
+  // distance to first partner should be bigger than distance in between:
+  static distanceToFirstCP: number = 300;
+  static distanceBetweenCP: number = 150;
+
+  static distanceToFirstMessage: number = 180;
+  static distanceBetweenMessages: number = 60;
+
+  static positionForNewPreknowledge: number = 50;
+
+  static infoBoxWidth: number = 200;
+  static infoBoxHeight: number = 50;
+  static preknowledgeX: number = -300;
+  static newInfoX: number = -600;
+  static distanceBetweenInfos: number = 10;
+
+  /*
+ positions the xPositions of the convPartners list.
+ It currently assumes no meaningful xPosition but just fills this field
+ It could later evaluate the current values and adjust them if things are not ok
+ */
+  positionConversationPartners(convPartners: ConversationPartner[]) {
+    for (let i = 0; i < convPartners.length; i++) {
+      convPartners[i].xPosition = LayoutingService.distanceToFirstCP + i * LayoutingService.distanceBetweenCP;
+    }
+  }
+
+  nextConversationPartnerPosition(positionBefore?: number): number {
+    if(positionBefore) {
+      return positionBefore + LayoutingService.distanceBetweenCP;
+    } else {return LayoutingService.distanceToFirstCP;}
+  }
+
+  static computeMessageY(timing: number): number {
+    return LayoutingService.distanceToFirstMessage+LayoutingService.distanceBetweenMessages*timing;
+  }
+
+  static initializeInfoPos(messages: Message[]) {
+    for (let msg of messages) {
+      //const infos = (msg as ReceiveMessage).generates;
+      (msg as ReceiveMessage)?.generates?.forEach((r, index ) => {
+        if(r.position.w < 7) {
+          r.position = this.bbForNewInfo(index)
+        }
+      })
+    }
+  }
+
+  static bbForNewInfo(index: number): BoundingBox {
+    return {
+      x: LayoutingService.newInfoX - LayoutingService.distanceBetweenInfos * index,
+      y: LayoutingService.distanceBetweenInfos * index,
+      w: LayoutingService.infoBoxWidth,
+      h: LayoutingService.infoBoxHeight
+    }
+  }
+
+  static bbForInfoDuplication(info: Information): BoundingBox {
+    let pos = info.position
+    return {
+      x: pos.x - LayoutingService.distanceBetweenInfos,
+      y: pos.y + LayoutingService.distanceBetweenInfos,
+      w: pos.w,
+      h: pos.h
+    }
+  }
+
+  static bbForPreknowledge(y: number): BoundingBox {
+    return {
+      x: LayoutingService.preknowledgeX,
+      y: y,
+      w: LayoutingService.infoBoxWidth,
+      h: LayoutingService.infoBoxHeight
+    }
+  }
+
+  static positionInfos(pre: Preknowledge[], msgs: Message[]): void {
+    //todo currently position new infos as 0:
+    this.initializeInfoPos(msgs);
+    this.positionPreknowledge(pre);
+  }
+
+  static positionPreknowledge(pre: Preknowledge[]) {
+    pre.forEach(p => {
+      if (p.position.w < 7 ) {
+        let timing = p.getTiming()
+        p.position = this.bbForPreknowledge(LayoutingService.computeMessageY(timing))
+      }
+    })
+    pre.sort((a, b) => {
+      return a.position.y - b.position.y
+    })
+  }
+
+}
