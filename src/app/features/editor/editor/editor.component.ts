@@ -3,7 +3,7 @@ import { NgFor } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { KemlService } from "@app/features/editor/services/keml.service";
+import { KemlService } from "@app/shared/keml/core/keml.service";
 import { DetailsService } from "@app/features/editor/details/details.service";
 import { MsgComponent } from '@app/shared/keml/graphical/msg/msg.component';
 import { PreknowledgeComponent } from '@app/shared/keml/graphical/preknowledge/preknowledge.component';

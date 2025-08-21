@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output, TemplateRef, ViewChild} from '@angular/core';
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {KemlService} from "@app/features/editor/services/keml.service";
+import {KemlService} from "@app/shared/keml/core/keml.service";
 import {Message, ReceiveMessage, SendMessage} from "@app/shared/keml/core/msg-info";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {Author} from "@app/shared/keml/core/author";

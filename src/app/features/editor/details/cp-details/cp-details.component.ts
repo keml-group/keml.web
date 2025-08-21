@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatDialogRef } from "@angular/material/dialog";
-import { KemlService } from "@app/features/editor/services/keml.service";
+import { KemlService } from "@app/shared/keml/core/keml.service";
 import { ConversationPartner } from "@app/shared/keml/core/conversation-partner";
 
 @Component({
