@@ -1,5 +1,5 @@
 <svg:g>
   <g person [w]="40" [h]="70" [attr.transform]="'translate(-20,'+ 30 +')'"></g>
   <g text-area-svg [(text)]="author.name" [singleEdit]="true" [w]="150" [h]="25" [x]="-25" [y]="110"></g>
-  <line x1="0" x2="0" y1="150" y2="5000" stroke="black" stroke-width="0.5pt" stroke-dasharray="10,10"></line>
+  <line x1="0" x2="0" y1="150" [attr.y2]="150+lineLength()" stroke="black" stroke-width="0.5pt" stroke-dasharray="10,10"></line>
 </svg:g>
