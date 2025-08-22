@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {NgForOf, NgIf, NgTemplateOutlet} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {MatDialogRef} from "@angular/material/dialog";
@@ -13,7 +13,7 @@ import {TrustComputationService} from "../trust-computation/trust-computation.se
 import {TrustFallbacks} from "@app/features/simulator/trust-computation/trust-fallbacks";
 import {IncrementalSimulationService} from "@app/features/simulator/incremental-simulation.service";
 import {ArrowMarkersComponent} from "@app/shared/keml/graphical/helper/arrow-styling/arrow-markers/arrow-markers.component";
-import {AlertService} from "ngx-emfular-helper";
+import {AlertService, IoService} from "ngx-emfular-helper";
 import {
   TrustFallbackControls
 } from "@app/features/simulator/trust-computation/trust-fallback-controls/trust-fallback-controls.component";
@@ -46,12 +46,15 @@ export class SimulatorComponent implements OnInit {
   trustFallbacks: TrustFallbacks = new TrustFallbacks()
   showIncremental: boolean = false;
 
+  @ViewChild("simulation") simulationSvg!: ElementRef<SVGElement>;
+
   constructor(
     public dialogRef: MatDialogRef<SimulatorComponent>,
     public infoTrustDetailsService: InfoTrustDetailsService,
     private alertService: AlertService,
     public incrementalSimulationService: IncrementalSimulationService,
     private trustComputationService: TrustComputationService,
+    private ioService: IoService,
   ) {}
 
   ngOnInit() {
@@ -84,6 +87,13 @@ export class SimulatorComponent implements OnInit {
 
   pauseAndResume(): void {
     this.incrementalSimulationService.pauseAndResume()
+  }
+
+  exportCurrentSvg() {
+    const svgContent = this.simulationSvg.nativeElement;
+    if(svgContent) {
+      this.ioService.saveSVG(svgContent, this.conversation.title)
+    }
   }
 
 }
