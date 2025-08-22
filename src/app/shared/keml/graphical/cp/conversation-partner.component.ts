@@ -28,4 +28,5 @@ export class ConversationPartnerComponent {
     this.openDetails.emit(this.conversationPartner);
   }
 
+  protected readonly LayoutingService = LayoutingService;
 }
