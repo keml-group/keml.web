@@ -26,7 +26,8 @@ export class LayoutingService {
   static distanceBetweenInfos: number = 10;
 
   determineLifeLineLength(msgCount: number): number {
-    return msgCount*10; //todo use msg distances
+    return LayoutingService.distanceToFirstMessage +
+      (msgCount+2)*LayoutingService.distanceBetweenMessages; //todo use msg distances
   }
 
   /*
