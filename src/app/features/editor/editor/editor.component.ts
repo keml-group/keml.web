@@ -48,6 +48,10 @@ export class EditorComponent {
     }
   }
 
+  saveSVGasPNG() {
+    console.log("Todo: save SVG as PNG")
+  }
+
   openKeml() {
     document.getElementById('openKEML')?.click();
   }
