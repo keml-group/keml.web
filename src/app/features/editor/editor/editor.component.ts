@@ -40,11 +40,24 @@ export class EditorComponent {
     this.kemlService.newConversation();
   }
 
-  //todo: handling of foreign objects leads to errors, will need self-written method
   saveSVG() {
     const svgContent = this.svg.nativeElement;
     if(svgContent) {
       this.ioService.saveSVG(svgContent, this.kemlService.conversation.title)
+    }
+  }
+
+  saveSVGasPNG() {
+    const svgContent = this.svg.nativeElement;
+    if(svgContent) {
+      this.ioService.saveSvgAsPng(svgContent, this.kemlService.conversation.title)
+    }
+  }
+
+  saveSVGasJPEG() {
+    const svgContent = this.svg.nativeElement;
+    if(svgContent) {
+      this.ioService.saveSvgAsJpeg(svgContent, this.kemlService.conversation.title)
     }
   }
 

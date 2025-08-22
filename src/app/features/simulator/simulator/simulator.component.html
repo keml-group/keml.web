@@ -1,9 +1,17 @@
 <h1>Trust Simulator</h1>
 <mat-toolbar class="file-level-bar">
-  <button class="file-level-button" (click)="exportCurrentSvg()" >
+  <button class="file-level-button" (click)="saveSVG()" >
     <mat-icon aria-hidden="false" fontIcon="photo_library" ></mat-icon>
     Save SVG
   </button>
+    <button class="file-level-button" (click)="saveSVGasPNG()">
+        <mat-icon aria-hidden="false" fontIcon="photo_library" ></mat-icon>
+        Save PNG
+    </button>
+    <button class="file-level-button" (click)="saveSVGasJPEG()">
+        <mat-icon aria-hidden="false" fontIcon="photo_library" ></mat-icon>
+        Save JPEG
+    </button>
   <button class="file-level-button" (click)="simulateIncrementally()" [disabled]="showIncremental" >
     <mat-icon aria-hidden="false" fontIcon="play_circle_outline" ></mat-icon>
     Simulate Incrementally
