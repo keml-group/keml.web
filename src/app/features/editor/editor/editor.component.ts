@@ -40,7 +40,13 @@ export class EditorComponent {
     this.kemlService.newConversation();
   }
 
-  //todo: handling of foreign objects leads to errors, will need self-written method
+  private cleanSVG(svg: SVGElement): Blob {
+    const clonedSvg = svg.cloneNode(true) as SVGElement;
+    clonedSvg.removeAttribute('ng-version'); // remove Angular artifacts
+    const svgText = new XMLSerializer().serializeToString(clonedSvg);
+    return new Blob([svgText], { type: 'image/svg+xml' });
+  }
+
   saveSVG() {
     const svgContent = this.svg.nativeElement;
     if(svgContent) {
@@ -49,8 +55,67 @@ export class EditorComponent {
   }
 
   saveSVGasPNG() {
-    console.log("Todo: save SVG as PNG")
+    const svgContent = this.svg.nativeElement;
+    let contentBlob = this.cleanSVG(svgContent);
+
+    this.convertSvgBlobToPngAndDownload(contentBlob, 'downloaded-image.png')
+    //console.log("Todo: save SVG as PNG")
   }
+
+  convertSvgBlobToPngAndDownload(svgBlob: Blob, fileName: string = 'image.png'): void {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const svgText = reader.result as string;
+      console.log(svgText);
+
+      const img = new Image();
+      const svgBase64 = btoa(unescape(encodeURIComponent(svgText)));
+      img.src = `data:image/svg+xml;base64,${svgBase64}`;
+
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          console.error('Canvas context not available');
+          return;
+        }
+
+        ctx.drawImage(img, 0, 0);
+
+        canvas.toBlob((pngBlob) => {
+          if (!pngBlob) {
+            console.error('Failed to convert canvas to PNG blob');
+            return;
+          } else {
+            console.log(pngBlob);
+          }
+
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(pngBlob);
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(link.href);
+        }, 'image/png');
+      };
+
+      img.onerror = (err) => {
+        console.error('Error loading SVG image:', err);
+      };
+    };
+
+    reader.onerror = (err) => {
+      console.error('Error reading SVG blob:', err);
+    };
+
+    reader.readAsText(svgBlob);
+  }
+
 
   openKeml() {
     document.getElementById('openKEML')?.click();
