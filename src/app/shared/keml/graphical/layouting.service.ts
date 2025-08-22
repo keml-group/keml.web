@@ -25,6 +25,10 @@ export class LayoutingService {
   static newInfoX: number = -600;
   static distanceBetweenInfos: number = 10;
 
+  determineLifeLineLength(msgCount: number): number {
+    return msgCount*10; //todo use msg distances
+  }
+
   /*
  positions the xPositions of the convPartners list.
  It currently assumes no meaningful xPosition but just fills this field

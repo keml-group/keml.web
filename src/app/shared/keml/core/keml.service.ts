@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {computed, Injectable, signal, Signal} from '@angular/core';
 import {
   Information,
   InformationLink,
@@ -33,6 +33,8 @@ export class KemlService {
     this.conversation = new Conversation();
     this.layoutingService.positionConversationPartners(this.conversation.conversationPartners)
   }
+
+  msgCount: Signal<number> = computed(() => this.conversation?.author.messages.length)
 
   newConversation(title?: string) {
     this.conversation = new Conversation(title);
