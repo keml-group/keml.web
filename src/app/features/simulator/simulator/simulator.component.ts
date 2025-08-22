@@ -89,10 +89,17 @@ export class SimulatorComponent implements OnInit {
     this.incrementalSimulationService.pauseAndResume()
   }
 
-  exportCurrentSvg() {
+  saveSVG() {
     const svgContent = this.simulationSvg.nativeElement;
     if(svgContent) {
       this.ioService.saveSVG(svgContent, this.conversation.title)
+    }
+  }
+
+  saveSVGasPNG() {
+    const svgContent = this.simulationSvg.nativeElement;
+    if(svgContent) {
+      this.ioService.saveSvgAsPng(svgContent, this.conversation.title)
     }
   }
 
