@@ -59,7 +59,6 @@ export class EditorComponent {
     let contentBlob = this.cleanSVG(svgContent);
 
     this.convertSvgBlobToPngAndDownload(contentBlob, 'downloaded-image.png')
-    //console.log("Todo: save SVG as PNG")
   }
 
   convertSvgBlobToPngAndDownload(svgBlob: Blob, fileName: string = 'image.png'): void {
@@ -67,10 +66,13 @@ export class EditorComponent {
 
     reader.onload = () => {
       const svgText = reader.result as string;
-      console.log(svgText);
 
       const img = new Image();
-      const svgBase64 = btoa(unescape(encodeURIComponent(svgText)));
+      const svgBase64 = btoa(
+        new TextEncoder()
+          .encode(svgText)
+          .reduce((data, byte) => data + String.fromCharCode(byte), '')
+      )
       img.src = `data:image/svg+xml;base64,${svgBase64}`;
 
       img.onload = () => {
@@ -84,6 +86,8 @@ export class EditorComponent {
           return;
         }
 
+        ctx.fillStyle = '#ffffff'; // white
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0);
 
         canvas.toBlob((pngBlob) => {
@@ -91,16 +95,8 @@ export class EditorComponent {
             console.error('Failed to convert canvas to PNG blob');
             return;
           } else {
-            console.log(pngBlob);
+            this.ioService.saveFile(pngBlob, fileName)
           }
-
-          const link = document.createElement('a');
-          link.href = URL.createObjectURL(pngBlob);
-          link.download = fileName;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(link.href);
         }, 'image/png');
       };
 
