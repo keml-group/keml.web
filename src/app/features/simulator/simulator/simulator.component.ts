@@ -103,4 +103,10 @@ export class SimulatorComponent implements OnInit {
     }
   }
 
+  saveSVGasJPEG() {
+    const svgContent = this.simulationSvg.nativeElement;
+    if(svgContent) {
+      this.ioService.saveSvgAsJpeg(svgContent, this.conversation.title)
+    }
+  }
 }

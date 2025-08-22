@@ -54,6 +54,13 @@ export class EditorComponent {
     }
   }
 
+  saveSVGasJPEG() {
+    const svgContent = this.svg.nativeElement;
+    if(svgContent) {
+      this.ioService.saveSvgAsJpeg(svgContent, this.kemlService.conversation.title)
+    }
+  }
+
   openKeml() {
     document.getElementById('openKEML')?.click();
   }
