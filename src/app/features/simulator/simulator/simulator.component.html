@@ -30,13 +30,14 @@
     (trustFallbacksChange)="recompute($event)">
   </trust-fallback-controls>
   <div style="width: 1500px; height: 1000px; overflow: auto;">
-    <svg #simulation id="svg" style="border: 1px solid black;" width="1500" height="5000" overflow="scroll">
+    <svg #simulation id="svg" style="border: 1px solid black;" width="1500" [attr.height]="convLength" overflow="scroll">
       <g convG
          [conversation]="showIncremental?incrementalSimulationService.incrementalConv: conversation"
          [showInfos]="true"
          [showInfoTrusts]="true"
          [msgCount]="this.kemlService.msgCount()"
          (chooseInfo)="infoTrustDetailsService.openInfoTrusts($event, conversation, trustFallbacks)"
+         (conversationLength)="updateConvLength($event)"
       ></g>
     </svg>
   </div>

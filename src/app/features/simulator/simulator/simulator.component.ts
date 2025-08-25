@@ -34,6 +34,7 @@ export class SimulatorComponent implements OnInit {
   showIncremental: boolean = false;
 
   @ViewChild("simulation") simulationSvg!: ElementRef<SVGElement>;
+  convLength: number = 150
 
   constructor(
     public dialogRef: MatDialogRef<SimulatorComponent>,
@@ -54,6 +55,10 @@ export class SimulatorComponent implements OnInit {
         this.alertService.alert(e.message)
       }
     }
+  }
+
+  updateConvLength(event: number) {
+    this.convLength = Math.max(event, 1000)
   }
 
   recompute(_: TrustFallbacks) {
