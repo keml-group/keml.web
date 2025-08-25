@@ -42,6 +42,28 @@ describe('KEML-Service', () => {
     expect(newInfo.source).toEqual(msg1)
   })
 
+  it('should adapt the msgCount correctly', () => {
+    let cp0 = service.addNewConversationPartner('cp0')
+    let cp1 = service.addNewConversationPartner('cp1')
+
+    expect(service.msgCount()).toEqual(0)
+    service.addNewMessage(true, cp0, 'send0')
+    service.addNewMessage(false, cp0, 'rec0')
+    expect(service.msgCount()).toEqual(2)
+    service.addNewMessage(true, cp1, 'send1')
+    expect(service.msgCount()).toEqual(3)
+    let msg4 = service.addNewMessage(false, cp0, 'rec1')
+    expect(service.msgCount()).toEqual(4)
+    service.deleteMessage(msg4!)
+    expect(service.msgCount()).toEqual(3)
+    
+    service.deleteConversationPartner(cp0)
+    expect(service.msgCount()).toEqual(1)
+
+    service.newConversation()
+    expect(service.msgCount()).toEqual(0)
+  })
+
   it('should parse an original json (missing sources and eClasses) into a conversation', () => {
     let cpsText = "  \"conversationPartners\" : [ {\n" +
       "    \"name\" : \"LLM\"\n" +
