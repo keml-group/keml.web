@@ -4,7 +4,7 @@
     <g text-area-svg [(text)]="conversation.title" [singleEdit]="true" [w]="600" [h]="25" [x]="0" [y]="0"></g>
     <g authorG [author]="conversation.author" [lineLength]="lifeLineLength()"></g>
     <g cp *ngFor="let convP of conversation.conversationPartners" [conversationPartner]="convP" (openDetails)="chooseCp.emit(convP)" [lineLength]="lifeLineLength()"></g>
-    <g preknowG *ngFor="let pre of conversation.author.preknowledge" [info]="pre" (chooseElem)="chooseInfo.emit(pre)" (chooseInfoLink)="chooseInfoLink.emit($event)"></g>
-    <g msgG *ngFor="let m of conversation.author.messages" [msg]="m" [msgTiming]="m.timing" (chooseMsg)="chooseMsg.emit(m)" (chooseInfo)="chooseInfo.emit($event)" (chooseInfoLink)="chooseInfoLink.emit($event)"></g>
+    <g preknowG *ngFor="let pre of conversation.author.preknowledge" [info]="pre" [showTrust]="showInfoTrusts" (chooseElem)="chooseInfo.emit(pre)" (chooseInfoLink)="chooseInfoLink.emit($event)"></g>
+    <g msgG *ngFor="let m of conversation.author.messages" [msg]="m" [msgTiming]="m.timing" [showInfoTrusts]="showInfoTrusts" (chooseMsg)="chooseMsg.emit(m)" (chooseInfo)="chooseInfo.emit($event)" (chooseInfoLink)="chooseInfoLink.emit($event)"></g>
   </g>
 </svg:g>
