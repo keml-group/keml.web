@@ -30,27 +30,16 @@
     (trustFallbacksChange)="recompute($event)">
   </trust-fallback-controls>
   <div style="width: 1500px; height: 1000px; overflow: auto;">
-    <svg #simulation id="svg" style="border: 1px solid black;" width="1500" height="5000" overflow="scroll">
-      <g arrow-markers></g>
-      <ng-container *ngIf="!showIncremental" >
-        <ng-container *ngTemplateOutlet="svgcontent; context:{$implicit: conversation}">
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf="showIncremental" >
-        <ng-container *ngTemplateOutlet="svgcontent; context:{$implicit: incrementalSimulationService.incrementalConv}">
-        </ng-container>
-      </ng-container>
+    <svg #simulation id="svg" style="border: 1px solid black;" width="1500" [attr.height]="convLength" overflow="scroll">
+      <g convG
+         [conversation]="showIncremental?incrementalSimulationService.incrementalConv: conversation"
+         [showInfos]="true"
+         [showInfoTrusts]="true"
+         [msgCount]="showIncremental?incrementalSimulationService.msgCount():kemlService.msgCount()"
+         (chooseInfo)="infoTrustDetailsService.openInfoTrusts($event, conversation, trustFallbacks)"
+         (conversationLength)="updateConvLength($event)"
+      ></g>
     </svg>
   </div>
 </div>
 
-
-<ng-template #svgcontent let-conv>
-  <svg:g transform="translate(750,0)">
-    <g text-area-svg [(text)]="conv.title" [singleEdit]="true" [w]="600" [h]="25" [x]="0" [y]="0"></g>
-    <g authorG [author]="conv.author"></g>
-    <g cp *ngFor="let convP of conv.conversationPartners" [conversationPartner]="convP"></g>
-    <g preknowG *ngFor="let pre of conv.author.preknowledge" [info]="pre" [showTrust]="true" (chooseElem)="infoTrustDetailsService.openInfoTrusts(pre, conversation, trustFallbacks)"></g>
-    <g msgG *ngFor="let m of conv.author.messages" [msg]="m" [msgTiming]="m.timing" [showInfoTrusts]="true" (chooseInfo)="infoTrustDetailsService.openInfoTrusts($event, conversation, trustFallbacks)"></g>
-  </svg:g>
-</ng-template>

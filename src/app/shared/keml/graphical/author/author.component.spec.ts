@@ -1,12 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AuthorComponent } from './author.component';
-import {NO_ERRORS_SCHEMA} from "@angular/core";
+import {ComponentRef, NO_ERRORS_SCHEMA} from "@angular/core";
 import {Author} from "@app/shared/keml/core/author";
 
 describe('AuthorComponent', () => {
   let component: AuthorComponent;
   let fixture: ComponentFixture<AuthorComponent>;
+  let componentRef: ComponentRef<AuthorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -18,6 +19,8 @@ describe('AuthorComponent', () => {
     fixture = TestBed.createComponent(AuthorComponent);
     component = fixture.componentInstance;
     component.author = new Author()
+    componentRef = fixture.componentRef;
+    componentRef.setInput('lineLength', 5); //todo
     fixture.detectChanges();
   });
 

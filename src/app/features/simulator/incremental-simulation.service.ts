@@ -10,14 +10,18 @@ import {
 } from "@app/shared/keml/core/msg-info";
 import {TrustComputationService} from "@app/features/simulator/trust-computation/trust-computation.service";
 import {TrustFallbacks} from "@app/features/simulator/trust-computation/trust-fallbacks";
-import {Injectable} from "@angular/core";
+import {Injectable, signal, WritableSignal} from "@angular/core";
 
 @Injectable()
 export class IncrementalSimulationService {
 
+  msgCount: WritableSignal<number> = signal(0)
+
   simulationInputs: TrustFallbacks = new TrustFallbacks();
   completeConv: Conversation = new Conversation();
   incrementalConv: Conversation = this.completeConv
+  //todo maybe export current msgCount here? this way, the line could be adapted on incremental conv
+
 
   msgConnections: Map<string, Message> = new Map<string, Message>();
   infoConnections: Map<string, Information> = new Map<string, Information>();
@@ -61,6 +65,7 @@ export class IncrementalSimulationService {
     let msg = new SendMessage(send.counterPart, send.timing, send.content, send.originalContent)
     this.msgConnections.set(send.gId, msg)
     this.incrementalConv.author.messages.push(msg)
+    this.msgCount.update(n => n+1)
     await this.sleep(500)
     let pres = this.findNewPreknowledges(send)
     this.incrementalConv.author.preknowledge.push(...pres.map(p => this.copyPreknowledge(p)))
@@ -79,6 +84,7 @@ export class IncrementalSimulationService {
     let msg = new ReceiveMessage(rec.counterPart, rec.timing, rec.content, rec.originalContent)
     this.msgConnections.set(rec.gId, msg)
     this.incrementalConv.author.messages.push(msg)
+    this.msgCount.update(n => n+1)
     await this.sleep(500)
     let repeats: Information[] = rec.repeats.map(i => this.infoConnections.get(i.gId)!)
     msg.repeats.push(...repeats)

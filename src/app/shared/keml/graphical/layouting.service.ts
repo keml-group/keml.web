@@ -10,6 +10,8 @@ import {Injectable} from "@angular/core";
   providedIn: 'root'
 })
 export class LayoutingService {
+  static heightOverCPs = 150
+
   // distance to first partner should be bigger than distance in between:
   static distanceToFirstCP: number = 300;
   static distanceBetweenCP: number = 150;
@@ -24,6 +26,15 @@ export class LayoutingService {
   static preknowledgeX: number = -300;
   static newInfoX: number = -600;
   static distanceBetweenInfos: number = 10;
+
+  determineConversationLength(msgCount: number) {
+    return LayoutingService.heightOverCPs + this.determineLifeLineLength(msgCount)
+  }
+
+  determineLifeLineLength(msgCount: number): number {
+    return LayoutingService.distanceToFirstMessage +
+      (msgCount+2)*LayoutingService.distanceBetweenMessages;
+  }
 
   /*
  positions the xPositions of the convPartners list.
