@@ -23,6 +23,8 @@ export class EditorComponent {
 
   @ViewChild("svg") svg!: ElementRef<SVGElement>;
 
+  convLength: number = 150
+
   constructor(
     public detailsService: DetailsService,
     public kemlIOService: KEMLIOService,
@@ -32,6 +34,10 @@ export class EditorComponent {
     private ioService: IoService,
   ) {
     this.kemlService.newConversation();
+  }
+
+  updateConvLength(event: number) {
+    this.convLength = Math.max(event, 1000)
   }
 
   saveSVG() {
@@ -90,4 +96,5 @@ export class EditorComponent {
   }
 
   protected readonly InputHandler = InputHandler;
+  protected readonly Math = Math;
 }
