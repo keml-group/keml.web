@@ -1,4 +1,4 @@
-import {computed, Injectable, signal, Signal} from '@angular/core';
+import {computed, Injectable, signal, Signal, WritableSignal} from '@angular/core';
 import {
   Information,
   InformationLink,
@@ -25,6 +25,9 @@ export class KemlService {
 
   public conversation!: Conversation;
 
+  msgCount: WritableSignal<number>;
+
+
   constructor(
     private msgPositionChangeService: MsgPositionChangeService,
     private alertService: AlertService,
@@ -32,12 +35,14 @@ export class KemlService {
   ) {
     this.conversation = new Conversation();
     this.layoutingService.positionConversationPartners(this.conversation.conversationPartners)
+    this.msgCount = signal<number>(this.conversation.author.messages.length);
+
   }
 
-  msgCount: Signal<number> = computed(() => this.conversation?.author.messages.length)
 
   newConversation(title?: string) {
     this.conversation = new Conversation(title);
+    this.msgCount.set(this.conversation.author.messages.length)
   }
 
   serializeConversation(): ConversationJson {
@@ -53,6 +58,7 @@ export class KemlService {
     KemlService.timeMessages(conv.author.messages)
     LayoutingService.positionInfos(conv.author.preknowledge, conv.author.messages);
     this.conversation = conv;
+    this.msgCount.set(this.conversation.author.messages.length)
     return conv;
   }
 
@@ -127,6 +133,7 @@ export class KemlService {
     this.conversation.author.messages.filter(m => m.counterPart == cp).forEach(m => {
       this.deleteMessage(m)
     })
+    this.msgCount.set(this.conversation.author.messages.length)
   }
 
   duplicateConversationPartner(cp: ConversationPartner): ConversationPartner {
@@ -179,12 +186,14 @@ export class KemlService {
     ListUpdater.removeFromList(msg, msgs)
     // adapt later messages:
     this.moveMessagesUp(msg.timing, msgs.length)
+    this.msgCount.update(n => n-1);
   }
 
   duplicateMessage(msg: Message): Message | undefined {
     if (this.msgPosFitsTiming(msg)) {
       let duplicate = Message.newMessage(msg.isSend(), msg.counterPart, msg.timing+1, 'Duplicate of '+ msg.content, msg.originalContent);
       this.insertMsgInPos(duplicate)
+      this.msgCount.update(n => n+1);
       return duplicate
     }
     return undefined
@@ -234,6 +243,8 @@ export class KemlService {
     msgs.splice(msg.timing, 0, msg);
     // adapt later messages:
     this.moveMessagesDown(msg.timing +1, msgs.length)
+    this.msgCount.update(n => n+1);
+
   }
 
   addNewMessage(isSend: boolean, counterPart?: ConversationPartner, content?: string, originalContent?: string): Message | undefined {
@@ -245,6 +256,7 @@ export class KemlService {
       const msgs = this.conversation.author.messages
       const newMsg: Message = Message.newMessage(isSend, cp, msgs.length, cont, originalCont)
       msgs.push(newMsg);
+      this.msgCount.update(n => n+1);
       return newMsg;
     } else {
       this.alertService.alert('No conversation partners found');

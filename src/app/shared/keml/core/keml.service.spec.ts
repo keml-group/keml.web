@@ -210,6 +210,9 @@ describe('KEML-Service', () => {
     testListRefs(resultRec.generates, msg1.generates)
     testListRefs(resultRec.repeats, msg1.repeats)
 
+    //msgSignal:
+    expect(service.msgCount()).toEqual(2)
+
     // ********** newInfo ****************
     let resultNewInfos = (callResult.author.messages[1] as ReceiveMessage).generates
     resultNewInfos.forEach((newInfo, i) => {
