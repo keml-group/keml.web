@@ -54,11 +54,15 @@ describe('KEML-Service', () => {
     expect(service.msgCount()).toEqual(3)
     let msg4 = service.addNewMessage(false, cp0, 'rec1')
     expect(service.msgCount()).toEqual(4)
+    service.duplicateMessage(msg4!)
+    expect(service.msgCount()).toEqual(5)
+
     service.deleteMessage(msg4!)
-    expect(service.msgCount()).toEqual(3)
-    
+    expect(service.msgCount()).toEqual(4)
+
     service.deleteConversationPartner(cp0)
     expect(service.msgCount()).toEqual(1)
+
 
     service.newConversation()
     expect(service.msgCount()).toEqual(0)

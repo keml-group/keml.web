@@ -193,7 +193,6 @@ export class KemlService {
     if (this.msgPosFitsTiming(msg)) {
       let duplicate = Message.newMessage(msg.isSend(), msg.counterPart, msg.timing+1, 'Duplicate of '+ msg.content, msg.originalContent);
       this.insertMsgInPos(duplicate)
-      this.msgCount.update(n => n+1);
       return duplicate
     }
     return undefined
