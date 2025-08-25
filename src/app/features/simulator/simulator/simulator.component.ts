@@ -12,6 +12,7 @@ import {
 } from "@app/features/simulator/trust-computation/trust-fallback-controls/trust-fallback-controls.component";
 import {InfoTrustDetailsService} from "@app/features/simulator/info-trust-details/info-trust-details.service";
 import {ConversationComponent} from "@app/shared/keml/graphical/conversation/conversation.component";
+import {KemlService} from "@app/shared/keml/core/keml.service";
 
 @Component({
     selector: 'app-simulator',
@@ -40,6 +41,7 @@ export class SimulatorComponent implements OnInit {
     private alertService: AlertService,
     public incrementalSimulationService: IncrementalSimulationService,
     private trustComputationService: TrustComputationService,
+    public kemlService: KemlService,
     private ioService: IoService,
   ) {}
 

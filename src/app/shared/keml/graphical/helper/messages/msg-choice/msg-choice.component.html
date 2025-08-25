@@ -17,8 +17,8 @@
   <div style="width: 1500px; height: 1000px; overflow: auto;">
     <svg id="svg" width="750" height="2000" overflow="scroll">
       <g transform="translate(150,0)">
-        <g authorG [author]="author"></g>
-        <g cp *ngFor="let convP of cps" [conversationPartner]="convP"></g>
+        <g authorG [author]="author" [lineLength]="lifeLineLength()"></g>
+        <g cp *ngFor="let convP of cps" [conversationPartner]="convP" [lineLength]="lifeLineLength()"></g>
         <g *ngIf="!isSend">
           <g msgG *ngFor="let m of receives" [msg]="m" [msgTiming]="m.timing" [showInfos]="false" (chooseMsg)="chooseReceive($event)"></g>
         </g>

@@ -18,6 +18,8 @@ export class IncrementalSimulationService {
   simulationInputs: TrustFallbacks = new TrustFallbacks();
   completeConv: Conversation = new Conversation();
   incrementalConv: Conversation = this.completeConv
+  //todo maybe export current msgCount here? this way, the line could be adapted on incremental conv
+
 
   msgConnections: Map<string, Message> = new Map<string, Message>();
   infoConnections: Map<string, Information> = new Map<string, Information>();

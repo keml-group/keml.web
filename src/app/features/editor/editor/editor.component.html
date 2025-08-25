@@ -78,6 +78,7 @@
              [conversation]="kemlService.conversation"
              [showInfos]="true"
              [showInfoTrusts]="false"
+             [msgCount]="this.kemlService.msgCount()"
              (chooseCp)="detailsService.openConversationPartnerDetails($event)"
              (chooseMsg)="detailsService.openMessageDetails($event)"
              (chooseInfo)="detailsService.openInfoDetails($event)"

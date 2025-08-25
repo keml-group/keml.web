@@ -35,6 +35,7 @@
          [conversation]="showIncremental?incrementalSimulationService.incrementalConv: conversation"
          [showInfos]="true"
          [showInfoTrusts]="true"
+         [msgCount]="this.kemlService.msgCount()"
          (chooseInfo)="infoTrustDetailsService.openInfoTrusts($event, conversation, trustFallbacks)"
       ></g>
     </svg>

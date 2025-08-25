@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output, TemplateRef, ViewChild} from '@angular/core';
+import {Component, computed, EventEmitter, Input, Output, Signal, TemplateRef, ViewChild} from '@angular/core';
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {KemlService} from "@app/shared/keml/core/keml.service";
 import {Message, ReceiveMessage, SendMessage} from "@app/shared/keml/core/msg-info";
@@ -9,6 +9,7 @@ import { ConversationPartnerComponent } from '../../../cp/conversation-partner.c
 import { AuthorComponent } from '../../../author/author.component';
 import { MsgOverviewComponent } from '../msg-overview/msg-overview.component';
 import { NgIf, NgFor } from '@angular/common';
+import {LayoutingService} from "@app/shared/keml/graphical/layouting.service";
 
 @Component({
     selector: 'msg-choice',
@@ -26,6 +27,10 @@ export class MsgChoiceComponent {
   @Input() receiveMsg?: ReceiveMessage;
   @Output() receiveMsgChange = new EventEmitter<ReceiveMessage>();
 
+  lifeLineLength: Signal<number> = computed(() =>
+    this.layoutingService.determineLifeLineLength(this.kemlService.msgCount())
+  )
+
   sends: SendMessage[] = [];
   receives: ReceiveMessage[] = [];
   cps: ConversationPartner[] = [];
@@ -35,6 +40,7 @@ export class MsgChoiceComponent {
   constructor(
     private dialog: MatDialog,
     public kemlService: KemlService,
+    private layoutingService: LayoutingService,
   ) {
     this.sends = this.kemlService.getSends();
     this.receives = this.kemlService.getReceives()
