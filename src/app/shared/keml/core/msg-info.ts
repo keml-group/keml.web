@@ -8,7 +8,7 @@ import {
   PreknowledgeJson,
 } from "@app/shared/keml/json/knowledge-models";
 import {EClasses} from "@app/shared/keml/eclasses";
-import {Deserializer, Ref, Referencable, ListUpdater} from "emfular";
+import {Deserializer, Ref, Referencable, ListUpdater, ReferencableListContainer} from "emfular";
 import {BoundingBox, Positionable, PositionHelper} from "ngx-svg-graphics";
 
 export abstract class Message extends Referencable {
@@ -69,14 +69,13 @@ export abstract class Message extends Referencable {
 }
 
 export class SendMessage extends Message {
+  private _uses2: ReferencableListContainer<Information> = new ReferencableListContainer<Information>('uses', 'isUsedOn')
   private _uses: Information[] = [];
   get uses(): Information[] {
-    return this._uses;
+    return this._uses2.get();
   }
   addUsage(info: Information) {
-    if (ListUpdater.addToList(info, this._uses)) {
-      info.addIsUsedOn(this)
-    }
+    this._uses2.add(info)
   }
   removeUsage(info: Information) {
     if (ListUpdater.removeFromList(info, this._uses)) {
