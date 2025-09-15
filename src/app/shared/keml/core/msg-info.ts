@@ -227,13 +227,12 @@ export abstract class Information extends Referencable implements Positionable {
   }
 
   private _isUsedOn: SendMessage[] = [];
+  private _isUsedOn2: ReferencableListContainer<SendMessage> = new ReferencableListContainer<SendMessage>('isUsedOn', 'uses');
   get isUsedOn(): SendMessage[] {
-    return this._isUsedOn;
+    return this._isUsedOn2.get();
   }
   addIsUsedOn(send: SendMessage){
-    if (ListUpdater.addToList(send, this._isUsedOn)) {
-      send.addUsage(this);
-    }
+    this._isUsedOn2.add(send)
   }
   removeIsUsedOn(send: SendMessage){
     if (ListUpdater.removeFromList(send, this._isUsedOn)) {
