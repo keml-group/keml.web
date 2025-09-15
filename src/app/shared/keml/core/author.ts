@@ -4,8 +4,10 @@ import {AuthorJson} from "@app/shared/keml/json/sequence-diagram-models"
 import {Preknowledge} from "./msg-info";
 import {Deserializer, Ref} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
+import {AuthorStructure} from "@app/shared/keml/structure/conversation-structure";
 
 export class Author extends LifeLine{
+  static _structure: AuthorStructure = new AuthorStructure();
   static readonly preknowledgePrefix: string = 'preknowledge';
   preknowledge: Preknowledge[];
   static readonly messagesPrefix: string = 'messages';
