@@ -77,9 +77,7 @@ export class SendMessage extends Message {
     this._uses.add(info)
   }
   removeUsage(info: Information) {
-    if (ListUpdater.removeFromList(info, this.uses)) {
-      info.removeIsUsedOn(this)
-    }
+    this._uses.remove(info)
   }
 
   constructor(
@@ -109,7 +107,7 @@ export class SendMessage extends Message {
 
   override destruct() {
     this.uses.forEach(info => {
-      ListUpdater.removeFromList(this, info.isUsedOn)
+      info.removeIsUsedOn(this)
     })
     super.destruct()
   }
@@ -233,9 +231,7 @@ export abstract class Information extends Referencable implements Positionable {
     this._isUsedOn.add(send)
   }
   removeIsUsedOn(send: SendMessage){
-    if (ListUpdater.removeFromList(send, this.isUsedOn)) {
-      send.removeUsage(this)
-    }
+    this._isUsedOn.remove(send)
   }
 
   private _repeatedBy: ReceiveMessage[] = [];
@@ -323,12 +319,11 @@ export abstract class Information extends Referencable implements Positionable {
       ListUpdater.removeFromList(this, rec.repeats)
     })
     this.isUsedOn.forEach((send: SendMessage) => {
-      ListUpdater.removeFromList(this, send.uses)
+      send.removeUsage(this)
     })
 
     ListUpdater.destructAllFromChangingList(this.targetedBy)
-
-
+    
     super.destruct();
   }
 }
