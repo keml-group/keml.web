@@ -69,16 +69,15 @@ export abstract class Message extends Referencable {
 }
 
 export class SendMessage extends Message {
-  private _uses2: ReferencableListContainer<Information> = new ReferencableListContainer<Information>('uses', 'isUsedOn')
-  private _uses: Information[] = [];
+  private _uses: ReferencableListContainer<Information> = new ReferencableListContainer<Information>(this, 'uses', 'isUsedOn')
   get uses(): Information[] {
-    return this._uses2.get();
+    return this._uses.get();
   }
   addUsage(info: Information) {
-    this._uses2.add(info)
+    this._uses.add(info)
   }
   removeUsage(info: Information) {
-    if (ListUpdater.removeFromList(info, this._uses)) {
+    if (ListUpdater.removeFromList(info, this.uses)) {
       info.removeIsUsedOn(this)
     }
   }
@@ -226,16 +225,15 @@ export abstract class Information extends Referencable implements Positionable {
     this.removeFromListChild(link, this._targetedBy)
   }
 
-  private _isUsedOn: SendMessage[] = [];
-  private _isUsedOn2: ReferencableListContainer<SendMessage> = new ReferencableListContainer<SendMessage>('isUsedOn', 'uses');
+  private _isUsedOn: ReferencableListContainer<SendMessage> = new ReferencableListContainer<SendMessage>(this, 'isUsedOn', 'uses');
   get isUsedOn(): SendMessage[] {
-    return this._isUsedOn2.get();
+    return this._isUsedOn.get();
   }
   addIsUsedOn(send: SendMessage){
-    this._isUsedOn2.add(send)
+    this._isUsedOn.add(send)
   }
   removeIsUsedOn(send: SendMessage){
-    if (ListUpdater.removeFromList(send, this._isUsedOn)) {
+    if (ListUpdater.removeFromList(send, this.isUsedOn)) {
       send.removeUsage(this)
     }
   }
