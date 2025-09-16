@@ -117,23 +117,22 @@ export class SendMessage extends Message {
 export class ReceiveMessage extends Message {
   static readonly generatesPrefix: string = 'generates';
   generates: NewInformation[] = [];
-  _repeats: Information[] = [];
+
+
+  _repeats: ReferencableListContainer<Information> = new ReferencableListContainer<Information>(this, 'repeats', 'repeatedBy');
   get repeats(): Information[] {
-    return this._repeats;
+    return this._repeats.get();
   }
   addRepetition(info: Information) {
     if(!Information.isRepetitionAllowed(this, info)) {
       throw new RangeError("Repetition is only allowed to an earlier information")
     }
-    if(ListUpdater.addToList(info, this._repeats)) {
-      info.addRepeatedBy(this)
-    }
+    this._repeats.add(info);
   }
   removeRepetition(info: Information) {
-    if(ListUpdater.removeFromList(info, this._repeats)) {
-      info.removeRepeatedBy(this)
-    }
+    this._repeats.remove(info);
   }
+
   isInterrupted: boolean = false;
 
   constructor(
@@ -175,7 +174,7 @@ export class ReceiveMessage extends Message {
 
   override destruct() {
     this.repeats.forEach(info => {
-      ListUpdater.removeFromList(this, info.repeatedBy)
+      this._repeats.remove(info)
     })
     this.generates.forEach(info => {
       info.destruct()
@@ -234,9 +233,9 @@ export abstract class Information extends Referencable implements Positionable {
     this._isUsedOn.remove(send)
   }
 
-  private _repeatedBy: ReceiveMessage[] = [];
+  private _repeatedBy: ReferencableListContainer<ReceiveMessage> = new ReferencableListContainer(this, 'repeatedBy', 'repeats');
   get repeatedBy(): ReceiveMessage[] {
-    return this._repeatedBy;
+    return this._repeatedBy.get();
   }
   static isRepetitionAllowed(msg: ReceiveMessage, info: Information): boolean {
     //only allow the repetition if it connects to an earlier info
@@ -247,14 +246,10 @@ export abstract class Information extends Referencable implements Positionable {
     if(!Information.isRepetitionAllowed(msg, this)) {
       throw new RangeError("Repetition is only allowed to an earlier information")
     }
-    if(ListUpdater.addToList(msg, this._repeatedBy)) {
-      msg.addRepetition(this);
-    }
+    this._repeatedBy.add(msg)
   }
   removeRepeatedBy(msg: ReceiveMessage) {
-    if(ListUpdater.removeFromList(msg, this._repeatedBy)) {
-      msg.removeRepetition(this)
-    }
+    this._repeatedBy.remove(msg)
   }
 
   protected constructor(ref: Ref, message: string, isInstruction: boolean = false,
@@ -323,7 +318,7 @@ export abstract class Information extends Referencable implements Positionable {
     })
 
     ListUpdater.destructAllFromChangingList(this.targetedBy)
-    
+
     super.destruct();
   }
 }
