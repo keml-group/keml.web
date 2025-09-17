@@ -13,6 +13,15 @@ describe('Msg-Info (models)', () => {
     expect (preknowledge.getRef()).toEqual(new Ref('fantasy', EClasses.Preknowledge));
   })
 
+  it('should set a counterpart correctly', () => {
+    let cp0 = new ConversationPartner('cp0')
+    let cp1 = new ConversationPartner('cp1')
+    let rec = new ReceiveMessage(cp0, 1, 'msg')
+    expect(rec.counterPart).toEqual(cp0)
+    rec.counterPart = cp1
+    expect(rec.counterPart).toEqual(cp1)
+  })
+
   it('should determine the correct timing of a new info', () => {
     let cp = new ConversationPartner('cp')
     let rec = new ReceiveMessage(cp, 5)
