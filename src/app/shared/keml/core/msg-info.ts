@@ -332,6 +332,18 @@ export abstract class Information extends Referencable implements Positionable {
 
 export class NewInformation extends Information {
   private _source!: ReceiveMessage;
+  // does both directions (source and generates)
+  set source(rec: ReceiveMessage) {
+    if (this._source != rec) {
+      ListUpdater.removeFromList(this, this._source?.generates)
+      this._source = rec
+      if(rec.generates.indexOf(this ) == -1)
+        rec.generates.push(this)
+    }
+  }
+  get source(): ReceiveMessage {
+    return this._source
+  }
 
   override getTreeParent() {
     return this._source;
@@ -361,20 +373,6 @@ export class NewInformation extends Information {
 
   override duplicate(): NewInformation {
     return new NewInformation(this._source, 'Copy of ' + this.message, this.isInstruction, this.position, [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
-  }
-
-  // does both directions (source and generates)
-  set source(rec: ReceiveMessage) {
-    if (this._source != rec) {
-      ListUpdater.removeFromList(this, this._source?.generates)
-      this._source = rec
-      if(rec.generates.indexOf(this ) == -1)
-        rec.generates.push(this)
-    }
-  }
-
-  get source(): ReceiveMessage {
-    return this._source
   }
 
   override toJson(): NewInformationJson {
