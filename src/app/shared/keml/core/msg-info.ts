@@ -218,16 +218,15 @@ export abstract class Information extends Referencable implements Positionable {
     this.removeFromListChild(link, this._causes)
   }
 
-  private _targetedBy: InformationLink[] = []; //todo avoid?
+  private _targetedBy: ReferencableListContainer<InformationLink> = new ReferencableListContainer<InformationLink>(this, 'targetedBy', 'target')
   get targetedBy(): InformationLink[] {
-    return this._targetedBy;
+    return this._targetedBy.get();
   }
   addTargetedBy(link: InformationLink) {
-    ListUpdater.addToList(link, this._targetedBy)
-    link.target = this
+    this._targetedBy.add(link)
   }
   removeTargetedBy(link: InformationLink) {
-    this.removeFromListChild(link, this._targetedBy)
+    this._targetedBy.remove(link)
   }
 
   private _isUsedOn: ReferencableListContainer<SendMessage> = new ReferencableListContainer<SendMessage>(this, 'isUsedOn', 'uses');
@@ -439,17 +438,12 @@ export class InformationLink extends Referencable {
     return this._source;
   }
 
-  private _target?: Information;
+  private _target: ReferencableSingletonContainer<Information> = new ReferencableSingletonContainer<Information>(this, 'target', 'targetedBy');
   get target(): Information {
-    return this._target!!;
+    return this._target.get()!!;
   }
   set target(target: Information) {
-    let oldTarget = this._target;
-    if (oldTarget != target){
-      this._target = target;
-      target.addTargetedBy(this);
-      oldTarget?.removeTargetedBy(this);
-    }
+    this._target.add(target);
   }
 
   private _type: InformationLinkType = InformationLinkType.SUPPLEMENT;
