@@ -8,7 +8,7 @@ import {
   PreknowledgeJson,
 } from "@app/shared/keml/json/knowledge-models";
 import {EClasses} from "@app/shared/keml/eclasses";
-import {Deserializer, Ref, Referencable, ListUpdater, ReferencableListContainer, ReferencableSingletonContainer} from "emfular";
+import {Deserializer, Ref, Referencable, ListUpdater, ReferencableListContainer, ReferencableSingletonContainer, ReferencableTreeListContainer} from "emfular";
 import {BoundingBox, Positionable, PositionHelper} from "ngx-svg-graphics";
 
 
@@ -205,17 +205,16 @@ export abstract class Information extends Referencable implements Positionable {
 
   abstract getTiming(): number | undefined;
 
-  private _causes: InformationLink[] = [];
-  get causes(): InformationLink[] {
-    return this._causes;
-  }
   static readonly causesPrefix: string = 'causes'
+  private _causes: ReferencableTreeListContainer<InformationLink> = new ReferencableTreeListContainer<InformationLink>(this, 'causes', 'source');
+  get causes(): InformationLink[] {
+    return this._causes.get();
+  }
   addCauses(link: InformationLink) {
-    ListUpdater.addToList(link, this._causes)
-    link.source = this
+    this._causes.add(link)
   }
   removeCauses(link: InformationLink) {
-    this.removeFromListChild(link, this._causes)
+    this._causes.remove(link)
   }
 
   private _targetedBy: ReferencableListContainer<InformationLink> = new ReferencableListContainer<InformationLink>(this, 'targetedBy', 'target')
@@ -279,7 +278,7 @@ export abstract class Information extends Referencable implements Positionable {
       //todo actually, causes should exist on the json, however, it is missing and we hence set it manually:
       let causesRefs = Deserializer.createRefList(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass? c.eClass : EClasses.InformationLink))
       causesRefs.map(r => deserializer.getOrCreate<InformationLink>(r))
-      json.targetedBy?.map(r =>  deserializer.getOrCreate(r))
+      json.targetedBy?.map(r =>  this.addTargetedBy(deserializer.getOrCreate(r)))
       json.isUsedOn?.map(r => this.addIsUsedOn(deserializer.getOrCreate<SendMessage>(r)))
       json.repeatedBy?.map(r => this.addRepeatedBy(deserializer.getOrCreate<ReceiveMessage>(r)))
     } else {
@@ -293,7 +292,7 @@ export abstract class Information extends Referencable implements Positionable {
       isUsedOn?.map(u => this.addIsUsedOn(u))
       repeatedBy?.map(m => this.addRepeatedBy(m));
     }
-    this.listChildren.set(Information.causesPrefix, this._causes)
+    this.listChildren.set(Information.causesPrefix, this.causes)
   }
 
 
@@ -419,21 +418,16 @@ export class Preknowledge extends Information {
 
 export class InformationLink extends Referencable {
 
-  private _source?: Information;
+  private _source: ReferencableSingletonContainer<Information> = new ReferencableSingletonContainer<Information>(this, 'source', 'causes');
   get source(): Information {
-    return this._source!!; //todo
+    return this._source.get()!!; //todo
   }
   set source(source: Information) {
-    let oldSource = this._source;
-    if (oldSource != source){
-      this._source = source;
-      source.addCauses(this)
-      oldSource?.removeCauses(this)
-    }
+    this._source.add(source)
   }
 
   override getTreeParent(): Information | undefined {
-    return this._source;
+    return this.source;
   }
 
   private _target: ReferencableSingletonContainer<Information> = new ReferencableSingletonContainer<Information>(this, 'target', 'targetedBy');
