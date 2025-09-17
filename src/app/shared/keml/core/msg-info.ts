@@ -8,11 +8,19 @@ import {
   PreknowledgeJson,
 } from "@app/shared/keml/json/knowledge-models";
 import {EClasses} from "@app/shared/keml/eclasses";
-import {Deserializer, Ref, Referencable, ListUpdater, ReferencableListContainer} from "emfular";
+import {Deserializer, Ref, Referencable, ListUpdater, ReferencableListContainer, ReferencableSingletonContainer} from "emfular";
 import {BoundingBox, Positionable, PositionHelper} from "ngx-svg-graphics";
 
+
 export abstract class Message extends Referencable {
-  counterPart: ConversationPartner;
+  _counterPart: ReferencableSingletonContainer<ConversationPartner> = new ReferencableSingletonContainer<ConversationPartner>(this, 'counterPart')
+  get counterPart(): ConversationPartner {
+    return this._counterPart.get()!! //todo
+  }
+  set counterPart(value: ConversationPartner) {
+    this._counterPart.add(value);
+  }
+
   timing: number = 0;
   content: string;
   originalContent?: string;
@@ -28,12 +36,12 @@ export abstract class Message extends Referencable {
     if(deserializer) {
       deserializer.put(this)
       let json: MessageJson = jsonOpt? jsonOpt: deserializer.getJsonFromTree(ref!.$ref);
-      this.counterPart = deserializer.getOrCreate(json.counterPart)
+      this._counterPart.add(deserializer.getOrCreate(json.counterPart))
       this.timing = json.timing? json.timing : 0;
       this.content = json.content;
       this.originalContent = json.originalContent;
     } else {
-      this.counterPart = counterPart;
+      this._counterPart.add(counterPart);
       this.timing = timing;
       this.content = content;
       this.originalContent = originalContent;
