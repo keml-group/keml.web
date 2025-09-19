@@ -152,7 +152,6 @@ export class ReceiveMessage extends Message {
     timing: number,
     content?: string,
     originalContent?: string,
-    generates: NewInformation[] = [],
     repeats: Information[] = [],
     isInterrupted: boolean = false,
     ref?: Ref,
@@ -163,15 +162,12 @@ export class ReceiveMessage extends Message {
     super(refC, counterPart, timing, content ? content : "New receive content", originalContent, deserializer, jsonOpt);
     if (deserializer) {
       let json: ReceiveMessageJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
+      //todo remove???
       let generatesRefs = Deserializer.createRefList(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates?.map(g => g.eClass? g.eClass: EClasses.NewInformation))
       this.generates = generatesRefs.map(g => deserializer.getOrCreate(g))
       json.repeats?.map(r => this.addRepetition(deserializer.getOrCreate<NewInformation>(r)))
       this.isInterrupted = json.isInterrupted;
     } else {
-      this.generates = generates ? generates : [];
-      generates?.forEach(info => {
-        info.source = this
-      })
       repeats.map(r => this.addRepetition(r));
       this.isInterrupted = isInterrupted;
     }

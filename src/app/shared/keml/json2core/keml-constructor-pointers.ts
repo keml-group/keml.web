@@ -58,7 +58,7 @@ export class KEMLConstructorPointers {
 
     const receiveMessageFun: ConstructorPointerFor<ReceiveMessage> = ($ref: string) => (deserializer: Deserializer ) => {
       let ref: Ref = new Ref($ref, EClasses.ReceiveMessage)
-      return new ReceiveMessage(new ConversationPartner(), 0, undefined, undefined, undefined, undefined, undefined, ref, deserializer)
+      return new ReceiveMessage(new ConversationPartner(), 0, undefined, undefined, undefined, undefined, ref, deserializer)
     }
     constructorPointers.set(EClasses.ReceiveMessage, receiveMessageFun)
 

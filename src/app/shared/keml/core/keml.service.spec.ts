@@ -161,7 +161,7 @@ describe('KEML-Service', () => {
     let msg0 = new SendMessage(cp0,0, "m0", "msg0long", [pre0],
       new Ref('//@author/@messages.0', 'http://www.unikoblenz.de/keml#//SendMessage'))
     let msg1 = new ReceiveMessage(cp1, 1, "m1", "msg1long",
-      undefined, undefined, false,
+      undefined, false,
       new Ref('//@author/@messages.1', 'http://www.unikoblenz.de/keml#//ReceiveMessage')
     )
     let msgs: Message[] = [msg0, msg1]
