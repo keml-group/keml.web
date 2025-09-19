@@ -186,9 +186,6 @@ export class ReceiveMessage extends Message {
     this.repeats.forEach(info => {
       this._repeats.remove(info)
     })
-    this.generates.forEach(info => {
-      info.destruct()
-    })
     super.destruct()
   }
 
