@@ -209,8 +209,8 @@ export abstract class Information extends Referencable implements Positionable {
   get causes(): InformationLink[] {
     return this._causes.get();
   }
-  addCauses(link: InformationLink) {
-    this._causes.add(link)
+  addCauses(...link: InformationLink[]) {
+    link?.map(l => this._causes.add(l))
   }
   removeCauses(link: InformationLink) {
     this._causes.remove(link)
@@ -257,11 +257,12 @@ export abstract class Information extends Referencable implements Positionable {
     this._repeatedBy.remove(msg)
   }
 
-  protected constructor(ref: Ref, message: string, isInstruction: boolean = false,
-              position?: BoundingBox, isUsedOn: SendMessage[] = [],
-              repeatedBy: ReceiveMessage[] = [], initialTrust?: number,
-              currentTrust?: number, feltTrustImmediately?: number,
-              feltTrustAfterwards?: number, deserializer?: Deserializer, jsonOpt?: InformationJson
+  protected constructor(
+    ref: Ref,
+    message: string, isInstruction: boolean = false, position?: BoundingBox,
+    isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
+    initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number, feltTrustAfterwards?: number,
+    deserializer?: Deserializer, jsonOpt?: InformationJson
   ) {
     super(ref);
     if (deserializer) {
