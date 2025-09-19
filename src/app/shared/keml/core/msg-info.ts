@@ -30,7 +30,9 @@ export abstract class Message extends Referencable {
     counterPart: ConversationPartner,
     timing: number,
     content: string,
-    originalContent?: string, deserializer?: Deserializer, jsonOpt?: MessageJson,
+    originalContent?: string,
+    deserializer?: Deserializer,
+    jsonOpt?: MessageJson,
   ) {
     super(ref);
     if(deserializer) {
@@ -94,7 +96,9 @@ export class SendMessage extends Message {
     content: string = 'New send content',
     originalContent?: string,
     uses: Information[] = [],
-    ref?: Ref, deserializer?: Deserializer, jsonOpt?: SendMessageJson,
+    ref?: Ref,
+    deserializer?: Deserializer,
+    jsonOpt?: SendMessageJson,
   ) {
     let refC = Ref.createRef(EClasses.SendMessage, ref)
     super(refC, counterPart, timing, content, originalContent, deserializer, jsonOpt);
@@ -151,7 +155,9 @@ export class ReceiveMessage extends Message {
     generates: NewInformation[] = [],
     repeats: Information[] = [],
     isInterrupted: boolean = false,
-    ref?: Ref, deserializer?: Deserializer, jsonOpt?: ReceiveMessageJson,
+    ref?: Ref,
+    deserializer?: Deserializer,
+    jsonOpt?: ReceiveMessageJson,
   ) {
     let refC = Ref.createRef(EClasses.ReceiveMessage, ref)
     super(refC, counterPart, timing, content ? content : "New receive content", originalContent, deserializer, jsonOpt);
