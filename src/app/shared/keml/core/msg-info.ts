@@ -317,7 +317,7 @@ export abstract class Information extends Referencable implements Positionable {
 
   override destruct() {
     this.repeatedBy.forEach((rec: ReceiveMessage) => {
-      ListUpdater.removeFromList(this, rec.repeats)
+      rec.removeRepetition(this)
     })
     this.isUsedOn.forEach((send: SendMessage) => {
       send.removeUsage(this)
