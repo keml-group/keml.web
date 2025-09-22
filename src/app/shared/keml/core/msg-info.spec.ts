@@ -5,21 +5,54 @@ import {ReceiveMessageJson, SendMessageJson} from "@app/shared/keml/json/sequenc
 import {Ref} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
 
-describe('Msg-Info (models)', () => {
-
-  it('should prepare the information serialization for getRef', () => {
-    let preknowledge = new Preknowledge()
-     preknowledge.prepare('fantasy')
-    expect (preknowledge.getRef()).toEqual(new Ref('fantasy', EClasses.Preknowledge));
-  })
-
-  it('should set a counterpart correctly', () => {
+describe("Msg-models", () => {
+  it('should set a message counterpart correctly', () => {
     let cp0 = new ConversationPartner('cp0')
     let cp1 = new ConversationPartner('cp1')
     let rec = new ReceiveMessage(cp0, 1, 'msg')
     expect(rec.counterPart).toEqual(cp0)
     rec.counterPart = cp1
     expect(rec.counterPart).toEqual(cp1)
+  })
+
+  it('should serialize a send msg', () => {
+    let cp = new ConversationPartner()
+    let msg = new SendMessage(cp, 0, "sendContent")
+    let msgJson: SendMessageJson = {
+      eClass: EClasses.SendMessage,
+      content: "sendContent",
+      originalContent: undefined,
+      timing: 0,
+      counterPart: cp.getRef(),
+      uses: []
+    }
+    expect(msg.toJson()).toEqual(msgJson);
+  });
+
+  it('should serialize a receive msg', () => {
+    let cp = new ConversationPartner()
+    let msg = new ReceiveMessage(cp, 1, "receiveContent")
+    let msgJson: ReceiveMessageJson = {
+      eClass: EClasses.ReceiveMessage,
+      content: "receiveContent",
+      originalContent: undefined,
+      timing: 1,
+      counterPart: cp.getRef(),
+      isInterrupted: false,
+      generates: [],
+      repeats: []
+    }
+    expect(msg.toJson()).toEqual(msgJson);
+  });
+
+});
+
+describe('Info (models)', () => {
+
+  it('should prepare the information serialization for getRef', () => {
+    let preknowledge = new Preknowledge()
+     preknowledge.prepare('fantasy')
+    expect (preknowledge.getRef()).toEqual(new Ref('fantasy', EClasses.Preknowledge));
   })
 
   it('should determine the correct timing of a new info', () => {
@@ -56,37 +89,6 @@ describe('Msg-Info (models)', () => {
     expect(Information.isRepetitionAllowed(rec, pre0)).toBe(false)
     expect(Information.isRepetitionAllowed(rec, pre1)).toBe(true)
   })
-
-  it('should serialize a send msg', () => {
-    let cp = new ConversationPartner()
-    let msg = new SendMessage(cp, 0, "sendContent")
-    let msgJson: SendMessageJson = {
-      eClass: EClasses.SendMessage,
-      content: "sendContent",
-      originalContent: undefined,
-      timing: 0,
-      counterPart: cp.getRef(),
-      uses: []
-    }
-    expect(msg.toJson()).toEqual(msgJson);
-  });
-
-  it('should serialize a receive msg', () => {
-    let cp = new ConversationPartner()
-    let msg = new ReceiveMessage(cp, 1, "receiveContent")
-    let msgJson: ReceiveMessageJson = {
-      eClass: EClasses.ReceiveMessage,
-      content: "receiveContent",
-      originalContent: undefined,
-      timing: 1,
-      counterPart: cp.getRef(),
-      isInterrupted: false,
-      generates: [],
-      repeats: []
-    }
-    expect(msg.toJson()).toEqual(msgJson);
-  });
-
 
   it('should serialize preknowledge', () => {
     let preknowledge = new Preknowledge()
