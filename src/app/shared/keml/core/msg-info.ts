@@ -101,7 +101,7 @@ export class SendMessage extends Message {
     deserializer?: Deserializer,
     jsonOpt?: SendMessageJson,
   ) {
-    let refC = RefHandler.createRefFromRef(EClasses.SendMessage, ref)
+    let refC = RefHandler.createRefIfMissing(EClasses.SendMessage, ref)
     super(refC, counterPart, timing, content, originalContent, deserializer, jsonOpt);
     if (deserializer) {
       //deserializer.put(this) // already done in super
@@ -159,7 +159,7 @@ export class ReceiveMessage extends Message {
     deserializer?: Deserializer,
     jsonOpt?: ReceiveMessageJson,
   ) {
-    let refC = RefHandler.createRefFromRef(EClasses.ReceiveMessage, ref)
+    let refC = RefHandler.createRefIfMissing(EClasses.ReceiveMessage, ref)
     super(refC, counterPart, timing, content ? content : "New receive content", originalContent, deserializer, jsonOpt);
     if (deserializer) {
       let json: ReceiveMessageJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
@@ -359,7 +359,7 @@ export class NewInformation extends Information {
               initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number , feltTrustAfterwards?: number,
               ref?: Ref, deserializer?: Deserializer, jsonOpt?: NewInformationJson
   ) {
-    let refC = RefHandler.createRefFromRef(EClasses.NewInformation, ref)
+    let refC = RefHandler.createRefIfMissing(EClasses.NewInformation, ref)
     super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
     if(deserializer) {
       let json: NewInformationJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
@@ -394,7 +394,7 @@ export class Preknowledge extends Information {
               initialTrust?: number, currentTrust?: number,
               feltTrustImmediately?: number, feltTrustAfterwards?: number,
               ref?: Ref, deserializer?: Deserializer, jsonOpt?: PreknowledgeJson) {
-    let refC = RefHandler.createRefFromRef(EClasses.Preknowledge, ref)
+    let refC = RefHandler.createRefIfMissing(EClasses.Preknowledge, ref)
     super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
   }
 
@@ -458,7 +458,7 @@ export class InformationLink extends Referencable {
   constructor(source: Information, target: Information, type: InformationLinkType, linkText?: string,
               ref?: Ref, deserializer?: Deserializer, jsonOpt?: InformationLinkJson
   ) {
-    let refC = RefHandler.createRefFromRef(EClasses.InformationLink, ref)
+    let refC = RefHandler.createRefIfMissing(EClasses.InformationLink, ref)
     super(refC);
     if(deserializer) {
       deserializer.put(this)

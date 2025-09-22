@@ -14,7 +14,7 @@ export class Author extends LifeLine{
 
   constructor(name = 'Author', xPosition: number = 0, preknowledge: Preknowledge[] = [], messages: Message[] = [],
               ref?: Ref, deserializer?: Deserializer) {
-    let refC = RefHandler.createRefFromRef(EClasses.Author, ref)
+    let refC = RefHandler.createRefIfMissing(EClasses.Author, ref)
     if (deserializer) {
       let authorJson: AuthorJson = deserializer?.getJsonFromTree(ref!.$ref)
       super(authorJson.name, authorJson.xPosition, refC)
