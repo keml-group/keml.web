@@ -10,6 +10,7 @@ import {
 import {EClasses} from "@app/shared/keml/eclasses";
 import {Deserializer, Ref, Referencable, ListUpdater, ReferencableListContainer, ReferencableSingletonContainer, ReferencableTreeListContainer} from "emfular";
 import {BoundingBox, Positionable, PositionHelper} from "ngx-svg-graphics";
+import {RefHandler} from "emfular";
 
 
 export abstract class Message extends Referencable {
@@ -100,7 +101,7 @@ export class SendMessage extends Message {
     deserializer?: Deserializer,
     jsonOpt?: SendMessageJson,
   ) {
-    let refC = Ref.createRef(EClasses.SendMessage, ref)
+    let refC = RefHandler.createRefFromRef(EClasses.SendMessage, ref)
     super(refC, counterPart, timing, content, originalContent, deserializer, jsonOpt);
     if (deserializer) {
       //deserializer.put(this) // already done in super
@@ -158,7 +159,7 @@ export class ReceiveMessage extends Message {
     deserializer?: Deserializer,
     jsonOpt?: ReceiveMessageJson,
   ) {
-    let refC = Ref.createRef(EClasses.ReceiveMessage, ref)
+    let refC = RefHandler.createRefFromRef(EClasses.ReceiveMessage, ref)
     super(refC, counterPart, timing, content ? content : "New receive content", originalContent, deserializer, jsonOpt);
     if (deserializer) {
       let json: ReceiveMessageJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
@@ -358,12 +359,12 @@ export class NewInformation extends Information {
               initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number , feltTrustAfterwards?: number,
               ref?: Ref, deserializer?: Deserializer, jsonOpt?: NewInformationJson
   ) {
-    let refC = Ref.createRef(EClasses.NewInformation, ref)
+    let refC = RefHandler.createRefFromRef(EClasses.NewInformation, ref)
     super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
     if(deserializer) {
       let json: NewInformationJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
       //todo this works against a bug in the used json lib: it computes the necessary source if it is not present
-      let src = json.source? json.source : new Ref(Ref.getParentAddress(ref!.$ref), EClasses.ReceiveMessage)
+      let src = json.source? json.source : RefHandler.createRef(RefHandler.getParentAddress(ref!.$ref), EClasses.ReceiveMessage)
       this._source = deserializer.getOrCreate(src)
     } else {
       this.source = source
@@ -393,7 +394,7 @@ export class Preknowledge extends Information {
               initialTrust?: number, currentTrust?: number,
               feltTrustImmediately?: number, feltTrustAfterwards?: number,
               ref?: Ref, deserializer?: Deserializer, jsonOpt?: PreknowledgeJson) {
-    let refC = Ref.createRef(EClasses.Preknowledge, ref)
+    let refC = RefHandler.createRefFromRef(EClasses.Preknowledge, ref)
     super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
   }
 
@@ -457,7 +458,7 @@ export class InformationLink extends Referencable {
   constructor(source: Information, target: Information, type: InformationLinkType, linkText?: string,
               ref?: Ref, deserializer?: Deserializer, jsonOpt?: InformationLinkJson
   ) {
-    let refC = Ref.createRef(EClasses.InformationLink, ref)
+    let refC = RefHandler.createRefFromRef(EClasses.InformationLink, ref)
     super(refC);
     if(deserializer) {
       deserializer.put(this)

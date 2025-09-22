@@ -4,6 +4,7 @@ import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
 import {Deserializer, Ref, Referencable} from "emfular";
 import {KEMLConstructorPointers} from "@app/shared/keml/json2core/keml-constructor-pointers";
 import {EClasses} from "@app/shared/keml/eclasses";
+import {RefHandler} from "emfular";
 
 
 export class Conversation extends Referencable {
@@ -20,7 +21,7 @@ export class Conversation extends Referencable {
     conversationPartners: ConversationPartner[] = [],
     deserializer?: Deserializer,
   ) {
-    let ref = new Ref(Conversation.ownPath, EClasses.Conversation)
+    let ref = RefHandler.createRef(Conversation.ownPath, EClasses.Conversation)
     super(ref);
     if (deserializer) {
       let convJson: ConversationJson = deserializer.getJsonFromTree(this.ref.$ref)

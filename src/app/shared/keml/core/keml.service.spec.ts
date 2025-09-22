@@ -12,7 +12,7 @@ import {LayoutingService} from "@app/shared/keml/graphical/layouting.service";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {Author} from "@app/shared/keml/core/author";
 import {Conversation} from "@app/shared/keml/core/conversation";
-import {Referencable, Ref} from "emfular";
+import {Referencable, RefHandler} from "emfular";
 
 describe('KEML-Service', () => {
   let service: KemlService;
@@ -74,8 +74,8 @@ describe('KEML-Service', () => {
       "  }, {\n" +
       "    \"name\" : \"Other\"\n" +
       "  } ]"
-    let cp0 = new ConversationPartner('LLM', 300, new Ref('//@conversationPartners.0', 'http://www.unikoblenz.de/keml#//ConversationPartner'))
-    let cp1 = new ConversationPartner('Other', 450, new Ref('//@conversationPartners.1', 'http://www.unikoblenz.de/keml#//ConversationPartner'))
+    let cp0 = new ConversationPartner('LLM', 300, RefHandler.createRef('//@conversationPartners.0', 'http://www.unikoblenz.de/keml#//ConversationPartner'))
+    let cp1 = new ConversationPartner('Other', 450, RefHandler.createRef('//@conversationPartners.1', 'http://www.unikoblenz.de/keml#//ConversationPartner'))
     let cps = [cp0, cp1]
 
     let preknowledgeStr =
@@ -104,11 +104,11 @@ describe('KEML-Service', () => {
     let pre0 = new Preknowledge(
       'pre0', false, undefined,
       undefined, undefined, 0.5, 0.5, undefined, undefined,
-      new Ref('//@author/@preknowledge.0', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
+      RefHandler.createRef('//@author/@preknowledge.0', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
     let pre1 = new Preknowledge(
       'pre1', false, undefined,
       undefined, undefined, 0.5, 0.5, undefined, undefined,
-      new Ref('//@author/@preknowledge.1', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
+      RefHandler.createRef('//@author/@preknowledge.1', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
 
     let preknowledge = [pre0, pre1]
     LayoutingService.positionPreknowledge(preknowledge)
@@ -159,23 +159,23 @@ describe('KEML-Service', () => {
       "       ]\n" +
       "   } ]\n"
     let msg0 = new SendMessage(cp0,0, "m0", "msg0long", [pre0],
-      new Ref('//@author/@messages.0', 'http://www.unikoblenz.de/keml#//SendMessage'))
+      RefHandler.createRef('//@author/@messages.0', 'http://www.unikoblenz.de/keml#//SendMessage'))
     let msg1 = new ReceiveMessage(cp1, 1, "m1", "msg1long",
       undefined, false,
-      new Ref('//@author/@messages.1', 'http://www.unikoblenz.de/keml#//ReceiveMessage')
+      RefHandler.createRef('//@author/@messages.1', 'http://www.unikoblenz.de/keml#//ReceiveMessage')
     )
     let msgs: Message[] = [msg0, msg1]
     let newInfo0 = new NewInformation(msg1, "ni0", true,
       undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
-      new Ref('//@author/@messages.1/@generates.0', 'http://www.unikoblenz.de/keml#//NewInformation'))
+      RefHandler.createRef('//@author/@messages.1/@generates.0', 'http://www.unikoblenz.de/keml#//NewInformation'))
     let newInfo1 = new NewInformation(msg1, "ni1",
       false,undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
-      new Ref('//@author/@messages.1/@generates.1', 'http://www.unikoblenz.de/keml#//NewInformation'))
+      RefHandler.createRef('//@author/@messages.1/@generates.1', 'http://www.unikoblenz.de/keml#//NewInformation'))
 
     LayoutingService.initializeInfoPos(msgs)
 
-    let infoLink0 = new InformationLink(newInfo0, pre0, InformationLinkType.SUPPLEMENT, undefined, new Ref('//@author/@messages.1/@generates.0/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink')) // necessary to test JsonFixer.addMissingSupplementType
-    let infoLink1 = new InformationLink(pre1, newInfo1, InformationLinkType.STRONG_ATTACK, undefined, new Ref( '//@author/@preknowledge.1/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink'))
+    let infoLink0 = new InformationLink(newInfo0, pre0, InformationLinkType.SUPPLEMENT, undefined, RefHandler.createRef('//@author/@messages.1/@generates.0/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink')) // necessary to test JsonFixer.addMissingSupplementType
+    let infoLink1 = new InformationLink(pre1, newInfo1, InformationLinkType.STRONG_ATTACK, undefined, RefHandler.createRef( '//@author/@preknowledge.1/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink'))
 
     let authorStr = "\"author\" : {" +
       msgsStr +",\n" +

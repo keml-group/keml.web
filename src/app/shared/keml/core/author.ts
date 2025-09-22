@@ -4,10 +4,9 @@ import {AuthorJson} from "@app/shared/keml/json/sequence-diagram-models"
 import {Preknowledge} from "./msg-info";
 import {Deserializer, Ref} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
-import {AuthorStructure} from "@app/shared/keml/structure/conversation-structure";
+import {RefHandler} from "emfular";
 
 export class Author extends LifeLine{
-  static _structure: AuthorStructure = new AuthorStructure();
   static readonly preknowledgePrefix: string = 'preknowledge';
   preknowledge: Preknowledge[];
   static readonly messagesPrefix: string = 'messages';
@@ -15,7 +14,7 @@ export class Author extends LifeLine{
 
   constructor(name = 'Author', xPosition: number = 0, preknowledge: Preknowledge[] = [], messages: Message[] = [],
               ref?: Ref, deserializer?: Deserializer) {
-    let refC = Ref.createRef(EClasses.Author, ref)
+    let refC = RefHandler.createRefFromRef(EClasses.Author, ref)
     if (deserializer) {
       let authorJson: AuthorJson = deserializer?.getJsonFromTree(ref!.$ref)
       super(authorJson.name, authorJson.xPosition, refC)
