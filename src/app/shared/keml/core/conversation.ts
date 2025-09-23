@@ -18,7 +18,6 @@ export class Conversation extends Referencable {
   constructor(
     title: string = 'New Conversation',
     author: Author = new Author(),
-    conversationPartners: ConversationPartner[] = [],
     deserializer?: Deserializer,
   ) {
     let ref = RefHandler.createRef(Conversation.ownPath, EClasses.Conversation)
@@ -34,10 +33,13 @@ export class Conversation extends Referencable {
     } else {
       this.title = title;
       this.author = author;
-      this.conversationPartners = conversationPartners;
     }
     this.singleChildren.set(Conversation.authorPrefix, this.author)
     this.listChildren.set(Conversation.conversationPartnersPrefix, this.conversationPartners)
+  }
+
+  addCP(...cps: ConversationPartner[]) {
+    cps.map(cp => this.conversationPartners.push(cp))
   }
 
   toJson(): ConversationJson {
@@ -54,6 +56,6 @@ export class Conversation extends Referencable {
 
   static fromJSON (conv: ConversationJson): Conversation {
     let context = new Deserializer(conv, KEMLConstructorPointers.getConstructorPointers());
-    return new Conversation(undefined, undefined, undefined, context)
+    return new Conversation(undefined, undefined, context)
   }
 }

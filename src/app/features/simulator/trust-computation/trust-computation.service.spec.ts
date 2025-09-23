@@ -215,7 +215,8 @@ describe('TrustComputationService', () => {
     let author = new Author('author', 0)
     author.addPreknowledge(pre0, pre1, pre2)
     author.addMessage(rec0, rec1, rec2, rec3)
-    let conv = new Conversation('trusts', author, cps)
+    let conv = new Conversation('trusts', author)
+    conv.addCP(...cps)
 
     function verify() {
       //call to test:

@@ -193,7 +193,8 @@ describe('KEML-Service', () => {
       cpsText +
       "}\n"
 
-    let conv = new Conversation("Test1", author, cps)
+    let conv = new Conversation("Test1", author)
+    conv.addCP(...cps)
 
     let callResult = service.deserializeConversation(JSON.parse(str))
     expect(callResult.title).toEqual(conv.title)
