@@ -1,9 +1,11 @@
 import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "./msg-info";
 import {InformationLinkJson, InformationLinkType, NewInformationJson, PreknowledgeJson} from "@app/shared/keml/json/knowledge-models";
 import {ConversationPartner} from "./conversation-partner";
-import {ReceiveMessageJson, SendMessageJson} from "@app/shared/keml/json/sequence-diagram-models";
+import {ConversationJson, ReceiveMessageJson, SendMessageJson} from "@app/shared/keml/json/sequence-diagram-models";
 import {RefHandler} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
+import {JsonFixer} from "@app/shared/keml/json2core/json-fixer";
+import {Conversation} from "@app/shared/keml/core/conversation";
 
 describe("Msg-models", () => {
   it('should set a message counterpart correctly', () => {
@@ -267,5 +269,20 @@ describe('Info (models)', () => {
     expect(pre1.getTiming()).toEqual(0)
     expect(pre2.getTiming()).toEqual(2)
     expect(pre3.getTiming()).toEqual(6)
+  })
+});
+
+describe('deserialize and re-serialize real example', () => {
+
+  it('should deserialize and re-serialize a real world example', () => {
+
+    let json = require('@assets/3-2-keml.json');
+    let convJson: ConversationJson = json as ConversationJson
+    JsonFixer.prepareJsonInfoLinkSources(convJson);
+    JsonFixer.addMissingSupplementType(convJson);
+    let conv = Conversation.fromJSON(convJson)
+    let convJson2 = conv.toJson()
+    
+    expect(convJson2).toEqual(convJson)
   })
 });

@@ -27,6 +27,7 @@
       "emfular": ["../../../EMFular/dist/emfular"], //https://medium.com/@joosep.parts/create-an-angular-14-library-use-it-locally-when-developing-and-publish-the-package-to-npm-689ca2efdea8
       "@env/*": ["./environments/*"],
       "@app/*": ["./src/app/*"],
+      "@assets/*": ["./src/assets/*"],
     },
   },
   "angularCompilerOptions": {
