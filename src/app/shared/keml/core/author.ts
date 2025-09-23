@@ -12,7 +12,7 @@ export class Author extends LifeLine{
   static readonly messagesPrefix: string = 'messages';
   messages: Message[];
 
-  constructor(name = 'Author', xPosition: number = 0, preknowledge: Preknowledge[] = [], messages: Message[] = [],
+  constructor(name = 'Author', xPosition: number = 0,
               ref?: Ref, deserializer?: Deserializer) {
     let refC = RefHandler.createRefIfMissing(EClasses.Author, ref)
     if (deserializer) {
@@ -26,11 +26,23 @@ export class Author extends LifeLine{
       this.messages = messageRefs.map(r => deserializer.getOrCreate<Message>(r));
     } else {
       super(name, xPosition, refC);
-      this.preknowledge = preknowledge;
-      this.messages = messages;
+      this.preknowledge = []
+      this.messages = [];
     }
     this.listChildren.set(Author.preknowledgePrefix, this.preknowledge)
     this.listChildren.set(Author.messagesPrefix, this.messages)
+  }
+
+  addPreknowledge(...preknowledge: Preknowledge[]) {
+    preknowledge.map(p => {
+      this.preknowledge.push(p)
+    })
+  }
+
+  addMessage(...msgs: Message[]) {
+    msgs.map(m => {
+      this.messages.push(m)
+    })
   }
 
   toJson(): AuthorJson {

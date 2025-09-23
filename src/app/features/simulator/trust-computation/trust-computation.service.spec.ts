@@ -182,7 +182,8 @@ describe('TrustComputationService', () => {
     new InformationLink(p0, p1, InformationLinkType.SUPPORT)
     new InformationLink(p1, p0, InformationLinkType.STRONG_ATTACK)
     new InformationLink(p2, p1, InformationLinkType.STRONG_ATTACK)
-    let auth = new Author('auth', 0, [p0, p1, p2])
+    let auth = new Author('auth', 0)
+    auth.addPreknowledge(p0, p1, p2)
     let conv = new Conversation('cycle', auth)
     expect(() => service.computeCurrentTrusts(conv, new TrustFallbacks())).toThrow(Error('Endless loops of 2 nodes - please check the InformationLinks'))
   })
@@ -193,12 +194,12 @@ describe('TrustComputationService', () => {
       undefined, undefined,
       0.5, 0 )
     let pre1 = new Preknowledge('pre1',
-      false, undefined, undefined, undefined,
+      false, undefined,
+      undefined, undefined,
       0.5, 0 )
     let pre2 = new Preknowledge('pre2',
       false, undefined, undefined, undefined,
       0.5, 0 )
-    let pres = [pre0, pre1, pre2]
 
     let cp0 = new ConversationPartner('cp0')
     let cp1 = new ConversationPartner('cp1')
@@ -208,11 +209,12 @@ describe('TrustComputationService', () => {
     let rec1 = new ReceiveMessage(cp1, 1, 'm1')
     let rec2 = new ReceiveMessage(cp0, 2, 'm2')
     let rec3 = new ReceiveMessage(cp0, 3, 'm3')
-    let msgs = [rec0, rec1, rec2, rec3]
 
     //todo add infos and Links
 
-    let author = new Author('author', 0, pres, msgs)
+    let author = new Author('author', 0)
+    author.addPreknowledge(pre0, pre1, pre2)
+    author.addMessage(rec0, rec1, rec2, rec3)
     let conv = new Conversation('trusts', author, cps)
 
     function verify() {

@@ -26,7 +26,7 @@ export class KEMLConstructorPointers {
     //create function pointers (!arrow functions (!) to have deserializercontext as this) for all existing types:
     const authorFun: ConstructorPointerFor<Author> = ($ref:string) => (deserializer: Deserializer) => {
       let ref = RefHandler.createRef($ref, EClasses.Author)
-      return new Author( undefined, 0, [], [], ref, deserializer)
+      return new Author( undefined, 0, ref, deserializer)
     }
     constructorPointers.set(EClasses.Author, authorFun)
 

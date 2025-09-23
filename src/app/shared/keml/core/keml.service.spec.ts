@@ -182,7 +182,9 @@ describe('KEML-Service', () => {
       preknowledgeStr + "\n"+
       "}"
 
-    let author = new Author(undefined,0, preknowledge, msgs )
+    let author = new Author(undefined,0 )
+    author.addPreknowledge(...preknowledge)
+    author.addMessage(...msgs)
 
     let str = "{" +
       "\"eClass\" : \"http://www.unikoblenz.de/keml#//Conversation\",\n" +
