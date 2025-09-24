@@ -276,7 +276,7 @@ describe('deserialize and re-serialize real example', () => {
 
   it('should deserialize and re-serialize a real world example', () => {
 
-    let json = require('@assets/3-2-keml.json');
+    let json = require('@assets/test/3-2-keml-jackson.json');
     let convJson: ConversationJson = json as ConversationJson
     JsonFixer.prepareJsonInfoLinkSources(convJson);
     JsonFixer.addMissingSupplementType(convJson);
