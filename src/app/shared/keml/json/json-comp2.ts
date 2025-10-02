@@ -97,9 +97,21 @@ export class JsonComp2 {
     }
   }
 
-
-  private arrayComp(subset: any, superset: any, ref: string) {
-
+  private arrayComp(subset: any[], superset: any, ref: string) {
+    if (!Array.isArray(superset)) {
+      this.errors.push([ref, 'The superset is no array'])
+    } else {
+      //let superArray = superset as any[];
+      if (subset.length !== superset.length) {
+        this.errors.push([ref, 'The arrays differ in length: '
+        +subset.length + ' vs ' + superset.length]);
+      } else {
+        for(let i = 0; i < subset.length; i++) {
+          let newRef = RefHandler.mixWithIndex(ref, i)
+          this.comp(subset[i], superset[i], newRef)
+        }
+      }
+    }
   }
 
 }
