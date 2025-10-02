@@ -107,7 +107,6 @@
           "$ref" : "//@author/@messages.25/@generates.1/@causes.1"
         } ],
         "causes" : [ {
-          "linkText" : "",
           "type" : "SUPPORT",
           "target" : {
             "eClass" : "http://www.unikoblenz.de/keml#//NewInformation",
@@ -148,7 +147,6 @@
           "$ref" : "//@author/@messages.7/@generates.0/@causes.0"
         } ],
         "causes" : [ {
-          "linkText" : "",
           "target" : {
             "eClass" : "http://www.unikoblenz.de/keml#//NewInformation",
             "$ref" : "//@author/@messages.1/@generates.1"
@@ -182,7 +180,6 @@
       "generates" : [ {
         "message" : "most empty, none with gradle, none in right version",
         "causes" : [ {
-          "linkText" : "",
           "type" : "STRONG_ATTACK",
           "target" : {
             "eClass" : "http://www.unikoblenz.de/keml#//NewInformation",
@@ -196,7 +193,6 @@
       }, {
         "message" : "most empty, none with gradle, one in 2.17.0 version",
         "causes" : [ {
-          "linkText" : "",
           "type" : "STRONG_ATTACK",
           "target" : {
             "eClass" : "http://www.unikoblenz.de/keml#//NewInformation",
@@ -210,7 +206,6 @@
           "$ref" : "//@author/@messages.25/@generates.1/@causes.0"
         } ],
         "causes" : [ {
-          "linkText" : "",
           "type" : "SUPPORT",
           "target" : {
             "eClass" : "http://www.unikoblenz.de/keml#//NewInformation",
@@ -251,7 +246,6 @@
           "$ref" : "//@author/@preknowledge.2/@causes.0"
         } ],
         "causes" : [ {
-          "linkText" : "",
           "target" : {
             "eClass" : "http://www.unikoblenz.de/keml#//NewInformation",
             "$ref" : "//@author/@messages.1/@generates.1"
@@ -291,7 +285,6 @@
           "$ref" : "//@author/@messages.15/@generates.0/@causes.0"
         } ],
         "causes" : [ {
-          "linkText" : "",
           "target" : {
             "eClass" : "http://www.unikoblenz.de/keml#//NewInformation",
             "$ref" : "//@author/@messages.1/@generates.1"
@@ -305,7 +298,6 @@
         "message" : "log4j filename:pom.xml",
         "isInstruction" : true,
         "causes" : [ {
-          "linkText" : "",
           "target" : {
             "eClass" : "http://www.unikoblenz.de/keml#//NewInformation",
             "$ref" : "//@author/@messages.1/@generates.1"
@@ -314,14 +306,12 @@
       }, {
         "message" : "dependecies are in build files",
         "causes" : [ {
-          "linkText" : "",
           "type" : "STRONG_ATTACK",
           "target" : {
             "eClass" : "http://www.unikoblenz.de/keml#//NewInformation",
             "$ref" : "//@author/@messages.9/@generates.0"
           }
         }, {
-          "linkText" : "",
           "type" : "STRONG_SUPPORT",
           "target" : {
             "eClass" : "http://www.unikoblenz.de/keml#//PreKnowledge",
@@ -370,7 +360,6 @@
       "generates" : [ {
         "message" : "mostly too new log4j version",
         "causes" : [ {
-          "linkText" : "",
           "type" : "STRONG_ATTACK",
           "target" : {
             "eClass" : "http://www.unikoblenz.de/keml#//NewInformation",
@@ -428,7 +417,6 @@
           "$ref" : "//@author/@messages.19/@generates.1/@causes.0"
         } ],
         "causes" : [ {
-          "linkText" : "",
           "type" : "STRONG_ATTACK",
           "target" : {
             "eClass" : "http://www.unikoblenz.de/keml#//NewInformation",
@@ -462,7 +450,6 @@
           "$ref" : "//@author/@messages.21/@generates.0/@causes.0"
         } ],
         "causes" : [ {
-          "linkText" : "",
           "target" : {
             "eClass" : "http://www.unikoblenz.de/keml#//NewInformation",
             "$ref" : "//@author/@messages.1/@generates.1"
@@ -475,7 +462,6 @@
       }, {
         "message" : "GitHub search can search for library versions",
         "causes" : [ {
-          "linkText" : "",
           "type" : "STRONG_ATTACK",
           "target" : {
             "eClass" : "http://www.unikoblenz.de/keml#//NewInformation",
@@ -506,7 +492,6 @@
       "generates" : [ {
         "message" : "0 results, wrong query",
         "causes" : [ {
-          "linkText" : "",
           "type" : "STRONG_ATTACK",
           "target" : {
             "eClass" : "http://www.unikoblenz.de/keml#//NewInformation",
@@ -551,7 +536,6 @@
           "$ref" : "//@author/@messages.25/@generates.0/@causes.0"
         } ],
         "causes" : [ {
-          "linkText" : "",
           "target" : {
             "eClass" : "http://www.unikoblenz.de/keml#//NewInformation",
             "$ref" : "//@author/@messages.1/@generates.1"
@@ -577,7 +561,6 @@
       "generates" : [ {
         "message" : "most empty, none with gradle, two in right versions",
         "causes" : [ {
-          "linkText" : "",
           "type" : "STRONG_ATTACK",
           "target" : {
             "eClass" : "http://www.unikoblenz.de/keml#//NewInformation",
@@ -601,7 +584,6 @@
             "$ref" : "//@author/@messages.3/@generates.0"
           }
         }, {
-          "linkText" : "",
           "type" : "SUPPORT",
           "target" : {
             "eClass" : "http://www.unikoblenz.de/keml#//NewInformation",
@@ -666,7 +648,6 @@
         "$ref" : "//@author/@messages.11/@generates.2/@causes.1"
       } ],
       "causes" : [ {
-        "linkText" : "",
         "type" : "STRONG_ATTACK",
         "target" : {
           "eClass" : "http://www.unikoblenz.de/keml#//NewInformation",
