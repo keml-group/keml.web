@@ -117,7 +117,6 @@ describe('KEML-Service', () => {
       "        \"message\" : \"ni0\",\n" +
       "        \"isInstruction\" : true,\n" +
       "        \"causes\" : [ {\n" +
-      "         \"linkText\" : \"\",\n" +
       "         \"type\" : \"SUPPLEMENT\",\n" +
       "         \"target\" : {\n" +
       "          \"eClass\" : \"http://www.unikoblenz.de/keml#//PreKnowledge\",\n" +
@@ -175,7 +174,7 @@ describe('KEML-Service', () => {
     LayoutingService.initializeInfoPos(msgs)
 
     let infoLink0 = new InformationLink(newInfo0, pre0, InformationLinkType.SUPPLEMENT, undefined, RefHandler.createRef('//@author/@messages.1/@generates.0/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink')) // necessary to test JsonFixer.addMissingSupplementType
-    let infoLink1 = new InformationLink(pre1, newInfo1, InformationLinkType.STRONG_ATTACK, undefined, RefHandler.createRef( '//@author/@preknowledge.1/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink'))
+    let infoLink1 = new InformationLink(pre1, newInfo1, InformationLinkType.STRONG_ATTACK, '', RefHandler.createRef( '//@author/@preknowledge.1/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink'))
 
     let authorStr = "\"author\" : {" +
       msgsStr +",\n" +

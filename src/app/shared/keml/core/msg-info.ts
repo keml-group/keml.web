@@ -468,9 +468,7 @@ export class InformationLink extends Referencable {
       this.source = deserializer.getOrCreate(src)
       this.target = deserializer.getOrCreate(json.target);
       this.type = json.type;
-      let text;
-      if (json.linkText && json.linkText.length > 0) {text = json.linkText} else {text = undefined}
-      this.linkText = text;
+      this.linkText = json.linkText;
     } else {
       this.source = source;
       this.target = target;
