@@ -106,12 +106,29 @@ export class JsonComp2 {
         this.errors.push([ref, 'The arrays differ in length: '
         +subset.length + ' vs ' + superset.length]);
       } else {
-        for(let i = 0; i < subset.length; i++) {
-          let newRef = RefHandler.mixWithIndex(ref, i)
-          this.comp(subset[i], superset[i], newRef)
+        if (this.isRef(subset[0])) {
+          for(let i = 0; i < subset.length; i++) {
+            let newRef = RefHandler.mixWithIndex(ref, i)
+            let s = superset.find(e =>
+              e["$ref"] == subset[i]["$ref"]);
+            if (s != undefined) {
+              this.comp(subset[i], s, newRef)
+            } else {
+              this.errors.push([ref, "No match on " + newRef + " for "+subset[i]["$ref"] ]);
+            }
+          }
+        } else {
+          for(let i = 0; i < subset.length; i++) {
+            let newRef = RefHandler.mixWithIndex(ref, i)
+            this.comp(subset[i], superset[i], newRef)
+          }
         }
       }
     }
   }
 
+
+  private isRef(obj: any) {
+    return obj["$ref"] != undefined
+  }
 }
