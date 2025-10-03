@@ -61,7 +61,7 @@ export class JsonComp2 {
     for (const entry of Object.entries(subset)) {
       let superEntry = superEntries.find(e => entry[0] == e[0]);
       if (!superEntry) {
-        this.errors.push([ref, "Entry "+entry[0] + " is missing."])
+        this.errors.push([ref, "Entry "+ entry[0] + " is missing."])
       } else {
         // compare the two entries in depth
         let newRef = RefHandler.computePrefix(ref, entry[0])
@@ -76,7 +76,7 @@ export class JsonComp2 {
     for (const entry of Object.entries(superset)) {
       let match = subEntries.find(e => entry[0] == e[0]);
       if (!match) {
-        this.differences.push([ref, "Entry \"+entry[0] + \" from superset is missing."])
+        this.differences.push([ref, "Entry "+entry[0] + " from superset is missing."])
       }
     }
   }
