@@ -278,7 +278,7 @@ export abstract class Information extends Referencable implements Positionable {
       this.feltTrustAfterwards = json.feltTrustAfterwards;
       //todo actually, causes should exist on the json, however, it is missing and we hence set it manually:
       let causesRefs = Deserializer.createRefList(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass? c.eClass : EClasses.InformationLink))
-      causesRefs.map(r => deserializer.getOrCreate<InformationLink>(r))
+      causesRefs.map(r => this.addCauses( deserializer.getOrCreate<InformationLink>(r)))
       json.targetedBy?.map(r =>  this.addTargetedBy(deserializer.getOrCreate(r)))
       json.isUsedOn?.map(r => this.addIsUsedOn(deserializer.getOrCreate<SendMessage>(r)))
       json.repeatedBy?.map(r => this.addRepeatedBy(deserializer.getOrCreate<ReceiveMessage>(r)))
