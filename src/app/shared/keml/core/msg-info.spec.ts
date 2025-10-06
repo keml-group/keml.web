@@ -284,10 +284,9 @@ describe('deserialize and re-serialize real example', () => {
     let conv = Conversation.fromJSON(convJson)
     let convJson2 = conv.toJson()
 
-    let comp = new JsonComparer(convJson, convJson2)
-    expect(comp.isLessEquals()).toEqual(true)
-    let comp2 =
-       new JsonComparer(convJson2, convJson)
+    let compRes = JsonComparer.compare(convJson, convJson2)
+    expect(compRes.isLessEquals()).toEqual(true)
+    let comp2 = JsonComparer.compare(convJson2, convJson)
     expect(comp2.isLessEquals()).toEqual(false)
   })
 
