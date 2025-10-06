@@ -1,10 +1,8 @@
-import {RefHandler} from "../../../../../../../../EMFular/projects/emfular/src/lib/referencing/ref/ref-handler";
+import { RefHandler } from "emfular";
 
 export type warning = [string, string]
 
-export class JsonComp2 {
-
-  //static compare(subset: any, superset: any, errors: warning[], differences: warning[]): number {}
+export class JsonComparer {
 
   private errors: warning[];
   private differences: warning[];

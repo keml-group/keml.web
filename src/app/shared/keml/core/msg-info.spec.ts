@@ -6,7 +6,7 @@ import {RefHandler} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
 import {JsonFixer} from "@app/shared/keml/json2core/json-fixer";
 import {Conversation} from "@app/shared/keml/core/conversation";
-import {JsonComp2} from "@app/shared/keml/json/json-comp2";
+import {JsonComparer} from "@app/shared/keml/json/json-comparer";
 
 describe("Msg-models", () => {
   it('should set a message counterpart correctly', () => {
@@ -284,10 +284,10 @@ describe('deserialize and re-serialize real example', () => {
     let conv = Conversation.fromJSON(convJson)
     let convJson2 = conv.toJson()
 
-    let comp = new JsonComp2(convJson, convJson2)
+    let comp = new JsonComparer(convJson, convJson2)
     expect(comp.isLessEquals()).toEqual(true)
     let comp2 =
-       new JsonComp2(convJson2, convJson)
+       new JsonComparer(convJson2, convJson)
     expect(comp2.isLessEquals()).toEqual(false)
   })
 
