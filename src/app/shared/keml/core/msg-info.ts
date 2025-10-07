@@ -14,7 +14,9 @@ import {RefHandler} from "emfular";
 
 
 export abstract class Message extends Referencable {
-  _counterPart: ReferencableSingletonContainer<ConversationPartner> = new ReferencableSingletonContainer<ConversationPartner>(this, 'counterPart')
+  public static readonly counterPartPrefix = 'counterPart'
+  
+  _counterPart: ReferencableSingletonContainer<ConversationPartner> = new ReferencableSingletonContainer<ConversationPartner>(this, Message.counterPartPrefix)
   get counterPart(): ConversationPartner {
     return this._counterPart.get()!! //todo
   }
@@ -80,7 +82,9 @@ export abstract class Message extends Referencable {
 }
 
 export class SendMessage extends Message {
-  private _uses: ReferencableListContainer<Information> = new ReferencableListContainer<Information>(this, 'uses', 'isUsedOn')
+  public static readonly usesPrefix = 'uses'
+
+  private _uses: ReferencableListContainer<Information> = new ReferencableListContainer<Information>(this, SendMessage.usesPrefix, Information.isUsedOnPrefix)
   get uses(): Information[] {
     return this._uses.get();
   }
@@ -129,10 +133,12 @@ export class SendMessage extends Message {
 
 export class ReceiveMessage extends Message {
   static readonly generatesPrefix: string = 'generates';
+  static readonly repeatsPrefix: string = 'repeats';
+
   generates: NewInformation[] = [];
 
 
-  _repeats: ReferencableListContainer<Information> = new ReferencableListContainer<Information>(this, 'repeats', 'repeatedBy');
+  _repeats: ReferencableListContainer<Information> = new ReferencableListContainer<Information>(this, ReceiveMessage.repeatsPrefix, Information.repeatedByPrefix);
   get repeats(): Information[] {
     return this._repeats.get();
   }
@@ -206,6 +212,9 @@ export abstract class Information extends Referencable implements Positionable {
   abstract getTiming(): number | undefined;
 
   static readonly causesPrefix: string = 'causes'
+  static readonly isUsedOnPrefix: string = 'isUsedOn'
+  static readonly repeatedByPrefix: string = 'repeatedBy'
+  static readonly targetedByPrefix: string = 'targetedBy'
   private _causes: ReferencableTreeListContainer<InformationLink> = new ReferencableTreeListContainer<InformationLink>(this, NewInformation.causesPrefix, InformationLink.sourcePrefix);
   get causes(): InformationLink[] {
     return this._causes.get();
@@ -217,7 +226,7 @@ export abstract class Information extends Referencable implements Positionable {
     this._causes.remove(link)
   }
 
-  private _targetedBy: ReferencableListContainer<InformationLink> = new ReferencableListContainer<InformationLink>(this, 'targetedBy', 'target')
+  private _targetedBy: ReferencableListContainer<InformationLink> = new ReferencableListContainer<InformationLink>(this, Information.targetedByPrefix, InformationLink.targetPrefix)
   get targetedBy(): InformationLink[] {
     return this._targetedBy.get();
   }
@@ -239,7 +248,7 @@ export abstract class Information extends Referencable implements Positionable {
     this._isUsedOn.remove(send)
   }
 
-  private _repeatedBy: ReferencableListContainer<ReceiveMessage> = new ReferencableListContainer(this, 'repeatedBy', 'repeats');
+  private _repeatedBy: ReferencableListContainer<ReceiveMessage> = new ReferencableListContainer(this, NewInformation.repeatedByPrefix, ReceiveMessage.repeatsPrefix);
   get repeatedBy(): ReceiveMessage[] {
     return this._repeatedBy.get();
   }
@@ -420,6 +429,7 @@ export class Preknowledge extends Information {
 export class InformationLink extends Referencable {
 
   public static readonly sourcePrefix = 'source'
+  public static readonly targetPrefix = 'target'
   private _source: ReferencableSingletonContainer<Information> = new ReferencableSingletonContainer<Information>(this, InformationLink.sourcePrefix, NewInformation.causesPrefix);
   get source(): Information {
     return this._source.get()!!; //todo
@@ -432,7 +442,7 @@ export class InformationLink extends Referencable {
     return this.source;
   }
 
-  private _target: ReferencableSingletonContainer<Information> = new ReferencableSingletonContainer<Information>(this, 'target', 'targetedBy');
+  private _target: ReferencableSingletonContainer<Information> = new ReferencableSingletonContainer<Information>(this, InformationLink.targetPrefix, Information.targetedByPrefix);
   get target(): Information {
     return this._target.get()!!;
   }
