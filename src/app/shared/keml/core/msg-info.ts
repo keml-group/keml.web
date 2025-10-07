@@ -15,7 +15,7 @@ import {RefHandler} from "emfular";
 
 export abstract class Message extends Referencable {
   public static readonly counterPartPrefix = 'counterPart'
-  
+
   _counterPart: ReferencableSingletonContainer<ConversationPartner> = new ReferencableSingletonContainer<ConversationPartner>(this, Message.counterPartPrefix)
   get counterPart(): ConversationPartner {
     return this._counterPart.get()!! //todo
@@ -79,6 +79,14 @@ export abstract class Message extends Referencable {
     }
   }
 
+  static createTreeBackbone(ref: Ref, context: Deserializer): Message {
+    if (ref.eClass == EClasses.SendMessage) {
+      return SendMessage.createTreeBackbone(ref, context);
+    } else {
+      return ReceiveMessage.createTreeBackbone(ref, context);
+    }
+  }
+
 }
 
 export class SendMessage extends Message {
@@ -127,6 +135,15 @@ export class SendMessage extends Message {
       info.removeIsUsedOn(this)
     })
     super.destruct()
+  }
+
+  static override createTreeBackbone(ref: Ref, context: Deserializer): SendMessage {
+    let sendJson: SendMessageJson = context.getJsonFromTree(ref.$ref)
+    //todo make dummy unnecessary?
+    let dummyCp = new ConversationPartner()
+    let send = new SendMessage(dummyCp, sendJson.timing, sendJson.content, sendJson.originalContent, [], ref)
+    context.put(send)
+    return send
   }
 
 }
@@ -194,6 +211,15 @@ export class ReceiveMessage extends Message {
       this._repeats.remove(info)
     })
     super.destruct()
+  }
+
+  static override createTreeBackbone(ref: Ref, context: Deserializer): ReceiveMessage {
+    let recJson: ReceiveMessageJson = context.getJsonFromTree(ref.$ref)
+    let dummyCp = new ConversationPartner()
+    let rec = new ReceiveMessage(dummyCp, recJson.timing, recJson.content, recJson.originalContent, [], recJson.isInterrupted, ref)
+    context.put(rec)
+    //todo children recJson.generates.map()
+    return rec
   }
 
 }
@@ -393,6 +419,22 @@ export class NewInformation extends Information {
   override destruct() {
     ListUpdater.removeFromList(this, this._source.generates)
     super.destruct();
+  }
+
+  static createTreeBackbone(ref: Ref, context: Deserializer): NewInformation {
+    let newInfoJson: NewInformationJson = context.getJsonFromTree(ref.$ref)
+    // todo source is the tree parent so it already exists...
+    let srcRefRef = RefHandler.getParentAddress(ref.$ref)
+    let srcRef = RefHandler.createRef(srcRefRef, EClasses.ReceiveMessage)
+    let src: ReceiveMessage = context.getOrCreate(srcRef) // only get
+    let newInfo = new NewInformation(src,
+        newInfoJson.message, newInfoJson.isInstruction,
+        newInfoJson.position, [], [],
+        newInfoJson.initialTrust, newInfoJson.currentTrust, newInfoJson.feltTrustImmediately, newInfoJson.feltTrustAfterwards,
+        ref);
+    context.put(newInfo)
+    // todo children: links
+    return newInfo
   }
 }
 

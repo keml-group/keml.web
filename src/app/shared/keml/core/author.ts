@@ -58,7 +58,13 @@ export class Author extends LifeLine{
     let authorJson: AuthorJson = context.getJsonFromTree(ref.$ref)
     let author = new Author(authorJson.name, authorJson.xPosition, ref)
     context.put(author)
-    // todo children
+    // todo children: messages and preknowledge
+    authorJson.messages.map((mj, i) => {
+      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Author.messagesPrefix, i)
+      let newRef = RefHandler.createRef(newRefRef, mj.eClass)
+      let m = Message.createTreeBackbone(newRef, context)
+      author.addMessage(m)
+    } )
     return author
   }
 
