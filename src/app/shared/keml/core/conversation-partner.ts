@@ -24,7 +24,8 @@ export class ConversationPartner extends LifeLine {
       }
     }
 
-    static createTreeBackbone(cpJson: ConversationPartnerJson, ref: Ref, context: Deserializer): ConversationPartner {
+    static createTreeBackbone(ref: Ref, context: Deserializer): ConversationPartner {
+        let cpJson: ConversationPartnerJson = context.getJsonFromTree(ref.$ref)
         let cp = new ConversationPartner(cpJson.name, cpJson.xPosition, ref)
         context.put(cp)
         return cp;

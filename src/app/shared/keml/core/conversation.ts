@@ -61,8 +61,7 @@ export class Conversation extends Referencable {
       eClass: EClasses.Conversation
     }
     let conv = this.createTreeBackbone(ref, context);
-    conv.addReferences(convJson, context);
-
+    context.addAllReferences()
     return conv;
   }
 
@@ -71,15 +70,15 @@ export class Conversation extends Referencable {
     let conv = new Conversation(convJson.title)
     context.put(conv)
     //trigger children:
-    convJson.conversationPartners.map((cpj, i) => {
+    convJson.conversationPartners.map((_, i) => {
       let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Conversation.conversationPartnersPrefix, i)
       let newRef: Ref = RefHandler.createRef(newRefRef, EClasses.ConversationPartner)
-      ConversationPartner.createTreeBackbone(cpj, newRef, context)
+      ConversationPartner.createTreeBackbone(newRef, context)
     })
+    let authorRefRef = RefHandler.computePrefix(ref.$ref, Conversation.authorPrefix)
+    let authorRef: Ref = {$ref: authorRefRef, eClass: EClasses.Author}
+    Author.createTreeBackbone(authorRef, context)
     return conv;
   }
 
-  addReferences(convJson: ConversationJson, context: Deserializer): void {
-
-  }
 }
