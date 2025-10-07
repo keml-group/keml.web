@@ -206,7 +206,7 @@ export abstract class Information extends Referencable implements Positionable {
   abstract getTiming(): number | undefined;
 
   static readonly causesPrefix: string = 'causes'
-  private _causes: ReferencableTreeListContainer<InformationLink> = new ReferencableTreeListContainer<InformationLink>(this, 'causes', 'source');
+  private _causes: ReferencableTreeListContainer<InformationLink> = new ReferencableTreeListContainer<InformationLink>(this, NewInformation.causesPrefix, InformationLink.sourcePrefix);
   get causes(): InformationLink[] {
     return this._causes.get();
   }
@@ -419,7 +419,8 @@ export class Preknowledge extends Information {
 
 export class InformationLink extends Referencable {
 
-  private _source: ReferencableSingletonContainer<Information> = new ReferencableSingletonContainer<Information>(this, 'source', 'causes');
+  public static readonly sourcePrefix = 'source'
+  private _source: ReferencableSingletonContainer<Information> = new ReferencableSingletonContainer<Information>(this, InformationLink.sourcePrefix, NewInformation.causesPrefix);
   get source(): Information {
     return this._source.get()!!; //todo
   }
