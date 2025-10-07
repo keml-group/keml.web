@@ -1,10 +1,9 @@
 import {Author} from "./author";
 import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
-import {Deserializer, Ref, Referencable} from "emfular";
+import {Deserializer, Ref, Referencable, RefHandler} from "emfular";
 import {KEMLConstructorPointers} from "@app/shared/keml/json2core/keml-constructor-pointers";
 import {EClasses} from "@app/shared/keml/eclasses";
-import {RefHandler} from "emfular";
 
 
 export class Conversation extends Referencable {
@@ -73,11 +72,12 @@ export class Conversation extends Referencable {
     convJson.conversationPartners.map((_, i) => {
       let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Conversation.conversationPartnersPrefix, i)
       let newRef: Ref = RefHandler.createRef(newRefRef, EClasses.ConversationPartner)
-      ConversationPartner.createTreeBackbone(newRef, context)
+      let cp = ConversationPartner.createTreeBackbone(newRef, context)
+      conv.addCP(cp)
     })
     let authorRefRef = RefHandler.computePrefix(ref.$ref, Conversation.authorPrefix)
     let authorRef: Ref = {$ref: authorRefRef, eClass: EClasses.Author}
-    Author.createTreeBackbone(authorRef, context)
+    conv.author = Author.createTreeBackbone(authorRef, context)
     return conv;
   }
 
