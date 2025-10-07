@@ -2,11 +2,10 @@ import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessa
 import {InformationLinkJson, InformationLinkType, NewInformationJson, PreknowledgeJson} from "@app/shared/keml/json/knowledge-models";
 import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson, ReceiveMessageJson, SendMessageJson} from "@app/shared/keml/json/sequence-diagram-models";
-import {RefHandler} from "emfular";
+import {RefHandler, JsonComparer} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
 import {JsonFixer} from "@app/shared/keml/json2core/json-fixer";
 import {Conversation} from "@app/shared/keml/core/conversation";
-import {JsonComparer} from "@app/shared/keml/json/json-comparer";
 
 describe("Msg-models", () => {
   it('should set a message counterpart correctly', () => {
