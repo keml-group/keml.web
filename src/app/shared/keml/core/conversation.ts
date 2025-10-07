@@ -54,8 +54,32 @@ export class Conversation extends Referencable {
     };
   }
 
-  static fromJSON (conv: ConversationJson): Conversation {
-    let context = new Deserializer(conv, KEMLConstructorPointers.getConstructorPointers());
-    return new Conversation(undefined, undefined, context)
+  static fromJSON (convJson: ConversationJson): Conversation {
+    let context = new Deserializer(convJson, KEMLConstructorPointers.getConstructorPointers());
+    let ref: Ref = {
+      $ref: Conversation.ownPath,
+      eClass: EClasses.Conversation
+    }
+    let conv = this.createTreeBackbone(convJson, ref, context);
+    conv.addReferences(convJson, context);
+
+    return conv;
+  }
+
+  static createTreeBackbone(convJson: ConversationJson, ref: Ref, context: Deserializer): Conversation {
+    let conv = new Conversation(convJson.title)
+    context.put(conv)
+    //trigger children:
+    convJson.conversationPartners.map((cpj, i) => {
+      let refPrefix = RefHandler.computePrefix(ref.$ref, Conversation.conversationPartnersPrefix)
+      let newRefRef = RefHandler.mixWithIndex(refPrefix, i)
+      let newRef: Ref = RefHandler.createRef(newRefRef, EClasses.ConversationPartner)
+      ConversationPartner.createTreeBackbone(cpj, newRef, context)
+    })
+    return conv;
+  }
+
+  addReferences(convJson: ConversationJson, context: Deserializer): void {
+
   }
 }
