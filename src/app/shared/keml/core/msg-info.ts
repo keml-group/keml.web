@@ -87,6 +87,12 @@ export abstract class Message extends Referencable {
     }
   }
 
+  override addReferences(context: Deserializer) {
+    let msgJson: MessageJson = context.getJsonFromTree(this.ref.$ref)
+    let counterpartRef = msgJson.counterPart;
+    this.counterPart = context.getOrCreate(counterpartRef);
+
+  }
 }
 
 export class SendMessage extends Message {
@@ -144,6 +150,12 @@ export class SendMessage extends Message {
     let send = new SendMessage(dummyCp, sendJson.timing, sendJson.content, sendJson.originalContent, [], ref)
     context.put(send)
     return send
+  }
+
+  override addReferences(context: Deserializer): void {
+    super.addReferences(context);
+    let sendMsgJson: SendMessageJson = context.getJsonFromTree(this.ref.$ref)
+    sendMsgJson.uses?.map(u => this.addUsage(context.getOrCreate(u)))
   }
 
 }
@@ -213,12 +225,22 @@ export class ReceiveMessage extends Message {
     super.destruct()
   }
 
+  addGenerates(info: NewInformation) {
+    this.generates.push(info);
+    //info.source = this
+  }
+
   static override createTreeBackbone(ref: Ref, context: Deserializer): ReceiveMessage {
     let recJson: ReceiveMessageJson = context.getJsonFromTree(ref.$ref)
     let dummyCp = new ConversationPartner()
     let rec = new ReceiveMessage(dummyCp, recJson.timing, recJson.content, recJson.originalContent, [], recJson.isInterrupted, ref)
     context.put(rec)
-    //todo children recJson.generates.map()
+    recJson.generates?.map((_, i) => {
+      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, ReceiveMessage.generatesPrefix, i)
+      let newRef = RefHandler.createRef(newRefRef, EClasses.NewInformation)
+      let newInfo = NewInformation.createTreeBackbone(newRef, context)
+      rec.addGenerates(newInfo)
+    })
     return rec
   }
 
@@ -434,6 +456,12 @@ export class NewInformation extends Information {
         ref);
     context.put(newInfo)
     // todo children: links
+    newInfoJson.causes?.map((_, i) => {
+      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, NewInformation.causesPrefix, i)
+      let newRef = RefHandler.createRef(newRefRef, EClasses.InformationLink)
+      let link = InformationLink.createTreeBackbone(newRef, context)
+      newInfo.addCauses(link)
+    })
     return newInfo
   }
 }
@@ -465,6 +493,22 @@ export class Preknowledge extends Information {
 
   override toJson(): PreknowledgeJson {
     return (<PreknowledgeJson>super.toJson())
+  }
+
+  static createTreeBackbone(ref: Ref, context: Deserializer): Preknowledge {
+    let preJson: PreknowledgeJson = context.getJsonFromTree(ref.$ref)
+    let pre = new Preknowledge(preJson.message, preJson.isInstruction, preJson.position,
+        [], [],
+        preJson.initialTrust, preJson.currentTrust, preJson.feltTrustImmediately, preJson.feltTrustAfterwards,
+        ref)
+    context.put(pre)
+    preJson.causes?.map((_, i) => {
+      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Preknowledge.causesPrefix, i)
+      let newRef = RefHandler.createRef(newRefRef, EClasses.InformationLink)
+      let link = InformationLink.createTreeBackbone(newRef, context)
+      pre.addCauses(link)
+    })
+    return pre;
   }
 }
 
@@ -546,5 +590,18 @@ export class InformationLink extends Referencable {
     super.destruct();
   }
 
+  static createTreeBackbone(ref: Ref, context: Deserializer): InformationLink {
+    let infoLinkJson: InformationLinkJson = context.getJsonFromTree(ref.$ref)
+    let srcRef = RefHandler.createRef(RefHandler.getParentAddress(ref.$ref), infoLinkJson.source.eClass)
+    let src: Information = context.getOrCreate(srcRef)
+    let dummyTarget = new Preknowledge()
+    let infoLink: InformationLink = new InformationLink(src, dummyTarget, infoLinkJson.type, infoLinkJson.linkText)
+    context.put(infoLink)
+    return infoLink
+  }
+
+  override addReferences(context: Deserializer){
+    //todo target
+  }
 }
 

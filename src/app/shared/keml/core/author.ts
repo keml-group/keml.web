@@ -65,6 +65,12 @@ export class Author extends LifeLine{
       let m = Message.createTreeBackbone(newRef, context)
       author.addMessage(m)
     } )
+    authorJson.preknowledge.map((_, i) => {
+      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Author.preknowledgePrefix, i)
+      let newRef = RefHandler.createRef(newRefRef, EClasses.Preknowledge)
+      let p = Preknowledge.createTreeBackbone(newRef, context)
+      author.addPreknowledge(p)
+    })
     return author
   }
 
