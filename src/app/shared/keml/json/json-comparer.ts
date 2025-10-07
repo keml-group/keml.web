@@ -31,7 +31,10 @@ export class JsonComparer {
 
   public static compare(subset: any, superset: any): ComparisonResult {
     let result = new ComparisonResult()
-    this.comp(subset, superset, '/', result);
+    if (Array.isArray(subset))
+      this.arrayComp(subset, superset, '/', result)
+    else
+      this.comp(subset, superset, '/', result);
     return result;
   }
 

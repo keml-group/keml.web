@@ -20,19 +20,23 @@ describe('JsonComparer', () => {
       .isLessEquals()).toEqual(false)
   })
 
-  it('should NOT match two reordered object lists (no $refs)', () => {
-    expect(JsonComparer.compare([{x: 'a'}, {x: 'b'}], [{x: 'b'}, {x:'a'}])
-      .isLessEquals()).toEqual(false)
-  })
-
   it('should match two reordered object lists with $refs)', () => {
-    let res = JsonComparer.compare({x: [{$ref: 'a'}, {$ref: 'b'}]}, {x: [{$ref: 'b'}, {$ref:'a'}]});
-      expect(res.isLessEquals()).toEqual(true)
+    expect(JsonComparer.compare([{$ref: 'a'}, {$ref: 'b'}], [{$ref: 'b'}, {$ref:'a'}])
+      .isLessEquals()).toEqual(true)
   })
 
-  //todo
-  it('should NOT match two reordered object lists with $refs)', () => {
-    expect(JsonComparer.compare([{$ref: 'a'}, {$ref: 'b'}], [{$ref: 'b'}, {$ref:'a'}])
+  it('should NOT match two reordered object lists (no $refs)', () => {
+    expect(JsonComparer.compare([{ref: 'a'}, {ref: 'b'}], [{ref: 'b'}, {ref:'a'}])
       .isLessEquals()).toEqual(false)
+  })
+
+  it('should match two objects with reordered object lists with $refs)', () => {
+    let res = JsonComparer.compare({x: [{$ref: 'a'}, {$ref: 'b'}]}, {x: [{$ref: 'b'}, {$ref:'a'}]});
+    expect(res.isLessEquals()).toEqual(true)
+  })
+
+  it('should NOT match two objects with reordered object lists without $refs)', () => {
+    let res = JsonComparer.compare({x: [{$re: 'a'}, {$re: 'b'}]}, {x: [{$re: 'b'}, {$re:'a'}]});
+    expect(res.isLessEquals()).toEqual(false)
   })
 });
