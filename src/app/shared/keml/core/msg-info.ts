@@ -8,9 +8,17 @@ import {
   PreknowledgeJson,
 } from "@app/shared/keml/json/knowledge-models";
 import {EClasses} from "@app/shared/keml/eclasses";
-import {Deserializer, Ref, Referencable, ListUpdater, ReferencableListContainer, ReferencableSingletonContainer, ReferencableTreeListContainer} from "emfular";
+import {
+  Deserializer,
+  ListUpdater,
+  Ref,
+  Referencable,
+  ReferencableListContainer,
+  ReferencableSingletonContainer,
+  ReferencableTreeListContainer,
+  RefHandler
+} from "emfular";
 import {BoundingBox, Positionable, PositionHelper} from "ngx-svg-graphics";
-import {RefHandler} from "emfular";
 
 
 export abstract class Message extends Referencable {
@@ -91,7 +99,6 @@ export abstract class Message extends Referencable {
     let msgJson: MessageJson = context.getJsonFromTree(this.ref.$ref)
     let counterpartRef = msgJson.counterPart;
     this.counterPart = context.getOrCreate(counterpartRef);
-
   }
 }
 
@@ -242,6 +249,14 @@ export class ReceiveMessage extends Message {
       rec.addGenerates(newInfo)
     })
     return rec
+  }
+
+  override addReferences(context: Deserializer) {
+    super.addReferences(context);
+    let recJson: ReceiveMessageJson = context.getJsonFromTree(this.ref.$ref)
+    recJson.repeats?.map(rj => {
+      this.addRepetition(context.getOrCreate(rj))
+    })
   }
 
 }
@@ -455,7 +470,6 @@ export class NewInformation extends Information {
         newInfoJson.initialTrust, newInfoJson.currentTrust, newInfoJson.feltTrustImmediately, newInfoJson.feltTrustAfterwards,
         ref);
     context.put(newInfo)
-    // todo children: links
     newInfoJson.causes?.map((_, i) => {
       let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, NewInformation.causesPrefix, i)
       let newRef = RefHandler.createRef(newRefRef, EClasses.InformationLink)
@@ -595,13 +609,14 @@ export class InformationLink extends Referencable {
     let srcRef = RefHandler.createRef(RefHandler.getParentAddress(ref.$ref), infoLinkJson.source.eClass)
     let src: Information = context.getOrCreate(srcRef)
     let dummyTarget = new Preknowledge()
-    let infoLink: InformationLink = new InformationLink(src, dummyTarget, infoLinkJson.type, infoLinkJson.linkText)
+    let infoLink: InformationLink = new InformationLink(src, dummyTarget, infoLinkJson.type, infoLinkJson.linkText, ref)
     context.put(infoLink)
     return infoLink
   }
 
   override addReferences(context: Deserializer){
-    //todo target
+    let infoLinkJson: InformationLinkJson = context.getJsonFromTree(this.ref.$ref)
+    this.target = context.getOrCreate(infoLinkJson.target)
   }
 }
 
