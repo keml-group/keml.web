@@ -4,12 +4,16 @@ import {AuthorJson} from "@app/shared/keml/json/sequence-diagram-models"
 import {Preknowledge} from "./msg-info";
 import {Deserializer, Ref} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
-import {RefHandler} from "emfular";
+import {RefHandler, ReferencableTreeListContainer} from "emfular";
 
 export class Author extends LifeLine{
   static readonly preknowledgePrefix: string = 'preknowledge';
-  preknowledge: Preknowledge[];
   static readonly messagesPrefix: string = 'messages';
+  _preknowledge: ReferencableTreeListContainer<Preknowledge>;
+  get preknowledge(): Preknowledge[] {
+    return this._preknowledge.get()
+  }
+  
   messages: Message[];
 
   constructor(name = 'Author', xPosition: number = 0,
@@ -18,17 +22,20 @@ export class Author extends LifeLine{
     if (deserializer) {
       let authorJson: AuthorJson = deserializer.getJsonFromTree(ref!.$ref)
       super(authorJson.name, authorJson.xPosition, refC)
+      this._preknowledge = new ReferencableTreeListContainer<Preknowledge>(this, Author.preknowledgePrefix)
       deserializer.put(this)
       //compute and use refs for all tree children:
       let preknowledgeRefs = Deserializer.createRefList(ref!.$ref, Author.preknowledgePrefix, authorJson.preknowledge? authorJson.preknowledge.map(_ => EClasses.Preknowledge): [])
-      this.preknowledge = preknowledgeRefs.map(r => deserializer.getOrCreate<Preknowledge>(r));
+      preknowledgeRefs.map(r => this.addPreknowledge(deserializer.getOrCreate<Preknowledge>(r)));
       let messageRefs = Deserializer.createRefList(ref!.$ref, Author.messagesPrefix, authorJson.messages.map(r => r.eClass))
       this.messages = messageRefs.map(r => deserializer.getOrCreate<Message>(r));
     } else {
       super(name, xPosition, refC);
-      this.preknowledge = []
+      this._preknowledge = new ReferencableTreeListContainer<Preknowledge>(this, Author.preknowledgePrefix)
+
       this.messages = [];
     }
+
     this.listChildren.set(Author.preknowledgePrefix, this.preknowledge)
     this.listChildren.set(Author.messagesPrefix, this.messages)
   }
