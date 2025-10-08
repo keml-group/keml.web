@@ -278,7 +278,7 @@ describe('TrustComputationService', () => {
 
   it('should show that the case of 0 receives is handled correctly', () => {
     let conv = new Conversation()
-    conv.author.preknowledge = [p0, p1]
+    conv.author.addPreknowledge(p0, p1)
     new InformationLink(p0, p1, InformationLinkType.ATTACK)
     service.computeCurrentTrusts(conv, new TrustFallbacks())
     expect(p0.currentTrust).toEqual(1.0)
