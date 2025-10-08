@@ -16,7 +16,7 @@ export class Author extends LifeLine{
               ref?: Ref, deserializer?: Deserializer) {
     let refC = RefHandler.createRefIfMissing(EClasses.Author, ref)
     if (deserializer) {
-      let authorJson: AuthorJson = deserializer?.getJsonFromTree(ref!.$ref)
+      let authorJson: AuthorJson = deserializer.getJsonFromTree(ref!.$ref)
       super(authorJson.name, authorJson.xPosition, refC)
       deserializer.put(this)
       //compute and use refs for all tree children:

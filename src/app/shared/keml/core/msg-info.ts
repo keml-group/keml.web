@@ -13,11 +13,13 @@ import {
   ListUpdater,
   Ref,
   Referencable,
+  RefHandler,
   ReferencableListContainer,
   ReferencableSingletonContainer,
   ReferencableTreeListContainer,
-  RefHandler
+  ReferencableTreeParentContainer
 } from "emfular";
+
 import {BoundingBox, Positionable, PositionHelper} from "ngx-svg-graphics";
 
 
@@ -171,7 +173,14 @@ export class ReceiveMessage extends Message {
   static readonly generatesPrefix: string = 'generates';
   static readonly repeatsPrefix: string = 'repeats';
 
-  generates: NewInformation[] = [];
+
+  _generates: ReferencableTreeListContainer<NewInformation> = new ReferencableTreeListContainer<NewInformation>(this, ReceiveMessage.generatesPrefix, NewInformation.sourcePrefix);
+  get generates(): NewInformation[] {
+    return this._generates.get()!!
+  }
+  addGenerates(news: NewInformation) {
+    this._generates.add(news)
+  }
 
 
   _repeats: ReferencableListContainer<Information> = new ReferencableListContainer<Information>(this, ReceiveMessage.repeatsPrefix, Information.repeatedByPrefix);
@@ -205,9 +214,8 @@ export class ReceiveMessage extends Message {
     super(refC, counterPart, timing, content ? content : "New receive content", originalContent, deserializer, jsonOpt);
     if (deserializer) {
       let json: ReceiveMessageJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
-      //todo remove???
       let generatesRefs = Deserializer.createRefList(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates?.map(g => g.eClass? g.eClass: EClasses.NewInformation))
-      this.generates = generatesRefs.map(g => deserializer.getOrCreate(g))
+      generatesRefs.map(g => this.addGenerates( deserializer.getOrCreate(g)))
       json.repeats?.map(r => this.addRepetition(deserializer.getOrCreate<NewInformation>(r)))
       this.isInterrupted = json.isInterrupted;
     } else {
@@ -230,11 +238,6 @@ export class ReceiveMessage extends Message {
       this._repeats.remove(info)
     })
     super.destruct()
-  }
-
-  addGenerates(info: NewInformation) {
-    this.generates.push(info);
-    //info.source = this
   }
 
   static override createTreeBackbone(ref: Ref, context: Deserializer): ReceiveMessage {
@@ -403,26 +406,23 @@ export abstract class Information extends Referencable implements Positionable {
 }
 
 export class NewInformation extends Information {
-  private _source!: ReceiveMessage;
-  // does both directions (source and generates)
+
+  public static readonly sourcePrefix = 'source'
+
+  private _source: ReferencableTreeParentContainer<ReceiveMessage>;
   set source(rec: ReceiveMessage) {
-    if (this._source != rec) {
-      ListUpdater.removeFromList(this, this._source?.generates)
-      this._source = rec
-      if(rec.generates.indexOf(this ) == -1)
-        rec.generates.push(this)
-    }
+    this._source.add(rec)
   }
   get source(): ReceiveMessage {
-    return this._source
+    return this._source.get()!!
   }
 
   override getTreeParent() {
-    return this._source;
+    return this.source;
   }
 
   override getTiming(): number | undefined {
-    return this._source?.timing
+    return this.source.timing
   }
 
   constructor(source: ReceiveMessage,
@@ -433,28 +433,31 @@ export class NewInformation extends Information {
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.NewInformation, ref)
     super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
+    this._source = new ReferencableTreeParentContainer(this, NewInformation.sourcePrefix, ReceiveMessage.generatesPrefix);
+
     if(deserializer) {
       let json: NewInformationJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
       //todo this works against a bug in the used json lib: it computes the necessary source if it is not present
       let src = json.source? json.source : RefHandler.createRef(RefHandler.getParentAddress(ref!.$ref), EClasses.ReceiveMessage)
-      this._source = deserializer.getOrCreate(src)
+      this.source = deserializer.getOrCreate(src)
     } else {
       this.source = source
     }
   }
 
   override duplicate(): NewInformation {
-    return new NewInformation(this._source, 'Copy of ' + this.message, this.isInstruction, this.position, [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
+    return new NewInformation(this.source, 'Copy of ' + this.message, this.isInstruction, this.position, [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
   }
 
   override toJson(): NewInformationJson {
     let res = (<NewInformationJson>super.toJson());
-    res.source = this._source.getRef()
+    res.source = this.source.getRef()
     return res;
   }
 
   override destruct() {
-    ListUpdater.removeFromList(this, this._source.generates)
+    // todo remove?
+    ListUpdater.removeFromList(this, this.source.generates)
     super.destruct();
   }
 
@@ -531,6 +534,7 @@ export class InformationLink extends Referencable {
   public static readonly sourcePrefix = 'source'
   public static readonly targetPrefix = 'target'
   private _source: ReferencableSingletonContainer<Information> = new ReferencableSingletonContainer<Information>(this, InformationLink.sourcePrefix, NewInformation.causesPrefix);
+
   get source(): Information {
     return this._source.get()!!; //todo
   }
