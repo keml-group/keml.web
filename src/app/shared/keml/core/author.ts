@@ -13,8 +13,12 @@ export class Author extends LifeLine{
   get preknowledge(): Preknowledge[] {
     return this._preknowledge.get()
   }
-  
-  messages: Message[];
+
+  _messages: ReferencableTreeListContainer<Message>;
+  get messages(): Message[] {
+    return this._messages.get()
+  }
+
 
   constructor(name = 'Author', xPosition: number = 0,
               ref?: Ref, deserializer?: Deserializer) {
@@ -23,17 +27,17 @@ export class Author extends LifeLine{
       let authorJson: AuthorJson = deserializer.getJsonFromTree(ref!.$ref)
       super(authorJson.name, authorJson.xPosition, refC)
       this._preknowledge = new ReferencableTreeListContainer<Preknowledge>(this, Author.preknowledgePrefix)
+      this._messages = new ReferencableTreeListContainer<Message>(this, Author.messagesPrefix)
       deserializer.put(this)
       //compute and use refs for all tree children:
       let preknowledgeRefs = Deserializer.createRefList(ref!.$ref, Author.preknowledgePrefix, authorJson.preknowledge? authorJson.preknowledge.map(_ => EClasses.Preknowledge): [])
       preknowledgeRefs.map(r => this.addPreknowledge(deserializer.getOrCreate<Preknowledge>(r)));
       let messageRefs = Deserializer.createRefList(ref!.$ref, Author.messagesPrefix, authorJson.messages.map(r => r.eClass))
-      this.messages = messageRefs.map(r => deserializer.getOrCreate<Message>(r));
+      messageRefs.map(r => this.addMessage(deserializer.getOrCreate<Message>(r)));
     } else {
       super(name, xPosition, refC);
       this._preknowledge = new ReferencableTreeListContainer<Preknowledge>(this, Author.preknowledgePrefix)
-
-      this.messages = [];
+      this._messages = new ReferencableTreeListContainer<Message>(this, Author.messagesPrefix)
     }
 
     this.listChildren.set(Author.preknowledgePrefix, this.preknowledge)
