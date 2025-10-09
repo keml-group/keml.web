@@ -1,7 +1,7 @@
 import {Author} from "./author";
 import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
-import {Deserializer, Ref, Referencable, RefHandler, ReferencableTreeSingletonContainer} from "emfular";
+import {Deserializer, Ref, Referencable, RefHandler, ReferencableTreeSingletonContainer, ReferencableTreeListContainer} from "emfular";
 import {KEMLConstructorPointers} from "@app/shared/keml/json2core/keml-constructor-pointers";
 import {EClasses} from "@app/shared/keml/eclasses";
 
@@ -18,7 +18,15 @@ export class Conversation extends Referencable {
   set author(author: Author) {
     this._author.add(author);
   }
-  conversationPartners: ConversationPartner[] = [];
+  _conversationPartners: ReferencableTreeListContainer<ConversationPartner>;
+  get conversationPartners(): ConversationPartner[] {
+    return this._conversationPartners.get()
+  }
+  addCP(...cps: ConversationPartner[]) {
+    cps.map(cp => {
+      this._conversationPartners.add(cp)
+    })
+  }
 
   constructor(
     title: string = 'New Conversation',
@@ -28,6 +36,7 @@ export class Conversation extends Referencable {
     let ref = RefHandler.createRef(Conversation.ownPath, EClasses.Conversation)
     super(ref);
     this._author = new ReferencableTreeSingletonContainer<Author>(this, Conversation.authorPrefix);
+    this._conversationPartners = new ReferencableTreeListContainer<ConversationPartner>(this, Conversation.conversationPartnersPrefix);
     if (deserializer) {
       let convJson: ConversationJson = deserializer.getJsonFromTree(this.ref.$ref)
       deserializer.put(this)
@@ -35,17 +44,13 @@ export class Conversation extends Referencable {
       const authorRef = Deserializer.createSingleRef(Conversation.ownPath, Conversation.authorPrefix, EClasses.Author)
       this.author = deserializer.getOrCreate<Author>(authorRef);
       const cpRefs: Ref[] = Deserializer.createRefList(Conversation.ownPath, Conversation.conversationPartnersPrefix, convJson.conversationPartners.map(_ => EClasses.ConversationPartner))
-      this.conversationPartners = cpRefs.map( cp => deserializer.getOrCreate<ConversationPartner>(cp))
+      cpRefs.map( cp => this.addCP(deserializer.getOrCreate<ConversationPartner>(cp)))
     } else {
       this.title = title;
       this.author = author;
     }
     this.singleChildren.set(Conversation.authorPrefix, this.author)
     this.listChildren.set(Conversation.conversationPartnersPrefix, this.conversationPartners)
-  }
-
-  addCP(...cps: ConversationPartner[]) {
-    cps.map(cp => this.conversationPartners.push(cp))
   }
 
   toJson(): ConversationJson {
