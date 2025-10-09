@@ -9,16 +9,26 @@ import {RefHandler, ReferencableTreeListContainer} from "emfular";
 export class Author extends LifeLine{
   static readonly preknowledgePrefix: string = 'preknowledge';
   static readonly messagesPrefix: string = 'messages';
+
   _preknowledge: ReferencableTreeListContainer<Preknowledge>;
   get preknowledge(): Preknowledge[] {
     return this._preknowledge.get()
+  }
+  addPreknowledge(...preknowledge: Preknowledge[]) {
+    preknowledge.map(p => {
+      this._preknowledge.add(p)
+    })
   }
 
   _messages: ReferencableTreeListContainer<Message>;
   get messages(): Message[] {
     return this._messages.get()
   }
-
+  addMessage(...msgs: Message[]) {
+    msgs.map(m => {
+      this._messages.add(m)
+    })
+  }
 
   constructor(name = 'Author', xPosition: number = 0,
               ref?: Ref, deserializer?: Deserializer) {
@@ -44,18 +54,6 @@ export class Author extends LifeLine{
     this.listChildren.set(Author.messagesPrefix, this.messages)
   }
 
-  addPreknowledge(...preknowledge: Preknowledge[]) {
-    preknowledge.map(p => {
-      this.preknowledge.push(p)
-    })
-  }
-
-  addMessage(...msgs: Message[]) {
-    msgs.map(m => {
-      this.messages.push(m)
-    })
-  }
-
   toJson(): AuthorJson {
     return {
       name: this.name,
@@ -69,7 +67,6 @@ export class Author extends LifeLine{
     let authorJson: AuthorJson = context.getJsonFromTree(ref.$ref)
     let author = new Author(authorJson.name? authorJson.name : '', authorJson.xPosition, ref)
     context.put(author)
-    // todo children: messages and preknowledge
     authorJson.messages.map((mj, i) => {
       let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Author.messagesPrefix, i)
       let newRef = RefHandler.createRef(newRefRef, mj.eClass)
