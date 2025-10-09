@@ -1,17 +1,23 @@
 import {Author} from "./author";
 import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
-import {Deserializer, Ref, Referencable, RefHandler} from "emfular";
+import {Deserializer, Ref, Referencable, RefHandler, ReferencableTreeSingletonContainer} from "emfular";
 import {KEMLConstructorPointers} from "@app/shared/keml/json2core/keml-constructor-pointers";
 import {EClasses} from "@app/shared/keml/eclasses";
 
 
 export class Conversation extends Referencable {
   static readonly ownPath: string = '/'
-  title: string;
   static readonly authorPrefix = 'author';
-  author: Author;
   static readonly conversationPartnersPrefix = 'conversationPartners';
+  title: string;
+  _author: ReferencableTreeSingletonContainer<Author>;
+  get author(): Author {
+    return this._author.get()!!
+  }
+  set author(author: Author) {
+    this._author.add(author);
+  }
   conversationPartners: ConversationPartner[] = [];
 
   constructor(
@@ -21,6 +27,7 @@ export class Conversation extends Referencable {
   ) {
     let ref = RefHandler.createRef(Conversation.ownPath, EClasses.Conversation)
     super(ref);
+    this._author = new ReferencableTreeSingletonContainer<Author>(this, Conversation.authorPrefix);
     if (deserializer) {
       let convJson: ConversationJson = deserializer.getJsonFromTree(this.ref.$ref)
       deserializer.put(this)
