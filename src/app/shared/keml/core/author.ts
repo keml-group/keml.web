@@ -50,8 +50,8 @@ export class Author extends LifeLine{
       this._messages = new ReferencableTreeListContainer<Message>(this, Author.messagesPrefix)
     }
 
-    this.listChildren.set(Author.preknowledgePrefix, this.preknowledge)
-    this.listChildren.set(Author.messagesPrefix, this.messages)
+    this.listChildren.set(Author.preknowledgePrefix, this._preknowledge)
+    this.listChildren.set(Author.messagesPrefix, this._messages)
   }
 
   toJson(): AuthorJson {

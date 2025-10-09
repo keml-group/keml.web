@@ -222,7 +222,7 @@ export class ReceiveMessage extends Message {
       repeats.map(r => this.addRepetition(r));
       this.isInterrupted = isInterrupted;
     }
-    this.listChildren.set(ReceiveMessage.generatesPrefix, this.generates)
+    this.listChildren.set(ReceiveMessage.generatesPrefix, this._generates)
   }
 
   override toJson(): ReceiveMessageJson {
@@ -369,7 +369,7 @@ export abstract class Information extends Referencable implements Positionable {
       isUsedOn?.map(u => this.addIsUsedOn(u))
       repeatedBy?.map(m => this.addRepeatedBy(m));
     }
-    this.listChildren.set(Information.causesPrefix, this.causes)
+    this.listChildren.set(Information.causesPrefix, this._causes)
   }
 
 
