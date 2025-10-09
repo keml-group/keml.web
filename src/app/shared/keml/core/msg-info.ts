@@ -245,12 +245,13 @@ export class ReceiveMessage extends Message {
     let dummyCp = new ConversationPartner()
     let rec = new ReceiveMessage(dummyCp, recJson.timing, recJson.content, recJson.originalContent, [], recJson.isInterrupted, ref)
     context.put(rec)
-    recJson.generates?.map((_, i) => {
-      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, ReceiveMessage.generatesPrefix, i)
-      let newRef = RefHandler.createRef(newRefRef, EClasses.NewInformation)
-      let newInfo = NewInformation.createTreeBackbone(newRef, context)
-      rec.addGenerates(newInfo)
-    })
+    let generatesRefs = Deserializer.createRefList(
+      ref!.$ref,
+      ReceiveMessage.generatesPrefix,
+      recJson.generates?.map(g => EClasses.NewInformation))
+    generatesRefs.map(newRef =>
+      rec.addGenerates(NewInformation.createTreeBackbone(newRef, context))
+    )
     return rec
   }
 
