@@ -37,6 +37,7 @@ export class Conversation extends Referencable {
     super(ref);
     this._author = new ReferencableTreeSingletonContainer<Author>(this, Conversation.authorPrefix);
     this._conversationPartners = new ReferencableTreeListContainer<ConversationPartner>(this, Conversation.conversationPartnersPrefix);
+    this.$treeChildren.push(this._author, this._conversationPartners);
     if (deserializer) {
       let convJson: ConversationJson = deserializer.getJsonFromTree(this.ref.$ref)
       deserializer.put(this)
