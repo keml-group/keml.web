@@ -50,8 +50,6 @@ export class Conversation extends Referencable {
       this.title = title;
       this.author = author;
     }
-    this.singleChildren.set(Conversation.authorPrefix, this._author)
-    this.listChildren.set(Conversation.conversationPartnersPrefix, this._conversationPartners)
   }
 
   toJson(): ConversationJson {
