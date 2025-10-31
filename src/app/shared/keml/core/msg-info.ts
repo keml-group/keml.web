@@ -44,16 +44,12 @@ export abstract class Message extends Referencable {
     timing: number,
     content: string,
     originalContent?: string,
-    deserializer?: Deserializer,
-    jsonOpt?: MessageJson,
   ) {
     super(ref);
-
-      this._counterPart.add(counterPart);
-      this.timing = timing;
-      this.content = content;
-      this.originalContent = originalContent;
-
+    this._counterPart.add(counterPart);
+    this.timing = timing;
+    this.content = content;
+    this.originalContent = originalContent;
 
     this.$otherReferences.push(this._counterPart) //todo this is tree backwards - suppress?
   }
@@ -120,11 +116,9 @@ export class SendMessage extends Message {
     originalContent?: string,
     uses: Information[] = [],
     ref?: Ref,
-    deserializer?: Deserializer,
-    jsonOpt?: SendMessageJson,
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.SendMessage, ref)
-    super(refC, counterPart, timing, content, originalContent, deserializer, jsonOpt);
+    super(refC, counterPart, timing, content, originalContent);
     this._uses  = new ReferencableListContainer<Information>(this, SendMessage.usesPrefix, Information.isUsedOnPrefix);
     this.$otherReferences.push(this._uses);
     uses.map(u => this.addUsage(u))
@@ -198,11 +192,9 @@ export class ReceiveMessage extends Message {
     repeats: Information[] = [],
     isInterrupted: boolean = false,
     ref?: Ref,
-    deserializer?: Deserializer,
-    jsonOpt?: ReceiveMessageJson,
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.ReceiveMessage, ref)
-    super(refC, counterPart, timing, content ? content : "New receive content", originalContent, deserializer, jsonOpt);
+    super(refC, counterPart, timing, content ? content : "New receive content", originalContent);
     this._generates = new ReferencableTreeListContainer<NewInformation>(this, ReceiveMessage.generatesPrefix, NewInformation.sourcePrefix);
     this._repeats = new ReferencableListContainer<Information>(this, ReceiveMessage.repeatsPrefix, Information.repeatedByPrefix);
     this.$treeChildren.push(this._generates)
@@ -327,7 +319,6 @@ export abstract class Information extends Referencable implements Positionable {
     message: string, isInstruction: boolean = false, position?: BoundingBox,
     isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
     initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number, feltTrustAfterwards?: number,
-    deserializer?: Deserializer, jsonOpt?: InformationJson
   ) {
     super(ref);
     this._causes = new ReferencableTreeListContainer<InformationLink>(this, NewInformation.causesPrefix, InformationLink.sourcePrefix);
@@ -408,16 +399,13 @@ export class NewInformation extends Information {
               message: string, isInstruction: boolean = false, position?: BoundingBox,
               isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
               initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number , feltTrustAfterwards?: number,
-              ref?: Ref, deserializer?: Deserializer, jsonOpt?: NewInformationJson
+              ref?: Ref,
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.NewInformation, ref)
-    super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
+    super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards);
     this._source = new ReferencableTreeParentContainer(this, NewInformation.sourcePrefix, ReceiveMessage.generatesPrefix);
     this.$otherReferences.push(this._source) //todo tree backwards
-
-
-      this.source = source
-
+    this.source = source
   }
 
   override duplicate(): NewInformation {
@@ -464,9 +452,10 @@ export class Preknowledge extends Information {
               isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
               initialTrust?: number, currentTrust?: number,
               feltTrustImmediately?: number, feltTrustAfterwards?: number,
-              ref?: Ref, deserializer?: Deserializer, jsonOpt?: PreknowledgeJson) {
+              ref?: Ref
+  ) {
     let refC = RefHandler.createRefIfMissing(EClasses.Preknowledge, ref)
-    super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
+    super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards);
   }
 
   getTiming(): number {
@@ -545,7 +534,7 @@ export class InformationLink extends Referencable {
   }
 
   constructor(source: Information, target: Information, type: InformationLinkType, linkText?: string,
-              ref?: Ref, deserializer?: Deserializer, jsonOpt?: InformationLinkJson
+              ref?: Ref,
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.InformationLink, ref)
     super(refC);

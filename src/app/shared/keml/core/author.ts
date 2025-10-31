@@ -31,12 +31,11 @@ export class Author extends LifeLine{
   }
 
   constructor(name = 'Author', xPosition: number = 0,
-              ref?: Ref, deserializer?: Deserializer) {
+              ref?: Ref) {
     let refC = RefHandler.createRefIfMissing(EClasses.Author, ref)
-      super(name, xPosition, refC);
-      this._preknowledge = new ReferencableTreeListContainer<Preknowledge>(this, Author.preknowledgePrefix)
-      this._messages = new ReferencableTreeListContainer<Message>(this, Author.messagesPrefix)
-
+    super(name, xPosition, refC);
+    this._preknowledge = new ReferencableTreeListContainer<Preknowledge>(this, Author.preknowledgePrefix)
+    this._messages = new ReferencableTreeListContainer<Message>(this, Author.messagesPrefix)
     this.$treeChildren.push(this._preknowledge, this._messages)
   }
 

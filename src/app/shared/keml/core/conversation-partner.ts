@@ -8,13 +8,7 @@ export class ConversationPartner extends LifeLine {
 
     constructor(name: string = 'NewPartner', xPosition?: number, ref?: Ref, deserializer?: Deserializer) {
       let refC = RefHandler.createRefIfMissing(EClasses.ConversationPartner, ref)
-      if(deserializer) {
-        let cpJson: ConversationPartnerJson = deserializer?.getJsonFromTree(ref!.$ref)
-        super(cpJson.name, cpJson.xPosition, refC)
-        deserializer.put(this)
-      } else {
-        super(name, xPosition, refC);
-      }
+      super(name, xPosition, refC);
     }
 
     toJson(): ConversationPartnerJson {
