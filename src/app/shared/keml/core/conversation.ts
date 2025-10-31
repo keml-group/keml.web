@@ -53,7 +53,7 @@ export class Conversation extends Referencable {
   }
 
   toJson(): ConversationJson {
-    this.prepare('/');
+    this.prepare(Conversation.ownPath);
     let cps = this.conversationPartners.map(x => x.toJson())
 
     return {
