@@ -103,6 +103,6 @@ describe('KEMLConstructorPointers', () => {
       "  }\n" +
       "}"
     let convJson = JSON.parse(json);
-    expect(new Deserializer(convJson, KEMLConstructorPointers.getConstructorPointers())).toBeTruthy();
+    expect(new Deserializer(convJson)).toBeTruthy();
   })
 });

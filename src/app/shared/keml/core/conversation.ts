@@ -31,17 +31,14 @@ export class Conversation extends Referencable {
   constructor(
     title: string = 'New Conversation',
     author: Author = new Author(),
-    deserializer?: Deserializer,
   ) {
     let ref = RefHandler.createRef(Conversation.ownPath, EClasses.Conversation)
     super(ref);
     this._author = new ReferencableTreeSingletonContainer<Author>(this, Conversation.authorPrefix);
     this._conversationPartners = new ReferencableTreeListContainer<ConversationPartner>(this, Conversation.conversationPartnersPrefix);
     this.$treeChildren.push(this._author, this._conversationPartners);
-
-      this.title = title;
-      this.author = author;
-
+    this.title = title;
+    this.author = author;
   }
 
   toJson(): ConversationJson {
@@ -57,7 +54,7 @@ export class Conversation extends Referencable {
   }
 
   static fromJSON (convJson: ConversationJson): Conversation {
-    let context = new Deserializer(convJson, KEMLConstructorPointers.getConstructorPointers());
+    let context = new Deserializer(convJson);
     let ref: Ref = {
       $ref: Conversation.ownPath,
       eClass: EClasses.Conversation
