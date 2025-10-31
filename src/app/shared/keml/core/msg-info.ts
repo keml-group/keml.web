@@ -48,19 +48,12 @@ export abstract class Message extends Referencable {
     jsonOpt?: MessageJson,
   ) {
     super(ref);
-    if(deserializer) {
-      deserializer.put(this)
-      let json: MessageJson = jsonOpt? jsonOpt: deserializer.getJsonFromTree(ref!.$ref);
-      this._counterPart.add(deserializer.getOrCreate(json.counterPart))
-      this.timing = json.timing? json.timing : 0;
-      this.content = json.content;
-      this.originalContent = json.originalContent;
-    } else {
+
       this._counterPart.add(counterPart);
       this.timing = timing;
       this.content = content;
       this.originalContent = originalContent;
-    }
+
 
     this.$otherReferences.push(this._counterPart) //todo this is tree backwards - suppress?
   }
@@ -102,7 +95,7 @@ export abstract class Message extends Referencable {
   override addReferences(context: Deserializer) {
     let msgJson: MessageJson = context.getJsonFromTree(this.ref.$ref)
     let counterpartRef = msgJson.counterPart;
-    this.counterPart = context.getOrCreate(counterpartRef);
+    this.counterPart = context.get(counterpartRef.$ref);
   }
 }
 
@@ -134,13 +127,7 @@ export class SendMessage extends Message {
     super(refC, counterPart, timing, content, originalContent, deserializer, jsonOpt);
     this._uses  = new ReferencableListContainer<Information>(this, SendMessage.usesPrefix, Information.isUsedOnPrefix);
     this.$otherReferences.push(this._uses);
-    if (deserializer) {
-      //deserializer.put(this) // already done in super
-      let json: SendMessageJson = jsonOpt ? jsonOpt : deserializer?.getJsonFromTree(ref!.$ref);
-      json.uses?.map(u => this.addUsage(deserializer.getOrCreate(u)))
-    } else {
-      uses.map(u => this.addUsage(u))
-    }
+    uses.map(u => this.addUsage(u))
   }
 
   override toJson(): SendMessageJson {
@@ -168,7 +155,7 @@ export class SendMessage extends Message {
   override addReferences(context: Deserializer): void {
     super.addReferences(context);
     let sendMsgJson: SendMessageJson = context.getJsonFromTree(this.ref.$ref)
-    sendMsgJson.uses?.map(u => this.addUsage(context.getOrCreate(u)))
+    sendMsgJson.uses?.map(u => this.addUsage(context.get(u.$ref)))
   }
 
 }
@@ -220,16 +207,10 @@ export class ReceiveMessage extends Message {
     this._repeats = new ReferencableListContainer<Information>(this, ReceiveMessage.repeatsPrefix, Information.repeatedByPrefix);
     this.$treeChildren.push(this._generates)
     this.$otherReferences.push(this._repeats)
-    if (deserializer) {
-      let json: ReceiveMessageJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
-      let generatesRefs = Deserializer.createRefList(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates?.map(g => g.eClass? g.eClass: EClasses.NewInformation))
-      generatesRefs.map(g => this.addGenerates( deserializer.getOrCreate(g)))
-      json.repeats?.map(r => this.addRepetition(deserializer.getOrCreate<NewInformation>(r)))
-      this.isInterrupted = json.isInterrupted;
-    } else {
+
       repeats.map(r => this.addRepetition(r));
       this.isInterrupted = isInterrupted;
-    }
+
   }
 
   override toJson(): ReceiveMessageJson {
@@ -266,7 +247,7 @@ export class ReceiveMessage extends Message {
     super.addReferences(context);
     let recJson: ReceiveMessageJson = context.getJsonFromTree(this.ref.$ref)
     recJson.repeats?.map(rj => {
-      this.addRepetition(context.getOrCreate(rj))
+      this.addRepetition(context.get(rj.$ref))
     })
   }
 
@@ -357,23 +338,6 @@ export abstract class Information extends Referencable implements Positionable {
     this.$treeChildren.push(this._causes)
     this.$otherReferences.push(this._targetedBy, this._isUsedOn, this._repeatedBy)
 
-    if (deserializer) {
-      deserializer.put(this)
-      let json: InformationJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
-      this.message = json.message;
-      this.isInstruction = json.isInstruction? json.isInstruction : false;
-      this.position = json.position? json.position : PositionHelper.newBoundingBox();
-      this.initialTrust = json.initialTrust;
-      this.currentTrust = json.currentTrust;
-      this.feltTrustImmediately = json.feltTrustImmediately;
-      this.feltTrustAfterwards = json.feltTrustAfterwards;
-      //todo actually, causes should exist on the json, however, it is missing and we hence set it manually:
-      let causesRefs = Deserializer.createRefList(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass? c.eClass : EClasses.InformationLink))
-      causesRefs.map(r => this.addCauses( deserializer.getOrCreate<InformationLink>(r)))
-      json.targetedBy?.map(r =>  this.addTargetedBy(deserializer.getOrCreate(r)))
-      json.isUsedOn?.map(r => this.addIsUsedOn(deserializer.getOrCreate<SendMessage>(r)))
-      json.repeatedBy?.map(r => this.addRepeatedBy(deserializer.getOrCreate<ReceiveMessage>(r)))
-    } else {
       this.message = message;
       this.isInstruction = isInstruction;
       this.position = position? position: PositionHelper.newBoundingBox();
@@ -383,7 +347,7 @@ export abstract class Information extends Referencable implements Positionable {
       this.feltTrustAfterwards = feltTrustAfterwards;
       isUsedOn?.map(u => this.addIsUsedOn(u))
       repeatedBy?.map(m => this.addRepeatedBy(m));
-    }
+
   }
 
 
@@ -451,14 +415,9 @@ export class NewInformation extends Information {
     this._source = new ReferencableTreeParentContainer(this, NewInformation.sourcePrefix, ReceiveMessage.generatesPrefix);
     this.$otherReferences.push(this._source) //todo tree backwards
 
-    if(deserializer) {
-      let json: NewInformationJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
-      //todo this works against a bug in the used json lib: it computes the necessary source if it is not present
-      let src = json.source? json.source : RefHandler.createRef(RefHandler.getParentAddress(ref!.$ref), EClasses.ReceiveMessage)
-      this.source = deserializer.getOrCreate(src)
-    } else {
+
       this.source = source
-    }
+
   }
 
   override duplicate(): NewInformation {
@@ -482,7 +441,7 @@ export class NewInformation extends Information {
     // todo source is the tree parent so it already exists...
     let srcRefRef = RefHandler.getParentAddress(ref.$ref)
     let srcRef = RefHandler.createRef(srcRefRef, EClasses.ReceiveMessage)
-    let src: ReceiveMessage = context.getOrCreate(srcRef) // only get
+    let src: ReceiveMessage = context.get(srcRef.$ref)
     let newInfo = new NewInformation(src,
         newInfoJson.message, newInfoJson.isInstruction,
         newInfoJson.position, [], [],
@@ -593,21 +552,12 @@ export class InformationLink extends Referencable {
     this._source = new ReferencableSingletonContainer<Information>(this, InformationLink.sourcePrefix, NewInformation.causesPrefix);
     this._target = new ReferencableSingletonContainer<Information>(this, InformationLink.targetPrefix, Information.targetedByPrefix);
     this.$otherReferences.push(this._source, this._target)
-    if(deserializer) {
-      deserializer.put(this)
-      let json: InformationLinkJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
-      //todo there is a problem with the incoming json: it does not have the link soruces. However, we solve this via 'prepareJsonInfoLinkSources' called in the loadKEML() method on modelIoService
-      let src = json.source!!
-      this.source = deserializer.getOrCreate(src)
-      this.target = deserializer.getOrCreate(json.target);
-      this.type = json.type;
-      this.linkText = json.linkText;
-    } else {
+
       this.source = source;
       this.target = target;
       this.type = type;
       this.linkText = linkText;
-    }
+
   }
 
   toJson(): InformationLinkJson {
@@ -629,7 +579,7 @@ export class InformationLink extends Referencable {
   static createTreeBackbone(ref: Ref, context: Deserializer): InformationLink {
     let infoLinkJson: InformationLinkJson = context.getJsonFromTree(ref.$ref)
     let srcRef = RefHandler.createRef(RefHandler.getParentAddress(ref.$ref), infoLinkJson.source.eClass)
-    let src: Information = context.getOrCreate(srcRef)
+    let src: Information = context.get(srcRef.$ref)
     let dummyTarget = new Preknowledge()
     let infoLink: InformationLink = new InformationLink(src, dummyTarget, infoLinkJson.type, infoLinkJson.linkText, ref)
     context.put(infoLink)
@@ -638,7 +588,7 @@ export class InformationLink extends Referencable {
 
   override addReferences(context: Deserializer){
     let infoLinkJson: InformationLinkJson = context.getJsonFromTree(this.ref.$ref)
-    this.target = context.getOrCreate(infoLinkJson.target)
+    this.target = context.get(infoLinkJson.target.$ref)
   }
 }
 

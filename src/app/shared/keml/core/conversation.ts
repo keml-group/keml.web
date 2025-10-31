@@ -38,18 +38,10 @@ export class Conversation extends Referencable {
     this._author = new ReferencableTreeSingletonContainer<Author>(this, Conversation.authorPrefix);
     this._conversationPartners = new ReferencableTreeListContainer<ConversationPartner>(this, Conversation.conversationPartnersPrefix);
     this.$treeChildren.push(this._author, this._conversationPartners);
-    if (deserializer) {
-      let convJson: ConversationJson = deserializer.getJsonFromTree(this.ref.$ref)
-      deserializer.put(this)
-      this.title = convJson.title;
-      const authorRef = Deserializer.createSingleRef(Conversation.ownPath, Conversation.authorPrefix, EClasses.Author)
-      this.author = deserializer.getOrCreate<Author>(authorRef);
-      const cpRefs: Ref[] = Deserializer.createRefList(Conversation.ownPath, Conversation.conversationPartnersPrefix, convJson.conversationPartners.map(_ => EClasses.ConversationPartner))
-      cpRefs.map( cp => this.addCP(deserializer.getOrCreate<ConversationPartner>(cp)))
-    } else {
+
       this.title = title;
       this.author = author;
-    }
+
   }
 
   toJson(): ConversationJson {
