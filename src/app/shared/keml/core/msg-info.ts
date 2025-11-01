@@ -10,7 +10,6 @@ import {
 import {EClasses} from "@app/shared/keml/eclasses";
 import {
   Deserializer,
-  ListUpdater,
   Ref,
   Referencable,
   RefHandler,
@@ -192,10 +191,8 @@ export class ReceiveMessage extends Message {
     this._repeats = new ReferencableListContainer<Information>(this, ReceiveMessage.repeatsPrefix, Information.repeatedByPrefix);
     this.$treeChildren.push(this._generates)
     this.$otherReferences.push(this._repeats)
-
-      repeats.map(r => this.addRepetition(r));
-      this.isInterrupted = isInterrupted;
-
+    repeats.map(r => this.addRepetition(r));
+    this.isInterrupted = isInterrupted;
   }
 
   override toJson(): ReceiveMessageJson {
@@ -346,8 +343,7 @@ export abstract class Information extends Referencable implements Positionable {
   }
 
   override destruct() {
-    ListUpdater.destructAllFromChangingList(this.targetedBy)
-
+    this._targetedBy.delete()
     super.destruct();
   }
 }
@@ -531,8 +527,8 @@ export class InformationLink extends Referencable {
 
   //todo removing this produces an endless loop on a test
   override destruct() {
-    ListUpdater.removeFromList(this, this.source.causes)
-    ListUpdater.removeFromList(this, this.target.targetedBy)
+    this.source.removeCauses(this)
+    this.target.removeTargetedBy(this)
     super.destruct();
   }
 
