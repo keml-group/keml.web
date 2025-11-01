@@ -130,13 +130,6 @@ export class SendMessage extends Message {
     return res;
   }
 
-  override destruct() {
-    this.uses.forEach(info => {
-      info.removeIsUsedOn(this)
-    })
-    super.destruct()
-  }
-
   static override createTreeBackbone(ref: Ref, context: Deserializer): SendMessage {
     let sendJson: SendMessageJson = context.getJsonFromTree(ref.$ref)
     //todo make dummy unnecessary?
@@ -213,13 +206,6 @@ export class ReceiveMessage extends Message {
     return res;
   }
 
-  override destruct() {
-    this.repeats.forEach(info => {
-      this._repeats.remove(info)
-    })
-    super.destruct()
-  }
-
   static override createTreeBackbone(ref: Ref, context: Deserializer): ReceiveMessage {
     let recJson: ReceiveMessageJson = context.getJsonFromTree(ref.$ref)
     let dummyCp = new ConversationPartner()
@@ -228,7 +214,7 @@ export class ReceiveMessage extends Message {
     let generatesRefs = Deserializer.createRefList(
       ref!.$ref,
       ReceiveMessage.generatesPrefix,
-      recJson.generates?.map(g => EClasses.NewInformation))
+      recJson.generates?.map(_ => EClasses.NewInformation))
     generatesRefs.map(newRef =>
       rec.addGenerates(NewInformation.createTreeBackbone(newRef, context))
     )
@@ -321,26 +307,24 @@ export abstract class Information extends Referencable implements Positionable {
     initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number, feltTrustAfterwards?: number,
   ) {
     super(ref);
+
     this._causes = new ReferencableTreeListContainer<InformationLink>(this, NewInformation.causesPrefix, InformationLink.sourcePrefix);
     this._targetedBy = new ReferencableListContainer<InformationLink>(this, Information.targetedByPrefix, InformationLink.targetPrefix)
     this._isUsedOn = new ReferencableListContainer<SendMessage>(this, 'isUsedOn', 'uses');
     this._repeatedBy = new ReferencableListContainer(this, NewInformation.repeatedByPrefix, ReceiveMessage.repeatsPrefix);
-
     this.$treeChildren.push(this._causes)
     this.$otherReferences.push(this._targetedBy, this._isUsedOn, this._repeatedBy)
 
-      this.message = message;
-      this.isInstruction = isInstruction;
-      this.position = position? position: PositionHelper.newBoundingBox();
-      this.initialTrust = initialTrust;
-      this.currentTrust = currentTrust;
-      this.feltTrustImmediately = feltTrustImmediately;
-      this.feltTrustAfterwards = feltTrustAfterwards;
-      isUsedOn?.map(u => this.addIsUsedOn(u))
-      repeatedBy?.map(m => this.addRepeatedBy(m));
-
+    this.message = message;
+    this.isInstruction = isInstruction;
+    this.position = position? position: PositionHelper.newBoundingBox();
+    this.initialTrust = initialTrust;
+    this.currentTrust = currentTrust;
+    this.feltTrustImmediately = feltTrustImmediately;
+    this.feltTrustAfterwards = feltTrustAfterwards;
+    isUsedOn?.map(u => this.addIsUsedOn(u))
+    repeatedBy?.map(m => this.addRepeatedBy(m));
   }
-
 
   abstract duplicate(): Information;
 
@@ -362,13 +346,6 @@ export abstract class Information extends Referencable implements Positionable {
   }
 
   override destruct() {
-    this.repeatedBy.forEach((rec: ReceiveMessage) => {
-      rec.removeRepetition(this)
-    })
-    this.isUsedOn.forEach((send: SendMessage) => {
-      send.removeUsage(this)
-    })
-
     ListUpdater.destructAllFromChangingList(this.targetedBy)
 
     super.destruct();
@@ -416,12 +393,6 @@ export class NewInformation extends Information {
     let res = (<NewInformationJson>super.toJson());
     res.source = this.source.getRef()
     return res;
-  }
-
-  override destruct() {
-    // todo remove?
-    ListUpdater.removeFromList(this, this.source.generates)
-    super.destruct();
   }
 
   static createTreeBackbone(ref: Ref, context: Deserializer): NewInformation {
@@ -542,11 +513,10 @@ export class InformationLink extends Referencable {
     this._target = new ReferencableSingletonContainer<Information>(this, InformationLink.targetPrefix, Information.targetedByPrefix);
     this.$otherReferences.push(this._source, this._target)
 
-      this.source = source;
-      this.target = target;
-      this.type = type;
-      this.linkText = linkText;
-
+    this.source = source;
+    this.target = target;
+    this.type = type;
+    this.linkText = linkText;
   }
 
   toJson(): InformationLinkJson {
@@ -559,6 +529,7 @@ export class InformationLink extends Referencable {
     }
   }
 
+  //todo removing this produces an endless loop on a test
   override destruct() {
     ListUpdater.removeFromList(this, this.source.causes)
     ListUpdater.removeFromList(this, this.target.targetedBy)
