@@ -6,7 +6,7 @@ import {RefHandler} from "emfular";
 
 export class ConversationPartner extends LifeLine {
 
-    constructor(name: string = 'NewPartner', xPosition?: number, ref?: Ref, deserializer?: Deserializer) {
+    constructor(name: string = 'NewPartner', xPosition?: number, ref?: Ref) {
       let refC = RefHandler.createRefIfMissing(EClasses.ConversationPartner, ref)
       super(name, xPosition, refC);
     }
