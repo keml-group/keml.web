@@ -525,13 +525,6 @@ export class InformationLink extends Referencable {
     }
   }
 
-  //todo removing this produces an endless loop on a test
-  override destruct() {
-    this.source.removeCauses(this)
-    this.target.removeTargetedBy(this)
-    super.destruct();
-  }
-
   static createTreeBackbone(ref: Ref, context: Deserializer): InformationLink {
     let infoLinkJson: InformationLinkJson = context.getJsonFromTree(ref.$ref)
     let srcRef = RefHandler.createRef(RefHandler.getParentAddress(ref.$ref), infoLinkJson.source.eClass)
