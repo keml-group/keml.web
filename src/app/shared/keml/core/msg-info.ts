@@ -314,10 +314,10 @@ export abstract class Information extends Referencable implements Positionable {
       feltTrustImmediately: this.feltTrustImmediately,
       feltTrustAfterwards: this.feltTrustAfterwards,
       isInstruction: this.isInstruction,
-      isUsedOn: Referencable.listToRefs(this.isUsedOn),
+      isUsedOn: this.isUsedOn.map(m => m.getRef()),
       message: this.message,
-      repeatedBy:  Referencable.listToRefs(this.repeatedBy),
-      targetedBy:  Referencable.listToRefs(this.targetedBy),
+      repeatedBy:  this.repeatedBy.map(m => m.getRef()),
+      targetedBy:  this.targetedBy.map(l => l.getRef()),
       position: this.position,
     }
   }
