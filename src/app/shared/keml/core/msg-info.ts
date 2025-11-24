@@ -86,12 +86,6 @@ export abstract class Message extends Referencable {
       return ReceiveMessage.createTreeBackbone(ref, context);
     }
   }
-
-  override addReferences(context: Deserializer) {
-    let msgJson: MessageJson = context.getJsonFromTree(this.ref.$ref)
-    let counterpartRef = msgJson.counterPart;
-    this.counterPart = context.get(counterpartRef.$ref);
-  }
 }
 
 export class SendMessage extends Message {
@@ -136,12 +130,6 @@ export class SendMessage extends Message {
     let send = new SendMessage(dummyCp, sendJson.timing, sendJson.content, sendJson.originalContent, [], ref)
     context.put(send)
     return send
-  }
-
-  override addReferences(context: Deserializer): void {
-    super.addReferences(context);
-    let sendMsgJson: SendMessageJson = context.getJsonFromTree(this.ref.$ref)
-    sendMsgJson.uses?.map(u => this.addUsage(context.get(u.$ref)))
   }
 
 }
@@ -216,14 +204,6 @@ export class ReceiveMessage extends Message {
       rec.addGenerates(NewInformation.createTreeBackbone(newRef, context))
     )
     return rec
-  }
-
-  override addReferences(context: Deserializer) {
-    super.addReferences(context);
-    let recJson: ReceiveMessageJson = context.getJsonFromTree(this.ref.$ref)
-    recJson.repeats?.map(rj => {
-      this.addRepetition(context.get(rj.$ref))
-    })
   }
 
 }
@@ -343,7 +323,7 @@ export abstract class Information extends Referencable implements Positionable {
   }
 
   override destruct() {
-    this._targetedBy.delete()
+    this._targetedBy.delete() //necessary to have a link die on target death
     super.destruct();
   }
 }
@@ -533,11 +513,6 @@ export class InformationLink extends Referencable {
     let infoLink: InformationLink = new InformationLink(src, dummyTarget, infoLinkJson.type, infoLinkJson.linkText, ref)
     context.put(infoLink)
     return infoLink
-  }
-
-  override addReferences(context: Deserializer){
-    let infoLinkJson: InformationLinkJson = context.getJsonFromTree(this.ref.$ref)
-    this.target = context.get(infoLinkJson.target.$ref)
   }
 }
 
