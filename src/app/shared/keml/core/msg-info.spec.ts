@@ -133,6 +133,46 @@ describe('Info (models)', () => {
     expect(newInfo.toJson()).toEqual(newInfoJson);
   });
 
+  it('should delete a "used on" on an info', () => {
+    let cp = new ConversationPartner('cp')
+    let m0 = new ReceiveMessage(cp, 1, "receive1")
+    let m1 = new SendMessage(cp, 1, "send1")
+
+    let i0 = new Preknowledge('pre0')
+    let i1 = new NewInformation(m0, 'i1', false)
+
+    i0.addIsUsedOn(m1);
+    i1.addIsUsedOn(m1);
+
+    expect(m1.uses.length).toBe(2)
+
+    i0.destruct()
+    expect(m1.uses.length).toBe(1)
+
+    i1.destruct()
+    expect(m1.uses.length).toBe(0)
+  })
+
+  it('should delete a "repeated by" on an info', () => {
+    let cp = new ConversationPartner('cp')
+    let m0 = new ReceiveMessage(cp, 0, "receive0")
+    let m1 = new ReceiveMessage(cp, 1, "receive1")
+
+    let i0 = new Preknowledge('pre0')
+    let i1 = new NewInformation(m0, 'i1', false)
+
+    i0.addRepeatedBy(m1);
+    i1.addRepeatedBy(m1);
+
+    expect(m1.repeats.length).toBe(2)
+
+    i0.destruct()
+    expect(m1.repeats.length).toBe(1)
+
+    i1.destruct()
+    expect(m1.repeats.length).toBe(0)
+  })
+
   it('should serialize information links', () => {
     let cp = new ConversationPartner()
     let msg = new ReceiveMessage(cp, 1, "receiveContent")
