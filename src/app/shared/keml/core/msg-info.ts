@@ -50,7 +50,7 @@ export abstract class Message extends Referencable {
     this.content = content;
     this.originalContent = originalContent;
 
-    this.$otherReferences.push(this._counterPart) //todo this is tree backwards - suppress?
+    this.$otherReferences.push(this._counterPart)
   }
 
   static isSend(eClass: string) {
@@ -91,7 +91,7 @@ export abstract class Message extends Referencable {
 export class SendMessage extends Message {
   public static readonly usesPrefix = 'uses'
 
-  private _uses: ReferencableListContainer<Information>;
+  private readonly _uses: ReferencableListContainer<Information>;
   get uses(): Information[] {
     return this._uses.get();
   }
@@ -225,7 +225,7 @@ export abstract class Information extends Referencable implements Positionable {
   static readonly isUsedOnPrefix: string = 'isUsedOn'
   static readonly repeatedByPrefix: string = 'repeatedBy'
   static readonly targetedByPrefix: string = 'targetedBy'
-  private _causes: ReferencableTreeListContainer<InformationLink>;
+  readonly _causes: ReferencableTreeListContainer<InformationLink>;
   get causes(): InformationLink[] {
     return this._causes.get();
   }
@@ -236,7 +236,7 @@ export abstract class Information extends Referencable implements Positionable {
     this._causes.remove(link)
   }
 
-  private _targetedBy: ReferencableListContainer<InformationLink>
+  readonly _targetedBy: ReferencableListContainer<InformationLink>
   get targetedBy(): InformationLink[] {
     return this._targetedBy.get();
   }
@@ -247,7 +247,7 @@ export abstract class Information extends Referencable implements Positionable {
     this._targetedBy.remove(link)
   }
 
-  private _isUsedOn: ReferencableListContainer<SendMessage>
+  readonly _isUsedOn: ReferencableListContainer<SendMessage>
   get isUsedOn(): SendMessage[] {
     return this._isUsedOn.get();
   }
@@ -258,7 +258,7 @@ export abstract class Information extends Referencable implements Positionable {
     this._isUsedOn.remove(send)
   }
 
-  private _repeatedBy: ReferencableListContainer<ReceiveMessage>
+  readonly _repeatedBy: ReferencableListContainer<ReceiveMessage>
   get repeatedBy(): ReceiveMessage[] {
     return this._repeatedBy.get();
   }
@@ -332,16 +332,12 @@ export class NewInformation extends Information {
 
   public static readonly sourcePrefix = 'source'
 
-  private _source: ReferencableTreeParentContainer<ReceiveMessage>;
+  readonly _source: ReferencableTreeParentContainer<ReceiveMessage>;
   set source(rec: ReceiveMessage) {
     this._source.add(rec)
   }
   get source(): ReceiveMessage {
     return this._source.get()!!
-  }
-
-  override getTreeParent() {
-    return this.source;
   }
 
   override getTiming(): number | undefined {
@@ -444,7 +440,7 @@ export class InformationLink extends Referencable {
 
   public static readonly sourcePrefix = 'source'
   public static readonly targetPrefix = 'target'
-  private _source: ReferencableSingletonContainer<Information>
+  readonly _source: ReferencableTreeParentContainer<Information>
   get source(): Information {
     return this._source.get()!!; //todo
   }
@@ -452,11 +448,7 @@ export class InformationLink extends Referencable {
     this._source.add(source)
   }
 
-  override getTreeParent(): Information | undefined {
-    return this.source;
-  }
-
-  private _target: ReferencableSingletonContainer<Information>
+  readonly _target: ReferencableSingletonContainer<Information>
   get target(): Information {
     return this._target.get()!!;
   }
@@ -485,7 +477,7 @@ export class InformationLink extends Referencable {
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.InformationLink, ref)
     super(refC);
-    this._source = new ReferencableSingletonContainer<Information>(this, InformationLink.sourcePrefix, NewInformation.causesPrefix);
+    this._source = new ReferencableTreeParentContainer<Information>(this, InformationLink.sourcePrefix, NewInformation.causesPrefix);
     this._target = new ReferencableSingletonContainer<Information>(this, InformationLink.targetPrefix, Information.targetedByPrefix);
     this.$otherReferences.push(this._source, this._target)
 
