@@ -37,21 +37,7 @@ export class HistoryService<T> {
     this.saveToStorage(next, elem)
   }
 
-  private invalidateTooYoungEntries(): void {
-    while (this.newestEntry != this.currentEntry) {
-      this.deleteEntry(this.newestEntry);
-      this.decrementNumber(this.newestEntry)
-    }
-    this.saveNumber(this.newestEntryName, this.newestEntry)
-  }
-
-  private invalidateOldestEntry(): void {
-    this.deleteEntry(this.oldestEntry)
-    this.oldestEntry = this.incrementNumber(this.oldestEntry)
-    this.saveNumber(this.oldestEntryName, this.oldestEntry)
-  }
-
-  load(): T | null {
+  undo(): T | null {
     if (this.currentEntry == this.oldestEntry) { //current Entry is oldest, no decrement possible
       console.error("Cannot undo - already reached oldest entry")
       return null
@@ -62,8 +48,23 @@ export class HistoryService<T> {
     }
   }
 
-  isLoadPossible(): boolean {
+  isUndoPossible(): boolean {
     return (this.currentEntry !== this.oldestEntry)
+  }
+
+  redo(): T | null {
+    if (this.currentEntry == this.newestEntry) {
+      console.error("Cannot redo - already reached newest entry")
+      return null
+    } else {
+      this.currentEntry = this.incrementNumber(this.currentEntry)
+      this.saveNumber(this.currentEntryName, this.currentEntry)
+      return this.loadFromStorage(this.currentEntry)
+    }
+  }
+
+  isRedoPossible(): boolean {
+    return (this.currentEntry !== this.newestEntry)
   }
 
   private loadFromStorage(index: number): T | null {
@@ -81,6 +82,20 @@ export class HistoryService<T> {
 
   private deleteEntry(index: number): void {
     localStorage.removeItem(this.prefix + index)
+  }
+
+  private invalidateTooYoungEntries(): void {
+    while (this.newestEntry != this.currentEntry) {
+      this.deleteEntry(this.newestEntry);
+      this.decrementNumber(this.newestEntry)
+    }
+    this.saveNumber(this.newestEntryName, this.newestEntry)
+  }
+
+  private invalidateOldestEntry(): void {
+    this.deleteEntry(this.oldestEntry)
+    this.oldestEntry = this.incrementNumber(this.oldestEntry)
+    this.saveNumber(this.oldestEntryName, this.oldestEntry)
   }
 
   private readNumber(name: string): number {
