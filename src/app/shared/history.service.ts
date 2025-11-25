@@ -12,9 +12,9 @@ export class HistoryService<T> {
   private readonly oldestEntryName: string = this.prefix+ 'oldestEntry'
   private readonly newestEntryName: string = this.prefix+ 'newestEntry'
   private readonly currentEntryName: string = this.prefix+ 'currentEntry'
-  private oldestEntry: number = -1;
-  private newestEntry: number = -1;
-  private currentEntry: number = -1;
+  private oldestEntry: number = 0;
+  private newestEntry: number = 0;
+  private currentEntry: number = 0;
 
   constructor() {
     this.oldestEntry = this.readNumber(this.oldestEntryName)
@@ -37,22 +37,17 @@ export class HistoryService<T> {
     this.saveToStorage(next, elem)
   }
 
-  private invalidateTooYoungEntries(): boolean {
-    if (this.newestEntry === -1) {
-      return false;
-    } else {
-      while (this.newestEntry != this.currentEntry) {
-        this.deleteEntry(this.newestEntry);
-        this.decrementNumber(this.newestEntry)
-      }
-      this.saveNumber(this.newestEntryName, this.newestEntry)
-      return true;
+  private invalidateTooYoungEntries(): void {
+    while (this.newestEntry != this.currentEntry) {
+      this.deleteEntry(this.newestEntry);
+      this.decrementNumber(this.newestEntry)
     }
+    this.saveNumber(this.newestEntryName, this.newestEntry)
   }
 
   private invalidateOldestEntry(): void {
     this.deleteEntry(this.oldestEntry)
-    this.incrementNumber(this.oldestEntry)
+    this.oldestEntry = this.incrementNumber(this.oldestEntry)
     this.saveNumber(this.oldestEntryName, this.oldestEntry)
   }
 
@@ -93,7 +88,7 @@ export class HistoryService<T> {
     if (maybeN) {
       return parseInt(maybeN, 10)
     } else {
-      return -1
+      return 0 //todo works?
     }
   }
 
