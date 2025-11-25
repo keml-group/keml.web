@@ -68,6 +68,24 @@ describe('KEML-Service', () => {
     expect(service.msgCount()).toEqual(0)
   })
 
+  it('should set trusts to undefined on preknowledge creation', () => {
+    let p0 = service.addNewPreknowledge()
+    expect(p0.initialTrust).toBe(undefined)
+    expect(p0.currentTrust).toBe(undefined)
+    expect(p0.feltTrustImmediately).toBe(undefined)
+    expect(p0.feltTrustAfterwards).toBe(undefined)
+  });
+
+  it('should set trusts to undefined on new info creation', () => {
+    let cp0 = service.addNewConversationPartner()
+    let rec0 = service.addNewMessage(false, cp0)
+    let i0 = (service.addNewNewInfo((rec0 as ReceiveMessage)) as NewInformation)
+    expect(i0.initialTrust).toBe(undefined)
+    expect(i0.currentTrust).toBe(undefined)
+    expect(i0.feltTrustImmediately).toBe(undefined)
+    expect(i0.feltTrustAfterwards).toBe(undefined)
+  });
+
   it('should parse an original json (missing sources and eClasses) into a conversation', () => {
     let cpsText = "  \"conversationPartners\" : [ {\n" +
       "    \"name\" : \"LLM\"\n" +
