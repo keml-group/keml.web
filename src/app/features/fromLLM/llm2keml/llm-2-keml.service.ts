@@ -1,6 +1,6 @@
 import {LLMMessage, LLMMessageAuthorType} from "@app/features/fromLLM/llm2keml/llm.models";
 import {Injectable} from "@angular/core";
-import {KemlService} from "@app/shared/keml/core/keml.service";
+import {KemlService} from "@app/shared/keml/edit/keml.service";
 
 @Injectable({
   providedIn: 'root'

@@ -2,7 +2,7 @@ import {Component, ElementRef, ViewChild,} from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { KemlService } from "@app/shared/keml/core/keml.service";
+import { KemlService } from "@app/shared/keml/edit/keml.service";
 import { DetailsService } from "@app/features/editor/details/details.service";
 import { DatabaseSvgComponent } from '@app/shared/keml/graphical/helper/base-svg/database-svg/database-svg.component';
 import { PersonSvgComponent } from '@app/shared/keml/graphical/helper/base-svg/person-svg/person-svg.component';

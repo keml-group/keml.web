@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {KemlService} from "@app/shared/keml/core/keml.service";
+import {KemlService} from "@app/shared/keml/edit/keml.service";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
 import {IoService} from "ngx-emfular-helper";
 
