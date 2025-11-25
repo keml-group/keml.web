@@ -48,8 +48,8 @@ export class HistoryService<T> {
     }
   }
 
-  isUndoPossible(): boolean {
-    return (this.currentEntry !== this.oldestEntry)
+  isUndoNotPossible(): boolean {
+    return (this.currentEntry == this.oldestEntry)
   }
 
   redo(): T | null {
@@ -63,8 +63,8 @@ export class HistoryService<T> {
     }
   }
 
-  isRedoPossible(): boolean {
-    return (this.currentEntry !== this.newestEntry)
+  isRedoNotPossible(): boolean {
+    return (this.currentEntry == this.newestEntry)
   }
 
   private loadFromStorage(index: number): T | null {

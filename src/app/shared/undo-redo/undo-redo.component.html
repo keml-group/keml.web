@@ -1,0 +1,8 @@
+<div style="display: flex; gap: 1rem;">
+  <button type="button" (click)="onUndo()" [disabled]="history.isUndoNotPossible()">
+    <mat-icon aria-hidden="false" fontIcon="file_upload" ></mat-icon>
+    Undo</button>
+  <button type="button" (click)="onRedo()" [disabled]="history.isRedoNotPossible()">
+    <mat-icon aria-hidden="false" fontIcon="file_upload" ></mat-icon>
+    Redo</button>
+</div>
