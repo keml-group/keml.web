@@ -8,11 +8,31 @@ import {
   PreknowledgeJson,
 } from "@app/shared/keml/json/knowledge-models";
 import {EClasses} from "@app/shared/keml/eclasses";
-import {Deserializer, Ref, Referencable, ListUpdater} from "emfular";
+import {
+  Deserializer,
+  Ref,
+  Referencable,
+  RefHandler,
+  ReferencableListContainer,
+  ReferencableSingletonContainer,
+  ReferencableTreeListContainer,
+  ReferencableTreeParentContainer
+} from "emfular";
+
 import {BoundingBox, Positionable, PositionHelper} from "ngx-svg-graphics";
 
+
 export abstract class Message extends Referencable {
-  counterPart: ConversationPartner;
+  public static readonly counterPartPrefix = 'counterPart'
+
+  _counterPart: ReferencableSingletonContainer<ConversationPartner> = new ReferencableSingletonContainer<ConversationPartner>(this, Message.counterPartPrefix)
+  get counterPart(): ConversationPartner {
+    return this._counterPart.get()!! //todo
+  }
+  set counterPart(value: ConversationPartner) {
+    this._counterPart.add(value);
+  }
+
   timing: number = 0;
   content: string;
   originalContent?: string;
@@ -22,22 +42,15 @@ export abstract class Message extends Referencable {
     counterPart: ConversationPartner,
     timing: number,
     content: string,
-    originalContent?: string, deserializer?: Deserializer, jsonOpt?: MessageJson,
+    originalContent?: string,
   ) {
     super(ref);
-    if(deserializer) {
-      deserializer.put(this)
-      let json: MessageJson = jsonOpt? jsonOpt: deserializer.getJsonFromTree(ref!.$ref);
-      this.counterPart = deserializer.getOrCreate(json.counterPart)
-      this.timing = json.timing? json.timing : 0;
-      this.content = json.content;
-      this.originalContent = json.originalContent;
-    } else {
-      this.counterPart = counterPart;
-      this.timing = timing;
-      this.content = content;
-      this.originalContent = originalContent;
-    }
+    this._counterPart.add(counterPart);
+    this.timing = timing;
+    this.content = content;
+    this.originalContent = originalContent;
+
+    this.$otherReferences.push(this._counterPart)
   }
 
   static isSend(eClass: string) {
@@ -66,22 +79,27 @@ export abstract class Message extends Referencable {
     }
   }
 
+  static createTreeBackbone(ref: Ref, context: Deserializer): Message {
+    if (ref.eClass == EClasses.SendMessage) {
+      return SendMessage.createTreeBackbone(ref, context);
+    } else {
+      return ReceiveMessage.createTreeBackbone(ref, context);
+    }
+  }
 }
 
 export class SendMessage extends Message {
-  private _uses: Information[] = [];
+  public static readonly usesPrefix = 'uses'
+
+  private readonly _uses: ReferencableListContainer<Information>;
   get uses(): Information[] {
-    return this._uses;
+    return this._uses.get();
   }
   addUsage(info: Information) {
-    if (ListUpdater.addToList(info, this._uses)) {
-      info.addIsUsedOn(this)
-    }
+    this._uses.add(info)
   }
   removeUsage(info: Information) {
-    if (ListUpdater.removeFromList(info, this._uses)) {
-      info.removeIsUsedOn(this)
-    }
+    this._uses.remove(info)
   }
 
   constructor(
@@ -90,17 +108,13 @@ export class SendMessage extends Message {
     content: string = 'New send content',
     originalContent?: string,
     uses: Information[] = [],
-    ref?: Ref, deserializer?: Deserializer, jsonOpt?: SendMessageJson,
+    ref?: Ref,
   ) {
-    let refC = Ref.createRef(EClasses.SendMessage, ref)
-    super(refC, counterPart, timing, content, originalContent, deserializer, jsonOpt);
-    if (deserializer) {
-      //deserializer.put(this) // already done in super
-      let json: SendMessageJson = jsonOpt ? jsonOpt : deserializer?.getJsonFromTree(ref!.$ref);
-      json.uses?.map(u => this.addUsage(deserializer.getOrCreate(u)))
-    } else {
-      uses.map(u => this.addUsage(u))
-    }
+    let refC = RefHandler.createRefIfMissing(EClasses.SendMessage, ref)
+    super(refC, counterPart, timing, content, originalContent);
+    this._uses  = new ReferencableListContainer<Information>(this, SendMessage.usesPrefix, Information.isUsedOnPrefix);
+    this.$otherReferences.push(this._uses);
+    uses.map(u => this.addUsage(u))
   }
 
   override toJson(): SendMessageJson {
@@ -109,35 +123,45 @@ export class SendMessage extends Message {
     return res;
   }
 
-  override destruct() {
-    this.uses.forEach(info => {
-      ListUpdater.removeFromList(this, info.isUsedOn)
-    })
-    super.destruct()
+  static override createTreeBackbone(ref: Ref, context: Deserializer): SendMessage {
+    let sendJson: SendMessageJson = context.getJsonFromTree(ref.$ref)
+    //todo make dummy unnecessary?
+    let dummyCp = new ConversationPartner()
+    let send = new SendMessage(dummyCp, sendJson.timing, sendJson.content, sendJson.originalContent, [], ref)
+    context.put(send)
+    return send
   }
 
 }
 
 export class ReceiveMessage extends Message {
   static readonly generatesPrefix: string = 'generates';
-  generates: NewInformation[] = [];
-  _repeats: Information[] = [];
+  static readonly repeatsPrefix: string = 'repeats';
+
+
+  _generates: ReferencableTreeListContainer<NewInformation>;
+  get generates(): NewInformation[] {
+    return this._generates.get()!!
+  }
+  addGenerates(news: NewInformation) {
+    this._generates.add(news)
+  }
+
+
+  _repeats: ReferencableListContainer<Information>;
   get repeats(): Information[] {
-    return this._repeats;
+    return this._repeats.get();
   }
   addRepetition(info: Information) {
     if(!Information.isRepetitionAllowed(this, info)) {
       throw new RangeError("Repetition is only allowed to an earlier information")
     }
-    if(ListUpdater.addToList(info, this._repeats)) {
-      info.addRepeatedBy(this)
-    }
+    this._repeats.add(info);
   }
   removeRepetition(info: Information) {
-    if(ListUpdater.removeFromList(info, this._repeats)) {
-      info.removeRepeatedBy(this)
-    }
+    this._repeats.remove(info);
   }
+
   isInterrupted: boolean = false;
 
   constructor(
@@ -145,28 +169,18 @@ export class ReceiveMessage extends Message {
     timing: number,
     content?: string,
     originalContent?: string,
-    generates: NewInformation[] = [],
     repeats: Information[] = [],
     isInterrupted: boolean = false,
-    ref?: Ref, deserializer?: Deserializer, jsonOpt?: ReceiveMessageJson,
+    ref?: Ref,
   ) {
-    let refC = Ref.createRef(EClasses.ReceiveMessage, ref)
-    super(refC, counterPart, timing, content ? content : "New receive content", originalContent, deserializer, jsonOpt);
-    if (deserializer) {
-      let json: ReceiveMessageJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
-      let generatesRefs = Deserializer.createRefList(ref!.$ref, ReceiveMessage.generatesPrefix, json.generates?.map(g => g.eClass? g.eClass: EClasses.NewInformation))
-      this.generates = generatesRefs.map(g => deserializer.getOrCreate(g))
-      json.repeats?.map(r => this.addRepetition(deserializer.getOrCreate<NewInformation>(r)))
-      this.isInterrupted = json.isInterrupted;
-    } else {
-      this.generates = generates ? generates : [];
-      generates?.forEach(info => {
-        info.source = this
-      })
-      repeats.map(r => this.addRepetition(r));
-      this.isInterrupted = isInterrupted;
-    }
-    this.listChildren.set(ReceiveMessage.generatesPrefix, this.generates)
+    let refC = RefHandler.createRefIfMissing(EClasses.ReceiveMessage, ref)
+    super(refC, counterPart, timing, content ? content : "New receive content", originalContent);
+    this._generates = new ReferencableTreeListContainer<NewInformation>(this, ReceiveMessage.generatesPrefix, NewInformation.sourcePrefix);
+    this._repeats = new ReferencableListContainer<Information>(this, ReceiveMessage.repeatsPrefix, Information.repeatedByPrefix);
+    this.$treeChildren.push(this._generates)
+    this.$otherReferences.push(this._repeats)
+    repeats.map(r => this.addRepetition(r));
+    this.isInterrupted = isInterrupted;
   }
 
   override toJson(): ReceiveMessageJson {
@@ -177,14 +191,19 @@ export class ReceiveMessage extends Message {
     return res;
   }
 
-  override destruct() {
-    this.repeats.forEach(info => {
-      ListUpdater.removeFromList(this, info.repeatedBy)
-    })
-    this.generates.forEach(info => {
-      info.destruct()
-    })
-    super.destruct()
+  static override createTreeBackbone(ref: Ref, context: Deserializer): ReceiveMessage {
+    let recJson: ReceiveMessageJson = context.getJsonFromTree(ref.$ref)
+    let dummyCp = new ConversationPartner()
+    let rec = new ReceiveMessage(dummyCp, recJson.timing, recJson.content, recJson.originalContent, [], recJson.isInterrupted, ref)
+    context.put(rec)
+    let generatesRefs = Deserializer.createRefList(
+      ref!.$ref,
+      ReceiveMessage.generatesPrefix,
+      recJson.generates?.map(_ => EClasses.NewInformation))
+    generatesRefs.map(newRef =>
+      rec.addGenerates(NewInformation.createTreeBackbone(newRef, context))
+    )
+    return rec
   }
 
 }
@@ -202,49 +221,46 @@ export abstract class Information extends Referencable implements Positionable {
 
   abstract getTiming(): number | undefined;
 
-  private _causes: InformationLink[] = [];
-  get causes(): InformationLink[] {
-    return this._causes;
-  }
   static readonly causesPrefix: string = 'causes'
-  addCauses(link: InformationLink) {
-    ListUpdater.addToList(link, this._causes)
-    link.source = this
+  static readonly isUsedOnPrefix: string = 'isUsedOn'
+  static readonly repeatedByPrefix: string = 'repeatedBy'
+  static readonly targetedByPrefix: string = 'targetedBy'
+  readonly _causes: ReferencableTreeListContainer<InformationLink>;
+  get causes(): InformationLink[] {
+    return this._causes.get();
+  }
+  addCauses(...link: InformationLink[]) {
+    link?.map(l => this._causes.add(l))
   }
   removeCauses(link: InformationLink) {
-    this.removeFromListChild(link, this._causes)
+    this._causes.remove(link)
   }
 
-  private _targetedBy: InformationLink[] = []; //todo avoid?
+  readonly _targetedBy: ReferencableListContainer<InformationLink>
   get targetedBy(): InformationLink[] {
-    return this._targetedBy;
+    return this._targetedBy.get();
   }
   addTargetedBy(link: InformationLink) {
-    ListUpdater.addToList(link, this._targetedBy)
-    link.target = this
+    this._targetedBy.add(link)
   }
   removeTargetedBy(link: InformationLink) {
-    this.removeFromListChild(link, this._targetedBy)
+    this._targetedBy.remove(link)
   }
 
-  private _isUsedOn: SendMessage[] = [];
+  readonly _isUsedOn: ReferencableListContainer<SendMessage>
   get isUsedOn(): SendMessage[] {
-    return this._isUsedOn;
+    return this._isUsedOn.get();
   }
   addIsUsedOn(send: SendMessage){
-    if (ListUpdater.addToList(send, this._isUsedOn)) {
-      send.addUsage(this);
-    }
+    this._isUsedOn.add(send)
   }
   removeIsUsedOn(send: SendMessage){
-    if (ListUpdater.removeFromList(send, this._isUsedOn)) {
-      send.removeUsage(this)
-    }
+    this._isUsedOn.remove(send)
   }
 
-  private _repeatedBy: ReceiveMessage[] = [];
+  readonly _repeatedBy: ReferencableListContainer<ReceiveMessage>
   get repeatedBy(): ReceiveMessage[] {
-    return this._repeatedBy;
+    return this._repeatedBy.get();
   }
   static isRepetitionAllowed(msg: ReceiveMessage, info: Information): boolean {
     //only allow the repetition if it connects to an earlier info
@@ -255,53 +271,37 @@ export abstract class Information extends Referencable implements Positionable {
     if(!Information.isRepetitionAllowed(msg, this)) {
       throw new RangeError("Repetition is only allowed to an earlier information")
     }
-    if(ListUpdater.addToList(msg, this._repeatedBy)) {
-      msg.addRepetition(this);
-    }
+    this._repeatedBy.add(msg)
   }
   removeRepeatedBy(msg: ReceiveMessage) {
-    if(ListUpdater.removeFromList(msg, this._repeatedBy)) {
-      msg.removeRepetition(this)
-    }
+    this._repeatedBy.remove(msg)
   }
 
-  protected constructor(ref: Ref, message: string, isInstruction: boolean = false,
-              position?: BoundingBox, isUsedOn: SendMessage[] = [],
-              repeatedBy: ReceiveMessage[] = [], initialTrust?: number,
-              currentTrust?: number, feltTrustImmediately?: number,
-              feltTrustAfterwards?: number, deserializer?: Deserializer, jsonOpt?: InformationJson
+  protected constructor(
+    ref: Ref,
+    message: string, isInstruction: boolean = false, position?: BoundingBox,
+    isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
+    initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number, feltTrustAfterwards?: number,
   ) {
     super(ref);
-    if (deserializer) {
-      deserializer.put(this)
-      let json: InformationJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
-      this.message = json.message;
-      this.isInstruction = json.isInstruction? json.isInstruction : false;
-      this.position = json.position? json.position : PositionHelper.newBoundingBox();
-      this.initialTrust = json.initialTrust;
-      this.currentTrust = json.currentTrust;
-      this.feltTrustImmediately = json.feltTrustImmediately;
-      this.feltTrustAfterwards = json.feltTrustAfterwards;
-      //todo actually, causes should exist on the json, however, it is missing and we hence set it manually:
-      let causesRefs = Deserializer.createRefList(ref!.$ref, Information.causesPrefix, json.causes?.map(c => c.eClass? c.eClass : EClasses.InformationLink))
-      causesRefs.map(r => deserializer.getOrCreate<InformationLink>(r))
-      json.targetedBy?.map(r =>  deserializer.getOrCreate(r))
-      json.isUsedOn?.map(r => this.addIsUsedOn(deserializer.getOrCreate<SendMessage>(r)))
-      json.repeatedBy?.map(r => this.addRepeatedBy(deserializer.getOrCreate<ReceiveMessage>(r)))
-    } else {
-      this.message = message;
-      this.isInstruction = isInstruction;
-      this.position = position? position: PositionHelper.newBoundingBox();
-      this.initialTrust = initialTrust;
-      this.currentTrust = currentTrust;
-      this.feltTrustImmediately = feltTrustImmediately;
-      this.feltTrustAfterwards = feltTrustAfterwards;
-      isUsedOn?.map(u => this.addIsUsedOn(u))
-      repeatedBy?.map(m => this.addRepeatedBy(m));
-    }
-    this.listChildren.set(Information.causesPrefix, this._causes)
-  }
 
+    this._causes = new ReferencableTreeListContainer<InformationLink>(this, NewInformation.causesPrefix, InformationLink.sourcePrefix);
+    this._targetedBy = new ReferencableListContainer<InformationLink>(this, Information.targetedByPrefix, InformationLink.targetPrefix)
+    this._isUsedOn = new ReferencableListContainer<SendMessage>(this, 'isUsedOn', 'uses');
+    this._repeatedBy = new ReferencableListContainer(this, NewInformation.repeatedByPrefix, ReceiveMessage.repeatsPrefix);
+    this.$treeChildren.push(this._causes)
+    this.$otherReferences.push(this._targetedBy, this._isUsedOn, this._repeatedBy)
+
+    this.message = message;
+    this.isInstruction = isInstruction;
+    this.position = position? position: PositionHelper.newBoundingBox();
+    this.initialTrust = initialTrust;
+    this.currentTrust = currentTrust;
+    this.feltTrustImmediately = feltTrustImmediately;
+    this.feltTrustAfterwards = feltTrustAfterwards;
+    isUsedOn?.map(u => this.addIsUsedOn(u))
+    repeatedBy?.map(m => this.addRepeatedBy(m));
+  }
 
   abstract duplicate(): Information;
 
@@ -314,85 +314,78 @@ export abstract class Information extends Referencable implements Positionable {
       feltTrustImmediately: this.feltTrustImmediately,
       feltTrustAfterwards: this.feltTrustAfterwards,
       isInstruction: this.isInstruction,
-      isUsedOn: Referencable.listToRefs(this.isUsedOn),
+      isUsedOn: this.isUsedOn.map(m => m.getRef()),
       message: this.message,
-      repeatedBy:  Referencable.listToRefs(this.repeatedBy),
-      targetedBy:  Referencable.listToRefs(this.targetedBy),
+      repeatedBy:  this.repeatedBy.map(m => m.getRef()),
+      targetedBy:  this.targetedBy.map(l => l.getRef()),
       position: this.position,
     }
   }
 
   override destruct() {
-    this.repeatedBy.forEach((rec: ReceiveMessage) => {
-      ListUpdater.removeFromList(this, rec.repeats)
-    })
-    this.isUsedOn.forEach((send: SendMessage) => {
-      ListUpdater.removeFromList(this, send.uses)
-    })
-
-    ListUpdater.destructAllFromChangingList(this.targetedBy)
-
-
+    this._targetedBy.delete() //necessary to have a link die on target death
     super.destruct();
   }
 }
 
 export class NewInformation extends Information {
-  private _source!: ReceiveMessage;
 
-  override getTreeParent() {
-    return this._source;
+  public static readonly sourcePrefix = 'source'
+
+  readonly _source: ReferencableTreeParentContainer<ReceiveMessage>;
+  set source(rec: ReceiveMessage) {
+    this._source.add(rec)
+  }
+  get source(): ReceiveMessage {
+    return this._source.get()!!
   }
 
   override getTiming(): number | undefined {
-    return this._source?.timing
+    return this.source.timing
   }
 
   constructor(source: ReceiveMessage,
               message: string, isInstruction: boolean = false, position?: BoundingBox,
               isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
               initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number , feltTrustAfterwards?: number,
-              ref?: Ref, deserializer?: Deserializer, jsonOpt?: NewInformationJson
+              ref?: Ref,
   ) {
-    let refC = Ref.createRef(EClasses.NewInformation, ref)
-    super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
-    if(deserializer) {
-      let json: NewInformationJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
-      //todo this works against a bug in the used json lib: it computes the necessary source if it is not present
-      let src = json.source? json.source : new Ref(Ref.getParentAddress(ref!.$ref), EClasses.ReceiveMessage)
-      this._source = deserializer.getOrCreate(src)
-    } else {
-      this.source = source
-    }
+    let refC = RefHandler.createRefIfMissing(EClasses.NewInformation, ref)
+    super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards);
+    this._source = new ReferencableTreeParentContainer(this, NewInformation.sourcePrefix, ReceiveMessage.generatesPrefix);
+    this.$otherReferences.push(this._source) //todo tree backwards
+    this.source = source
   }
 
   override duplicate(): NewInformation {
-    return new NewInformation(this._source, 'Copy of ' + this.message, this.isInstruction, this.position, [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
-  }
-
-  // does both directions (source and generates)
-  set source(rec: ReceiveMessage) {
-    if (this._source != rec) {
-      ListUpdater.removeFromList(this, this._source?.generates)
-      this._source = rec
-      if(rec.generates.indexOf(this ) == -1)
-        rec.generates.push(this)
-    }
-  }
-
-  get source(): ReceiveMessage {
-    return this._source
+    return new NewInformation(this.source, 'Copy of ' + this.message, this.isInstruction, this.position, [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
   }
 
   override toJson(): NewInformationJson {
     let res = (<NewInformationJson>super.toJson());
-    res.source = this._source.getRef()
+    res.source = this.source.getRef()
     return res;
   }
 
-  override destruct() {
-    ListUpdater.removeFromList(this, this._source.generates)
-    super.destruct();
+  static createTreeBackbone(ref: Ref, context: Deserializer): NewInformation {
+    let newInfoJson: NewInformationJson = context.getJsonFromTree(ref.$ref)
+    // todo source is the tree parent so it already exists...
+    let srcRefRef = RefHandler.getParentAddress(ref.$ref)
+    let srcRef = RefHandler.createRef(srcRefRef, EClasses.ReceiveMessage)
+    let src: ReceiveMessage = context.get(srcRef.$ref)
+    let newInfo = new NewInformation(src,
+        newInfoJson.message, newInfoJson.isInstruction,
+        newInfoJson.position, [], [],
+        newInfoJson.initialTrust, newInfoJson.currentTrust, newInfoJson.feltTrustImmediately, newInfoJson.feltTrustAfterwards,
+        ref);
+    context.put(newInfo)
+    newInfoJson.causes?.map((_, i) => {
+      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, NewInformation.causesPrefix, i)
+      let newRef = RefHandler.createRef(newRefRef, EClasses.InformationLink)
+      let link = InformationLink.createTreeBackbone(newRef, context)
+      newInfo.addCauses(link)
+    })
+    return newInfo
   }
 }
 
@@ -402,9 +395,10 @@ export class Preknowledge extends Information {
               isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
               initialTrust?: number, currentTrust?: number,
               feltTrustImmediately?: number, feltTrustAfterwards?: number,
-              ref?: Ref, deserializer?: Deserializer, jsonOpt?: PreknowledgeJson) {
-    let refC = Ref.createRef(EClasses.Preknowledge, ref)
-    super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards, deserializer, jsonOpt);
+              ref?: Ref
+  ) {
+    let refC = RefHandler.createRefIfMissing(EClasses.Preknowledge, ref)
+    super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards);
   }
 
   getTiming(): number {
@@ -424,38 +418,42 @@ export class Preknowledge extends Information {
   override toJson(): PreknowledgeJson {
     return (<PreknowledgeJson>super.toJson())
   }
+
+  static createTreeBackbone(ref: Ref, context: Deserializer): Preknowledge {
+    let preJson: PreknowledgeJson = context.getJsonFromTree(ref.$ref)
+    let pre = new Preknowledge(preJson.message, preJson.isInstruction, preJson.position,
+        [], [],
+        preJson.initialTrust, preJson.currentTrust, preJson.feltTrustImmediately, preJson.feltTrustAfterwards,
+        ref)
+    context.put(pre)
+    preJson.causes?.map((_, i) => {
+      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Preknowledge.causesPrefix, i)
+      let newRef = RefHandler.createRef(newRefRef, EClasses.InformationLink)
+      let link = InformationLink.createTreeBackbone(newRef, context)
+      pre.addCauses(link)
+    })
+    return pre;
+  }
 }
 
 export class InformationLink extends Referencable {
 
-  private _source?: Information;
+  public static readonly sourcePrefix = 'source'
+  public static readonly targetPrefix = 'target'
+  readonly _source: ReferencableTreeParentContainer<Information>
   get source(): Information {
-    return this._source!!; //todo
+    return this._source.get()!!; //todo
   }
   set source(source: Information) {
-    let oldSource = this._source;
-    if (oldSource != source){
-      this._source = source;
-      source.addCauses(this)
-      oldSource?.removeCauses(this)
-    }
+    this._source.add(source)
   }
 
-  override getTreeParent(): Information | undefined {
-    return this._source;
-  }
-
-  private _target?: Information;
+  readonly _target: ReferencableSingletonContainer<Information>
   get target(): Information {
-    return this._target!!;
+    return this._target.get()!!;
   }
   set target(target: Information) {
-    let oldTarget = this._target;
-    if (oldTarget != target){
-      this._target = target;
-      target.addTargetedBy(this);
-      oldTarget?.removeTargetedBy(this);
-    }
+    this._target.add(target);
   }
 
   private _type: InformationLinkType = InformationLinkType.SUPPLEMENT;
@@ -475,27 +473,18 @@ export class InformationLink extends Referencable {
   }
 
   constructor(source: Information, target: Information, type: InformationLinkType, linkText?: string,
-              ref?: Ref, deserializer?: Deserializer, jsonOpt?: InformationLinkJson
+              ref?: Ref,
   ) {
-    let refC = Ref.createRef(EClasses.InformationLink, ref)
+    let refC = RefHandler.createRefIfMissing(EClasses.InformationLink, ref)
     super(refC);
-    if(deserializer) {
-      deserializer.put(this)
-      let json: InformationLinkJson = jsonOpt ? jsonOpt : deserializer.getJsonFromTree(ref!.$ref)
-      //todo there is a problem with the incoming json: it does not have the link soruces. However, we solve this via 'prepareJsonInfoLinkSources' called in the loadKEML() method on modelIoService
-      let src = json.source!!
-      this.source = deserializer.getOrCreate(src)
-      this.target = deserializer.getOrCreate(json.target);
-      this.type = json.type;
-      let text;
-      if (json.linkText && json.linkText.length > 0) {text = json.linkText} else {text = undefined}
-      this.linkText = text;
-    } else {
-      this.source = source;
-      this.target = target;
-      this.type = type;
-      this.linkText = linkText;
-    }
+    this._source = new ReferencableTreeParentContainer<Information>(this, InformationLink.sourcePrefix, NewInformation.causesPrefix);
+    this._target = new ReferencableSingletonContainer<Information>(this, InformationLink.targetPrefix, Information.targetedByPrefix);
+    this.$otherReferences.push(this._source, this._target)
+
+    this.source = source;
+    this.target = target;
+    this.type = type;
+    this.linkText = linkText;
   }
 
   toJson(): InformationLinkJson {
@@ -508,11 +497,14 @@ export class InformationLink extends Referencable {
     }
   }
 
-  override destruct() {
-    ListUpdater.removeFromList(this, this.source.causes)
-    ListUpdater.removeFromList(this, this.target.targetedBy)
-    super.destruct();
+  static createTreeBackbone(ref: Ref, context: Deserializer): InformationLink {
+    let infoLinkJson: InformationLinkJson = context.getJsonFromTree(ref.$ref)
+    let srcRef = RefHandler.createRef(RefHandler.getParentAddress(ref.$ref), infoLinkJson.source.eClass)
+    let src: Information = context.get(srcRef.$ref)
+    let dummyTarget = new Preknowledge()
+    let infoLink: InformationLink = new InformationLink(src, dummyTarget, infoLinkJson.type, infoLinkJson.linkText, ref)
+    context.put(infoLink)
+    return infoLink
   }
-
 }
 

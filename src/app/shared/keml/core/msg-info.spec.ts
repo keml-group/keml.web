@@ -1,16 +1,60 @@
 import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "./msg-info";
 import {InformationLinkJson, InformationLinkType, NewInformationJson, PreknowledgeJson} from "@app/shared/keml/json/knowledge-models";
 import {ConversationPartner} from "./conversation-partner";
-import {ReceiveMessageJson, SendMessageJson} from "@app/shared/keml/json/sequence-diagram-models";
-import {Ref} from "emfular";
+import {ConversationJson, ReceiveMessageJson, SendMessageJson} from "@app/shared/keml/json/sequence-diagram-models";
+import {RefHandler, JsonComparer} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
+import {JsonFixer} from "@app/shared/keml/json2core/json-fixer";
+import {Conversation} from "@app/shared/keml/core/conversation";
 
-describe('Msg-Info (models)', () => {
+describe("Msg-models", () => {
+  it('should set a message counterpart correctly', () => {
+    let cp0 = new ConversationPartner('cp0')
+    let cp1 = new ConversationPartner('cp1')
+    let rec = new ReceiveMessage(cp0, 1, 'msg')
+    expect(rec.counterPart).toEqual(cp0)
+    rec.counterPart = cp1
+    expect(rec.counterPart).toEqual(cp1)
+  })
+
+  it('should serialize a send msg', () => {
+    let cp = new ConversationPartner()
+    let msg = new SendMessage(cp, 0, "sendContent")
+    let msgJson: SendMessageJson = {
+      eClass: EClasses.SendMessage,
+      content: "sendContent",
+      originalContent: undefined,
+      timing: 0,
+      counterPart: cp.getRef(),
+      uses: []
+    }
+    expect(msg.toJson()).toEqual(msgJson);
+  });
+
+  it('should serialize a receive msg', () => {
+    let cp = new ConversationPartner()
+    let msg = new ReceiveMessage(cp, 1, "receiveContent")
+    let msgJson: ReceiveMessageJson = {
+      eClass: EClasses.ReceiveMessage,
+      content: "receiveContent",
+      originalContent: undefined,
+      timing: 1,
+      counterPart: cp.getRef(),
+      isInterrupted: false,
+      generates: [],
+      repeats: []
+    }
+    expect(msg.toJson()).toEqual(msgJson);
+  });
+
+});
+
+describe('Info (models)', () => {
 
   it('should prepare the information serialization for getRef', () => {
     let preknowledge = new Preknowledge()
      preknowledge.prepare('fantasy')
-    expect (preknowledge.getRef()).toEqual(new Ref('fantasy', EClasses.Preknowledge));
+    expect (preknowledge.getRef()).toEqual(RefHandler.createRef('fantasy', EClasses.Preknowledge));
   })
 
   it('should determine the correct timing of a new info', () => {
@@ -47,37 +91,6 @@ describe('Msg-Info (models)', () => {
     expect(Information.isRepetitionAllowed(rec, pre0)).toBe(false)
     expect(Information.isRepetitionAllowed(rec, pre1)).toBe(true)
   })
-
-  it('should serialize a send msg', () => {
-    let cp = new ConversationPartner()
-    let msg = new SendMessage(cp, 0, "sendContent")
-    let msgJson: SendMessageJson = {
-      eClass: EClasses.SendMessage,
-      content: "sendContent",
-      originalContent: undefined,
-      timing: 0,
-      counterPart: cp.getRef(),
-      uses: []
-    }
-    expect(msg.toJson()).toEqual(msgJson);
-  });
-
-  it('should serialize a receive msg', () => {
-    let cp = new ConversationPartner()
-    let msg = new ReceiveMessage(cp, 1, "receiveContent")
-    let msgJson: ReceiveMessageJson = {
-      eClass: EClasses.ReceiveMessage,
-      content: "receiveContent",
-      originalContent: undefined,
-      timing: 1,
-      counterPart: cp.getRef(),
-      isInterrupted: false,
-      generates: [],
-      repeats: []
-    }
-    expect(msg.toJson()).toEqual(msgJson);
-  });
-
 
   it('should serialize preknowledge', () => {
     let preknowledge = new Preknowledge()
@@ -120,6 +133,46 @@ describe('Msg-Info (models)', () => {
     expect(newInfo.toJson()).toEqual(newInfoJson);
   });
 
+  it('should delete a "used on" on an info', () => {
+    let cp = new ConversationPartner('cp')
+    let m0 = new ReceiveMessage(cp, 1, "receive1")
+    let m1 = new SendMessage(cp, 1, "send1")
+
+    let i0 = new Preknowledge('pre0')
+    let i1 = new NewInformation(m0, 'i1', false)
+
+    i0.addIsUsedOn(m1);
+    i1.addIsUsedOn(m1);
+
+    expect(m1.uses.length).toBe(2)
+
+    i0.destruct()
+    expect(m1.uses.length).toBe(1)
+
+    i1.destruct()
+    expect(m1.uses.length).toBe(0)
+  })
+
+  it('should delete a "repeated by" on an info', () => {
+    let cp = new ConversationPartner('cp')
+    let m0 = new ReceiveMessage(cp, 0, "receive0")
+    let m1 = new ReceiveMessage(cp, 1, "receive1")
+
+    let i0 = new Preknowledge('pre0')
+    let i1 = new NewInformation(m0, 'i1', false)
+
+    i0.addRepeatedBy(m1);
+    i1.addRepeatedBy(m1);
+
+    expect(m1.repeats.length).toBe(2)
+
+    i0.destruct()
+    expect(m1.repeats.length).toBe(1)
+
+    i1.destruct()
+    expect(m1.repeats.length).toBe(0)
+  })
+
   it('should serialize information links', () => {
     let cp = new ConversationPartner()
     let msg = new ReceiveMessage(cp, 1, "receiveContent")
@@ -133,8 +186,8 @@ describe('Msg-Info (models)', () => {
     let infoLink_new_new_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
       linkText: "text",
-      source: new Ref('', EClasses.NewInformation),
-      target: new Ref('', EClasses.NewInformation),
+      source: RefHandler.createRef('', EClasses.NewInformation),
+      target: RefHandler.createRef('', EClasses.NewInformation),
       type: InformationLinkType.SUPPLEMENT
     }
     expect(infoLink_new_new.toJson()).toEqual(infoLink_new_new_Json);
@@ -143,8 +196,8 @@ describe('Msg-Info (models)', () => {
     let infoLink_new_pre_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
       linkText: "text",
-      source: new Ref('', EClasses.NewInformation),
-      target: new Ref('', EClasses.Preknowledge),
+      source: RefHandler.createRef('', EClasses.NewInformation),
+      target: RefHandler.createRef('', EClasses.Preknowledge),
       type: InformationLinkType.STRONG_ATTACK
     }
     expect(infoLink_new_pre.toJson()).toEqual(infoLink_new_pre_Json);
@@ -153,8 +206,8 @@ describe('Msg-Info (models)', () => {
     let infoLink_pre_new_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
       linkText: undefined,
-      source: new Ref('', EClasses.Preknowledge),
-      target: new Ref('', EClasses.NewInformation),
+      source: RefHandler.createRef('', EClasses.Preknowledge),
+      target: RefHandler.createRef('', EClasses.NewInformation),
       type: InformationLinkType.SUPPORT
     }
     expect(infoLink_pre_new.toJson()).toEqual(infoLink_pre_new_Json);
@@ -163,8 +216,8 @@ describe('Msg-Info (models)', () => {
     let infoLink_pre_pre_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
       linkText: undefined,
-      source: new Ref('', EClasses.Preknowledge),
-      target: new Ref('', EClasses.Preknowledge),
+      source: RefHandler.createRef('', EClasses.Preknowledge),
+      target: RefHandler.createRef('', EClasses.Preknowledge),
       type: InformationLinkType.STRONG_SUPPORT
     }
     expect(infoLink_pre_pre.toJson()).toEqual(infoLink_pre_pre_Json);
@@ -173,8 +226,8 @@ describe('Msg-Info (models)', () => {
     let infoLink_pre_pre_2_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
       linkText: undefined,
-      source: new Ref('', EClasses.Preknowledge),
-      target: new Ref('', EClasses.Preknowledge),
+      source: RefHandler.createRef('', EClasses.Preknowledge),
+      target: RefHandler.createRef('', EClasses.Preknowledge),
       type: InformationLinkType.ATTACK
     }
     expect(infoLink_pre_pre_2.toJson()).toEqual(infoLink_pre_pre_2_Json);
@@ -257,4 +310,23 @@ describe('Msg-Info (models)', () => {
     expect(pre2.getTiming()).toEqual(2)
     expect(pre3.getTiming()).toEqual(6)
   })
+});
+
+describe('deserialize and re-serialize real example', () => {
+
+  it('should deserialize and re-serialize a real world example', () => {
+
+    let json = require('@assets/test/3-2-keml-jackson.json');
+    let convJson: ConversationJson = json as ConversationJson
+    JsonFixer.prepareJsonInfoLinkSources(convJson);
+    JsonFixer.addMissingSupplementType(convJson);
+    let conv = Conversation.fromJSON(convJson)
+    let convJson2 = conv.toJson()
+
+    let compRes = JsonComparer.compare(convJson, convJson2)
+    expect(compRes.isLessEquals()).toEqual(true)
+    let comp2 = JsonComparer.compare(convJson2, convJson)
+    expect(comp2.isLessEquals()).toEqual(false)
+  })
+
 });

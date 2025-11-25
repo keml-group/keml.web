@@ -4,32 +4,39 @@ import {AuthorJson} from "@app/shared/keml/json/sequence-diagram-models"
 import {Preknowledge} from "./msg-info";
 import {Deserializer, Ref} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
+import {RefHandler, ReferencableTreeListContainer} from "emfular";
 
 export class Author extends LifeLine{
   static readonly preknowledgePrefix: string = 'preknowledge';
-  preknowledge: Preknowledge[];
   static readonly messagesPrefix: string = 'messages';
-  messages: Message[];
 
-  constructor(name = 'Author', xPosition: number = 0, preknowledge: Preknowledge[] = [], messages: Message[] = [],
-              ref?: Ref, deserializer?: Deserializer) {
-    let refC = Ref.createRef(EClasses.Author, ref)
-    if (deserializer) {
-      let authorJson: AuthorJson = deserializer?.getJsonFromTree(ref!.$ref)
-      super(authorJson.name, authorJson.xPosition, refC)
-      deserializer.put(this)
-      //compute and use refs for all tree children:
-      let preknowledgeRefs = Deserializer.createRefList(ref!.$ref, Author.preknowledgePrefix, authorJson.preknowledge? authorJson.preknowledge.map(_ => EClasses.Preknowledge): [])
-      this.preknowledge = preknowledgeRefs.map(r => deserializer.getOrCreate<Preknowledge>(r));
-      let messageRefs = Deserializer.createRefList(ref!.$ref, Author.messagesPrefix, authorJson.messages.map(r => r.eClass))
-      this.messages = messageRefs.map(r => deserializer.getOrCreate<Message>(r));
-    } else {
-      super(name, xPosition, refC);
-      this.preknowledge = preknowledge;
-      this.messages = messages;
-    }
-    this.listChildren.set(Author.preknowledgePrefix, this.preknowledge)
-    this.listChildren.set(Author.messagesPrefix, this.messages)
+  _preknowledge: ReferencableTreeListContainer<Preknowledge>;
+  get preknowledge(): Preknowledge[] {
+    return this._preknowledge.get()
+  }
+  addPreknowledge(...preknowledge: Preknowledge[]) {
+    preknowledge.map(p => {
+      this._preknowledge.add(p)
+    })
+  }
+
+  _messages: ReferencableTreeListContainer<Message>;
+  get messages(): Message[] {
+    return this._messages.get()
+  }
+  addMessage(...msgs: Message[]) {
+    msgs.map(m => {
+      this._messages.add(m)
+    })
+  }
+
+  constructor(name = 'Author', xPosition: number = 0,
+              ref?: Ref) {
+    let refC = RefHandler.createRefIfMissing(EClasses.Author, ref)
+    super(name, xPosition, refC);
+    this._preknowledge = new ReferencableTreeListContainer<Preknowledge>(this, Author.preknowledgePrefix)
+    this._messages = new ReferencableTreeListContainer<Message>(this, Author.messagesPrefix)
+    this.$treeChildren.push(this._preknowledge, this._messages)
   }
 
   toJson(): AuthorJson {
@@ -39,6 +46,25 @@ export class Author extends LifeLine{
       messages: this.messages.map(m => m.toJson()),
       preknowledge: this.preknowledge.map(p => p.toJson()),
     }
+  }
+
+  static createTreeBackbone(ref: Ref, context: Deserializer): Author {
+    let authorJson: AuthorJson = context.getJsonFromTree(ref.$ref)
+    let author = new Author(authorJson.name? authorJson.name : '', authorJson.xPosition, ref)
+    context.put(author)
+    authorJson.messages.map((mj, i) => {
+      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Author.messagesPrefix, i)
+      let newRef = RefHandler.createRef(newRefRef, mj.eClass)
+      let m = Message.createTreeBackbone(newRef, context)
+      author.addMessage(m)
+    } )
+    authorJson.preknowledge.map((_, i) => {
+      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Author.preknowledgePrefix, i)
+      let newRef = RefHandler.createRef(newRefRef, EClasses.Preknowledge)
+      let p = Preknowledge.createTreeBackbone(newRef, context)
+      author.addPreknowledge(p)
+    })
+    return author
   }
 
 }
