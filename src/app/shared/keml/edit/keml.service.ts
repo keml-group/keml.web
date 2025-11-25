@@ -1,4 +1,4 @@
-import { Injectable, signal, WritableSignal} from '@angular/core';
+import {Injectable, signal, WritableSignal} from '@angular/core';
 import {
   Information,
   InformationLink,
@@ -17,6 +17,7 @@ import {MsgPositionChangeService} from "@app/shared/keml/graphical/msg-position-
 import {AlertService} from "ngx-emfular-helper";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
 import {JsonFixer} from "@app/shared/keml/json2core/json-fixer";
+import {KemlHistoryService} from "@app/shared/keml/edit/keml-history.service";
 
 @Injectable({
   providedIn: 'root'
@@ -32,17 +33,19 @@ export class KemlService {
     private msgPositionChangeService: MsgPositionChangeService,
     private alertService: AlertService,
     private layoutingService: LayoutingService,
+    private historyService: KemlHistoryService,
   ) {
     this.conversation = new Conversation();
     this.layoutingService.positionConversationPartners(this.conversation.conversationPartners)
     this.msgCount = signal<number>(this.conversation.author.messages.length);
-
+    this.historyService.save(this.conversation.toJson())
   }
 
 
   newConversation(title?: string) {
     this.conversation = new Conversation(title);
     this.msgCount.set(this.conversation.author.messages.length)
+    this.historyService.save(this.conversation.toJson())
   }
 
   serializeConversation(): ConversationJson {
@@ -59,6 +62,7 @@ export class KemlService {
     LayoutingService.positionInfos(conv.author.preknowledge, conv.author.messages);
     this.conversation = conv;
     this.msgCount.set(this.conversation.author.messages.length)
+    this.historyService.save(this.conversation.toJson())
     return conv;
   }
 
@@ -89,6 +93,7 @@ export class KemlService {
       this.layoutingService.nextConversationPartnerPosition(cps[cps.length-1]?.xPosition), //todo
     );
     cps.push(cp);
+    this.historyService.save(this.conversation.toJson())
     return cp;
   }
 
@@ -106,6 +111,7 @@ export class KemlService {
       cps[pos + 1] = cp;
       this.layoutingService.positionConversationPartners(cps);
     }
+    this.historyService.save(this.conversation.toJson())
   }
 
   isMoveConversationPartnerLeftDisabled(cp: ConversationPartner): boolean {
@@ -121,12 +127,14 @@ export class KemlService {
       cps[pos-1] = cp;
       this.layoutingService.positionConversationPartners(cps);
     }
+    this.historyService.save(this.conversation.toJson())
   }
 
   deleteConversationPartner(cp: ConversationPartner) {
     cp.destruct()
     this.deleteMsgsWithCP(cp)
     ListUpdater.removeFromList(cp, this.conversation.conversationPartners)
+    this.historyService.save(this.conversation.toJson())
   }
 
   deleteMsgsWithCP(cp: ConversationPartner) {
@@ -134,6 +142,7 @@ export class KemlService {
       this.deleteMessage(m)
     })
     this.msgCount.set(this.conversation.author.messages.length)
+    this.historyService.save(this.conversation.toJson())
   }
 
   duplicateConversationPartner(cp: ConversationPartner): ConversationPartner {
@@ -145,6 +154,7 @@ export class KemlService {
     )
     cps.splice(pos+1, 0, newCp);
     this.layoutingService.positionConversationPartners(cps); // complete re-positioning
+    this.historyService.save(this.conversation.toJson())
     return newCp;
   }
 
@@ -159,6 +169,7 @@ export class KemlService {
     msgs[msg.timing-1] = msg;
     msg.timing--;
     this.msgPositionChangeService.notifyPositionChangeMessage( msg)
+    this.historyService.save(this.conversation.toJson())
   }
 
   isMoveUpDisabled(msg: Message): boolean {
@@ -174,6 +185,7 @@ export class KemlService {
     msgs[msg.timing+1] = msg;
     msg.timing+=1;
     this.msgPositionChangeService.notifyPositionChangeMessage(msg)
+    this.historyService.save(this.conversation.toJson())
   }
 
   isMoveDownDisabled(msg: Message): boolean {
@@ -187,12 +199,14 @@ export class KemlService {
     // adapt later messages:
     this.moveMessagesUp(msg.timing, msgs.length)
     this.msgCount.update(n => n-1);
+    this.historyService.save(this.conversation.toJson())
   }
 
   duplicateMessage(msg: Message): Message | undefined {
     if (this.msgPosFitsTiming(msg)) {
       let duplicate = Message.newMessage(msg.isSend(), msg.counterPart, msg.timing+1, 'Duplicate of '+ msg.content, msg.originalContent);
       this.insertMsgInPos(duplicate)
+      this.historyService.save(this.conversation.toJson())
       return duplicate
     }
     return undefined
@@ -243,7 +257,6 @@ export class KemlService {
     // adapt later messages:
     this.moveMessagesDown(msg.timing +1, msgs.length)
     this.msgCount.update(n => n+1);
-
   }
 
   addNewMessage(isSend: boolean, counterPart?: ConversationPartner, content?: string, originalContent?: string): Message | undefined {
@@ -256,6 +269,7 @@ export class KemlService {
       const newMsg: Message = Message.newMessage(isSend, cp, msgs.length, cont, originalCont)
       msgs.push(newMsg);
       this.msgCount.update(n => n+1);
+      this.historyService.save(this.conversation.toJson())
       return newMsg;
     } else {
       this.alertService.alert('No conversation partners found');
@@ -293,18 +307,22 @@ export class KemlService {
 
   addRepetition(rec: ReceiveMessage, info: Information) {
     rec.addRepetition(info) //todo handle error, maybe alert?
+    this.historyService.save(this.conversation.toJson())
   }
 
   deleteRepetition(rec: ReceiveMessage, info: Information) {
     rec.removeRepetition(info)
+    this.historyService.save(this.conversation.toJson())
   }
 
   addUsage(send: SendMessage, info: Information) {
     send.addUsage(info)
+    this.historyService.save(this.conversation.toJson())
   }
 
   deleteUsage(send: SendMessage, info: Information) {
     send.removeUsage(info)
+    this.historyService.save(this.conversation.toJson())
   }
   //************** Infos ************************
 
@@ -312,6 +330,7 @@ export class KemlService {
     const infos = this.getRightInfoList(info)
     info.destruct()
     ListUpdater.removeFromList(info, infos)
+    this.historyService.save(this.conversation.toJson())
   }
 
   duplicateInfo(info: Information): Information {
@@ -319,6 +338,7 @@ export class KemlService {
     const newInfo = info.duplicate()
     newInfo.position = LayoutingService.bbForInfoDuplication(info)
     infos.push(newInfo); //todo position right after current info?
+    this.historyService.save(this.conversation.toJson())
     return newInfo;
   }
 
@@ -334,6 +354,7 @@ export class KemlService {
   addNewPreknowledge(): Preknowledge {
     const preknowledge: Preknowledge = new Preknowledge("New preknowledge", false, LayoutingService.bbForPreknowledge(LayoutingService.positionForNewPreknowledge));
     this.conversation.author.preknowledge.push(preknowledge);
+    this.historyService.save(this.conversation.toJson())
     return preknowledge;
   }
 
@@ -344,6 +365,7 @@ export class KemlService {
   addNewNewInfo(causeMsg?: ReceiveMessage): NewInformation | undefined {
     let source = causeMsg? causeMsg : this.getFirstReceive()
     if (source) {
+      this.historyService.save(this.conversation.toJson())
       return new NewInformation(source, 'New Information', false, LayoutingService.bbForNewInfo(source.generates.length));
     } else {
       this.alertService.alert('No receive messages found');
@@ -353,6 +375,7 @@ export class KemlService {
 
   changeInfoSource(info: NewInformation, newSrc: ReceiveMessage) {
     info.source = newSrc
+    this.historyService.save(this.conversation.toJson())
   }
   //***************** information links ********************
 
@@ -374,15 +397,19 @@ export class KemlService {
   }
 
   addInformationLink(src: Information, target: Information, type: InformationLinkType = InformationLinkType.SUPPLEMENT, text?: string): InformationLink {
+    this.historyService.save(this.conversation.toJson())
     return new InformationLink(src, target, type, text);
   }
 
   deleteLink(link: InformationLink) {
+    this.historyService.save(this.conversation.toJson())
     link.destruct()
   }
 
-  duplicateLink(link: InformationLink) {
-    new InformationLink(link.source, link.target, link.type, link.linkText)
- }
+  duplicateLink(link: InformationLink): InformationLink {
+    let newlink = new InformationLink(link.source, link.target, link.type, link.linkText)
+    this.historyService.save(this.conversation.toJson())
+    return newlink;
+  }
 
 }
