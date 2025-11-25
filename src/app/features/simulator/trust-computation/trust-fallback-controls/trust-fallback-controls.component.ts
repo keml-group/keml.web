@@ -3,7 +3,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TrustFallbacks} from "@app/features/simulator/trust-computation/trust-fallbacks";
 import {NgForOf} from "@angular/common";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
-import {TrustSliderComponent} from "@app/shared/trust-slider/trust-slider.component";
+import {TrustSliderComponent} from "@app/shared/keml/graphical/helper/trust/trust-slider/trust-slider.component";
 
 @Component({
     selector: 'trust-fallback-controls',
