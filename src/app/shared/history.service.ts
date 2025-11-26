@@ -1,3 +1,5 @@
+import {BehaviorSubject} from "rxjs";
+
 export class HistoryService<T> {
 
   // history in a circular buffer
@@ -10,6 +12,9 @@ export class HistoryService<T> {
   private oldestEntry: number = 0;
   private newestEntry: number = 0;
   private currentEntry: number = 0;
+
+  private stateSubject = new BehaviorSubject<T | null>(null);
+  state$ = this.stateSubject.asObservable();
 
   constructor(prefix: string = 'history_') {
     this.prefix = prefix;
@@ -43,7 +48,9 @@ export class HistoryService<T> {
     } else {
       this.currentEntry = this.decrementNumber(this.currentEntry)
       this.saveNumber(this.currentEntryName, this.currentEntry)
-      return this.loadFromStorage(this.currentEntry)
+      let entry = this.loadFromStorage(this.currentEntry)
+      this.stateSubject.next(entry)
+      return entry
     }
   }
 
@@ -58,7 +65,9 @@ export class HistoryService<T> {
     } else {
       this.currentEntry = this.incrementNumber(this.currentEntry)
       this.saveNumber(this.currentEntryName, this.currentEntry)
-      return this.loadFromStorage(this.currentEntry)
+      let entry = this.loadFromStorage(this.currentEntry)
+      this.stateSubject.next(entry)
+      return entry
     }
   }
 

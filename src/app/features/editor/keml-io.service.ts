@@ -19,7 +19,7 @@ export class KEMLIOService {
     this.ioService.loadStringFromFile(event).then(txt => {
       //todo insert detection code for wrong files (no json, not appropriately structured
       let convJson =  <ConversationJson>JSON.parse(txt);
-      this.kemlService.deserializeConversation(convJson);
+      this.kemlService.loadConversation(convJson);
     });
   }
 

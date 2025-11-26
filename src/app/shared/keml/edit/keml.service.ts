@@ -39,6 +39,13 @@ export class KemlService {
     this.layoutingService.positionConversationPartners(this.conversation.conversationPartners)
     this.msgCount = signal<number>(this.conversation.author.messages.length);
     //this.historyService.save(this.conversation.toJson())
+
+    this.historyService.state$.subscribe(state => {
+      if (state) {
+        this.deserializeConversation(state);
+        console.log('KEML updated:', state);
+      }
+    });
   }
 
 
@@ -48,11 +55,17 @@ export class KemlService {
     this.historyService.save(this.conversation.toJson())
   }
 
+  loadConversation(convJson: ConversationJson): Conversation {
+    let conv = this.deserializeConversation(convJson);
+    this.historyService.save(this.conversation.toJson())
+    return conv;
+  }
+
   serializeConversation(): ConversationJson {
     return this.conversation.toJson()
   }
 
-  deserializeConversation(convJson: ConversationJson): Conversation {
+  private deserializeConversation(convJson: ConversationJson): Conversation {
     JsonFixer.prepareJsonInfoLinkSources(convJson);
     JsonFixer.addMissingSupplementType(convJson);
 
@@ -62,7 +75,6 @@ export class KemlService {
     LayoutingService.positionInfos(conv.author.preknowledge, conv.author.messages);
     this.conversation = conv;
     this.msgCount.set(this.conversation.author.messages.length)
-    this.historyService.save(this.conversation.toJson())
     return conv;
   }
 
