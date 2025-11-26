@@ -144,4 +144,44 @@ describe('HistoryService', () => {
     expect(localStorage.getItem(prefix+"49")).toEqual(JSON.stringify({inside: "s49"}))
 
   }));
+
+  it('should decide if a redo is possible', () => {
+    localStorage.clear();
+    localStorage.setItem(service.oldestEntryName, "5")
+    localStorage.setItem(service.currentEntryName, "1")
+    localStorage.setItem(service.newestEntryName, "3")
+
+    service.init()
+    expect(service.isRedoNotPossible()).toEqual(false);
+
+    localStorage.setItem(service.currentEntryName, "3")
+    service.init()
+    expect(service.isRedoNotPossible()).toEqual(true);
+
+    localStorage.setItem(service.currentEntryName, "5")
+    service.init()
+    expect(service.isRedoNotPossible()).toEqual(false);
+  });
+
+  it('should decide if an undo is possible', () => {
+    localStorage.clear();
+    localStorage.setItem(service.oldestEntryName, "5")
+    localStorage.setItem(service.currentEntryName, "1")
+    localStorage.setItem(service.newestEntryName, "3")
+
+    service.init()
+    expect(service.isUndoNotPossible()).toEqual(false);
+
+    localStorage.setItem(service.currentEntryName, "3")
+    service.init()
+    expect(service.isUndoNotPossible()).toEqual(false);
+
+    localStorage.setItem(service.currentEntryName, "5")
+    service.init()
+    expect(service.isUndoNotPossible()).toEqual(true);
+  });
+
+  it('should handle wrong pointer lookups by a complete reset', () => {
+    //todo
+  });
 });
