@@ -188,21 +188,45 @@ describe('HistoryService', () => {
     expect(service.isUndoNotPossible()).toEqual(true);
   });
 
-  it('should handle wrong pointer lookup (oldest) by a complete reset', () => {
-    let prefix = "TestHistoryWrong_"
-    let service = new HistoryService<HistoryTester>(prefix);
-
-    localStorage.setItem(service.oldestEntryName, "-1")
-    localStorage.setItem(service.currentEntryName, "5")
-    localStorage.setItem(service.newestEntryName, "3")
+  function expectReset(prefix: string, service: HistoryService<HistoryTester>) {
     localStorage.setItem(prefix+"3", "3")
     expect(localStorage.getItem(prefix+"3")).toEqual("3")
-    
+
     service.init()
 
     expect(localStorage.getItem(service.oldestEntryName)).toEqual("-1")
     expect(localStorage.getItem(service.currentEntryName)).toEqual("-1")
     expect(localStorage.getItem(service.newestEntryName)).toEqual("-1")
     expect(localStorage.getItem(prefix+"3")).toBeNull()
+  }
+
+  it('should handle wrong pointer lookup (oldest) by a complete reset', () => {
+    let prefix = "TestHistoryWrongO_"
+    let service = new HistoryService<HistoryTester>(prefix);
+
+    localStorage.setItem(service.oldestEntryName, "-1")
+    localStorage.setItem(service.currentEntryName, "5")
+    localStorage.setItem(service.newestEntryName, "3")
+    expectReset(prefix, service)
+  });
+
+  it('should handle wrong pointer lookup (newest) by a complete reset', () => {
+    let prefix = "TestHistoryWrongN_"
+    let service = new HistoryService<HistoryTester>(prefix);
+
+    localStorage.setItem(service.oldestEntryName, "3")
+    localStorage.setItem(service.currentEntryName, "5")
+    localStorage.setItem(service.newestEntryName, "-1")
+    expectReset(prefix, service)
+  });
+
+  it('should handle wrong pointer lookup (current) by a complete reset', () => {
+    let prefix = "TestHistoryWrongC_"
+    let service = new HistoryService<HistoryTester>(prefix);
+
+    localStorage.setItem(service.oldestEntryName, "5")
+    localStorage.setItem(service.currentEntryName, "-1")
+    localStorage.setItem(service.newestEntryName, "3")
+    expectReset(prefix, service)
   });
 });
