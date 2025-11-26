@@ -1,16 +1,15 @@
-import { TestBed } from '@angular/core/testing';
-
 import { HistoryService } from './history.service';
 
-describe('HistoryService', () => {
-  let service: HistoryService;
+interface HistoryTester {value: string}
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(HistoryService);
-  });
+describe('HistoryService', () => {
+  let service = new HistoryService<HistoryTester>();
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  })
+
+  it('should handle saves', () => {
+
   });
 });

@@ -213,7 +213,7 @@ describe('KEML-Service', () => {
     let conv = new Conversation("Test1", author)
     conv.addCP(...cps)
 
-    let callResult = service.deserializeConversation(JSON.parse(str))
+    let callResult = service.loadConversation(JSON.parse(str))
     expect(callResult.title).toEqual(conv.title)
 
     function testListRefs<T extends Referencable>(l1: T[], l2: T[]) {
