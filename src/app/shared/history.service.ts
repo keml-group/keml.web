@@ -17,9 +17,9 @@ export class HistoryService<T> {
    */
 
   private readonly prefix: string;
-  private readonly oldestEntryName: string;
-  private readonly newestEntryName: string;
-  private readonly currentEntryName: string;
+  readonly oldestEntryName: string;
+  readonly newestEntryName: string;
+  readonly currentEntryName: string;
   private oldestEntry: number = 0;
   private newestEntry: number = 0;
   private currentEntry: number = 0;
@@ -38,7 +38,10 @@ export class HistoryService<T> {
     this.oldestEntry = this.readNumber(this.oldestEntryName)
     this.newestEntry = this.readNumber(this.newestEntryName)
     this.currentEntry = this.readNumber(this.currentEntryName)
-    //todo: always load?
+    //todo maybe some error handling here? set all to 0 if any null detected?
+    this.saveNumber(this.oldestEntryName, this.oldestEntry)
+    this.saveNumber(this.currentEntryName, this.currentEntry)
+    this.saveNumber(this.newestEntryName, this.newestEntry)
     let entry = this.loadFromStorage(this.currentEntry)
     this.stateSubject.next(entry)
   }
@@ -48,7 +51,8 @@ export class HistoryService<T> {
     this.invalidateTooYoungEntries()
     // also remove one oldest entry if you need to make space
     let next = this.incrementNumber(this.currentEntry)
-    if (next == this.oldestEntry) {
+
+    if (next == this.oldestEntry || this.oldestEntry == -1) {
       this.invalidateOldestEntry()
     }
     this.newestEntry = next
@@ -128,7 +132,7 @@ export class HistoryService<T> {
     if (maybeN) {
       return parseInt(maybeN, 10)
     } else {
-      return 0 //todo works?
+      return -1
     }
   }
 
