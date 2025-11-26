@@ -14,3 +14,17 @@
   color: orange;
   background: transparent;
 }
+
+.file-level-button:disabled,
+.file-level-button[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+  .svg-dis{
+    stroke: #666666;
+  }
+  .mat-icon{
+    color: #666666;
+    background: transparent;
+  }
+}
