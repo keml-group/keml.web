@@ -38,12 +38,24 @@ export class HistoryService<T> {
     this.oldestEntry = this.readNumber(this.oldestEntryName)
     this.newestEntry = this.readNumber(this.newestEntryName)
     this.currentEntry = this.readNumber(this.currentEntryName)
-    //todo maybe some error handling here? set all to -1 if any -1 detected?
+    if (this.oldestEntry == -1 || this.newestEntry == -1 || this.currentEntry == -1) {
+      this.clearHistory()
+    } else {
+      let entry = this.loadFromStorage(this.currentEntry)
+      this.stateSubject.next(entry)
+    }
+  }
+
+  clearHistory() {
+    this.oldestEntry = -1;
+    this.newestEntry = -1;
+    this.currentEntry = -1;
     this.saveNumber(this.oldestEntryName, this.oldestEntry)
-    this.saveNumber(this.currentEntryName, this.currentEntry)
     this.saveNumber(this.newestEntryName, this.newestEntry)
-    let entry = this.loadFromStorage(this.currentEntry)
-    this.stateSubject.next(entry)
+    this.saveNumber(this.currentEntryName, this.currentEntry)
+    for (let i = 1; i < 50; i++) {
+      this.deleteEntry(i);
+    }
   }
 
   save(elem: T) {

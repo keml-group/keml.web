@@ -4,19 +4,23 @@ import {fakeAsync, tick} from "@angular/core/testing";
 
 describe('HistoryService', () => {
   interface HistoryTester {inside: string}
-  let prefix = "TestHistory_"
-  let service = new HistoryService<HistoryTester>(prefix);
 
   beforeEach(() => {
     localStorage.clear()
   })
 
   it('should be created', () => {
+    let prefix = "TestHistoryCreate_"
+    let service = new HistoryService<HistoryTester>(prefix);
     expect(service).toBeTruthy();
   })
 
   it('should handle saves, undos and redos from a clear cache', fakeAsync(() => {
     let emitted: HistoryTester | null = null;
+
+    let prefix = "TestHistoryClean_"
+    let service = new HistoryService<HistoryTester>(prefix);
+
     service.state$.subscribe((value: HistoryTester | null) => emitted = value);
 
     service.init()
@@ -80,6 +84,8 @@ describe('HistoryService', () => {
 
   it('should remove newer elements when saving in an intermediate situation', fakeAsync(() => {
     let emitted: HistoryTester | null = null;
+    let prefix = "TestHistoryIntermediate_"
+    let service = new HistoryService<HistoryTester>(prefix);
     service.state$.subscribe((value: HistoryTester | null) => emitted = value);
 
     service.init()
@@ -111,9 +117,8 @@ describe('HistoryService', () => {
 
   it('should overwrite the oldest entry if buffer is full',  fakeAsync(() => {
 
-    let emitted: HistoryTester | null = null;
-    service.state$.subscribe((value: HistoryTester | null) => emitted = value);
-
+    let prefix = "TestHistoryFull_"
+    let service = new HistoryService<HistoryTester>(prefix);
     service.init()
 
     for (let i = 0; i < 50; i++) {
@@ -146,7 +151,8 @@ describe('HistoryService', () => {
   }));
 
   it('should decide if a redo is possible', () => {
-    localStorage.clear();
+    let prefix = "TestHistoryRedo_"
+    let service = new HistoryService<HistoryTester>(prefix);
     localStorage.setItem(service.oldestEntryName, "5")
     localStorage.setItem(service.currentEntryName, "1")
     localStorage.setItem(service.newestEntryName, "3")
@@ -164,7 +170,8 @@ describe('HistoryService', () => {
   });
 
   it('should decide if an undo is possible', () => {
-    localStorage.clear();
+    let prefix = "TestHistoryUndo_"
+    let service = new HistoryService<HistoryTester>(prefix);
     localStorage.setItem(service.oldestEntryName, "5")
     localStorage.setItem(service.currentEntryName, "1")
     localStorage.setItem(service.newestEntryName, "3")
@@ -181,7 +188,21 @@ describe('HistoryService', () => {
     expect(service.isUndoNotPossible()).toEqual(true);
   });
 
-  it('should handle wrong pointer lookups by a complete reset', () => {
-    //todo
+  it('should handle wrong pointer lookup (oldest) by a complete reset', () => {
+    let prefix = "TestHistoryWrong_"
+    let service = new HistoryService<HistoryTester>(prefix);
+
+    localStorage.setItem(service.oldestEntryName, "-1")
+    localStorage.setItem(service.currentEntryName, "5")
+    localStorage.setItem(service.newestEntryName, "3")
+    localStorage.setItem(prefix+"3", "3")
+    expect(localStorage.getItem(prefix+"3")).toEqual("3")
+    
+    service.init()
+
+    expect(localStorage.getItem(service.oldestEntryName)).toEqual("-1")
+    expect(localStorage.getItem(service.currentEntryName)).toEqual("-1")
+    expect(localStorage.getItem(service.newestEntryName)).toEqual("-1")
+    expect(localStorage.getItem(prefix+"3")).toBeNull()
   });
 });
