@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {KemlService} from "@app/shared/keml/core/keml.service";
+import {KemlService} from "@app/shared/keml/edit/keml.service";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
 import {IoService} from "ngx-emfular-helper";
 
@@ -19,7 +19,7 @@ export class KEMLIOService {
     this.ioService.loadStringFromFile(event).then(txt => {
       //todo insert detection code for wrong files (no json, not appropriately structured
       let convJson =  <ConversationJson>JSON.parse(txt);
-      this.kemlService.deserializeConversation(convJson);
+      this.kemlService.loadConversation(convJson);
     });
   }
 

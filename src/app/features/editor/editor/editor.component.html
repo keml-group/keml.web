@@ -11,12 +11,15 @@
               [matTooltip]="'Upload your complete conv.json'"
               (click)="newFromChatGPTList()">
         <mat-icon aria-hidden="false" fontIcon="insert_drive_file" ></mat-icon>
-        From ChatGPT List
+        From ChatGPT
       </button>
       <button class="file-level-button" (click)="openKeml()">
         <mat-icon aria-hidden="false" fontIcon="file_upload" ></mat-icon>
         Open KEML
       </button>
+      <hr class="v-divider">
+      <undo-redo></undo-redo>
+      <hr class="v-divider">
       <button class="file-level-button" (click)="kemlIOService.saveKEML()">
         <mat-icon aria-hidden="false" fontIcon="file_download" ></mat-icon>
         Save KEML
@@ -33,6 +36,7 @@
         <mat-icon aria-hidden="false" fontIcon="photo_library" ></mat-icon>
         Save JPEG
       </button>
+      <hr class="v-divider">
       <button class="file-level-button" (click)="openSimulation()">
         <!--fontIcon="open_in_new" lightbulb_outline-->
         <mat-icon aria-hidden="false" fontIcon="schedule" ></mat-icon>

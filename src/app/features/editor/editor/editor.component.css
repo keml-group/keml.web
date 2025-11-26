@@ -70,3 +70,11 @@
 .filter-to-orange{
   filter: invert(73%) sepia(61%) saturate(3593%) hue-rotate(360deg) brightness(103%) contrast(104%);
 }
+
+.v-divider{
+  width: 1px;              /* thin line */
+  height: 20px;
+  color: orangered;           /* line color */
+  border: none;            /* remove default border */
+  margin: 1rem;
+}

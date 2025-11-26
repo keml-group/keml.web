@@ -3,7 +3,7 @@ import { NgIf, NgFor } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import {MatDialogRef} from "@angular/material/dialog";
 import { FormsModule } from '@angular/forms';
-import {KemlService} from "@app/shared/keml/core/keml.service";
+import {KemlService} from "@app/shared/keml/edit/keml.service";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {Information, InformationLink, Preknowledge} from "@app/shared/keml/core/msg-info";
 import { InfoChoiceComponent } from '@app/shared/keml/graphical/helper/information/info-choice/info-choice.component';

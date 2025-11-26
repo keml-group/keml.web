@@ -2,7 +2,7 @@ import {Component, ElementRef, ViewChild,} from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { KemlService } from "@app/shared/keml/core/keml.service";
+import { KemlService } from "@app/shared/keml/edit/keml.service";
 import { DetailsService } from "@app/features/editor/details/details.service";
 import { DatabaseSvgComponent } from '@app/shared/keml/graphical/helper/base-svg/database-svg/database-svg.component';
 import { PersonSvgComponent } from '@app/shared/keml/graphical/helper/base-svg/person-svg/person-svg.component';
@@ -11,13 +11,14 @@ import {KEMLIOService} from "@app/features/editor/keml-io.service";
 import {ConversationPickService} from "@app/features/fromLLM/chatGPT2llm/conversationpicking/conversation-pick.service";
 import {IoService, InputHandler} from "ngx-emfular-helper";
 import {ConversationComponent} from "@app/shared/keml/graphical/conversation/conversation.component";
+import {UndoRedoComponent} from "@app/shared/undo-redo/undo-redo.component";
 
 
 @Component({
     selector: 'keml-editor',
     templateUrl: './editor.component.html',
     styleUrl: './editor.component.css',
-  imports: [MatTooltipModule, MatToolbar, MatIcon, PersonSvgComponent, DatabaseSvgComponent, ConversationComponent]
+  imports: [MatTooltipModule, MatToolbar, MatIcon, PersonSvgComponent, DatabaseSvgComponent, ConversationComponent, UndoRedoComponent]
 })
 export class EditorComponent {
 
@@ -32,9 +33,7 @@ export class EditorComponent {
     public conversationPickService: ConversationPickService,
     private simulationService: SimulationDialogueService,
     private ioService: IoService,
-  ) {
-    this.kemlService.newConversation();
-  }
+  ) {}
 
   updateConvLength(event: number) {
     this.convLength = Math.max(event, 1000)
@@ -96,5 +95,4 @@ export class EditorComponent {
   }
 
   protected readonly InputHandler = InputHandler;
-  protected readonly Math = Math;
 }

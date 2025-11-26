@@ -7,7 +7,7 @@ import {NgForOf} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Information} from "@app/shared/keml/core/msg-info";
 import {LinkOverview} from "@app/shared/keml/graphical/helper/link-overview/link-overview.component";
-import {TrustSliderComponent} from "@app/shared/trust-slider/trust-slider.component";
+import {TrustSliderComponent} from "@app/shared/keml/graphical/helper/trust/trust-slider/trust-slider.component";
 
 @Component({
     selector: 'info-trust-details',
