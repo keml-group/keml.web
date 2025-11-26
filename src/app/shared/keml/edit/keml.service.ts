@@ -149,12 +149,11 @@ export class KemlService {
     this.historyService.save(this.conversation.toJson())
   }
 
-  deleteMsgsWithCP(cp: ConversationPartner) {
+  private deleteMsgsWithCP(cp: ConversationPartner) {
     this.conversation.author.messages.filter(m => m.counterPart == cp).forEach(m => {
-      this.deleteMessage(m)
+      this.deleteMessageInternally(m)
     })
     this.msgCount.set(this.conversation.author.messages.length)
-    this.historyService.save(this.conversation.toJson())
   }
 
   duplicateConversationPartner(cp: ConversationPartner): ConversationPartner {
@@ -204,13 +203,17 @@ export class KemlService {
     return msg.timing>=this.conversation.author.messages.length-1;
   }
 
-  deleteMessage(msg: Message) {
+  private deleteMessageInternally(msg: Message) {
     const msgs = this.conversation.author.messages
     msg.destruct()
     ListUpdater.removeFromList(msg, msgs)
     // adapt later messages:
     this.moveMessagesUp(msg.timing, msgs.length)
     this.msgCount.update(n => n-1);
+  }
+
+  deleteMessage(msg: Message) {
+    this.deleteMessageInternally(msg)
     this.historyService.save(this.conversation.toJson())
   }
 
