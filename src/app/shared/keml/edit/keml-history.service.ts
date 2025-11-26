@@ -5,4 +5,8 @@ import {HistoryService} from "@app/shared/history.service";
 @Injectable({
   providedIn: 'root'
 })
-export class KemlHistoryService extends HistoryService<ConversationJson> {}
+export class KemlHistoryService extends HistoryService<ConversationJson> {
+  constructor() {
+    super("KEML-history_");
+  }
+}

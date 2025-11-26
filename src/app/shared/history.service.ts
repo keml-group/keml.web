@@ -1,22 +1,21 @@
-import { Injectable } from '@angular/core';
-
-@Injectable({
-  providedIn: 'root'
-})
 export class HistoryService<T> {
 
   // history in a circular buffer
   //50 entries: entries are 0 to 49, -1 is unset
 
-  private readonly prefix: string = 'history_';
-  private readonly oldestEntryName: string = this.prefix+ 'oldestEntry'
-  private readonly newestEntryName: string = this.prefix+ 'newestEntry'
-  private readonly currentEntryName: string = this.prefix+ 'currentEntry'
+  private readonly prefix: string;
+  private readonly oldestEntryName: string;
+  private readonly newestEntryName: string;
+  private readonly currentEntryName: string;
   private oldestEntry: number = 0;
   private newestEntry: number = 0;
   private currentEntry: number = 0;
 
-  constructor() {
+  constructor(prefix: string = 'history_') {
+    this.prefix = prefix;
+    this.oldestEntryName = prefix + 'oldestEntry';
+    this.newestEntryName = prefix + 'newestEntry';
+    this.currentEntryName = prefix + 'currentEntry';
     /*this.oldestEntry = this.readNumber(this.oldestEntryName)
     this.newestEntry = this.readNumber(this.newestEntryName)
     this.currentEntry = this.readNumber(this.currentEntryName)*/
