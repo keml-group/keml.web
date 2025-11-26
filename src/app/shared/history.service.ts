@@ -17,9 +17,9 @@ export class HistoryService<T> {
   private currentEntry: number = 0;
 
   constructor() {
-    this.oldestEntry = this.readNumber(this.oldestEntryName)
+    /*this.oldestEntry = this.readNumber(this.oldestEntryName)
     this.newestEntry = this.readNumber(this.newestEntryName)
-    this.currentEntry = this.readNumber(this.currentEntryName)
+    this.currentEntry = this.readNumber(this.currentEntryName)*/
   }
 
   save(elem: T) {

@@ -32,9 +32,7 @@ export class EditorComponent {
     public conversationPickService: ConversationPickService,
     private simulationService: SimulationDialogueService,
     private ioService: IoService,
-  ) {
-    this.kemlService.newConversation();
-  }
+  ) {}
 
   updateConvLength(event: number) {
     this.convLength = Math.max(event, 1000)
@@ -96,5 +94,4 @@ export class EditorComponent {
   }
 
   protected readonly InputHandler = InputHandler;
-  protected readonly Math = Math;
 }

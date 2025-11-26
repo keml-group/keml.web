@@ -38,7 +38,7 @@ export class KemlService {
     this.conversation = new Conversation();
     this.layoutingService.positionConversationPartners(this.conversation.conversationPartners)
     this.msgCount = signal<number>(this.conversation.author.messages.length);
-    this.historyService.save(this.conversation.toJson())
+    //this.historyService.save(this.conversation.toJson())
   }
 
 
