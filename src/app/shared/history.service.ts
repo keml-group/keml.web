@@ -38,7 +38,7 @@ export class HistoryService<T> {
     this.oldestEntry = this.readNumber(this.oldestEntryName)
     this.newestEntry = this.readNumber(this.newestEntryName)
     this.currentEntry = this.readNumber(this.currentEntryName)
-    //todo maybe some error handling here? set all to 0 if any null detected?
+    //todo maybe some error handling here? set all to -1 if any -1 detected?
     this.saveNumber(this.oldestEntryName, this.oldestEntry)
     this.saveNumber(this.currentEntryName, this.currentEntry)
     this.saveNumber(this.newestEntryName, this.newestEntry)

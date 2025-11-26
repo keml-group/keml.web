@@ -107,6 +107,41 @@ describe('HistoryService', () => {
     expect(localStorage.getItem(prefix+"0")).toEqual(JSON.stringify({inside: "s0"}))
     expect(localStorage.getItem(prefix+"3")).toBeNull()
 
+  }));
 
-  }))
+  it('should overwrite the oldest entry if buffer is full',  fakeAsync(() => {
+
+    let emitted: HistoryTester | null = null;
+    service.state$.subscribe((value: HistoryTester | null) => emitted = value);
+
+    service.init()
+
+    for (let i = 0; i < 50; i++) {
+      service.save({inside: "s"+i})
+    }
+    expect(localStorage.getItem(service.oldestEntryName)).toEqual("0")
+    expect(localStorage.getItem(service.currentEntryName)).toEqual("49")
+    expect(localStorage.getItem(service.newestEntryName)).toEqual("49")
+
+    expect(localStorage.getItem(prefix+"0")).toEqual(JSON.stringify({inside: "s0"}))
+    expect(localStorage.getItem(prefix+"49")).toEqual(JSON.stringify({inside: "s49"}))
+
+    service.save({inside: "s50"})
+    expect(localStorage.getItem(service.oldestEntryName)).toEqual("1")
+    expect(localStorage.getItem(service.currentEntryName)).toEqual("0")
+    expect(localStorage.getItem(service.newestEntryName)).toEqual("0")
+
+    expect(localStorage.getItem(prefix+"0")).toEqual(JSON.stringify({inside: "s50"}))
+    expect(localStorage.getItem(prefix+"49")).toEqual(JSON.stringify({inside: "s49"}))
+
+    service.save({inside: "s51"})
+    expect(localStorage.getItem(service.oldestEntryName)).toEqual("2")
+    expect(localStorage.getItem(service.currentEntryName)).toEqual("1")
+    expect(localStorage.getItem(service.newestEntryName)).toEqual("1")
+
+    expect(localStorage.getItem(prefix+"0")).toEqual(JSON.stringify({inside: "s50"}))
+    expect(localStorage.getItem(prefix+"1")).toEqual(JSON.stringify({inside: "s51"}))
+    expect(localStorage.getItem(prefix+"49")).toEqual(JSON.stringify({inside: "s49"}))
+
+  }));
 });
