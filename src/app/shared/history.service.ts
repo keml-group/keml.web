@@ -3,7 +3,7 @@ import {BehaviorSubject} from "rxjs";
 export class HistoryService<T> {
 
   // history in a circular buffer
-  //50 entries: entries are 0 to 49, -1 is unset
+  //bufferSize entries: entries are 0 to bufferSize-1, -1 is not defined
 
   //you need to call init after localstorage is ready if you would like to have the history available at app start
   /* example for instance "KemlHistoryService" that has a fixed prefix and type for T:
@@ -17,6 +17,7 @@ export class HistoryService<T> {
    */
 
   private readonly prefix: string;
+  private readonly bufferSize: number;
   readonly oldestEntryName: string;
   readonly newestEntryName: string;
   readonly currentEntryName: string;
@@ -27,11 +28,12 @@ export class HistoryService<T> {
   private stateSubject = new BehaviorSubject<T | null>(null);
   state$ = this.stateSubject.asObservable();
 
-  constructor(prefix: string = 'history_') {
+  constructor(prefix: string = 'history_', bufferSize: number = 50) {
     this.prefix = prefix;
     this.oldestEntryName = prefix + 'oldestEntry';
     this.newestEntryName = prefix + 'newestEntry';
     this.currentEntryName = prefix + 'currentEntry';
+    this.bufferSize = bufferSize;
   }
 
   init() {
@@ -53,7 +55,7 @@ export class HistoryService<T> {
     this.saveNumber(this.oldestEntryName, this.oldestEntry)
     this.saveNumber(this.newestEntryName, this.newestEntry)
     this.saveNumber(this.currentEntryName, this.currentEntry)
-    for (let i = 1; i < 50; i++) {
+    for (let i = 1; i < this.bufferSize; i++) {
       this.deleteEntry(i);
     }
   }
@@ -153,12 +155,12 @@ export class HistoryService<T> {
   }
 
   private decrementNumber(num: number): number {
-    if (num === 0) return 49 //fixed, otherwise we would need modulo computation
+    if (num === 0) return this.bufferSize-1
     else return num-1
   }
 
   private incrementNumber(num: number): number {
-    if (num === 49) return 0
+    if (num === this.bufferSize-1) return 0
     else return num+1
   }
 }

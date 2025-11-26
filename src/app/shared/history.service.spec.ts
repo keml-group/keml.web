@@ -19,7 +19,7 @@ describe('HistoryService', () => {
     let emitted: HistoryTester | null = null;
 
     let prefix = "TestHistoryClean_"
-    let service = new HistoryService<HistoryTester>(prefix);
+    let service = new HistoryService<HistoryTester>(prefix, 10);
 
     service.state$.subscribe((value: HistoryTester | null) => emitted = value);
 
@@ -85,7 +85,7 @@ describe('HistoryService', () => {
   it('should remove newer elements when saving in an intermediate situation', fakeAsync(() => {
     let emitted: HistoryTester | null = null;
     let prefix = "TestHistoryIntermediate_"
-    let service = new HistoryService<HistoryTester>(prefix);
+    let service = new HistoryService<HistoryTester>(prefix, 20);
     service.state$.subscribe((value: HistoryTester | null) => emitted = value);
 
     service.init()
@@ -118,7 +118,7 @@ describe('HistoryService', () => {
   it('should overwrite the oldest entry if buffer is full',  fakeAsync(() => {
 
     let prefix = "TestHistoryFull_"
-    let service = new HistoryService<HistoryTester>(prefix);
+    let service = new HistoryService<HistoryTester>(prefix, 50);
     service.init()
 
     for (let i = 0; i < 50; i++) {
@@ -150,9 +150,44 @@ describe('HistoryService', () => {
 
   }));
 
+  it('should overwrite the oldest entry if buffer is full (size 10)',  fakeAsync(() => {
+
+    let prefix = "TestHistoryFull10_"
+    let service = new HistoryService<HistoryTester>(prefix, 10);
+    service.init()
+
+    for (let i = 0; i < 10; i++) {
+      service.save({inside: "s"+i})
+    }
+    expect(localStorage.getItem(service.oldestEntryName)).toEqual("0")
+    expect(localStorage.getItem(service.currentEntryName)).toEqual("9")
+    expect(localStorage.getItem(service.newestEntryName)).toEqual("9")
+
+    expect(localStorage.getItem(prefix+"0")).toEqual(JSON.stringify({inside: "s0"}))
+    expect(localStorage.getItem(prefix+"9")).toEqual(JSON.stringify({inside: "s9"}))
+
+    service.save({inside: "s10"})
+    expect(localStorage.getItem(service.oldestEntryName)).toEqual("1")
+    expect(localStorage.getItem(service.currentEntryName)).toEqual("0")
+    expect(localStorage.getItem(service.newestEntryName)).toEqual("0")
+
+    expect(localStorage.getItem(prefix+"0")).toEqual(JSON.stringify({inside: "s10"}))
+    expect(localStorage.getItem(prefix+"9")).toEqual(JSON.stringify({inside: "s9"}))
+
+    service.save({inside: "s11"})
+    expect(localStorage.getItem(service.oldestEntryName)).toEqual("2")
+    expect(localStorage.getItem(service.currentEntryName)).toEqual("1")
+    expect(localStorage.getItem(service.newestEntryName)).toEqual("1")
+
+    expect(localStorage.getItem(prefix+"0")).toEqual(JSON.stringify({inside: "s10"}))
+    expect(localStorage.getItem(prefix+"1")).toEqual(JSON.stringify({inside: "s11"}))
+    expect(localStorage.getItem(prefix+"9")).toEqual(JSON.stringify({inside: "s9"}))
+
+  }));
+
   it('should decide if a redo is possible', () => {
     let prefix = "TestHistoryRedo_"
-    let service = new HistoryService<HistoryTester>(prefix);
+    let service = new HistoryService<HistoryTester>(prefix, 10);
     localStorage.setItem(service.oldestEntryName, "5")
     localStorage.setItem(service.currentEntryName, "1")
     localStorage.setItem(service.newestEntryName, "3")
@@ -171,7 +206,7 @@ describe('HistoryService', () => {
 
   it('should decide if an undo is possible', () => {
     let prefix = "TestHistoryUndo_"
-    let service = new HistoryService<HistoryTester>(prefix);
+    let service = new HistoryService<HistoryTester>(prefix, 10);
     localStorage.setItem(service.oldestEntryName, "5")
     localStorage.setItem(service.currentEntryName, "1")
     localStorage.setItem(service.newestEntryName, "3")
@@ -202,7 +237,7 @@ describe('HistoryService', () => {
 
   it('should handle wrong pointer lookup (oldest) by a complete reset', () => {
     let prefix = "TestHistoryWrongO_"
-    let service = new HistoryService<HistoryTester>(prefix);
+    let service = new HistoryService<HistoryTester>(prefix, 10);
 
     localStorage.setItem(service.oldestEntryName, "-1")
     localStorage.setItem(service.currentEntryName, "5")
@@ -212,7 +247,7 @@ describe('HistoryService', () => {
 
   it('should handle wrong pointer lookup (newest) by a complete reset', () => {
     let prefix = "TestHistoryWrongN_"
-    let service = new HistoryService<HistoryTester>(prefix);
+    let service = new HistoryService<HistoryTester>(prefix, 10);
 
     localStorage.setItem(service.oldestEntryName, "3")
     localStorage.setItem(service.currentEntryName, "5")
@@ -222,7 +257,7 @@ describe('HistoryService', () => {
 
   it('should handle wrong pointer lookup (current) by a complete reset', () => {
     let prefix = "TestHistoryWrongC_"
-    let service = new HistoryService<HistoryTester>(prefix);
+    let service = new HistoryService<HistoryTester>(prefix, 10);
 
     localStorage.setItem(service.oldestEntryName, "5")
     localStorage.setItem(service.currentEntryName, "-1")

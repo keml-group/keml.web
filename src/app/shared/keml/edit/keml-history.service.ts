@@ -7,6 +7,6 @@ import {HistoryService} from "@app/shared/history.service";
 })
 export class KemlHistoryService extends HistoryService<ConversationJson> {
   constructor() {
-    super("KEML-history_");
+    super("KEML-history_", 50);
   }
 }
