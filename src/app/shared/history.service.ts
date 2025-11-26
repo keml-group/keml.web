@@ -95,7 +95,7 @@ export class HistoryService<T> {
   private invalidateTooYoungEntries(): void {
     while (this.newestEntry != this.currentEntry) {
       this.deleteEntry(this.newestEntry);
-      this.decrementNumber(this.newestEntry)
+      this.newestEntry = this.decrementNumber(this.newestEntry)
     }
     this.saveNumber(this.newestEntryName, this.newestEntry)
   }
