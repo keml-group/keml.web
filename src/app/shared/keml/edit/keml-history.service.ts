@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
-import {HistoryService} from "@app/shared/history.service";
+import {HistoryService} from 'ngx-emfular-helper';
 
 @Injectable({
   providedIn: 'root'
