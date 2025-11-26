@@ -1,6 +1,7 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {HistoryService} from "@app/shared/history.service";
+import {Component, EventEmitter, Inject, Input, Output} from '@angular/core';
 import {MatIcon} from "@angular/material/icon";
+import {KemlHistoryService} from "@app/shared/keml/edit/keml-history.service";
+import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
 
 @Component({
   selector: 'undo-redo',
@@ -10,10 +11,14 @@ import {MatIcon} from "@angular/material/icon";
   templateUrl: './undo-redo.component.html',
   styleUrl: './undo-redo.component.css'
 })
-export class UndoRedoComponent<T> {
+export class UndoRedoComponent {
 
-  @Input() history!: HistoryService<T>
-  @Output() undoRedo: EventEmitter<T> = new EventEmitter<T>();
+
+  constructor(
+    public history: KemlHistoryService,
+  ) {}
+
+  @Output() undoRedo: EventEmitter<ConversationJson> = new EventEmitter<ConversationJson>();
 
   onUndo() {
     let res = this.history.undo()
