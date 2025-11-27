@@ -12,7 +12,7 @@ export class Llm2KemlService {
   ) {}
 
   convFromLlmMessages(llmMsgs: LLMMessage[]): void {
-    this.kemlService.newConversation('From model')
+    this.kemlService.initializeConversation('From model')
     let llm = this.kemlService.addNewConversationPartnerNoHistory('LLM')
     for( let i=0; i < llmMsgs.length; i++) {
       this.kemlService.addNewMessageNoHistory(

@@ -49,10 +49,13 @@ export class KemlService {
     this.historyService.save(this.serializeConversation())
   }
 
-
-  newConversation(title?: string) {
+  initializeConversation(title?: string) {
     this.conversation = new Conversation(title);
     this.msgCount.set(this.conversation.author.messages.length)
+  }
+
+  newConversation(title?: string) {
+    this.initializeConversation(title);
     this.saveCurrentState()
   }
 
