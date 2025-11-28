@@ -319,6 +319,14 @@ describe('KemlService and KemlHistory interplay', () => {
     expect(historyStub.save).toHaveBeenCalledWith(kemlConv)
   })
 
+  it('should not call save on normal serialization call; it should just deliver the current conv as json', () => {
+    const kemlConv = kemlService.conversation.toJson()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    let res = kemlService.serializeConversation()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(res).toEqual(kemlConv)
+  })
+
   it('should create a new conversation; without history on first method and with history on second method', () => {
     kemlService.newConversationNoHistory("test")
     expect(historyStub.save).toHaveBeenCalledTimes(0)
@@ -329,4 +337,84 @@ describe('KemlService and KemlHistory interplay', () => {
     expect(historyStub.save).toHaveBeenCalledTimes(1)
     expect(historyStub.save).toHaveBeenCalledOnceWith(new Conversation("test1").toJson())
   })
+
+  //(cannot test deserialize to not call history) it is private
+  it('should call history once on load', () => {
+    const exampleConv = new Conversation("testLoad").toJson()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(kemlService.conversation.title == exampleConv.title).toBeFalse()
+    kemlService.loadConversation(exampleConv)
+    const loadedConv = kemlService.conversation.toJson()
+    expect(loadedConv.title == exampleConv.title).toBeTrue()
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(loadedConv)
+  })
+
+  it('should not call save on getters', () => {
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.getTitle()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.getAuthor()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.getConversationPartners()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.getSends()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.getReceives()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.getFirstReceive()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+  })
+
+  it('should call history on conversation partner creation but not on the version without history', () => {
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.addNewConversationPartnerNoHistory("cp0")
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.addNewConversationPartner("cp1")
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+    let res = kemlService.serializeConversation()
+    expect(historyStub.save).toHaveBeenCalledOnceWith(res)
+    expect(res.conversationPartners.map(cp=> cp.name)).toEqual(["cp0", "cp1"])
+  })
+
+  it("should not call history on cp isMoveDisabled", () => {
+    let cp = new ConversationPartner("cp")
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.isMoveConversationPartnerLeftDisabled(cp)
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.isMoveConversationPartnerRightDisabled(cp)
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+  })
+
+  it('should move and call history on real cp movement (=if move possible)', () => {
+    let cp0 = kemlService.addNewConversationPartnerNoHistory("cp0")
+    let cp1 = kemlService.addNewConversationPartnerNoHistory("cp1")
+    let cp2 = kemlService.addNewConversationPartnerNoHistory("cp2")
+
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(kemlService.conversation.conversationPartners.map(cp=> cp.name)).toEqual(["cp0", "cp1", "cp2"])
+    //*** impossible move:
+    //right
+    kemlService.moveConversationPartnerRight(cp2)
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(kemlService.conversation.conversationPartners.map(cp=> cp.name)).toEqual(["cp0", "cp1", "cp2"])
+    //left
+    kemlService.moveConversationPartnerLeft(cp0)
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(kemlService.conversation.conversationPartners.map(cp=> cp.name)).toEqual(["cp0", "cp1", "cp2"])
+    //***possible move:
+    //right
+    kemlService.moveConversationPartnerRight(cp1)
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+    expect(kemlService.conversation.conversationPartners.map(cp=> cp.name)).toEqual(["cp0", "cp2", "cp1"])
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.serializeConversation())
+    //left
+    kemlService.moveConversationPartnerLeft(cp2)
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+    expect(kemlService.conversation.conversationPartners.map(cp=> cp.name)).toEqual(["cp2", "cp0", "cp1"])
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.serializeConversation())
+  })
+
+
+
 });

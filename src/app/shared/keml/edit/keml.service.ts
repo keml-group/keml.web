@@ -49,6 +49,10 @@ export class KemlService {
     this.historyService.save(this.serializeConversation())
   }
 
+  serializeConversation(): ConversationJson {
+    return this.conversation.toJson()
+  }
+
   newConversationNoHistory(title?: string) {
     this.conversation = new Conversation(title);
     this.msgCount.set(this.conversation.author.messages.length)
@@ -65,10 +69,6 @@ export class KemlService {
     return conv;
   }
 
-  serializeConversation(): ConversationJson {
-    return this.conversation.toJson()
-  }
-
   private deserializeConversation(convJson: ConversationJson): Conversation {
     JsonFixer.prepareJsonInfoLinkSources(convJson);
     JsonFixer.addMissingSupplementType(convJson);
@@ -82,7 +82,7 @@ export class KemlService {
     return conv;
   }
 
-  static timeMessages(msgs: Message[]) {
+  private static timeMessages(msgs: Message[]) {
     msgs.forEach((msg, i) => {
       msg.timing = i
     })
@@ -131,8 +131,8 @@ export class KemlService {
       cps[pos] = cps[pos+1];
       cps[pos + 1] = cp;
       this.layoutingService.positionConversationPartners(cps);
+      this.saveCurrentState()
     }
-    this.saveCurrentState()
   }
 
   isMoveConversationPartnerLeftDisabled(cp: ConversationPartner): boolean {
@@ -147,8 +147,8 @@ export class KemlService {
       cps[pos] = cps[pos-1];
       cps[pos-1] = cp;
       this.layoutingService.positionConversationPartners(cps);
+      this.saveCurrentState()
     }
-    this.saveCurrentState()
   }
 
   deleteConversationPartner(cp: ConversationPartner) {
