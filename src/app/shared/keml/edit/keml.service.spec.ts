@@ -13,6 +13,8 @@ import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {Author} from "@app/shared/keml/core/author";
 import {Conversation} from "@app/shared/keml/core/conversation";
 import {Referencable, RefHandler} from "emfular";
+import {of} from "rxjs";
+import {KemlHistoryService} from "@app/shared/keml/edit/keml-history.service";
 
 describe('KEML-Service', () => {
   let service: KemlService;
@@ -284,5 +286,51 @@ describe('KEML-Service', () => {
     }
     compareLinks(resultLink0, infoLink0)
     compareLinks(resultLink1, infoLink1)
+  })
+});
+
+describe('KemlService and KemlHistory interplay', () => {
+  let kemlService: KemlService;
+  let historyStub: any;
+
+  beforeEach(() => {
+
+    historyStub = {
+      // minimal observable so KemlService can subscribe without error
+      state$: of(null),
+      save: jasmine.createSpy('save')
+    };
+
+    TestBed.configureTestingModule({
+      providers: [
+          KemlService,
+        {provide: KemlHistoryService, useValue: historyStub},
+      ]
+    })
+
+    kemlService = TestBed.inject(KemlService);
+  });
+
+  interface Tester {
+    m1: string
+    m2: string
+    input: any
+    output: any
+  }
+  let testCases: Tester[] = [
+
+  ]
+
+  testCases.forEach((t: Tester) => {
+    it(`should call not call history save on ${t.m1} but on ${t.m2} when called with ${t.input}`, () => {
+
+
+    });
+  });
+
+  it('should create no save on any method without history', () => {
+
+
+
   })
 });

@@ -5,7 +5,7 @@ import {KemlHistoryService} from "@app/shared/keml/edit/keml-history.service";
 import {of} from "rxjs";
 import {LLMMessageAuthorType} from "@app/features/fromLLM/llm2keml/llm.models";
 
-describe('LlmConversationCreationService', () => {
+describe('Llm2KemlService', () => {
   let service: Llm2KemlService;
 
   beforeEach(() => {
@@ -18,7 +18,7 @@ describe('LlmConversationCreationService', () => {
   });
 });
 
-describe('LlmService integration with history', () => {
+describe('Llm2KemlService integration with history', () => {
   let llmService: Llm2KemlService;
   let kemlService: KemlService;
   let historyStub: any;
