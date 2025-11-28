@@ -311,26 +311,22 @@ describe('KemlService and KemlHistory interplay', () => {
     kemlService = TestBed.inject(KemlService);
   });
 
-  interface Tester {
-    m1: string
-    m2: string
-    input: any
-    output: any
-  }
-  let testCases: Tester[] = [
+  it('should call save on saveCurrentState', () => {
+    const kemlConv = kemlService.conversation.toJson()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.saveCurrentState()
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlConv)
+  })
 
-  ]
+  it('should create a new conversation; without history on first method and with history on second method', () => {
+    kemlService.newConversationNoHistory("test")
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    const res = kemlService.conversation.toJson()
+    expect(res).toEqual(new Conversation("test").toJson())
 
-  testCases.forEach((t: Tester) => {
-    it(`should call not call history save on ${t.m1} but on ${t.m2} when called with ${t.input}`, () => {
-
-
-    });
-  });
-
-  it('should create no save on any method without history', () => {
-
-
-
+    kemlService.newConversation("test1")
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(new Conversation("test1").toJson())
   })
 });
