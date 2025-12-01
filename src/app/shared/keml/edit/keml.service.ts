@@ -125,9 +125,9 @@ export class KemlService {
   }
 
   moveConversationPartnerRight(cp: ConversationPartner) {
-    const cps = this.conversation.conversationPartners;
-    const pos = cps.indexOf(cp);
     if (!this.isMoveConversationPartnerRightDisabled(cp)) {
+      const cps = this.conversation.conversationPartners;
+      const pos = cps.indexOf(cp);
       cps[pos] = cps[pos+1];
       cps[pos + 1] = cp;
       this.layoutingService.positionConversationPartners(cps);
@@ -141,9 +141,9 @@ export class KemlService {
   }
 
   moveConversationPartnerLeft(cp: ConversationPartner) {
-    const cps = this.conversation.conversationPartners;
-    const pos = cps.indexOf(cp);
     if (!this.isMoveConversationPartnerLeftDisabled(cp)) {
+      const cps = this.conversation.conversationPartners;
+      const pos = cps.indexOf(cp);
       cps[pos] = cps[pos-1];
       cps[pos-1] = cp;
       this.layoutingService.positionConversationPartners(cps);
@@ -181,15 +181,19 @@ export class KemlService {
   //************* Messages ********************
 
   moveMessageUp(msg: Message) {
-    const msgs = this.conversation.author.messages
-    //actually, timing should be equal to the index - can we rely on it?
-    msgs[msg.timing] = msgs[msg.timing-1];
-    msgs[msg.timing].timing++;
-    this.msgPositionChangeService.notifyPositionChangeMessage( msgs[msg.timing] )
-    msgs[msg.timing-1] = msg;
-    msg.timing--;
-    this.msgPositionChangeService.notifyPositionChangeMessage( msg)
-    this.saveCurrentState()
+    if(this.isMoveUpDisabled(msg)) {
+      console.error("Cannot move message up");
+    } else {
+      const msgs = this.conversation.author.messages
+      //actually, timing should be equal to the index - can we rely on it?
+      msgs[msg.timing] = msgs[msg.timing-1];
+      msgs[msg.timing].timing++;
+      this.msgPositionChangeService.notifyPositionChangeMessage( msgs[msg.timing] )
+      msgs[msg.timing-1] = msg;
+      msg.timing--;
+      this.msgPositionChangeService.notifyPositionChangeMessage( msg)
+      this.saveCurrentState()
+    }
   }
 
   isMoveUpDisabled(msg: Message): boolean {
@@ -197,43 +201,23 @@ export class KemlService {
   }
 
   moveMessageDown(msg: Message) {
-    const msgs = this.conversation.author.messages
-    //actually, timing should be equal to the index - can we rely on it?
-    msgs[msg.timing] = msgs[msg.timing+1];
-    msgs[msg.timing].timing-=1;
-    this.msgPositionChangeService.notifyPositionChangeMessage(msgs[msg.timing])
-    msgs[msg.timing+1] = msg;
-    msg.timing+=1;
-    this.msgPositionChangeService.notifyPositionChangeMessage(msg)
-    this.saveCurrentState()
+    if(this.isMoveDownDisabled(msg)) {
+      console.error("Cannot move message down");
+    } else {
+      const msgs = this.conversation.author.messages
+      //actually, timing should be equal to the index - can we rely on it?
+      msgs[msg.timing] = msgs[msg.timing+1];
+      msgs[msg.timing].timing-=1;
+      this.msgPositionChangeService.notifyPositionChangeMessage(msgs[msg.timing])
+      msgs[msg.timing+1] = msg;
+      msg.timing+=1;
+      this.msgPositionChangeService.notifyPositionChangeMessage(msg)
+      this.saveCurrentState()
+    }
   }
 
   isMoveDownDisabled(msg: Message): boolean {
     return msg.timing>=this.conversation.author.messages.length-1;
-  }
-
-  private deleteMessageInternally(msg: Message) {
-    const msgs = this.conversation.author.messages
-    msg.destruct()
-    ListUpdater.removeFromList(msg, msgs)
-    // adapt later messages:
-    this.moveMessagesUp(msg.timing, msgs.length)
-    this.msgCount.update(n => n-1);
-  }
-
-  deleteMessage(msg: Message) {
-    this.deleteMessageInternally(msg)
-    this.saveCurrentState()
-  }
-
-  duplicateMessage(msg: Message): Message | undefined {
-    if (this.msgPosFitsTiming(msg)) {
-      let duplicate = Message.newMessage(msg.isSend(), msg.counterPart, msg.timing+1, 'Duplicate of '+ msg.content, msg.originalContent);
-      this.insertMsgInPos(duplicate)
-      this.saveCurrentState()
-      return duplicate
-    }
-    return undefined
   }
 
   changeMessagePos(msg: Message, newPos: number) {
@@ -274,12 +258,40 @@ export class KemlService {
     }
   }
 
+  deleteMessage(msg: Message) {
+    this.deleteMessageInternally(msg)
+    this.saveCurrentState()
+  }
+
+  private deleteMessageInternally(msg: Message) {
+    const msgs = this.conversation.author.messages
+    msg.destruct()
+    ListUpdater.removeFromList(msg, msgs)
+    // adapt later messages:
+    this.moveMessagesUp(msg.timing, msgs.length)
+    this.msgCount.update(n => n-1);
+  }
+
+  duplicateMessage(msg: Message): Message | undefined {
+    if (this.msgPosFitsTiming(msg)) {
+      let duplicate = Message.newMessage(msg.isSend(), msg.counterPart, msg.timing+1, 'Duplicate of '+ msg.content, msg.originalContent);
+      this.insertMsgInPos(duplicate)
+      this.saveCurrentState()
+      return duplicate
+    }
+    return undefined
+  }
+
   private insertMsgInPos(msg: Message) {
     const msgs = this.conversation.author.messages
     msgs.splice(msg.timing, 0, msg);
     // adapt later messages:
     this.moveMessagesDown(msg.timing +1, msgs.length)
     this.msgCount.update(n => n+1);
+  }
+
+  isAddNewMessageDisabled(): boolean {
+    return this.conversation.conversationPartners.length <= 0;
   }
 
   addNewMessage(isSend: boolean, counterPart?: ConversationPartner, content?: string, originalContent?: string): Message | undefined {
@@ -307,10 +319,6 @@ export class KemlService {
       console.error('No conversation partners found');
       return undefined;
     }
-  }
-
-  isAddNewMessageDisabled(): boolean {
-    return this.conversation.conversationPartners.length <= 0;
   }
 
   getReceives() {

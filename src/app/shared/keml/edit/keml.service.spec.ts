@@ -289,7 +289,7 @@ describe('KEML-Service', () => {
   })
 });
 
-describe('KemlService and KemlHistory interplay', () => {
+describe('KemlService and KemlHistory interplay; verify method results as well', () => {
   let kemlService: KemlService;
   let historyStub: any;
 
@@ -415,7 +415,7 @@ describe('KemlService and KemlHistory interplay', () => {
     expect(historyStub.save).toHaveBeenCalledWith(kemlService.serializeConversation())
   })
 
-  function prepareCp(): ConversationPartner {
+  function prepareCpWith4Messages(): ConversationPartner {
     const cp = kemlService.addNewConversationPartnerNoHistory("cp0")
     for (let i = 0; i < 4; i++) {
       kemlService.addNewMessageNoHistory(i/2==0,cp, "message"+i)
@@ -429,7 +429,7 @@ describe('KemlService and KemlHistory interplay', () => {
 
   it('should call save history once on deleteCp', () => {
     // todo history only if cp exists on current conv?
-    const cp = prepareCp();
+    const cp = prepareCpWith4Messages();
     // actual call:
     kemlService.deleteConversationPartner(cp)
     expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
@@ -438,11 +438,60 @@ describe('KemlService and KemlHistory interplay', () => {
   })
 
   it('should call save history once on duplicateCp', () => {
-    const cp = prepareCp();
+    const cp = prepareCpWith4Messages();
     // actual call:
     kemlService.duplicateConversationPartner(cp)
     expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
     expect(kemlService.conversation.conversationPartners.length).toBe(2)
     expect(kemlService.conversation.author.messages.length).toBe(4)
   })
+
+  //************* Messages ********************
+  it('should call save history once on real message movements', () => {
+    prepareCpWith4Messages()
+    const msgs = kemlService.conversation.author.messages
+    const msg0 = msgs[0]
+    const msg1 = msgs[1]
+    const msg3 = msgs[3]
+    const convBefore = kemlService.conversation
+      // isMoveUp/Down
+    let res0 = kemlService.isMoveDownDisabled(msg3)
+    expect(res0).toBeTrue()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    let res1 = kemlService.isMoveDownDisabled(msg1)
+    expect(res1).toBeFalse()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    res0 = kemlService.isMoveUpDisabled(msg1)
+    expect(res0).toBeFalse()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    res1 = kemlService.isMoveUpDisabled(msg0)
+    expect(res1).toBeTrue()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+      // moveMessageUp/Down not possible => no history:
+    kemlService.moveMessageUp(msg0)
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(kemlService.conversation).toEqual(convBefore)
+    kemlService.moveMessageDown(msg3)
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(kemlService.conversation).toEqual(convBefore)
+      // move Message up/down possible => history:
+    expect(msg3.timing).toBe(3)
+    kemlService.moveMessageUp(msg3)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
+    expect(msg3.timing).toBe(2)
+    kemlService.moveMessageDown(msg3)
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+    expect(kemlService.conversation).toEqual(convBefore)
+
+    kemlService.changeMessagePos(msg1, 3)
+    expect(historyStub.save).toHaveBeenCalledTimes(3)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+    expect(msg1.timing).toBe(3)
+  })
+
+  it('should delete a message', () => {
+
+  })
+
 });
