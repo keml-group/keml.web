@@ -415,6 +415,34 @@ describe('KemlService and KemlHistory interplay', () => {
     expect(historyStub.save).toHaveBeenCalledWith(kemlService.serializeConversation())
   })
 
+  function prepareCp(): ConversationPartner {
+    const cp = kemlService.addNewConversationPartnerNoHistory("cp0")
+    for (let i = 0; i < 4; i++) {
+      kemlService.addNewMessageNoHistory(i/2==0,cp, "message"+i)
+    }
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(kemlService.conversation.conversationPartners.length).toBe(1)
+    expect(kemlService.conversation.author.messages.length).toBe(4)
 
+    return cp;
+  }
 
+  it('should call save history once on deleteCp', () => {
+    // todo history only if cp exists on current conv?
+    const cp = prepareCp();
+    // actual call:
+    kemlService.deleteConversationPartner(cp)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
+    expect(kemlService.conversation.conversationPartners.length).toBe(0)
+    expect(kemlService.conversation.author.messages.length).toBe(0)
+  })
+
+  it('should call save history once on duplicateCp', () => {
+    const cp = prepareCp();
+    // actual call:
+    kemlService.duplicateConversationPartner(cp)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
+    expect(kemlService.conversation.conversationPartners.length).toBe(2)
+    expect(kemlService.conversation.author.messages.length).toBe(4)
+  })
 });
