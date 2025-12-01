@@ -623,6 +623,11 @@ describe('KemlService and KemlHistory interplay; verify method results as well',
     expect(historyStub.save).toHaveBeenCalledTimes(2)
     expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
     expect(kemlService.conversation).toBe(convInit)
+
+    // new deletion is not possible, hence no new triggering of removal
+    kemlService.deleteRepetition(m3, n0)
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+    expect(kemlService.conversation).toBe(convInit)
   })
 
 });

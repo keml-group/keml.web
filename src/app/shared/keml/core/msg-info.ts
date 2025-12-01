@@ -98,8 +98,8 @@ export class SendMessage extends Message {
   addUsage(info: Information) {
     this._uses.add(info)
   }
-  removeUsage(info: Information) {
-    this._uses.remove(info)
+  removeUsage(info: Information): boolean {
+    return this._uses.remove(info)
   }
 
   constructor(

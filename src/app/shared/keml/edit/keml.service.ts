@@ -371,8 +371,9 @@ export class KemlService {
   }
 
   deleteUsage(send: SendMessage, info: Information) {
-    send.removeUsage(info)
-    this.saveCurrentState()
+    if (send.removeUsage(info)) {
+      this.saveCurrentState()
+    }
   }
   //************** Infos ************************
 
