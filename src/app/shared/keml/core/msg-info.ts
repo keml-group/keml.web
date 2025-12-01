@@ -153,9 +153,6 @@ export class ReceiveMessage extends Message {
     return this._repeats.get();
   }
   addRepetition(info: Information) {
-    if(!Information.isRepetitionAllowed(this, info)) {
-      throw new RangeError("Repetition is only allowed to an earlier information")
-    }
     this._repeats.add(info);
   }
   removeRepetition(info: Information) {
@@ -262,15 +259,8 @@ export abstract class Information extends Referencable implements Positionable {
   get repeatedBy(): ReceiveMessage[] {
     return this._repeatedBy.get();
   }
-  static isRepetitionAllowed(msg: ReceiveMessage, info: Information): boolean {
-    //only allow the repetition if it connects to an earlier info
-    let infoTiming = info.getTiming()
-    return (infoTiming == undefined || infoTiming < msg.timing)
-  }
+
   addRepeatedBy(msg: ReceiveMessage) {
-    if(!Information.isRepetitionAllowed(msg, this)) {
-      throw new RangeError("Repetition is only allowed to an earlier information")
-    }
     this._repeatedBy.add(msg)
   }
   removeRepeatedBy(msg: ReceiveMessage) {

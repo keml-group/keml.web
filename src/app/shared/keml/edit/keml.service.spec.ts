@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { KemlService } from './keml.service';
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {
+  Information,
   InformationLink,
   Message,
   NewInformation, Preknowledge,
@@ -27,6 +28,22 @@ describe('KEML-Service', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
+  it('should determine if a repetition is allowed', () => {
+    let cp = new ConversationPartner('cp')
+    let rec = new ReceiveMessage(cp, 5)
+    let newInfo = new NewInformation(rec, 'info1')
+    let pre0 = new Preknowledge('pre0')
+    let pre1 = new Preknowledge('pre1')
+    let send3 = new SendMessage(cp, 3)
+    pre0.addIsUsedOn(send3)
+    expect(KemlService.isRepetitionAllowed(rec, newInfo)).toBe(false)
+    expect(KemlService.isRepetitionAllowed(rec, pre1)).toBe(true)
+    expect(KemlService.isRepetitionAllowed(rec, pre0)).toBe(true)
+    rec.timing = 1
+    expect(KemlService.isRepetitionAllowed(rec, pre0)).toBe(false)
+    expect(KemlService.isRepetitionAllowed(rec, pre1)).toBe(true)
+  })
 
   it('should change a new info\'s source', () => {
     let cp = new ConversationPartner()
@@ -64,7 +81,6 @@ describe('KEML-Service', () => {
 
     service.deleteConversationPartner(cp0)
     expect(service.msgCount()).toEqual(1)
-
 
     service.newConversation()
     expect(service.msgCount()).toEqual(0)
@@ -580,6 +596,33 @@ describe('KemlService and KemlHistory interplay; verify method results as well',
     ])
     expect(historyStub.save).toHaveBeenCalledTimes(2)
     expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+  })
+
+  it('should call history on repetition changes', () => {
+    const cp0 = kemlService.addNewConversationPartnerNoHistory("cp0")
+    const m1: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "m1") as ReceiveMessage
+    const m3: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "m3") as ReceiveMessage
+
+    let n0 = new NewInformation(m1, "i0")
+    let n1 = new NewInformation(m3, "i1")
+
+    let convInit = kemlService.conversation
+
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.addRepetition(m1, n0)
+    kemlService.addRepetition(m1, n1)
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(kemlService.conversation).toBe(convInit)
+
+    kemlService.addRepetition(m3, n0)
+    expect(m3.repeats.length).toBe(1)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
+
+    kemlService.deleteRepetition(m3, n0)
+    expect(m3.repeats.length).toBe(0)
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+    expect(kemlService.conversation).toBe(convInit)
   })
 
 });

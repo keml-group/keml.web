@@ -345,9 +345,19 @@ export class KemlService {
       .map(msg => msg as SendMessage)
   }
 
+  static isRepetitionAllowed(msg: ReceiveMessage, info: Information): boolean {
+    //only allow the repetition if it connects to an earlier info
+    let infoTiming = info.getTiming()
+    return (infoTiming == undefined || infoTiming < msg.timing)
+  }
+
   addRepetition(rec: ReceiveMessage, info: Information) {
-    rec.addRepetition(info) //todo handle error, maybe alert?
-    this.saveCurrentState()
+    if(KemlService.isRepetitionAllowed(rec, info)) {
+      rec.addRepetition(info)
+      this.saveCurrentState()
+    } else {
+      this.alertService.alert("Repetition is not allowed")
+    }
   }
 
   deleteRepetition(rec: ReceiveMessage, info: Information) {

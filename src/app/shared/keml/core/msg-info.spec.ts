@@ -76,22 +76,6 @@ describe('Info (models)', () => {
     expect(pre0.getTiming()).toEqual(4)
   })
 
-  it('should determine if a repetition is allowed', () => {
-    let cp = new ConversationPartner('cp')
-    let rec = new ReceiveMessage(cp, 5)
-    let newInfo = new NewInformation(rec, 'info1')
-    let pre0 = new Preknowledge('pre0')
-    let pre1 = new Preknowledge('pre1')
-    let send3 = new SendMessage(cp, 3)
-    pre0.addIsUsedOn(send3)
-    expect(Information.isRepetitionAllowed(rec, newInfo)).toBe(false)
-    expect(Information.isRepetitionAllowed(rec, pre1)).toBe(true)
-    expect(Information.isRepetitionAllowed(rec, pre0)).toBe(true)
-    rec.timing = 1
-    expect(Information.isRepetitionAllowed(rec, pre0)).toBe(false)
-    expect(Information.isRepetitionAllowed(rec, pre1)).toBe(true)
-  })
-
   it('should serialize preknowledge', () => {
     let preknowledge = new Preknowledge()
     let preknowledgeJson : PreknowledgeJson = {
