@@ -491,7 +491,95 @@ describe('KemlService and KemlHistory interplay; verify method results as well',
   })
 
   it('should delete a message', () => {
+    prepareCpWith4Messages()
+    const msgs = kemlService.conversation.author.messages
+    const m0 = msgs[0]
+    const m1 = msgs[1]
+    const m2 = msgs[2]
+    const m3 = msgs[3]
+    expect(m0.timing).toBe(0)
+    expect(m1.timing).toBe(1)
+    expect(m2.timing).toBe(2)
+    expect(m3.timing).toBe(3)
+    kemlService.deleteMessage(m1)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
+    expect(kemlService.conversation.author.messages.length).toBe(3)
+    expect(kemlService.conversation.author.messages.map(m => m.content)).toEqual([
+        "message0", "message2", "message3"
+    ])
+    expect(m0.timing).toBe(0)
+    expect(m2.timing).toBe(1)
+    expect(m3.timing).toBe(2)
+  })
 
+  it('should call history once when duplicating a msg and not if duplication not possible', () => {
+    prepareCpWith4Messages()
+    const msgs = kemlService.conversation.author.messages
+    const m0 = msgs[0]
+    const m1 = msgs[1]
+    const m2 = msgs[2]
+    const m3 = msgs[3]
+    // manipulate timing:
+    m1.timing = 42
+    const m1NoDup = kemlService.duplicateMessage(m1)
+    expect(m1NoDup).toBeUndefined()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    m1.timing = 1
+    const m1Dup = kemlService.duplicateMessage(m1)
+    expect(m1Dup).toBeDefined()
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
+    expect(kemlService.conversation.author.messages.length).toBe(5)
+    expect(m0.timing).toBe(0)
+    expect(m1.timing).toBe(1)
+    expect(m1Dup?.timing).toBe(2)
+    expect(m2.timing).toBe(3)
+    expect(m3.timing).toBe(4)
+    expect(kemlService.conversation.author.messages.map(m => m.content)).toEqual([
+      "message0", "message1", "Duplicate of message1", "message2", "message3"
+    ])
+  })
+
+  it('should call history on real add, but not if not possible or on disabled calls', () => {
+    let res = kemlService.isAddNewMessageDisabled()
+    expect(res).toBeTrue()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+
+    const noMsg = kemlService.addNewMessage(true)
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(noMsg).toBeUndefined()
+
+    // now we add cps, hence message creation is now possible:
+    const cp0 = prepareCpWith4Messages()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+
+    res = kemlService.isAddNewMessageDisabled()
+    expect(res).toBeFalse()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+
+    const cp1 = kemlService.addNewConversationPartnerNoHistory("cp1")
+    kemlService.moveConversationPartnerLeft(cp1)
+    // two partners to also test choice on message when not specified (should be leftmost)
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+
+    // add new msg with cp1 (since now first)
+    const msgNoExplicitCp = kemlService.addNewMessageNoHistory(true, undefined, "msgNew0")
+    expect(msgNoExplicitCp).toBeDefined()
+    expect(msgNoExplicitCp?.timing).toBe(4)
+    expect(msgNoExplicitCp?.counterPart.name).toBe("cp1")
+    expect(kemlService.conversation.author.messages.map(m => m.content)).toEqual([
+      "message0", "message1", "message2", "message3", "msgNew0"
+    ])
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+
+    const msgExplicitCp = kemlService.addNewMessage(true, cp0, "msgNew1")
+    expect(msgExplicitCp).toBeDefined()
+    expect(msgExplicitCp?.timing).toBe(5)
+    expect(msgExplicitCp?.counterPart.name).toBe("cp0")
+    expect(kemlService.conversation.author.messages.map(m => m.content)).toEqual([
+      "message0", "message1", "message2", "message3", "msgNew0", "msgNew1"
+    ])
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
   })
 
 });

@@ -282,6 +282,15 @@ export class KemlService {
     return undefined
   }
 
+  private msgPosFitsTiming(msg: Message): boolean {
+    const msgs = this.conversation.author.messages
+    if (msgs.indexOf(msg) != msg.timing) {
+      this.alertService.alert('Position and msg timing do not fit for the message with content \'' + msg.content );
+      return false;
+    }
+    return true;
+  }
+
   private insertMsgInPos(msg: Message) {
     const msgs = this.conversation.author.messages
     msgs.splice(msg.timing, 0, msg);
@@ -334,15 +343,6 @@ export class KemlService {
   getSends(): SendMessage[] {
     return this.conversation.author.messages.filter(msg => msg.isSend())
       .map(msg => msg as SendMessage)
-  }
-
-  private msgPosFitsTiming(msg: Message): boolean {
-    const msgs = this.conversation.author.messages
-    if (msgs.indexOf(msg) != msg.timing) {
-      this.alertService.alert('Position and msg timing do not fit for the message with content \'' + msg.content );
-      return false;
-    }
-    return true;
   }
 
   addRepetition(rec: ReceiveMessage, info: Information) {
