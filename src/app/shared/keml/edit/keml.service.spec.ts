@@ -630,4 +630,39 @@ describe('KemlService and KemlHistory interplay; verify method results as well',
     expect(kemlService.conversation).toBe(convInit)
   })
 
+  it('should call history on usage changes', () => {
+    const cp0 = kemlService.addNewConversationPartnerNoHistory("cp0")
+    const m1: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "m1") as ReceiveMessage
+    const m2: SendMessage = kemlService.addNewMessageNoHistory(true, cp0, "m2") as SendMessage
+    const m3: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "m3") as ReceiveMessage
+    const m4: SendMessage = kemlService.addNewMessageNoHistory(true, cp0, "m4") as SendMessage
+
+    let n0 = new NewInformation(m1, "i0")
+    let n1 = new NewInformation(m3, "i1")
+
+    let convInit = kemlService.conversation
+
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    // not working add:
+    kemlService.addUsage(m2, n1)
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(kemlService.conversation).toBe(convInit)
+    // working add:
+    kemlService.addUsage(m4, n1)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
+    expect(m4.uses).toContain(n1)
+    expect(n1.isUsedOn).toContain(m4)
+
+    // delete usage:
+    kemlService.deleteUsage(m4, n1)
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+    expect(historyStub.save).toHaveBeenCalledWith(convInit)
+    expect(kemlService.conversation).toBe(convInit)
+    // new deletion is not possible, hence no new triggering of removal
+    kemlService.deleteUsage(m4, n1)
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+    expect(kemlService.conversation).toBe(convInit)
+  })
+
+
 });
