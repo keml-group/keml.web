@@ -803,4 +803,51 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
   })
 
+  //***************** information links ********************
+  it('should test for general link creation (without history)', () => {
+    expect(kemlService.isLinkCreationDisabled()).toBeTrue()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+
+    const pre0 = kemlService.addNewPreknowledge()
+    expect(kemlService.conversation.author.preknowledge.length).toBe(1)
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+
+    expect(kemlService.isLinkCreationDisabled()).toBeTrue()
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+
+    const pre1 = kemlService.addNewPreknowledge()
+    expect(kemlService.conversation.author.preknowledge.length).toBe(2)
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+
+    expect(kemlService.isLinkCreationDisabled()).toBeFalse()
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+
+    kemlService.deleteInfo(pre0)
+    expect(historyStub.save).toHaveBeenCalledTimes(3)
+
+    const cp0 = kemlService.addNewConversationPartnerNoHistory("cp0")
+    const rec0: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "rec0") as ReceiveMessage
+    const n0: NewInformation = kemlService.addNewNewInfo(rec0) as NewInformation
+    expect(n0).toBeDefined()
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
+
+    expect(kemlService.isLinkCreationDisabled()).toBeFalse()
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
+
+    kemlService.deleteInfo(pre1)
+    expect(historyStub.save).toHaveBeenCalledTimes(5)
+
+    expect(kemlService.isLinkCreationDisabled()).toBeTrue()
+    expect(historyStub.save).toHaveBeenCalledTimes(5)
+
+    const n1 = kemlService.addNewNewInfo(rec0) as NewInformation
+    expect(n1).toBeDefined()
+    expect(rec0.generates).toContain(n1!)
+    expect(rec0.generates.length).toBe(2)
+    expect(historyStub.save).toHaveBeenCalledTimes(6)
+
+    expect(kemlService.isLinkCreationDisabled()).toBeFalse()
+    expect(historyStub.save).toHaveBeenCalledTimes(6)
+  })
+
 });

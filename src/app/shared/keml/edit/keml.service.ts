@@ -454,6 +454,7 @@ export class KemlService {
 
   //***************** information links ********************
 
+  //general information if link creation should be possible at all:
   isLinkCreationDisabled() {
     let size = this.conversation.author.preknowledge.length;
     if (size >=2)
