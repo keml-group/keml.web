@@ -632,13 +632,14 @@ describe('KemlService and KemlHistory interplay; verify method results as well',
 
   it('should call history on usage changes', () => {
     const cp0 = kemlService.addNewConversationPartnerNoHistory("cp0")
-    const m1: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "m1") as ReceiveMessage
+    const m0: SendMessage = kemlService.addNewMessageNoHistory(true, cp0, "m0") as SendMessage
     const m2: SendMessage = kemlService.addNewMessageNoHistory(true, cp0, "m2") as SendMessage
     const m3: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "m3") as ReceiveMessage
     const m4: SendMessage = kemlService.addNewMessageNoHistory(true, cp0, "m4") as SendMessage
 
-    let n0 = new NewInformation(m1, "i0")
     let n1 = new NewInformation(m3, "i1")
+
+    let pre0 = new Preknowledge("pre0")
 
     let convInit = kemlService.conversation
 
@@ -652,17 +653,43 @@ describe('KemlService and KemlHistory interplay; verify method results as well',
     expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
     expect(m4.uses).toContain(n1)
     expect(n1.isUsedOn).toContain(m4)
-
-    // delete usage:
-    kemlService.deleteUsage(m4, n1)
+    //also add usage for preknowledge (always working):
+    kemlService.addUsage(m4, pre0)
+    expect(m4.uses).toContain(pre0)
+    expect(m4.uses.length).toBe(2)
+    expect(pre0.isUsedOn).toContain(m4)
     expect(historyStub.save).toHaveBeenCalledTimes(2)
-    expect(historyStub.save).toHaveBeenCalledWith(convInit)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+    kemlService.addUsage(m0, pre0) //earlier one, makes new first usage
+    expect(m0.uses).toContain(pre0)
+    expect(pre0.isUsedOn).toContain(m0)
+    expect(historyStub.save).toHaveBeenCalledTimes(3)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+
+    //delete usage on pre:
+    kemlService.deleteUsage(m4, pre0)
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+    expect(m4.uses).toContain(n1)
+    expect(m4.uses.length).toBe(1)
+    expect(pre0.isUsedOn).toContain(m0)
+    expect(pre0.isUsedOn.length).toBe(1)
+    kemlService.deleteUsage(m0, pre0)
+    expect(historyStub.save).toHaveBeenCalledTimes(5)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+    expect(m4.uses).toContain(n1)
+    expect(m4.uses.length).toBe(1)
+    expect(pre0.isUsedOn.length).toBe(0)
+
+    // delete usage on new:
+    kemlService.deleteUsage(m4, n1)
+    expect(historyStub.save).toHaveBeenCalledTimes(6)
+    expect(historyStub.save).toHaveBeenCalledWith(convInit.toJson())
     expect(kemlService.conversation).toBe(convInit)
     // new deletion is not possible, hence no new triggering of removal
     kemlService.deleteUsage(m4, n1)
-    expect(historyStub.save).toHaveBeenCalledTimes(2)
+    expect(historyStub.save).toHaveBeenCalledTimes(6)
     expect(kemlService.conversation).toBe(convInit)
   })
-
 
 });

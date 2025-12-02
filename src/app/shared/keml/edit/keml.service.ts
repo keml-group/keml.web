@@ -366,9 +366,22 @@ export class KemlService {
     }
   }
 
+  isUsageAllowed(send: SendMessage, info: Information): boolean {
+    let newInfo: NewInformation = info as NewInformation;
+    if (newInfo?.source !== undefined) {
+      return (newInfo.getTiming() < send.timing)
+    } else {
+      return true
+    }
+  }
+
   addUsage(send: SendMessage, info: Information) {
-    send.addUsage(info)
-    this.saveCurrentState()
+    if(this.isUsageAllowed(send, info)) {
+      send.addUsage(info)
+      this.saveCurrentState()
+    } else {
+      this.alertService.alert("Usage is not allowed: it must connect an older new information with a younger message")
+    }
   }
 
   deleteUsage(send: SendMessage, info: Information) {
@@ -376,6 +389,8 @@ export class KemlService {
       this.saveCurrentState()
     }
   }
+
+
   //************** Infos ************************
 
   deleteInfo(info: Information) {
@@ -432,6 +447,7 @@ export class KemlService {
     info.source = newSrc
     this.saveCurrentState()
   }
+  
   //***************** information links ********************
 
   isLinkCreationDisabled() {

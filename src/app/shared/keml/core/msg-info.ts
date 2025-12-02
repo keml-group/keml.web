@@ -216,7 +216,7 @@ export abstract class Information extends Referencable implements Positionable {
   feltTrustImmediately: number | undefined;
   feltTrustAfterwards: number | undefined;
 
-  abstract getTiming(): number | undefined;
+  abstract getTiming(): number;
 
   static readonly causesPrefix: string = 'causes'
   static readonly isUsedOnPrefix: string = 'isUsedOn'
@@ -330,7 +330,7 @@ export class NewInformation extends Information {
     return this._source.get()!!
   }
 
-  override getTiming(): number | undefined {
+  override getTiming(): number {
     return this.source.timing
   }
 
