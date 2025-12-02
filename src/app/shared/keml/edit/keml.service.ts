@@ -396,7 +396,7 @@ export class KemlService {
     info.source = newSrc
     this.saveCurrentState()
   }
-  
+
   addNewPreknowledge(): Preknowledge {
     const preknowledge: Preknowledge = new Preknowledge("New preknowledge", false, LayoutingService.bbForPreknowledge(LayoutingService.positionForNewPreknowledge));
     this.conversation.author.preknowledge.push(preknowledge);
@@ -424,9 +424,12 @@ export class KemlService {
 
   deleteInfo(info: Information) {
     const infos = this.getRightInfoList(info)
-    info.destruct()
-    ListUpdater.removeFromList(info, infos)
-    this.saveCurrentState()
+    let index = infos.findIndex(c => c == info)
+    if (index >= 0) {
+      info.destruct()
+      ListUpdater.removeFromList(info, infos)
+      this.saveCurrentState()
+    }
   }
 
   duplicateInfo(info: Information): Information {

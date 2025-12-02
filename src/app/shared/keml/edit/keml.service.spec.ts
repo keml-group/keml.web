@@ -730,4 +730,47 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
   })
 
+  it('should delete an info (with history)', () => {
+    let p0 = kemlService.addNewPreknowledge()
+    expect(kemlService.conversation.author.preknowledge).toContain(p0)
+    expect(kemlService.conversation.author.preknowledge.length).toBe(1)
+    const cp0 = kemlService.addNewConversationPartnerNoHistory("cp0")
+    const rec0: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "rec0") as ReceiveMessage
+    const n0: NewInformation = kemlService.addNewNewInfo(rec0) as NewInformation
+    expect(n0).toBeDefined()
+    expect(rec0.generates).toContain(n0!)
+    expect(rec0.generates.length).toBe(1)
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+
+    kemlService.deleteInfo(p0)
+    expect(kemlService.conversation.author.preknowledge.length).toBe(0)
+    expect(historyStub.save).toHaveBeenCalledTimes(3)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+
+    kemlService.deleteInfo(p0)
+    expect(historyStub.save).toHaveBeenCalledTimes(3)
+
+    kemlService.deleteInfo(n0)
+    expect(rec0.generates.length).toBe(0)
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+
+    kemlService.deleteInfo(n0)
+    expect(rec0.generates.length).toBe(0)
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
+
+    const p1 = new Preknowledge("Not contained")
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
+    kemlService.deleteInfo(p1)
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
+
+    /*
+    // since rec exists, call works:
+    const rec2 = new ReceiveMessage(cp0, 5, "not contained")
+    const n1 = new NewInformation(rec2, "Not contained")
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
+    kemlService.deleteInfo(n1)
+    expect(historyStub.save).toHaveBeenCalledTimes(5)*/
+  })
+
 });
