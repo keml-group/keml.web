@@ -850,4 +850,39 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(historyStub.save).toHaveBeenCalledTimes(6)
   })
 
+  it('should add, suplicate and delete an info link with history (currently no validation check)', () => {
+    const pre0 = kemlService.addNewPreknowledge()
+    const cp0 = kemlService.addNewConversationPartnerNoHistory("cp0")
+    const rec0: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "rec0") as ReceiveMessage
+    const n0: NewInformation = kemlService.addNewNewInfo(rec0) as NewInformation
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+
+    const link0 = kemlService.addInformationLink(n0, pre0)
+    const stateWithOneLink = kemlService.conversation
+    expect(historyStub.save).toHaveBeenCalledTimes(3)
+    expect(historyStub.save).toHaveBeenCalledWith(stateWithOneLink.toJson())
+    expect(n0.causes).toContain(link0)
+    expect(n0.causes.length).toBe(1)
+    expect(pre0.targetedBy).toContain(link0)
+    expect(pre0.targetedBy.length).toBe(1)
+
+    const link1 = kemlService.duplicateLink(link0)
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+    expect(n0.causes).toContain(link0)
+    expect(n0.causes).toContain(link1)
+    expect(n0.causes.length).toBe(2)
+    expect(pre0.targetedBy).toContain(link0)
+    expect(pre0.targetedBy).toContain(link1)
+    expect(pre0.targetedBy.length).toBe(2)
+
+    kemlService.deleteLink(link1)
+    expect(historyStub.save).toHaveBeenCalledTimes(5)
+    expect(n0.causes).toContain(link0)
+    expect(n0.causes.length).toBe(1)
+    expect(pre0.targetedBy).toContain(link0)
+    expect(pre0.targetedBy.length).toBe(1)
+    //todo another trigger would again trigger a history - we have no option to see that a link is not existing any more or do we?
+  })
+
 });
