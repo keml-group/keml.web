@@ -479,8 +479,10 @@ export class KemlService {
   }
 
   deleteLink(link: InformationLink) {
-    link.destruct()
-    this.saveCurrentState()
+    if(link.source != undefined || link.target != undefined) {
+      link.destruct()
+      this.saveCurrentState()
+    }
   }
 
   duplicateLink(link: InformationLink): InformationLink {

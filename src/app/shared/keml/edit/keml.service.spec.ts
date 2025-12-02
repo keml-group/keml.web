@@ -882,7 +882,13 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(n0.causes.length).toBe(1)
     expect(pre0.targetedBy).toContain(link0)
     expect(pre0.targetedBy.length).toBe(1)
-    //todo another trigger would again trigger a history - we have no option to see that a link is not existing any more or do we?
+    //delete again: should not trigger another history:
+    kemlService.deleteLink(link1)
+    expect(historyStub.save).toHaveBeenCalledTimes(5)
+    expect(n0.causes).toContain(link0)
+    expect(n0.causes.length).toBe(1)
+    expect(pre0.targetedBy).toContain(link0)
+    expect(pre0.targetedBy.length).toBe(1)
   })
 
 });
