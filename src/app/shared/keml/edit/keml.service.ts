@@ -436,7 +436,9 @@ export class KemlService {
     const infos = this.getRightInfoList(info)
     const newInfo = info.duplicate()
     newInfo.position = LayoutingService.bbForInfoDuplication(info)
-    infos.push(newInfo); //todo position right after current info?
+    if (infos == this.conversation.author.preknowledge) {
+      infos.push(newInfo); //todo position right after current info?
+    }
     this.saveCurrentState()
     return newInfo;
   }

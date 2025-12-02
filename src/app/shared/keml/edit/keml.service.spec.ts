@@ -773,4 +773,34 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(historyStub.save).toHaveBeenCalledTimes(5)*/
   })
 
+  it('should duplicate an info (with history)', () => {
+    let p0 = kemlService.addNewPreknowledge()
+    expect(kemlService.conversation.author.preknowledge).toContain(p0)
+    expect(kemlService.conversation.author.preknowledge.length).toBe(1)
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+    const p1 = kemlService.duplicateInfo(p0)
+    expect(kemlService.conversation.author.preknowledge.length).toBe(2)
+    expect(kemlService.conversation.author.preknowledge).toContain(p1)
+    expect(kemlService.conversation.author.preknowledge).toContain(p0)
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+
+      // new info:
+    const cp0 = kemlService.addNewConversationPartnerNoHistory("cp0")
+    const rec0: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "rec0") as ReceiveMessage
+    const n0: NewInformation = kemlService.addNewNewInfo(rec0) as NewInformation
+    expect(n0).toBeDefined()
+    expect(rec0.generates).toContain(n0!)
+    expect(rec0.generates.length).toBe(1)
+    expect(historyStub.save).toHaveBeenCalledTimes(3)
+    const n1 = kemlService.duplicateInfo(n0)
+    expect(n1).toBeDefined()
+    expect(rec0.generates.length).toBe(2)
+    expect(rec0.generates).toContain(n1 as NewInformation)
+    expect(rec0.generates).toContain(n0)
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+  })
+
 });
