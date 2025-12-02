@@ -705,15 +705,29 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
   })
 
-  it('should add a new new information (with history) and check for the ability (without history)', () => {
+  it('should add a new new information (with history only if possible) and check for the ability (without history)', () => {
     const cp0 = kemlService.addNewConversationPartnerNoHistory("cp0")
+    const initialConv = kemlService.conversation
+    const res0 = kemlService.isAddNewNewInfoDisabled()
+    expect(res0).toBeTrue()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    //add call (not possible):
+    const noN = kemlService.addNewNewInfo()
+    expect(noN).toBeUndefined()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(kemlService.conversation).toBe(initialConv)
+
+    // add one receive, now new info creation is possible:
     const rec0: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "rec0") as ReceiveMessage
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    const res1 = kemlService.isAddNewNewInfoDisabled()
+    expect(res1).toBeFalse()
     expect(historyStub.save).toHaveBeenCalledTimes(0)
 
     const n0 = kemlService.addNewNewInfo(rec0)
+    expect(n0).toBeDefined()
     expect(rec0.generates).toContain(n0!)
     expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
-
   })
 
 });
