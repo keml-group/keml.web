@@ -698,4 +698,22 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
   })
 
+  it('should add a new preknowledge (with history)', () => {
+    let p0 = kemlService.addNewPreknowledge()
+    expect(kemlService.conversation.author.preknowledge.length).toEqual(1)
+    expect(kemlService.conversation.author.preknowledge).toContain(p0)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
+  })
+
+  it('should add a new new information (with history) and check for the ability (without history)', () => {
+    const cp0 = kemlService.addNewConversationPartnerNoHistory("cp0")
+    const rec0: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "rec0") as ReceiveMessage
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+
+    const n0 = kemlService.addNewNewInfo(rec0)
+    expect(rec0.generates).toContain(n0!)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
+
+  })
+
 });
