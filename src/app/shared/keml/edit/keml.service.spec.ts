@@ -3,7 +3,6 @@ import { TestBed } from '@angular/core/testing';
 import { KemlService } from './keml.service';
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {
-  Information,
   InformationLink,
   Message,
   NewInformation, Preknowledge,
@@ -633,6 +632,7 @@ describe('KemlService and KemlHistory interplay; verify method results as well',
   it('should call history on usage changes', () => {
     const cp0 = kemlService.addNewConversationPartnerNoHistory("cp0")
     const m0: SendMessage = kemlService.addNewMessageNoHistory(true, cp0, "m0") as SendMessage
+    kemlService.addNewMessageNoHistory(false, cp0, "m1")
     const m2: SendMessage = kemlService.addNewMessageNoHistory(true, cp0, "m2") as SendMessage
     const m3: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "m3") as ReceiveMessage
     const m4: SendMessage = kemlService.addNewMessageNoHistory(true, cp0, "m4") as SendMessage
@@ -658,11 +658,13 @@ describe('KemlService and KemlHistory interplay; verify method results as well',
     expect(m4.uses).toContain(pre0)
     expect(m4.uses.length).toBe(2)
     expect(pre0.isUsedOn).toContain(m4)
+    expect(pre0.getTiming()).toBe(4)
     expect(historyStub.save).toHaveBeenCalledTimes(2)
     expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
     kemlService.addUsage(m0, pre0) //earlier one, makes new first usage
     expect(m0.uses).toContain(pre0)
     expect(pre0.isUsedOn).toContain(m0)
+    expect(pre0.getTiming()).toBe(0)
     expect(historyStub.save).toHaveBeenCalledTimes(3)
     expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
 
