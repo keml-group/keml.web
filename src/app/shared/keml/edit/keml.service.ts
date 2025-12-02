@@ -361,8 +361,9 @@ export class KemlService {
   }
 
   deleteRepetition(rec: ReceiveMessage, info: Information) {
-    rec.removeRepetition(info)
-    this.saveCurrentState()
+    if (rec.removeRepetition(info)) {
+      this.saveCurrentState()
+    }
   }
 
   addUsage(send: SendMessage, info: Information) {

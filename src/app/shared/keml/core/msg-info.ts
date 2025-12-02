@@ -155,8 +155,8 @@ export class ReceiveMessage extends Message {
   addRepetition(info: Information) {
     this._repeats.add(info);
   }
-  removeRepetition(info: Information) {
-    this._repeats.remove(info);
+  removeRepetition(info: Information): boolean {
+    return this._repeats.remove(info);
   }
 
   isInterrupted: boolean = false;
