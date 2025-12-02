@@ -44,22 +44,6 @@ describe('KEML-Service', () => {
     expect(KemlService.isRepetitionAllowed(rec, pre1)).toBe(true)
   })
 
-  it('should change a new info\'s source', () => {
-    let cp = new ConversationPartner()
-    let msg1 = new ReceiveMessage(cp, 0, "rec1")
-    let msg2 = new ReceiveMessage(cp, 1, "rec2")
-    let newInfo = new NewInformation(msg2, 'newInfo', false)
-    expect(msg1.generates.length).toEqual(0)
-    expect(msg2.generates.length).toEqual(1)
-    expect(newInfo.source).toEqual(msg2)
-
-    // call to test:
-    service.changeInfoSource(newInfo, msg1)
-    expect(msg1.generates.length).toEqual(1)
-    expect(msg2.generates.length).toEqual(0)
-    expect(newInfo.source).toEqual(msg1)
-  })
-
   it('should adapt the msgCount correctly', () => {
     let cp0 = service.addNewConversationPartner('cp0')
     let cp1 = service.addNewConversationPartner('cp1')
@@ -95,7 +79,7 @@ describe('KEML-Service', () => {
 
   it('should set trusts to undefined on new info creation', () => {
     let cp0 = service.addNewConversationPartner()
-    let rec0 = service.addNewMessage(false, cp0)
+    let rec0 = service.addNewMessageNoHistory(false, cp0)
     let i0 = (service.addNewNewInfo((rec0 as ReceiveMessage)) as NewInformation)
     expect(i0.initialTrust).toBe(undefined)
     expect(i0.currentTrust).toBe(undefined)
@@ -304,7 +288,7 @@ describe('KEML-Service', () => {
   })
 });
 
-describe('KemlService and KemlHistory interplay; verify method results as well', () => {
+describe('KemlService: verify method results - also KemlHistory interplay: when to call save', () => {
   let kemlService: KemlService;
   let historyStub: any;
 
@@ -692,6 +676,26 @@ describe('KemlService and KemlHistory interplay; verify method results as well',
     kemlService.deleteUsage(m4, n1)
     expect(historyStub.save).toHaveBeenCalledTimes(6)
     expect(kemlService.conversation).toBe(convInit)
+  })
+
+  //************** Infos ************************
+  it('should change a new info\'s source and call history', () => {
+    const cp = kemlService.addNewConversationPartnerNoHistory()
+
+    const msg1: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp, "rec1") as ReceiveMessage
+    const msg2: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp, "rec2") as ReceiveMessage
+    let newInfo = new NewInformation(msg2, 'newInfo', false)
+    expect(msg1.generates.length).toEqual(0)
+    expect(msg2.generates.length).toEqual(1)
+    expect(newInfo.source).toEqual(msg2)
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+
+    // call to test:
+    kemlService.changeInfoSource(newInfo, msg1)
+    expect(msg1.generates.length).toEqual(1)
+    expect(msg2.generates.length).toEqual(0)
+    expect(newInfo.source).toEqual(msg1)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
   })
 
 });

@@ -392,6 +392,35 @@ export class KemlService {
 
 
   //************** Infos ************************
+  changeInfoSource(info: NewInformation, newSrc: ReceiveMessage) {
+    info.source = newSrc
+    this.saveCurrentState()
+  }
+  
+  addNewPreknowledge(): Preknowledge {
+    const preknowledge: Preknowledge = new Preknowledge("New preknowledge", false, LayoutingService.bbForPreknowledge(LayoutingService.positionForNewPreknowledge));
+    this.conversation.author.preknowledge.push(preknowledge);
+    this.saveCurrentState()
+    return preknowledge;
+  }
+
+  isAddNewNewInfoDisabled(): boolean {
+    return !this.getFirstReceive();
+  }
+
+  addNewNewInfo(causeMsg?: ReceiveMessage): NewInformation | undefined {
+    const source = causeMsg? causeMsg : this.getFirstReceive()
+    if (source) {
+      const newInfo = new NewInformation(
+        source, 'New Information', false, LayoutingService.bbForNewInfo(source.generates.length)
+      );
+      this.historyService.save(this.conversation.toJson())
+      return newInfo
+    } else {
+      this.alertService.alert('No receive messages found');
+      return undefined;
+    }
+  }
 
   deleteInfo(info: Information) {
     const infos = this.getRightInfoList(info)
@@ -418,36 +447,6 @@ export class KemlService {
     }
   }
 
-  addNewPreknowledge(): Preknowledge {
-    const preknowledge: Preknowledge = new Preknowledge("New preknowledge", false, LayoutingService.bbForPreknowledge(LayoutingService.positionForNewPreknowledge));
-    this.conversation.author.preknowledge.push(preknowledge);
-    this.saveCurrentState()
-    return preknowledge;
-  }
-
-  isAddNewNewInfoDisabled(): boolean {
-    return !this.getFirstReceive();
-  }
-
-  addNewNewInfo(causeMsg?: ReceiveMessage): NewInformation | undefined {
-    const source = causeMsg? causeMsg : this.getFirstReceive()
-    if (source) {
-      const newInfo = new NewInformation(
-        source, 'New Information', false, LayoutingService.bbForNewInfo(source.generates.length)
-      );
-      this.historyService.save(this.conversation.toJson())
-      return newInfo
-    } else {
-      this.alertService.alert('No receive messages found');
-      return undefined;
-    }
-  }
-
-  changeInfoSource(info: NewInformation, newSrc: ReceiveMessage) {
-    info.source = newSrc
-    this.saveCurrentState()
-  }
-  
   //***************** information links ********************
 
   isLinkCreationDisabled() {
