@@ -38,31 +38,35 @@ export class KemlService {
     this.conversation = new Conversation();
     this.layoutingService.positionConversationPartners(this.conversation.conversationPartners)
     this.msgCount = signal<number>(this.conversation.author.messages.length);
-    //this.historyService.save(this.conversation.toJson())
-
     this.historyService.state$.subscribe(state => {
       if (state) {
         this.deserializeConversation(state);
-        console.log('KEML updated:', state);
       }
     });
   }
 
-
-  newConversation(title?: string) {
-    this.conversation = new Conversation(title);
-    this.msgCount.set(this.conversation.author.messages.length)
-    this.historyService.save(this.conversation.toJson())
-  }
-
-  loadConversation(convJson: ConversationJson): Conversation {
-    let conv = this.deserializeConversation(convJson);
-    this.historyService.save(this.conversation.toJson())
-    return conv;
+  saveCurrentState() {
+    this.historyService.save(this.serializeConversation())
   }
 
   serializeConversation(): ConversationJson {
     return this.conversation.toJson()
+  }
+
+  newConversationNoHistory(title?: string) {
+    this.conversation = new Conversation(title);
+    this.msgCount.set(this.conversation.author.messages.length)
+  }
+
+  newConversation(title?: string) {
+    this.newConversationNoHistory(title);
+    this.saveCurrentState()
+  }
+
+  loadConversation(convJson: ConversationJson): Conversation {
+    let conv = this.deserializeConversation(convJson);
+    this.saveCurrentState()
+    return conv;
   }
 
   private deserializeConversation(convJson: ConversationJson): Conversation {
@@ -78,7 +82,7 @@ export class KemlService {
     return conv;
   }
 
-  static timeMessages(msgs: Message[]) {
+  private static timeMessages(msgs: Message[]) {
     msgs.forEach((msg, i) => {
       msg.timing = i
     })
@@ -99,13 +103,18 @@ export class KemlService {
   }
 
   addNewConversationPartner(name?: string): ConversationPartner {
+    const cp = this.addNewConversationPartnerNoHistory(name)
+    this.saveCurrentState()
+    return cp;
+  }
+
+  addNewConversationPartnerNoHistory(name?: string): ConversationPartner {
     const cps = this.conversation.conversationPartners;
     const cp: ConversationPartner = new ConversationPartner(
       name? name : 'New Partner',
       this.layoutingService.nextConversationPartnerPosition(cps[cps.length-1]?.xPosition), //todo
     );
     cps.push(cp);
-    this.historyService.save(this.conversation.toJson())
     return cp;
   }
 
@@ -116,14 +125,14 @@ export class KemlService {
   }
 
   moveConversationPartnerRight(cp: ConversationPartner) {
-    const cps = this.conversation.conversationPartners;
-    const pos = cps.indexOf(cp);
     if (!this.isMoveConversationPartnerRightDisabled(cp)) {
+      const cps = this.conversation.conversationPartners;
+      const pos = cps.indexOf(cp);
       cps[pos] = cps[pos+1];
       cps[pos + 1] = cp;
       this.layoutingService.positionConversationPartners(cps);
+      this.saveCurrentState()
     }
-    this.historyService.save(this.conversation.toJson())
   }
 
   isMoveConversationPartnerLeftDisabled(cp: ConversationPartner): boolean {
@@ -132,21 +141,21 @@ export class KemlService {
   }
 
   moveConversationPartnerLeft(cp: ConversationPartner) {
-    const cps = this.conversation.conversationPartners;
-    const pos = cps.indexOf(cp);
     if (!this.isMoveConversationPartnerLeftDisabled(cp)) {
+      const cps = this.conversation.conversationPartners;
+      const pos = cps.indexOf(cp);
       cps[pos] = cps[pos-1];
       cps[pos-1] = cp;
       this.layoutingService.positionConversationPartners(cps);
+      this.saveCurrentState()
     }
-    this.historyService.save(this.conversation.toJson())
   }
 
   deleteConversationPartner(cp: ConversationPartner) {
-    cp.destruct()
     this.deleteMsgsWithCP(cp)
+    cp.destruct()
     ListUpdater.removeFromList(cp, this.conversation.conversationPartners)
-    this.historyService.save(this.conversation.toJson())
+    this.saveCurrentState()
   }
 
   private deleteMsgsWithCP(cp: ConversationPartner) {
@@ -165,22 +174,26 @@ export class KemlService {
     )
     cps.splice(pos+1, 0, newCp);
     this.layoutingService.positionConversationPartners(cps); // complete re-positioning
-    this.historyService.save(this.conversation.toJson())
+    this.saveCurrentState()
     return newCp;
   }
 
   //************* Messages ********************
 
   moveMessageUp(msg: Message) {
-    const msgs = this.conversation.author.messages
-    //actually, timing should be equal to the index - can we rely on it?
-    msgs[msg.timing] = msgs[msg.timing-1];
-    msgs[msg.timing].timing++;
-    this.msgPositionChangeService.notifyPositionChangeMessage( msgs[msg.timing] )
-    msgs[msg.timing-1] = msg;
-    msg.timing--;
-    this.msgPositionChangeService.notifyPositionChangeMessage( msg)
-    this.historyService.save(this.conversation.toJson())
+    if(this.isMoveUpDisabled(msg)) {
+      console.error("Cannot move message up");
+    } else {
+      const msgs = this.conversation.author.messages
+      //actually, timing should be equal to the index - can we rely on it?
+      msgs[msg.timing] = msgs[msg.timing-1];
+      msgs[msg.timing].timing++;
+      this.msgPositionChangeService.notifyPositionChangeMessage( msgs[msg.timing] )
+      msgs[msg.timing-1] = msg;
+      msg.timing--;
+      this.msgPositionChangeService.notifyPositionChangeMessage( msg)
+      this.saveCurrentState()
+    }
   }
 
   isMoveUpDisabled(msg: Message): boolean {
@@ -188,43 +201,23 @@ export class KemlService {
   }
 
   moveMessageDown(msg: Message) {
-    const msgs = this.conversation.author.messages
-    //actually, timing should be equal to the index - can we rely on it?
-    msgs[msg.timing] = msgs[msg.timing+1];
-    msgs[msg.timing].timing-=1;
-    this.msgPositionChangeService.notifyPositionChangeMessage(msgs[msg.timing])
-    msgs[msg.timing+1] = msg;
-    msg.timing+=1;
-    this.msgPositionChangeService.notifyPositionChangeMessage(msg)
-    this.historyService.save(this.conversation.toJson())
+    if(this.isMoveDownDisabled(msg)) {
+      console.error("Cannot move message down");
+    } else {
+      const msgs = this.conversation.author.messages
+      //actually, timing should be equal to the index - can we rely on it?
+      msgs[msg.timing] = msgs[msg.timing+1];
+      msgs[msg.timing].timing-=1;
+      this.msgPositionChangeService.notifyPositionChangeMessage(msgs[msg.timing])
+      msgs[msg.timing+1] = msg;
+      msg.timing+=1;
+      this.msgPositionChangeService.notifyPositionChangeMessage(msg)
+      this.saveCurrentState()
+    }
   }
 
   isMoveDownDisabled(msg: Message): boolean {
     return msg.timing>=this.conversation.author.messages.length-1;
-  }
-
-  private deleteMessageInternally(msg: Message) {
-    const msgs = this.conversation.author.messages
-    msg.destruct()
-    ListUpdater.removeFromList(msg, msgs)
-    // adapt later messages:
-    this.moveMessagesUp(msg.timing, msgs.length)
-    this.msgCount.update(n => n-1);
-  }
-
-  deleteMessage(msg: Message) {
-    this.deleteMessageInternally(msg)
-    this.historyService.save(this.conversation.toJson())
-  }
-
-  duplicateMessage(msg: Message): Message | undefined {
-    if (this.msgPosFitsTiming(msg)) {
-      let duplicate = Message.newMessage(msg.isSend(), msg.counterPart, msg.timing+1, 'Duplicate of '+ msg.content, msg.originalContent);
-      this.insertMsgInPos(duplicate)
-      this.historyService.save(this.conversation.toJson())
-      return duplicate
-    }
-    return undefined
   }
 
   changeMessagePos(msg: Message, newPos: number) {
@@ -246,6 +239,7 @@ export class KemlService {
     msg.timing = newPos
     msgs.splice(newPos, 0, msg)
     this.msgPositionChangeService.notifyPositionChangeMessage(msg)
+    this.saveCurrentState()
   }
 
   private moveMessagesDown(start: number, afterEnd: number) {
@@ -253,7 +247,6 @@ export class KemlService {
     for(let i = start; i < afterEnd; i++) {
       msgs[i].timing++;
       this.msgPositionChangeService.notifyPositionChangeMessage(msgs[i])
-      //todo also adapt infos?
     }
   }
 
@@ -262,8 +255,40 @@ export class KemlService {
     for(let i = start; i < afterEnd; i++) {
       msgs[i].timing--;
       this.msgPositionChangeService.notifyPositionChangeMessage(msgs[i])
-      //todo also adapt infos?
     }
+  }
+
+  deleteMessage(msg: Message) {
+    this.deleteMessageInternally(msg)
+    this.saveCurrentState()
+  }
+
+  private deleteMessageInternally(msg: Message) {
+    const msgs = this.conversation.author.messages
+    msg.destruct()
+    ListUpdater.removeFromList(msg, msgs)
+    // adapt later messages:
+    this.moveMessagesUp(msg.timing, msgs.length)
+    this.msgCount.update(n => n-1);
+  }
+
+  duplicateMessage(msg: Message): Message | undefined {
+    if (this.msgPosFitsTiming(msg)) {
+      let duplicate = Message.newMessage(msg.isSend(), msg.counterPart, msg.timing+1, 'Duplicate of '+ msg.content, msg.originalContent);
+      this.insertMsgInPos(duplicate)
+      this.saveCurrentState()
+      return duplicate
+    }
+    return undefined
+  }
+
+  private msgPosFitsTiming(msg: Message): boolean {
+    const msgs = this.conversation.author.messages
+    if (msgs.indexOf(msg) != msg.timing) {
+      this.alertService.alert('Position and msg timing do not fit for the message with content \'' + msg.content );
+      return false;
+    }
+    return true;
   }
 
   private insertMsgInPos(msg: Message) {
@@ -274,7 +299,21 @@ export class KemlService {
     this.msgCount.update(n => n+1);
   }
 
+  isAddNewMessageDisabled(): boolean {
+    return this.conversation.conversationPartners.length <= 0;
+  }
+
   addNewMessage(isSend: boolean, counterPart?: ConversationPartner, content?: string, originalContent?: string): Message | undefined {
+    let msg = this.addNewMessageNoHistory(isSend, counterPart, content, originalContent)
+    if (msg !== undefined) {
+      this.saveCurrentState()
+    } else {
+      this.alertService.alert('No conversation partners found');
+    }
+    return msg
+  }
+
+  addNewMessageNoHistory(isSend: boolean, counterPart?: ConversationPartner, content?: string, originalContent?: string): Message | undefined {
     if (this.conversation.conversationPartners.length > 0) {
       const cp = counterPart ? counterPart : this.conversation.conversationPartners[0];
       const defaultContent = isSend ? 'New send content' : 'New receive content';
@@ -284,16 +323,11 @@ export class KemlService {
       const newMsg: Message = Message.newMessage(isSend, cp, msgs.length, cont, originalCont)
       msgs.push(newMsg);
       this.msgCount.update(n => n+1);
-      this.historyService.save(this.conversation.toJson())
       return newMsg;
     } else {
-      this.alertService.alert('No conversation partners found');
+      console.error('No conversation partners found');
       return undefined;
     }
-  }
-
-  isAddNewMessageDisabled(): boolean {
-    return this.conversation.conversationPartners.length <= 0;
   }
 
   getReceives() {
@@ -311,49 +345,101 @@ export class KemlService {
       .map(msg => msg as SendMessage)
   }
 
-  private msgPosFitsTiming(msg: Message): boolean {
-    const msgs = this.conversation.author.messages
-    if (msgs.indexOf(msg) != msg.timing) {
-      this.alertService.alert('Position and msg timing do not fit for the message with content \'' + msg.content );
-      return false;
-    }
-    return true;
+  static isRepetitionAllowed(msg: ReceiveMessage, info: Information): boolean {
+    //only allow the repetition if it connects to an earlier info
+    let infoTiming = info.getTiming()
+    return (infoTiming == undefined || infoTiming < msg.timing)
   }
 
   addRepetition(rec: ReceiveMessage, info: Information) {
-    rec.addRepetition(info) //todo handle error, maybe alert?
-    this.historyService.save(this.conversation.toJson())
+    if(KemlService.isRepetitionAllowed(rec, info)) {
+      rec.addRepetition(info)
+      this.saveCurrentState()
+    } else {
+      this.alertService.alert("Repetition is not allowed")
+    }
   }
 
   deleteRepetition(rec: ReceiveMessage, info: Information) {
-    rec.removeRepetition(info)
-    this.historyService.save(this.conversation.toJson())
+    if (rec.removeRepetition(info)) {
+      this.saveCurrentState()
+    }
+  }
+
+  isUsageAllowed(send: SendMessage, info: Information): boolean {
+    let newInfo: NewInformation = info as NewInformation;
+    if (newInfo?.source !== undefined) {
+      return (newInfo.getTiming() < send.timing)
+    } else {
+      return true
+    }
   }
 
   addUsage(send: SendMessage, info: Information) {
-    send.addUsage(info)
-    this.historyService.save(this.conversation.toJson())
+    if(this.isUsageAllowed(send, info)) {
+      send.addUsage(info)
+      this.saveCurrentState()
+    } else {
+      this.alertService.alert("Usage is not allowed: it must connect an older new information with a younger message")
+    }
   }
 
   deleteUsage(send: SendMessage, info: Information) {
-    send.removeUsage(info)
-    this.historyService.save(this.conversation.toJson())
+    if (send.removeUsage(info)) {
+      this.saveCurrentState()
+    }
   }
+
+
   //************** Infos ************************
+  changeInfoSource(info: NewInformation, newSrc: ReceiveMessage) {
+    info.source = newSrc
+    this.saveCurrentState()
+  }
+
+  addNewPreknowledge(): Preknowledge {
+    const preknowledge: Preknowledge = new Preknowledge("New preknowledge", false, LayoutingService.bbForPreknowledge(LayoutingService.positionForNewPreknowledge));
+    this.conversation.author.preknowledge.push(preknowledge);
+    this.saveCurrentState()
+    return preknowledge;
+  }
+
+  isAddNewNewInfoDisabled(): boolean {
+    return !this.getFirstReceive();
+  }
+
+  addNewNewInfo(causeMsg?: ReceiveMessage): NewInformation | undefined {
+    const source = causeMsg? causeMsg : this.getFirstReceive()
+    if (source) {
+      const newInfo = new NewInformation(
+        source, 'New Information', false, LayoutingService.bbForNewInfo(source.generates.length)
+      );
+      this.historyService.save(this.conversation.toJson())
+      return newInfo
+    } else {
+      this.alertService.alert('No receive messages found');
+      return undefined;
+    }
+  }
 
   deleteInfo(info: Information) {
     const infos = this.getRightInfoList(info)
-    info.destruct()
-    ListUpdater.removeFromList(info, infos)
-    this.historyService.save(this.conversation.toJson())
+    let index = infos.findIndex(c => c == info)
+    if (index >= 0) {
+      info.destruct()
+      ListUpdater.removeFromList(info, infos)
+      this.saveCurrentState()
+    }
   }
 
   duplicateInfo(info: Information): Information {
     const infos = this.getRightInfoList(info)
     const newInfo = info.duplicate()
     newInfo.position = LayoutingService.bbForInfoDuplication(info)
-    infos.push(newInfo); //todo position right after current info?
-    this.historyService.save(this.conversation.toJson())
+    if (infos == this.conversation.author.preknowledge) {
+      infos.push(newInfo); //todo position right after current info?
+    }
+    this.saveCurrentState()
     return newInfo;
   }
 
@@ -366,34 +452,9 @@ export class KemlService {
     }
   }
 
-  addNewPreknowledge(): Preknowledge {
-    const preknowledge: Preknowledge = new Preknowledge("New preknowledge", false, LayoutingService.bbForPreknowledge(LayoutingService.positionForNewPreknowledge));
-    this.conversation.author.preknowledge.push(preknowledge);
-    this.historyService.save(this.conversation.toJson())
-    return preknowledge;
-  }
-
-  isAddNewNewInfoDisabled(): boolean {
-    return !this.getFirstReceive();
-  }
-
-  addNewNewInfo(causeMsg?: ReceiveMessage): NewInformation | undefined {
-    let source = causeMsg? causeMsg : this.getFirstReceive()
-    if (source) {
-      this.historyService.save(this.conversation.toJson())
-      return new NewInformation(source, 'New Information', false, LayoutingService.bbForNewInfo(source.generates.length));
-    } else {
-      this.alertService.alert('No receive messages found');
-      return undefined;
-    }
-  }
-
-  changeInfoSource(info: NewInformation, newSrc: ReceiveMessage) {
-    info.source = newSrc
-    this.historyService.save(this.conversation.toJson())
-  }
   //***************** information links ********************
 
+  //general information if link creation should be possible at all:
   isLinkCreationDisabled() {
     let size = this.conversation.author.preknowledge.length;
     if (size >=2)
@@ -412,18 +473,21 @@ export class KemlService {
   }
 
   addInformationLink(src: Information, target: Information, type: InformationLinkType = InformationLinkType.SUPPLEMENT, text?: string): InformationLink {
-    this.historyService.save(this.conversation.toJson())
-    return new InformationLink(src, target, type, text);
+    let link = new InformationLink(src, target, type, text);
+    this.saveCurrentState()
+    return link
   }
 
   deleteLink(link: InformationLink) {
-    this.historyService.save(this.conversation.toJson())
-    link.destruct()
+    if(link.source != undefined || link.target != undefined) {
+      link.destruct()
+      this.saveCurrentState()
+    }
   }
 
   duplicateLink(link: InformationLink): InformationLink {
     let newlink = new InformationLink(link.source, link.target, link.type, link.linkText)
-    this.historyService.save(this.conversation.toJson())
+    this.saveCurrentState()
     return newlink;
   }
 

@@ -12,16 +12,17 @@ export class Llm2KemlService {
   ) {}
 
   convFromLlmMessages(llmMsgs: LLMMessage[]): void {
-    this.kemlService.newConversation('From model')
-    let llm = this.kemlService.addNewConversationPartner('LLM')
+    this.kemlService.newConversationNoHistory('From model')
+    let llm = this.kemlService.addNewConversationPartnerNoHistory('LLM')
     for( let i=0; i < llmMsgs.length; i++) {
-      this.kemlService.addNewMessage(
+      this.kemlService.addNewMessageNoHistory(
         Llm2KemlService.isSend(llmMsgs[i]),
         llm,
         llmMsgs[i].message,
         llmMsgs[i].message,
       )
     }
+    this.kemlService.saveCurrentState()
   }
 
   private static isSend(llmMsg: LLMMessage): boolean {

@@ -13,6 +13,8 @@ import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {Author} from "@app/shared/keml/core/author";
 import {Conversation} from "@app/shared/keml/core/conversation";
 import {Referencable, RefHandler} from "emfular";
+import {of} from "rxjs";
+import {KemlHistoryService} from "@app/shared/keml/edit/keml-history.service";
 
 describe('KEML-Service', () => {
   let service: KemlService;
@@ -26,20 +28,20 @@ describe('KEML-Service', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should change a new info\'s source', () => {
-    let cp = new ConversationPartner()
-    let msg1 = new ReceiveMessage(cp, 0, "rec1")
-    let msg2 = new ReceiveMessage(cp, 1, "rec2")
-    let newInfo = new NewInformation(msg2, 'newInfo', false)
-    expect(msg1.generates.length).toEqual(0)
-    expect(msg2.generates.length).toEqual(1)
-    expect(newInfo.source).toEqual(msg2)
-
-    // call to test:
-    service.changeInfoSource(newInfo, msg1)
-    expect(msg1.generates.length).toEqual(1)
-    expect(msg2.generates.length).toEqual(0)
-    expect(newInfo.source).toEqual(msg1)
+  it('should determine if a repetition is allowed', () => {
+    let cp = new ConversationPartner('cp')
+    let rec = new ReceiveMessage(cp, 5)
+    let newInfo = new NewInformation(rec, 'info1')
+    let pre0 = new Preknowledge('pre0')
+    let pre1 = new Preknowledge('pre1')
+    let send3 = new SendMessage(cp, 3)
+    pre0.addIsUsedOn(send3)
+    expect(KemlService.isRepetitionAllowed(rec, newInfo)).toBe(false)
+    expect(KemlService.isRepetitionAllowed(rec, pre1)).toBe(true)
+    expect(KemlService.isRepetitionAllowed(rec, pre0)).toBe(true)
+    rec.timing = 1
+    expect(KemlService.isRepetitionAllowed(rec, pre0)).toBe(false)
+    expect(KemlService.isRepetitionAllowed(rec, pre1)).toBe(true)
   })
 
   it('should adapt the msgCount correctly', () => {
@@ -63,7 +65,6 @@ describe('KEML-Service', () => {
     service.deleteConversationPartner(cp0)
     expect(service.msgCount()).toEqual(1)
 
-
     service.newConversation()
     expect(service.msgCount()).toEqual(0)
   })
@@ -78,7 +79,7 @@ describe('KEML-Service', () => {
 
   it('should set trusts to undefined on new info creation', () => {
     let cp0 = service.addNewConversationPartner()
-    let rec0 = service.addNewMessage(false, cp0)
+    let rec0 = service.addNewMessageNoHistory(false, cp0)
     let i0 = (service.addNewNewInfo((rec0 as ReceiveMessage)) as NewInformation)
     expect(i0.initialTrust).toBe(undefined)
     expect(i0.currentTrust).toBe(undefined)
@@ -285,4 +286,609 @@ describe('KEML-Service', () => {
     compareLinks(resultLink0, infoLink0)
     compareLinks(resultLink1, infoLink1)
   })
+});
+
+describe('KemlService: verify method results - also KemlHistory interplay: when to call save', () => {
+  let kemlService: KemlService;
+  let historyStub: any;
+
+  beforeEach(() => {
+
+    historyStub = {
+      // minimal observable so KemlService can subscribe without error
+      state$: of(null),
+      save: jasmine.createSpy('save')
+    };
+
+    TestBed.configureTestingModule({
+      providers: [
+          KemlService,
+        {provide: KemlHistoryService, useValue: historyStub},
+      ]
+    })
+
+    kemlService = TestBed.inject(KemlService);
+  });
+
+  it('should call save on saveCurrentState', () => {
+    const kemlConv = kemlService.conversation.toJson()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.saveCurrentState()
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlConv)
+  })
+
+  it('should not call save on normal serialization call; it should just deliver the current conv as json', () => {
+    const kemlConv = kemlService.conversation.toJson()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    let res = kemlService.serializeConversation()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(res).toEqual(kemlConv)
+  })
+
+  it('should create a new conversation; without history on first method and with history on second method', () => {
+    kemlService.newConversationNoHistory("test")
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    const res = kemlService.conversation.toJson()
+    expect(res).toEqual(new Conversation("test").toJson())
+
+    kemlService.newConversation("test1")
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(new Conversation("test1").toJson())
+  })
+
+  //(cannot test deserialize to not call history) it is private
+  it('should call history once on load', () => {
+    const exampleConv = new Conversation("testLoad").toJson()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(kemlService.conversation.title == exampleConv.title).toBeFalse()
+    kemlService.loadConversation(exampleConv)
+    const loadedConv = kemlService.conversation.toJson()
+    expect(loadedConv.title == exampleConv.title).toBeTrue()
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(loadedConv)
+  })
+
+  it('should not call save on getters', () => {
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.getTitle()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.getAuthor()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.getConversationPartners()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.getSends()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.getReceives()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.getFirstReceive()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+  })
+
+  it('should call history on conversation partner creation but not on the version without history', () => {
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.addNewConversationPartnerNoHistory("cp0")
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.addNewConversationPartner("cp1")
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+    let res = kemlService.serializeConversation()
+    expect(historyStub.save).toHaveBeenCalledOnceWith(res)
+    expect(res.conversationPartners.map(cp=> cp.name)).toEqual(["cp0", "cp1"])
+  })
+
+  it("should not call history on cp isMoveDisabled", () => {
+    let cp = new ConversationPartner("cp")
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.isMoveConversationPartnerLeftDisabled(cp)
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.isMoveConversationPartnerRightDisabled(cp)
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+  })
+
+  it('should move and call history on real cp movement (=if move possible)', () => {
+    let cp0 = kemlService.addNewConversationPartnerNoHistory("cp0")
+    let cp1 = kemlService.addNewConversationPartnerNoHistory("cp1")
+    let cp2 = kemlService.addNewConversationPartnerNoHistory("cp2")
+
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(kemlService.conversation.conversationPartners.map(cp=> cp.name)).toEqual(["cp0", "cp1", "cp2"])
+    //*** impossible move:
+    //right
+    kemlService.moveConversationPartnerRight(cp2)
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(kemlService.conversation.conversationPartners.map(cp=> cp.name)).toEqual(["cp0", "cp1", "cp2"])
+    //left
+    kemlService.moveConversationPartnerLeft(cp0)
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(kemlService.conversation.conversationPartners.map(cp=> cp.name)).toEqual(["cp0", "cp1", "cp2"])
+    //***possible move:
+    //right
+    kemlService.moveConversationPartnerRight(cp1)
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+    expect(kemlService.conversation.conversationPartners.map(cp=> cp.name)).toEqual(["cp0", "cp2", "cp1"])
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.serializeConversation())
+    //left
+    kemlService.moveConversationPartnerLeft(cp2)
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+    expect(kemlService.conversation.conversationPartners.map(cp=> cp.name)).toEqual(["cp2", "cp0", "cp1"])
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.serializeConversation())
+  })
+
+  function prepareCpWith4Messages(): ConversationPartner {
+    const cp = kemlService.addNewConversationPartnerNoHistory("cp0")
+    for (let i = 0; i < 4; i++) {
+      kemlService.addNewMessageNoHistory(i/2==0,cp, "message"+i)
+    }
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(kemlService.conversation.conversationPartners.length).toBe(1)
+    expect(kemlService.conversation.author.messages.length).toBe(4)
+
+    return cp;
+  }
+
+  it('should call save history once on deleteCp', () => {
+    // todo history only if cp exists on current conv?
+    const cp = prepareCpWith4Messages();
+    // actual call:
+    kemlService.deleteConversationPartner(cp)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
+    expect(kemlService.conversation.conversationPartners.length).toBe(0)
+    expect(kemlService.conversation.author.messages.length).toBe(0)
+  })
+
+  it('should call save history once on duplicateCp', () => {
+    const cp = prepareCpWith4Messages();
+    // actual call:
+    kemlService.duplicateConversationPartner(cp)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
+    expect(kemlService.conversation.conversationPartners.length).toBe(2)
+    expect(kemlService.conversation.author.messages.length).toBe(4)
+  })
+
+  //************* Messages ********************
+  it('should call save history once on real message movements', () => {
+    prepareCpWith4Messages()
+    const msgs = kemlService.conversation.author.messages
+    const msg0 = msgs[0]
+    const msg1 = msgs[1]
+    const msg3 = msgs[3]
+    const convBefore = kemlService.conversation
+      // isMoveUp/Down
+    let res0 = kemlService.isMoveDownDisabled(msg3)
+    expect(res0).toBeTrue()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    let res1 = kemlService.isMoveDownDisabled(msg1)
+    expect(res1).toBeFalse()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    res0 = kemlService.isMoveUpDisabled(msg1)
+    expect(res0).toBeFalse()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    res1 = kemlService.isMoveUpDisabled(msg0)
+    expect(res1).toBeTrue()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+      // moveMessageUp/Down not possible => no history:
+    kemlService.moveMessageUp(msg0)
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(kemlService.conversation).toEqual(convBefore)
+    kemlService.moveMessageDown(msg3)
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(kemlService.conversation).toEqual(convBefore)
+      // move Message up/down possible => history:
+    expect(msg3.timing).toBe(3)
+    kemlService.moveMessageUp(msg3)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
+    expect(msg3.timing).toBe(2)
+    kemlService.moveMessageDown(msg3)
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+    expect(kemlService.conversation).toEqual(convBefore)
+
+    kemlService.changeMessagePos(msg1, 3)
+    expect(historyStub.save).toHaveBeenCalledTimes(3)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+    expect(msg1.timing).toBe(3)
+  })
+
+  it('should delete a message', () => {
+    prepareCpWith4Messages()
+    const msgs = kemlService.conversation.author.messages
+    const m0 = msgs[0]
+    const m1 = msgs[1]
+    const m2 = msgs[2]
+    const m3 = msgs[3]
+    expect(m0.timing).toBe(0)
+    expect(m1.timing).toBe(1)
+    expect(m2.timing).toBe(2)
+    expect(m3.timing).toBe(3)
+    kemlService.deleteMessage(m1)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
+    expect(kemlService.conversation.author.messages.length).toBe(3)
+    expect(kemlService.conversation.author.messages.map(m => m.content)).toEqual([
+        "message0", "message2", "message3"
+    ])
+    expect(m0.timing).toBe(0)
+    expect(m2.timing).toBe(1)
+    expect(m3.timing).toBe(2)
+  })
+
+  it('should call history once when duplicating a msg and not if duplication not possible', () => {
+    prepareCpWith4Messages()
+    const msgs = kemlService.conversation.author.messages
+    const m0 = msgs[0]
+    const m1 = msgs[1]
+    const m2 = msgs[2]
+    const m3 = msgs[3]
+    // manipulate timing:
+    m1.timing = 42
+    const m1NoDup = kemlService.duplicateMessage(m1)
+    expect(m1NoDup).toBeUndefined()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    m1.timing = 1
+    const m1Dup = kemlService.duplicateMessage(m1)
+    expect(m1Dup).toBeDefined()
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
+    expect(kemlService.conversation.author.messages.length).toBe(5)
+    expect(m0.timing).toBe(0)
+    expect(m1.timing).toBe(1)
+    expect(m1Dup?.timing).toBe(2)
+    expect(m2.timing).toBe(3)
+    expect(m3.timing).toBe(4)
+    expect(kemlService.conversation.author.messages.map(m => m.content)).toEqual([
+      "message0", "message1", "Duplicate of message1", "message2", "message3"
+    ])
+  })
+
+  it('should call history on real add, but not if not possible or on disabled calls', () => {
+    let res = kemlService.isAddNewMessageDisabled()
+    expect(res).toBeTrue()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+
+    const noMsg = kemlService.addNewMessage(true)
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(noMsg).toBeUndefined()
+
+    // now we add cps, hence message creation is now possible:
+    const cp0 = prepareCpWith4Messages()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+
+    res = kemlService.isAddNewMessageDisabled()
+    expect(res).toBeFalse()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+
+    const cp1 = kemlService.addNewConversationPartnerNoHistory("cp1")
+    kemlService.moveConversationPartnerLeft(cp1)
+    // two partners to also test choice on message when not specified (should be leftmost)
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+
+    // add new msg with cp1 (since now first)
+    const msgNoExplicitCp = kemlService.addNewMessageNoHistory(true, undefined, "msgNew0")
+    expect(msgNoExplicitCp).toBeDefined()
+    expect(msgNoExplicitCp?.timing).toBe(4)
+    expect(msgNoExplicitCp?.counterPart.name).toBe("cp1")
+    expect(kemlService.conversation.author.messages.map(m => m.content)).toEqual([
+      "message0", "message1", "message2", "message3", "msgNew0"
+    ])
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+
+    const msgExplicitCp = kemlService.addNewMessage(true, cp0, "msgNew1")
+    expect(msgExplicitCp).toBeDefined()
+    expect(msgExplicitCp?.timing).toBe(5)
+    expect(msgExplicitCp?.counterPart.name).toBe("cp0")
+    expect(kemlService.conversation.author.messages.map(m => m.content)).toEqual([
+      "message0", "message1", "message2", "message3", "msgNew0", "msgNew1"
+    ])
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+  })
+
+  it('should call history on repetition changes', () => {
+    const cp0 = kemlService.addNewConversationPartnerNoHistory("cp0")
+    const m1: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "m1") as ReceiveMessage
+    const m3: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "m3") as ReceiveMessage
+
+    let n0 = new NewInformation(m1, "i0")
+    let n1 = new NewInformation(m3, "i1")
+
+    let convInit = kemlService.conversation
+
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    kemlService.addRepetition(m1, n0)
+    kemlService.addRepetition(m1, n1)
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(kemlService.conversation).toBe(convInit)
+
+    kemlService.addRepetition(m3, n0)
+    expect(m3.repeats.length).toBe(1)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
+
+    kemlService.deleteRepetition(m3, n0)
+    expect(m3.repeats.length).toBe(0)
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+    expect(kemlService.conversation).toBe(convInit)
+
+    // new deletion is not possible, hence no new triggering of removal
+    kemlService.deleteRepetition(m3, n0)
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+    expect(kemlService.conversation).toBe(convInit)
+  })
+
+  it('should call history on usage changes', () => {
+    const cp0 = kemlService.addNewConversationPartnerNoHistory("cp0")
+    const m0: SendMessage = kemlService.addNewMessageNoHistory(true, cp0, "m0") as SendMessage
+    kemlService.addNewMessageNoHistory(false, cp0, "m1")
+    const m2: SendMessage = kemlService.addNewMessageNoHistory(true, cp0, "m2") as SendMessage
+    const m3: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "m3") as ReceiveMessage
+    const m4: SendMessage = kemlService.addNewMessageNoHistory(true, cp0, "m4") as SendMessage
+
+    let n1 = new NewInformation(m3, "i1")
+
+    let pre0 = new Preknowledge("pre0")
+
+    let convInit = kemlService.conversation
+
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    // not working add:
+    kemlService.addUsage(m2, n1)
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(kemlService.conversation).toBe(convInit)
+    // working add:
+    kemlService.addUsage(m4, n1)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
+    expect(m4.uses).toContain(n1)
+    expect(n1.isUsedOn).toContain(m4)
+    //also add usage for preknowledge (always working):
+    kemlService.addUsage(m4, pre0)
+    expect(m4.uses).toContain(pre0)
+    expect(m4.uses.length).toBe(2)
+    expect(pre0.isUsedOn).toContain(m4)
+    expect(pre0.getTiming()).toBe(4)
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+    kemlService.addUsage(m0, pre0) //earlier one, makes new first usage
+    expect(m0.uses).toContain(pre0)
+    expect(pre0.isUsedOn).toContain(m0)
+    expect(pre0.getTiming()).toBe(0)
+    expect(historyStub.save).toHaveBeenCalledTimes(3)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+
+    //delete usage on pre:
+    kemlService.deleteUsage(m4, pre0)
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+    expect(m4.uses).toContain(n1)
+    expect(m4.uses.length).toBe(1)
+    expect(pre0.isUsedOn).toContain(m0)
+    expect(pre0.isUsedOn.length).toBe(1)
+    kemlService.deleteUsage(m0, pre0)
+    expect(historyStub.save).toHaveBeenCalledTimes(5)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+    expect(m4.uses).toContain(n1)
+    expect(m4.uses.length).toBe(1)
+    expect(pre0.isUsedOn.length).toBe(0)
+
+    // delete usage on new:
+    kemlService.deleteUsage(m4, n1)
+    expect(historyStub.save).toHaveBeenCalledTimes(6)
+    expect(historyStub.save).toHaveBeenCalledWith(convInit.toJson())
+    expect(kemlService.conversation).toBe(convInit)
+    // new deletion is not possible, hence no new triggering of removal
+    kemlService.deleteUsage(m4, n1)
+    expect(historyStub.save).toHaveBeenCalledTimes(6)
+    expect(kemlService.conversation).toBe(convInit)
+  })
+
+  //************** Infos ************************
+  it('should change a new info\'s source and call history', () => {
+    const cp = kemlService.addNewConversationPartnerNoHistory()
+
+    const msg1: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp, "rec1") as ReceiveMessage
+    const msg2: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp, "rec2") as ReceiveMessage
+    let newInfo = new NewInformation(msg2, 'newInfo', false)
+    expect(msg1.generates.length).toEqual(0)
+    expect(msg2.generates.length).toEqual(1)
+    expect(newInfo.source).toEqual(msg2)
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+
+    // call to test:
+    kemlService.changeInfoSource(newInfo, msg1)
+    expect(msg1.generates.length).toEqual(1)
+    expect(msg2.generates.length).toEqual(0)
+    expect(newInfo.source).toEqual(msg1)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
+  })
+
+  it('should add a new preknowledge (with history)', () => {
+    let p0 = kemlService.addNewPreknowledge()
+    expect(kemlService.conversation.author.preknowledge.length).toEqual(1)
+    expect(kemlService.conversation.author.preknowledge).toContain(p0)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
+  })
+
+  it('should add a new new information (with history only if possible) and check for the ability (without history)', () => {
+    const cp0 = kemlService.addNewConversationPartnerNoHistory("cp0")
+    const initialConv = kemlService.conversation
+    const res0 = kemlService.isAddNewNewInfoDisabled()
+    expect(res0).toBeTrue()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    //add call (not possible):
+    const noN = kemlService.addNewNewInfo()
+    expect(noN).toBeUndefined()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(kemlService.conversation).toBe(initialConv)
+
+    // add one receive, now new info creation is possible:
+    const rec0: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "rec0") as ReceiveMessage
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    const res1 = kemlService.isAddNewNewInfoDisabled()
+    expect(res1).toBeFalse()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+
+    const n0 = kemlService.addNewNewInfo(rec0)
+    expect(n0).toBeDefined()
+    expect(rec0.generates).toContain(n0!)
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
+  })
+
+  it('should delete an info (with history)', () => {
+    let p0 = kemlService.addNewPreknowledge()
+    expect(kemlService.conversation.author.preknowledge).toContain(p0)
+    expect(kemlService.conversation.author.preknowledge.length).toBe(1)
+    const cp0 = kemlService.addNewConversationPartnerNoHistory("cp0")
+    const rec0: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "rec0") as ReceiveMessage
+    const n0: NewInformation = kemlService.addNewNewInfo(rec0) as NewInformation
+    expect(n0).toBeDefined()
+    expect(rec0.generates).toContain(n0!)
+    expect(rec0.generates.length).toBe(1)
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+
+    kemlService.deleteInfo(p0)
+    expect(kemlService.conversation.author.preknowledge.length).toBe(0)
+    expect(historyStub.save).toHaveBeenCalledTimes(3)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+
+    kemlService.deleteInfo(p0)
+    expect(historyStub.save).toHaveBeenCalledTimes(3)
+
+    kemlService.deleteInfo(n0)
+    expect(rec0.generates.length).toBe(0)
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+
+    kemlService.deleteInfo(n0)
+    expect(rec0.generates.length).toBe(0)
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
+
+    const p1 = new Preknowledge("Not contained")
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
+    kemlService.deleteInfo(p1)
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
+
+    /*
+    // since rec exists, call works:
+    const rec2 = new ReceiveMessage(cp0, 5, "not contained")
+    const n1 = new NewInformation(rec2, "Not contained")
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
+    kemlService.deleteInfo(n1)
+    expect(historyStub.save).toHaveBeenCalledTimes(5)*/
+  })
+
+  it('should duplicate an info (with history)', () => {
+    let p0 = kemlService.addNewPreknowledge()
+    expect(kemlService.conversation.author.preknowledge).toContain(p0)
+    expect(kemlService.conversation.author.preknowledge.length).toBe(1)
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+    const p1 = kemlService.duplicateInfo(p0)
+    expect(kemlService.conversation.author.preknowledge.length).toBe(2)
+    expect(kemlService.conversation.author.preknowledge).toContain(p1)
+    expect(kemlService.conversation.author.preknowledge).toContain(p0)
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+
+      // new info:
+    const cp0 = kemlService.addNewConversationPartnerNoHistory("cp0")
+    const rec0: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "rec0") as ReceiveMessage
+    const n0: NewInformation = kemlService.addNewNewInfo(rec0) as NewInformation
+    expect(n0).toBeDefined()
+    expect(rec0.generates).toContain(n0!)
+    expect(rec0.generates.length).toBe(1)
+    expect(historyStub.save).toHaveBeenCalledTimes(3)
+    const n1 = kemlService.duplicateInfo(n0)
+    expect(n1).toBeDefined()
+    expect(rec0.generates.length).toBe(2)
+    expect(rec0.generates).toContain(n1 as NewInformation)
+    expect(rec0.generates).toContain(n0)
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+  })
+
+  //***************** information links ********************
+  it('should test for general link creation (without history)', () => {
+    expect(kemlService.isLinkCreationDisabled()).toBeTrue()
+    expect(historyStub.save).toHaveBeenCalledTimes(0)
+
+    const pre0 = kemlService.addNewPreknowledge()
+    expect(kemlService.conversation.author.preknowledge.length).toBe(1)
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+
+    expect(kemlService.isLinkCreationDisabled()).toBeTrue()
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+
+    const pre1 = kemlService.addNewPreknowledge()
+    expect(kemlService.conversation.author.preknowledge.length).toBe(2)
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+
+    expect(kemlService.isLinkCreationDisabled()).toBeFalse()
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+
+    kemlService.deleteInfo(pre0)
+    expect(historyStub.save).toHaveBeenCalledTimes(3)
+
+    const cp0 = kemlService.addNewConversationPartnerNoHistory("cp0")
+    const rec0: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "rec0") as ReceiveMessage
+    const n0: NewInformation = kemlService.addNewNewInfo(rec0) as NewInformation
+    expect(n0).toBeDefined()
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
+
+    expect(kemlService.isLinkCreationDisabled()).toBeFalse()
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
+
+    kemlService.deleteInfo(pre1)
+    expect(historyStub.save).toHaveBeenCalledTimes(5)
+
+    expect(kemlService.isLinkCreationDisabled()).toBeTrue()
+    expect(historyStub.save).toHaveBeenCalledTimes(5)
+
+    const n1 = kemlService.addNewNewInfo(rec0) as NewInformation
+    expect(n1).toBeDefined()
+    expect(rec0.generates).toContain(n1!)
+    expect(rec0.generates.length).toBe(2)
+    expect(historyStub.save).toHaveBeenCalledTimes(6)
+
+    expect(kemlService.isLinkCreationDisabled()).toBeFalse()
+    expect(historyStub.save).toHaveBeenCalledTimes(6)
+  })
+
+  it('should add, suplicate and delete an info link with history (currently no validation check)', () => {
+    const pre0 = kemlService.addNewPreknowledge()
+    const cp0 = kemlService.addNewConversationPartnerNoHistory("cp0")
+    const rec0: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "rec0") as ReceiveMessage
+    const n0: NewInformation = kemlService.addNewNewInfo(rec0) as NewInformation
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
+
+    const link0 = kemlService.addInformationLink(n0, pre0)
+    const stateWithOneLink = kemlService.conversation
+    expect(historyStub.save).toHaveBeenCalledTimes(3)
+    expect(historyStub.save).toHaveBeenCalledWith(stateWithOneLink.toJson())
+    expect(n0.causes).toContain(link0)
+    expect(n0.causes.length).toBe(1)
+    expect(pre0.targetedBy).toContain(link0)
+    expect(pre0.targetedBy.length).toBe(1)
+
+    const link1 = kemlService.duplicateLink(link0)
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
+    expect(n0.causes).toContain(link0)
+    expect(n0.causes).toContain(link1)
+    expect(n0.causes.length).toBe(2)
+    expect(pre0.targetedBy).toContain(link0)
+    expect(pre0.targetedBy).toContain(link1)
+    expect(pre0.targetedBy.length).toBe(2)
+
+    kemlService.deleteLink(link1)
+    expect(historyStub.save).toHaveBeenCalledTimes(5)
+    expect(n0.causes).toContain(link0)
+    expect(n0.causes.length).toBe(1)
+    expect(pre0.targetedBy).toContain(link0)
+    expect(pre0.targetedBy.length).toBe(1)
+    //delete again: should not trigger another history:
+    kemlService.deleteLink(link1)
+    expect(historyStub.save).toHaveBeenCalledTimes(5)
+    expect(n0.causes).toContain(link0)
+    expect(n0.causes.length).toBe(1)
+    expect(pre0.targetedBy).toContain(link0)
+    expect(pre0.targetedBy.length).toBe(1)
+  })
+
 });

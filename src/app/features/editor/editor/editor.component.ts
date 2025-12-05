@@ -11,7 +11,7 @@ import {KEMLIOService} from "@app/features/editor/keml-io.service";
 import {ConversationPickService} from "@app/features/fromLLM/chatGPT2llm/conversationpicking/conversation-pick.service";
 import {IoService, InputHandler} from "ngx-emfular-helper";
 import {ConversationComponent} from "@app/shared/keml/graphical/conversation/conversation.component";
-import {UndoRedoComponent} from "@app/shared/undo-redo/undo-redo.component";
+import {UndoRedoComponent} from "@app/features/editor/undo-redo/undo-redo.component";
 
 
 @Component({

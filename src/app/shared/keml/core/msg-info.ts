@@ -98,8 +98,8 @@ export class SendMessage extends Message {
   addUsage(info: Information) {
     this._uses.add(info)
   }
-  removeUsage(info: Information) {
-    this._uses.remove(info)
+  removeUsage(info: Information): boolean {
+    return this._uses.remove(info)
   }
 
   constructor(
@@ -153,13 +153,10 @@ export class ReceiveMessage extends Message {
     return this._repeats.get();
   }
   addRepetition(info: Information) {
-    if(!Information.isRepetitionAllowed(this, info)) {
-      throw new RangeError("Repetition is only allowed to an earlier information")
-    }
     this._repeats.add(info);
   }
-  removeRepetition(info: Information) {
-    this._repeats.remove(info);
+  removeRepetition(info: Information): boolean {
+    return this._repeats.remove(info);
   }
 
   isInterrupted: boolean = false;
@@ -219,7 +216,7 @@ export abstract class Information extends Referencable implements Positionable {
   feltTrustImmediately: number | undefined;
   feltTrustAfterwards: number | undefined;
 
-  abstract getTiming(): number | undefined;
+  abstract getTiming(): number;
 
   static readonly causesPrefix: string = 'causes'
   static readonly isUsedOnPrefix: string = 'isUsedOn'
@@ -262,15 +259,8 @@ export abstract class Information extends Referencable implements Positionable {
   get repeatedBy(): ReceiveMessage[] {
     return this._repeatedBy.get();
   }
-  static isRepetitionAllowed(msg: ReceiveMessage, info: Information): boolean {
-    //only allow the repetition if it connects to an earlier info
-    let infoTiming = info.getTiming()
-    return (infoTiming == undefined || infoTiming < msg.timing)
-  }
+
   addRepeatedBy(msg: ReceiveMessage) {
-    if(!Information.isRepetitionAllowed(msg, this)) {
-      throw new RangeError("Repetition is only allowed to an earlier information")
-    }
     this._repeatedBy.add(msg)
   }
   removeRepeatedBy(msg: ReceiveMessage) {
@@ -340,7 +330,7 @@ export class NewInformation extends Information {
     return this._source.get()!!
   }
 
-  override getTiming(): number | undefined {
+  override getTiming(): number {
     return this.source.timing
   }
 
