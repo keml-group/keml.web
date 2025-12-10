@@ -11,9 +11,7 @@
   --bright-yellow: oklch(89.26% 0.1603 89.76);
 
 
-  --gray-900: oklch(19.37% 0.006 300.98);
   --gray-700: oklch(36.98% 0.014 302.71);
-  --gray-400: oklch(70.9% 0.015 304.04);
 
   --red-to-orange-vertical-gradient: linear-gradient(
     180deg,
@@ -22,11 +20,11 @@
     var(--orange-yellow) 100%
   );
 
-  --red-to-pink-to-purple-horizontal-gradient: linear-gradient(
+  --red-to-orange-horizontal-gradient: linear-gradient(
     90deg,
     var(--orange-red) 0%,
-    var(--vivid-pink) 50%,
-    var(--electric-violet) 100%
+    var(--bright-orange) 50%,
+    var(--orange-yellow) 100%
   );
 
   --red-to-green-horizontal-gradient: linear-gradient(
@@ -81,10 +79,6 @@ main {
   padding: 1rem;
   box-sizing: inherit;
   position: relative;
-}
-
-.angular-logo {
-  max-width: 9.2rem;
 }
 
 .content {
@@ -173,7 +167,7 @@ main {
   .divider {
     height: 1px;
     width: 100%;
-    background: var(--red-to-pink-to-purple-horizontal-gradient);
+    background: var(--red-to-orange-horizontal-gradient);
     margin-block: 1.5rem;
   }
 }
