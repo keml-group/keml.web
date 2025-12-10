@@ -1,3 +1,5 @@
+@use "functions" as f;
+
 $bright-blue: oklch(51.01% 0.274 263.83);
 $electric-violet: oklch(53.18% 0.28 296.97);
 $french-violet: oklch(47.66% 0.246 305.88);
@@ -8,3 +10,19 @@ $bright-orange: oklch(70% 0.1825 58.76);
 $orange-yellow: oklch(81.33% 0.1554 68.29);
 $opace-orange: oklch(90% 0.1225 58.76);
 $bright-yellow: oklch(89.26% 0.1603 89.76);
+
+$red-to-orange-vertical-gradient: f.vertical-gradient(
+  var(--orange-red),
+  var(--bright-orange),
+  var(--orange-yellow),
+);
+$red-to-orange-horizontal-gradient: f.horizontal-gradient(
+    var(--orange-red),
+    var(--bright-orange),
+    var(--orange-yellow),
+);
+$red-to-green-horizontal-gradient: f.horizontal-gradient(
+#ff0000,
+#ffff00,
+#00ff00
+)

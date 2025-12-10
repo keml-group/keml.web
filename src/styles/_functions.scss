@@ -1,0 +1,16 @@
+@function gradient($c1, $c2, $c3, $direction: 90deg) {
+  @return linear-gradient(
+      $direction,
+      $c1 0%,
+      $c2 50%,
+      $c3 100%
+  );
+}
+
+@function vertical-gradient($c1, $c2, $c3) {
+  @return gradient($c1, $c2, $c3, 180deg);
+}
+
+@function horizontal-gradient($c1, $c2, $c3) {
+  @return gradient($c1, $c2, $c3, 90deg);
+}
