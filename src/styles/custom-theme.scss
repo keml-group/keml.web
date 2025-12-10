@@ -4,7 +4,16 @@
   --bright-blue: #{v.$bright-blue};
   --electric-violet: #{v.$electric-violet};
   --hot-red: #{v.$hot-red};
+  --orange-red: #{v.$orange-red};
+  --bright-orange: #{v.$bright-orange};
+  --orange-yellow: #{v.$orange-yellow};
+  --opaque-orange: #{v.$opace-orange};
   --bright-yellow: #{v.$bright-yellow};
+
+  // just depending on css, hence no need to re-define in dark:
+  --red-to-green-horizontal-gradient: #{v.$red-to-green-horizontal-gradient};
+  --red-to-orange-vertical-gradient: #{v.$red-to-orange-vertical-gradient};
+  --red-to-orange-horizontal-gradient: #{v.$red-to-orange-horizontal-gradient};
 }
 
 [data-theme="dark"] {
