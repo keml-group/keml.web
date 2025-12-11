@@ -9,6 +9,17 @@ h1 {
   margin: 0;
 }
 
+.headline-with-icon {
+  display: inline-flex;
+  align-items: center; /* vertically centers image with text */
+  gap: 0.5rem;         /* spacing between icon and text */
+}
+
+.headline-with-icon img {
+  height: 1em;         /* match the text height */
+  width: auto;         /* keep aspect ratio */
+}
+
 main {
   width: 100%;
   min-height: 100%;
@@ -89,10 +100,6 @@ main {
 }
 .pill-group .pill:nth-child(6n + 6) {
   --pill-accent: var(--bright-yellow);
-}
-
-.pill-group svg {
-  margin-inline-start: 0.25rem;
 }
 
 
