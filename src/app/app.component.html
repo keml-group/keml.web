@@ -1,5 +1,5 @@
 <main class="main">
-  <div class="pill-group">
+  <aside class="pill-group">
       <ng-container *ngTemplateOutlet="linkpill; context: {
           title: 'Watch a video tutorial (German)',
           link: 'https://uni-ko.de/keml-video'
@@ -25,7 +25,7 @@
         <ng-container *ngTemplateOutlet="linkpill; context: {title: item.title, link: item.link}">
         </ng-container>
       }
-  </div>
+  </aside>
   <div class="divider" role="separator" aria-label="Divider"></div>
   <div class="content">
     <h1 class="headline-with-icon">
