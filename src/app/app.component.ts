@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {EditorComponent} from "@app/features/editor/editor/editor.component";
+import {NgTemplateOutlet} from "@angular/common";
 
 
 @Component({
     selector: 'app-root',
-    imports: [RouterOutlet, EditorComponent],
+  imports: [RouterOutlet, EditorComponent, NgTemplateOutlet],
     templateUrl: './app.component.html',
     styleUrl: './app.component.css'
 })
