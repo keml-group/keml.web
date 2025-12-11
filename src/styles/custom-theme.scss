@@ -1,4 +1,5 @@
 @use 'variables' as v;
+@use "functions" as f;
 
 :root {
   --bright-blue: #{v.$bright-blue};
@@ -11,9 +12,18 @@
   --bright-yellow: #{v.$bright-yellow};
 
   // just depending on css, hence no need to re-define in dark:
+  --red-to-orange-vertical-gradient: #{f.vertical-gradient(
+                          var(--orange-red),
+                          var(--bright-orange),
+                          var(--orange-yellow),
+                 )};
+  --red-to-orange-horizontal-gradient: #{f.horizontal-gradient(
+                  var(--orange-red),
+                  var(--bright-orange),
+                  var(--orange-yellow),
+          )};
+  // todo no theme changes but also computation about it
   --red-to-green-horizontal-gradient: #{v.$red-to-green-horizontal-gradient};
-  --red-to-orange-vertical-gradient: #{v.$red-to-orange-vertical-gradient};
-  --red-to-orange-horizontal-gradient: #{v.$red-to-orange-horizontal-gradient};
 }
 
 [data-theme="dark"] {

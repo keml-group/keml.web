@@ -11,18 +11,10 @@ $orange-yellow: oklch(81.33% 0.1554 68.29);
 $opace-orange: oklch(90% 0.1225 58.76);
 $bright-yellow: oklch(89.26% 0.1603 89.76);
 
-$red-to-orange-vertical-gradient: f.vertical-gradient(
-  var(--orange-red),
-  var(--bright-orange),
-  var(--orange-yellow),
-);
-$red-to-orange-horizontal-gradient: f.horizontal-gradient(
-    var(--orange-red),
-    var(--bright-orange),
-    var(--orange-yellow),
-);
 $red-to-green-horizontal-gradient: f.horizontal-gradient(
 #ff0000,
 #ffff00,
 #00ff00
 )
+
+
