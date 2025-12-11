@@ -1,44 +1,40 @@
 <main class="main">
-  <div class="content">
-    <div class="right-side">
-      <div class="pill-group">
-        <ng-container *ngTemplateOutlet="linkpill; context: {
+  <div class="pill-group">
+      <ng-container *ngTemplateOutlet="linkpill; context: {
           title: 'Watch a video tutorial (German)',
           link: 'https://uni-ko.de/keml-video'
          }">
-        </ng-container>
-        <ng-container *ngTemplateOutlet="downloadpill; context: {
+      </ng-container>
+      <ng-container *ngTemplateOutlet="downloadpill; context: {
           title: 'Download an KEML example',
           link: 'assets/3-2-keml.json',
           filename: '3-2-keml.json'
         }">
-        </ng-container>
-        <ng-container *ngTemplateOutlet="downloadpill; context: {
+      </ng-container>
+      <ng-container *ngTemplateOutlet="downloadpill; context: {
           title: 'Download a ChatGPT conversation example',
           link: 'assets/3-2-chatgpt.json',
           filename: '3-2-chatgpt.json'
         }">
+      </ng-container>
+      @for (item of [
+        { title: 'Read the introductory paper', link: 'https://dl.acm.org/doi/10.1145/3652620.3687809' },
+        { title: 'Explore the KEML group', link: 'https://github.com/keml-group' },
+        { title: 'See the KEML metamodel', link: 'https://github.com/keml-group/keml/blob/main/model/keml-with-parts.png' },
+      ]; track item.title) {
+        <ng-container *ngTemplateOutlet="linkpill; context: {title: item.title, link: item.link}">
         </ng-container>
-        @for (item of [
-          { title: 'Read the introductory paper', link: 'https://dl.acm.org/doi/10.1145/3652620.3687809' },
-          { title: 'Explore the KEML group', link: 'https://github.com/keml-group' },
-          { title: 'See the KEML metamodel', link: 'https://github.com/keml-group/keml/blob/main/model/keml-with-parts.png' },
-        ]; track item.title) {
-          <ng-container *ngTemplateOutlet="linkpill; context: {title: item.title, link: item.link}">
-          </ng-container>
-        }
-      </div>
-    </div>
-    <div class="divider" role="separator" aria-label="Divider"></div>
-    <div class="left-side">
-      <h1 class="headline-with-icon">
-        <img src="favicon.ico" alt="Camel Icon">
-        KEML Graphical Editor
-      </h1>
-      <p>This editor allows you to create your own KEML (json) files 🎉</p>
-      <keml-editor>
-      </keml-editor>
-    </div>
+      }
+  </div>
+  <div class="divider" role="separator" aria-label="Divider"></div>
+  <div class="content">
+    <h1 class="headline-with-icon">
+      <img src="favicon.ico" alt="Camel Icon">
+      KEML Graphical Editor
+    </h1>
+    <p>This editor allows you to create your own KEML (json) files 🎉</p>
+    <keml-editor>
+    </keml-editor>
   </div>
 </main>
 
