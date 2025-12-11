@@ -24,6 +24,8 @@
           )};
   // todo no theme changes but also computation about it
   --red-to-green-horizontal-gradient: #{v.$red-to-green-horizontal-gradient};
+
+  --font-family: "Inter", system-ui, sans-serif;
 }
 
 [data-theme="dark"] {
