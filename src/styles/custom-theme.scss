@@ -27,8 +27,12 @@
 }
 
 [data-theme="dark"] {
-  --bright-blue: oklch(70% 0.2 263.83);
-  --electric-violet: oklch(65% 0.25 296.97);
-  --hot-red: oklch(55% 0.22 15.34);
-  --bright-yellow: oklch(80% 0.15 89.76);
+  --bright-blue: #{v.$bright-blue-dark};
+  --electric-violet: #{v.$electric-violet-dark};
+  --hot-red: #{v.$hot-red-dark};
+  --orange-red: #{v.$orange-red-dark};
+  --bright-orange: #{v.$bright-orange-dark};
+  --orange-yellow: #{v.$orange-yellow-dark};
+  --opaque-orange: #{v.$opace-orange-dark};
+  --bright-yellow: #{v.$bright-yellow-dark};
 }
