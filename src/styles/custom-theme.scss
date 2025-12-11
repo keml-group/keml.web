@@ -10,6 +10,8 @@
   --orange-yellow: #{v.$orange-yellow};
   --opaque-orange: #{v.$opace-orange};
   --bright-yellow: #{v.$bright-yellow};
+  --color-bg: #ffffff;
+  --color-text: #111111;
 
   // just depending on css, hence no need to re-define in dark:
   --red-to-orange-vertical-gradient: #{f.vertical-gradient(
@@ -37,4 +39,6 @@
   --orange-yellow: #{v.$orange-yellow-dark};
   --opaque-orange: #{v.$opace-orange-dark};
   --bright-yellow: #{v.$bright-yellow-dark};
+  --color-bg: #2b1d17;
+  --color-text: #e5e5e5;
 }
