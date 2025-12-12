@@ -1,20 +1,20 @@
 .file-level-bar{
-  background-color: antiquewhite;
+  background-color: var(--antique-white);
 }
 .file-level-button{
   text-align: center;
-  color: orange;
+  color: var(--bright-orange);
   margin-right: 1rem;
-  border: 2px solid orange;
+  border: 2px solid var(--bright-orange);
   border-radius: 8px;
-  background-color: antiquewhite;
+  background-color: transparent;
 }
 .file-level-button:hover {
   box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 }
 
 .mat-icon{
-  color: orange;
+  color: var(--bright-orange);
   background: transparent;
 }
 

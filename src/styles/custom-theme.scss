@@ -44,6 +44,8 @@ $kemlgui-theme: mat.m2-define-light-theme((
   --bright-orange: #{v.$bright-orange};
   --orange-yellow: #{v.$orange-yellow};
   --opaque-orange: #{v.$opace-orange};
+  --orange-white: #{v.$orange-white};
+  --antique-white: #{v.$antique-white};
   --bright-yellow: #{v.$bright-yellow};
   --color-bg: #ffffff;
   --color-text: #111111;
@@ -71,6 +73,8 @@ $kemlgui-theme: mat.m2-define-light-theme((
   --bright-orange: #{v.$bright-orange-dark};
   --orange-yellow: #{v.$orange-yellow-dark};
   --opaque-orange: #{v.$opace-orange-dark};
+  --orange-white: #{v.$orange-white-dark};
+  --antique-white: #{v.$antique-white-dark};
   --bright-yellow: #{v.$bright-yellow-dark};
   --color-bg: #2b1d17;
   --color-text: #e5e5e5;
