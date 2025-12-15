@@ -1,23 +1,11 @@
-h1 {
-  font-size: 3.125rem;
-  background-image: var(--red-to-orange-horizontal-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 500;
-  line-height: 100%;
-  letter-spacing: -0.125rem;
-  margin: 0;
-}
-
 .headline-with-icon {
   display: inline-flex;
   align-items: center; /* vertically centers image with text */
   gap: 0.5rem;         /* spacing between icon and text */
-}
-
-.headline-with-icon img {
-  height: 1em;         /* match the text height */
-  width: auto;         /* keep aspect ratio */
+  img {
+    height: 1em;         /* match the text height */
+    width: auto;         /* keep aspect ratio */
+  }
 }
 
 main {

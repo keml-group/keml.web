@@ -20,6 +20,17 @@ footer {
   margin-left: 15rem;
 }
 
-.button:hover {
+button:hover {
   @include mixins.hovering();
+}
+
+h1 {
+  font-size: 3.125rem;
+  background-image: var(--red-to-orange-horizontal-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 500;
+  line-height: 100%;
+  letter-spacing: -0.125rem;
+  margin: 0;
 }
