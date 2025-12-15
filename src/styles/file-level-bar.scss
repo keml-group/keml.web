@@ -3,16 +3,28 @@
 .file-level-button{
   text-align: center;
   color: var(--bright-orange);
-  margin-right: 1rem;
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
   border: 2px solid var(--bright-orange);
   border-radius: 8px;
   background-color: transparent;
+  .mat-icon {
+    color: var(--bright-orange);
+    background: transparent;
+  }
 }
 .file-level-button:hover {
   @include mixin.hovering();
 }
 
-.file-level-button mat-icon{
-  color: var(--bright-orange);
-  background: transparent;
+.file-level-button:disabled,
+.file-level-button[disabled] {
+  cursor: not-allowed;
+  border-color: #999999;
+  background-color: #cccccc;
+  color: #666666;
+  .mat-icon {
+    color: #666666;
+  }
 }
+
