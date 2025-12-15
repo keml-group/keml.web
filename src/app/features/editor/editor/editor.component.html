@@ -2,7 +2,7 @@
   <div class="file-handling">
     <input id="openKEML" type="file" class="file-upload" style="display: none" (change)="kemlIOService.loadKEMLfromFile($event)" (click)="InputHandler.clearElem($event)">
     <input id="openChatGptConvList" type="file" class="file-upload" style="display: none" (change)="conversationPickService.startWithAllConvs($event)" (click)="InputHandler.clearElem($event)">
-    <mat-toolbar class="file-level-bar">
+    <mat-toolbar>
       <button class="file-level-button" (click)="kemlService.newConversation()">
         <mat-icon aria-hidden="false" fontIcon="insert_drive_file" ></mat-icon>
         New
