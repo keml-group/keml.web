@@ -11,14 +11,14 @@ import {KEMLIOService} from "@app/features/editor/keml-io.service";
 import {ConversationPickService} from "@app/features/fromLLM/chatGPT2llm/conversationpicking/conversation-pick.service";
 import {IoService, InputHandler} from "ngx-emfular-helper";
 import {ConversationComponent} from "@app/shared/keml/graphical/conversation/conversation.component";
-import {UndoRedoComponent} from "@app/features/editor/undo-redo/undo-redo.component";
+import {KemlHistoryService} from "@app/shared/keml/edit/keml-history.service";
 
 
 @Component({
     selector: 'keml-editor',
     templateUrl: './editor.component.html',
     styleUrl: './editor.component.css',
-  imports: [MatTooltipModule, MatToolbar, MatIcon, PersonSvgComponent, DatabaseSvgComponent, ConversationComponent, UndoRedoComponent]
+  imports: [MatTooltipModule, MatToolbar, MatIcon, PersonSvgComponent, DatabaseSvgComponent, ConversationComponent]
 })
 export class EditorComponent {
 
@@ -28,6 +28,7 @@ export class EditorComponent {
 
   constructor(
     public detailsService: DetailsService,
+    public history: KemlHistoryService,
     public kemlIOService: KEMLIOService,
     public kemlService: KemlService,
     public conversationPickService: ConversationPickService,

@@ -18,7 +18,12 @@
         Open KEML
       </button>
       <hr class="v-divider">
-      <undo-redo></undo-redo>
+        <button class="file-level-button" (click)="history.undo()" [disabled]="history.isUndoNotPossible()">
+            <mat-icon aria-hidden="false" fontIcon="undo" ></mat-icon>
+            Undo</button>
+        <button class="file-level-button" (click)="history.redo()" [disabled]="history.isRedoNotPossible()">
+            <mat-icon aria-hidden="false" fontIcon="redo" ></mat-icon>
+            Redo</button>
       <hr class="v-divider">
       <button class="file-level-button" (click)="kemlIOService.saveKEML()">
         <mat-icon aria-hidden="false" fontIcon="file_download" ></mat-icon>
