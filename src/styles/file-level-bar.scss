@@ -1,5 +1,8 @@
 @use "mixins" as mixin;
 
+.file-level-bar{
+  background-color: var(--antique-white);
+}
 
 .file-level-bar-divider{
   width: 1px;
