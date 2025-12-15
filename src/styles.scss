@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 @use "styles/custom-theme.scss";
+@use "styles/mixins" as mixins;
 @import 'material-icons/iconfont/material-icons.css';
 
 html, body { height: 100%;
@@ -12,9 +13,13 @@ body {
 }
 
 a {
-  color: var(--hot-red)
+  color: var(--hot-red);
 }
 
 footer {
   margin-left: 15rem;
+}
+
+.button:hover {
+  @include mixins.hovering();
 }

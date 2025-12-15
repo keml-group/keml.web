@@ -1,15 +1,14 @@
+.mat-toolbar{
+  background-color: var(--antique-white);
+}
+
 .editor-panel{
   width: 100%;
   min-height: 100%;
   display: flex;
   justify-content: center;
-  align-items: first;
   box-sizing: inherit;
   position: relative;
-}
-
-.mat-toolbar{
-  background-color: var(--antique-white);
 }
 
 .edit-tools{
