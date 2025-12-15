@@ -1,33 +1,36 @@
 @use "mixins" as mixin;
 
-.file-level-bar{
+.mat-toolbar.file-level-bar {
   background-color: var(--antique-white);
-}
-
-.file-level-bar-divider{
-  width: 1px;
-  height: 100%;
-  background-color: var(--bright-orange);
-  border: none;
-  margin: 0 12px;
-}
-
-.file-level-button{
   --accent-color: var(--bright-orange);
-  text-align: center;
-  color: var(--accent-color);
-  margin-right: 0.5rem;
-  margin-left: 0.5rem;
-  border: 2px solid var(--accent-color);
-  border-radius: 8px;
-  background-color: transparent;
-}
-.file-level-button:enabled:hover {
+
+  hr {
+    width: 1px;
+    height: 100%;
+    background-color: var(--accent-color);
+    border: none;
+    margin: 0 12px;
+  }
+
+  button {
+    text-align: center;
+    color: var(--accent-color);
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+    border: 2px solid var(--accent-color);
+    border-radius: 8px;
+    background-color: transparent;
+  }
+  button:enabled:hover {
     @include mixin.hovering();
+  }
+
+  button:disabled,
+  button[disabled] {
+    @include  mixin.disable();
+  }
+
 }
 
-.file-level-button:disabled,
-.file-level-button[disabled] {
-  @include  mixin.disable();
-}
+
 
