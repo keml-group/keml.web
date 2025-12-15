@@ -49,12 +49,3 @@
     background: transparent;
   }
 }
-
-
-.v-divider{
-  width: 1px;              /* thin line */
-  height: 20px;
-  color: orangered;           /* line color */
-  border: none;            /* remove default border */
-  margin: 1rem;
-}

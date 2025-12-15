@@ -1,11 +1,21 @@
 @use "mixins" as mixin;
 
+
+.file-level-bar-divider{
+  width: 1px;
+  height: 100%;
+  background-color: var(--bright-orange);
+  border: none;
+  margin: 0 12px;
+}
+
 .file-level-button{
+  --accent-color: var(--bright-orange);
   text-align: center;
-  color: var(--bright-orange);
+  color: var(--accent-color);
   margin-right: 0.5rem;
   margin-left: 0.5rem;
-  border: 2px solid var(--bright-orange);
+  border: 2px solid var(--accent-color);
   border-radius: 8px;
   background-color: transparent;
 }
