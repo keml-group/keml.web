@@ -17,13 +17,11 @@
       Conversation Partner Fallbacks
     </label>
     <small>Defaults: {{SimulationInputs.generalDefault}}</small>
-    <div class="defaults-inner-form">
-      <div *ngFor="let partner of partnerList; let  i = index">
-        <label class="form-label">
-          {{partner.name}}
-        </label>
-        <trust-slider [trust]="valueList[i]" (trustChange)="changeDefaultForCp(partner, i, $event)"></trust-slider>
-      </div>
+    <div *ngFor="let partner of partnerList; let  i = index" class="form-row">
+      <label class="form-label">
+        {{partner.name}}
+      </label>
+      <trust-slider [trust]="valueList[i]" (trustChange)="changeDefaultForCp(partner, i, $event)"></trust-slider>
     </div>
   </div>
 </div>
