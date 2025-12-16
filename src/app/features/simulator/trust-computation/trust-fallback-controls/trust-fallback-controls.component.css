@@ -1,3 +1,9 @@
+h2 {
+  color: var(--bright-orange);
+  align-self: center;
+  padding: 6px;
+}
+
 div.defaults-form {
   display:grid;
   grid-template-columns: max-content max-content;
