@@ -7,13 +7,18 @@ h1 {
   width: 100%;
   min-height: 100%;
   display: flex;
-  justify-content: center;
-  box-sizing: inherit;
-  position: relative;
+}
+
+.left-panel {
+  max-width: 80ch;
 }
 
 .multi-line {
   display: flex;
   flex-wrap: wrap;
+  height: auto;
   align-items: center;
+  row-gap: 0.5rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
 }
