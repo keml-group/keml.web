@@ -19,6 +19,13 @@
   </div>
   <div class="right-side">
     <mat-toolbar class="file-level-bar">
+      <button (click)="history.undo()" [disabled]="history.isUndoNotPossible()">
+        <mat-icon aria-hidden="false" fontIcon="undo" ></mat-icon>
+        Undo</button>
+      <button (click)="history.redo()" [disabled]="history.isRedoNotPossible()">
+        <mat-icon aria-hidden="false" fontIcon="redo" ></mat-icon>
+        Redo</button>
+      <hr />
       <button (click)="saveSVG()" >
         <mat-icon aria-hidden="false" fontIcon="photo_library" ></mat-icon>
         Save SVG
