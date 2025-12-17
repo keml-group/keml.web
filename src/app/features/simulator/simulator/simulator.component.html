@@ -1,21 +1,5 @@
 <h1>KEML Trust Simulator</h1>
-<mat-toolbar class="file-level-bar">
-  <button (click)="saveSVG()" >
-    <mat-icon aria-hidden="false" fontIcon="photo_library" ></mat-icon>
-    Save SVG
-  </button>
-    <button (click)="saveSVGasPNG()">
-        <mat-icon aria-hidden="false" fontIcon="photo_library" ></mat-icon>
-        Save PNG
-    </button>
-    <button (click)="saveSVGasJPEG()">
-        <mat-icon aria-hidden="false" fontIcon="photo_library" ></mat-icon>
-        Save JPEG
-    </button>
-  <button class="close-button" (click)="close()">
-    <mat-icon aria-hidden="false" fontIcon="close"></mat-icon>
-  </button>
-</mat-toolbar>
+
 <div class="editor-panel">
   <div class="left-panel">
     <trust-fallback-controls
@@ -33,17 +17,38 @@
       </button>
     </mat-toolbar>
   </div>
-  <div style="width: 1500px; height: 1000px; overflow: auto;">
-    <svg #simulation id="svg" style="border: 1px solid black;" width="1500" [attr.height]="convLength" overflow="scroll">
-      <g convG
-         [conversation]="showIncremental?incrementalSimulationService.incrementalConv: conversation"
-         [showInfos]="true"
-         [showInfoTrusts]="true"
-         [msgCount]="showIncremental?incrementalSimulationService.msgCount():kemlService.msgCount()"
-         (chooseInfo)="infoTrustDetailsService.openInfoTrusts($event, conversation, trustFallbacks)"
-         (conversationLength)="updateConvLength($event)"
-      ></g>
-    </svg>
+  <div class="right-side">
+    <mat-toolbar class="file-level-bar">
+      <button (click)="saveSVG()" >
+        <mat-icon aria-hidden="false" fontIcon="photo_library" ></mat-icon>
+        Save SVG
+      </button>
+      <button (click)="saveSVGasPNG()">
+        <mat-icon aria-hidden="false" fontIcon="photo_library" ></mat-icon>
+        Save PNG
+      </button>
+      <button (click)="saveSVGasJPEG()">
+        <mat-icon aria-hidden="false" fontIcon="photo_library" ></mat-icon>
+        Save JPEG
+      </button>
+      <hr />
+      <button (click)="close()">
+        <mat-icon aria-hidden="false" fontIcon="close"></mat-icon>
+        Back to Edit
+      </button>
+    </mat-toolbar>
+    <div style="width: 1500px; height: 1000px; overflow: auto;">
+      <svg #simulation id="svg" style="border: 1px solid black;" width="1500" [attr.height]="convLength" overflow="scroll">
+        <g convG
+           [conversation]="showIncremental?incrementalSimulationService.incrementalConv: conversation"
+           [showInfos]="true"
+           [showInfoTrusts]="true"
+           [msgCount]="showIncremental?incrementalSimulationService.msgCount():kemlService.msgCount()"
+           (chooseInfo)="infoTrustDetailsService.openInfoTrusts($event, conversation, trustFallbacks)"
+           (conversationLength)="updateConvLength($event)"
+        ></g>
+      </svg>
+    </div>
   </div>
 </div>
 
