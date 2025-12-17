@@ -11,3 +11,9 @@ h1 {
   box-sizing: inherit;
   position: relative;
 }
+
+.multi-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}

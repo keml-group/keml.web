@@ -6,7 +6,7 @@
       [trustFallbacks]="trustFallbacks"
       (trustFallbacksChange)="recompute($event)">
     </trust-fallback-controls>
-    <mat-toolbar class="file-level-bar">
+    <mat-toolbar class="file-level-bar multi-line">
       <button (click)="simulateIncrementally()" [disabled]="showIncremental" >
         <mat-icon aria-hidden="false" fontIcon="play_circle_outline" ></mat-icon>
         Simulate
