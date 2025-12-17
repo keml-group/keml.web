@@ -12,23 +12,27 @@
         <mat-icon aria-hidden="false" fontIcon="photo_library" ></mat-icon>
         Save JPEG
     </button>
-  <button (click)="simulateIncrementally()" [disabled]="showIncremental" >
-    <mat-icon aria-hidden="false" fontIcon="play_circle_outline" ></mat-icon>
-    Simulate Incrementally
-  </button>
-  <button (click)="pauseAndResume()" [disabled]="!showIncremental">
-    <mat-icon aria-hidden="false" fontIcon="autorenew" ></mat-icon>
-    Pause/Resume
-  </button>
   <button class="close-button" (click)="close()">
     <mat-icon aria-hidden="false" fontIcon="close"></mat-icon>
   </button>
 </mat-toolbar>
 <div class="editor-panel">
-  <trust-fallback-controls
-    [trustFallbacks]="trustFallbacks"
-    (trustFallbacksChange)="recompute($event)">
-  </trust-fallback-controls>
+  <div class="left-panel">
+    <trust-fallback-controls
+      [trustFallbacks]="trustFallbacks"
+      (trustFallbacksChange)="recompute($event)">
+    </trust-fallback-controls>
+    <mat-toolbar class="file-level-bar">
+      <button (click)="simulateIncrementally()" [disabled]="showIncremental" >
+        <mat-icon aria-hidden="false" fontIcon="play_circle_outline" ></mat-icon>
+        Simulate
+      </button>
+      <button (click)="pauseAndResume()" [disabled]="!showIncremental">
+        <mat-icon aria-hidden="false" fontIcon="autorenew" ></mat-icon>
+        Pause/Resume
+      </button>
+    </mat-toolbar>
+  </div>
   <div style="width: 1500px; height: 1000px; overflow: auto;">
     <svg #simulation id="svg" style="border: 1px solid black;" width="1500" [attr.height]="convLength" overflow="scroll">
       <g convG
