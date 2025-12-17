@@ -46,3 +46,10 @@
     background: transparent;
   }
 }
+
+.svg-container {
+  width: 100%;          /* or any fixed width */
+  height: auto;        /* or any height you want */
+  overflow: auto;       /* enables both scrollbars */
+  border: 1px solid #ccc; /* optional, just to visualize the area */
+}
