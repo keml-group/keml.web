@@ -50,13 +50,13 @@
   </div>
   <div class="editor-panel">
       <div class="edit-tools">
-        <p style="color: orange">
+        <p>
           <mat-icon aria-hidden="true" fontIcon="add"></mat-icon>
           Add
         </p>
         <button class="tool-button" title="Add conversation partner" (click)="addConversationPartner()">
           <svg width="20" height="35">
-            <g person [w]="20" [h]="35" [stroke]="'orange'"></g>
+            <g person [w]="20" [h]="35" [stroke]="'var(--accent-color, orange)'"></g>
           </svg>
         </button>
         <button class="tool-button" title="Add send message" (click)="addMessage(true)" [disabled]="kemlService.isAddNewMessageDisabled()">
@@ -67,7 +67,7 @@
         </button>
         <button class="tool-button" title="Add preknowledge" (click)="addPreknowledge()">
           <svg width="32" height="24">
-            <g database [w]="32" [h]="9" [fill]="'white'" [stroke]="'orange'" [strokewidth]="1.5"></g>
+            <g database [w]="32" [h]="9" [fill]="'white'" [stroke]="'var(--accent-color, orange)'" [strokewidth]="1.5"></g>
           </svg>
         </button>
         <button class="tool-button" title="Add new information" (click)="addNewInfo()" [disabled]="kemlService.isAddNewNewInfoDisabled()">
