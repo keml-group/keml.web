@@ -1,7 +1,7 @@
 
 .editor-panel{
   position: absolute;
-  top: 170px;                /* same as toolbar height */
+  top: 166px;                /* same as toolbar height */
   bottom: 0;
   left: 0;
   right: 0;
@@ -14,7 +14,7 @@
   bottom: 0;
   left: 0;
   background: #f7f7f7;
-  border-right: 1px solid #ccc;
+  border-right: 1px solid var(--bright-orange);
   overflow: auto;
 }
 
@@ -57,8 +57,8 @@
   left: 80px;              /* same as drawing-tools width */
   right: 0;
   overflow: auto;           /* scroll only here */
-  background: #fff;
-  border: 1px solid #cccccc;
+  background: var(--color-bg);
+  border: 1px solid var(--bright-orange);
 }
 
 .svg-container svg {

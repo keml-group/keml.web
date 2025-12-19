@@ -4,7 +4,7 @@
   background-color: var(--antique-white);
   --accent-color: var(--bright-orange);
   height: 60px;             /* fixed height */
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--bright-orange);
   overflow: hidden;
 
   hr {

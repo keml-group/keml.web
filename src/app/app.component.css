@@ -36,7 +36,7 @@ main {
   bottom: 0;
   left: 0;
   background: var(--antique-white);
-  border-right: 1px solid var(--orange-red);
+  border-right: 1px solid var(--bright-orange);
   overflow: auto;           /* optional */
 }
 
