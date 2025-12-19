@@ -3,6 +3,9 @@
 .mat-toolbar.file-level-bar {
   background-color: var(--antique-white);
   --accent-color: var(--bright-orange);
+  height: 60px;             /* fixed height */
+  border-bottom: 1px solid #ccc;
+  overflow: hidden;
 
   hr {
     width: 1px;

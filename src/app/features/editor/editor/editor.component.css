@@ -1,18 +1,21 @@
 
 .editor-panel{
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  box-sizing: inherit;
-  position: relative;
+  position: absolute;
+  top: 170px;                /* same as toolbar height */
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .edit-tools{
-  width: 5rem;
-  height: 5rem;
-  flex-direction: column;
-  display: block;
+  width: 80px;              /* fixed width */
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background: #f7f7f7;
+  border-right: 1px solid #ccc;
+  overflow: auto;
 }
 
 .tool-button{
@@ -48,11 +51,14 @@
 }
 
 .svg-container {
-  width: 80%;
-  height: 500px;
-  /* OR: height: 500px; */
-  overflow: auto;             /* scroll only here */
-  border: 1px solid #ccc;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 80px;              /* same as drawing-tools width */
+  right: 0;
+  overflow: auto;           /* scroll only here */
+  background: #fff;
+  border: 1px solid #cccccc;
 }
 
 .svg-container svg {

@@ -9,13 +9,19 @@
 }
 
 main {
+  height: 100%;
   width: 100%;
-  padding: 16px;
-  display: flex;
-  flex-direction: row;
+  position: relative;
 }
 
-
+.content {
+  /* Main view to the right of global sidebar */
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 125px;               /* same as global-left-bar width */
+  right: 0;
+}
 
 .divider {
   width: 1px;
@@ -24,12 +30,14 @@ main {
 }
 
 .pill-group {
-  margin-top: 5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  flex-wrap: wrap;
-  gap: 1.25rem;
+  width: 120px;              /* or any fixed width */
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background: var(--antique-white);
+  border-right: 1px solid var(--orange-red);
+  overflow: auto;           /* optional */
 }
 
 .pill {
