@@ -1,16 +1,17 @@
 <main class="main">
   <aside class="pill-group">
-      <ng-container *ngTemplateOutlet="linkpill; context: {
+    <h3>Learn KEML</h3>
+    <ng-container *ngTemplateOutlet="linkpill; context: {
           title: 'Watch a video tutorial (German)',
           link: 'https://uni-ko.de/keml-video'
-         }">
-      </ng-container>
-      <ng-container *ngTemplateOutlet="downloadpill; context: {
+      }">
+    </ng-container>
+    <ng-container *ngTemplateOutlet="downloadpill; context: {
           title: 'Download a KEML example',
           link: 'assets/3-2-keml.json',
           filename: '3-2-keml.json'
         }">
-      </ng-container>
+    </ng-container>
       <ng-container *ngTemplateOutlet="downloadpill; context: {
           title: 'Download a ChatGPT conversation example',
           link: 'assets/3-2-chatgpt.json',

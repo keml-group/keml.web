@@ -20,9 +20,6 @@ footer {
   margin-left: 15rem;
 }
 
-button:hover {
-  @include mixins.hovering();
-}
 
 h1 {
   font-size: 3.125rem;

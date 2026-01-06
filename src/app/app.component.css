@@ -42,6 +42,11 @@ main {
   background: var(--antique-white);
   border-right: 1px solid var(--bright-orange);
   overflow: auto;           /* optional */
+
+  h3 {
+    text-align: center;
+    color: var(--hot-red);
+  }
 }
 
 .pill {
@@ -67,18 +72,18 @@ main {
   background: color-mix(in srgb, var(--pill-accent) 15%, transparent);
 }
 
-.pill-group .pill:nth-child(6n + 1) {
+.pill-group .pill:nth-child(6n+2) {
   --pill-accent: var(--orange-red);
 }
-.pill-group .pill:nth-child(6n + 2),
-.pill-group .pill:nth-child(6n + 3) {
+.pill-group .pill:nth-child(6n+3),
+.pill-group .pill:nth-child(6n + 4) {
   --pill-accent: var(--bright-orange);
 }
-.pill-group .pill:nth-child(6n + 4),
-.pill-group .pill:nth-child(6n + 5) {
+.pill-group .pill:nth-child(6n + 5),
+.pill-group .pill:nth-child(6n + 6) {
   --pill-accent: var(--orange-yellow);
 }
-.pill-group .pill:nth-child(6n + 6) {
+.pill-group .pill:nth-child(6n + 7) {
   --pill-accent: var(--bright-yellow);
 }
 
