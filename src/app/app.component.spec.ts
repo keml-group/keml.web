@@ -21,7 +21,7 @@ describe('AppComponent', () => {
 
   it(`should have the 'keml.graphical' title`,  () => {
     fixture.detectChanges();
-    expect(app.title).toEqual('KEMLeditor');
+    expect(app.title).toEqual('KEML-Editor');
   });
 
   it('should render title', () => {
