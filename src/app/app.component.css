@@ -2,6 +2,7 @@ main {
   display: flex;
   flex-direction: row;
   min-height: 100vh; /* full height, but grows with content */
+  min-width: 0;
 }
 
 footer{
@@ -16,6 +17,7 @@ footer{
   flex: 1; /* take remaining space */
   position: relative; /* if you need positioning inside */
   min-height: 0;
+  min-width: 0;
 }
 
 .headline-with-icon {

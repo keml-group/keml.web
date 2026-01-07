@@ -3,20 +3,14 @@
   flex-direction: column;
   flex: 1;            /* fills available space in .content */
   min-height: 0;  /* ensures internal sidebar fits */
-}
-
-.file-handling {
-  flex: 0 0 auto;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid red;
+  min-width: 0;
 }
 
 .editor-panel {
   flex: 1;            /* takes all remaining height */
   display: flex;
   min-height: 0;      /* allows children to shrink */
+  min-width: 0;
 }
 
 .edit-tools{
@@ -73,6 +67,7 @@
 }
 
 .svg-container svg {
-  width: 100%; height: 100%; overflow: visible;
+  width: max-content; height: max-content;
+  overflow: visible;
   outline: 4px solid green;
 }

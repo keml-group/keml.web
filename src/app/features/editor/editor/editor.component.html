@@ -1,5 +1,4 @@
 <div class="editor" id="editor">
-  <div class="file-handling">
     <input id="openKEML" type="file" class="file-upload" style="display: none" (change)="kemlIOService.loadKEMLfromFile($event)" (click)="InputHandler.clearElem($event)">
     <input id="openChatGptConvList" type="file" class="file-upload" style="display: none" (change)="conversationPickService.startWithAllConvs($event)" (click)="InputHandler.clearElem($event)">
     <mat-toolbar class="file-level-bar">
@@ -47,7 +46,6 @@
         Simulate Trust
       </button>
     </mat-toolbar>
-  </div>
   <div class="editor-panel">
       <div class="edit-tools">
         <p>
