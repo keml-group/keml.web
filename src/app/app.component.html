@@ -1,5 +1,5 @@
 <main class="main">
-  <aside class="pill-group">
+  <aside class="pill-group" [hidden]="hideAside">
     <h3>Learn KEML</h3>
     <ng-container *ngTemplateOutlet="linkpill; context: {
           title: 'Watch a video tutorial (German)',
@@ -27,12 +27,14 @@
         </ng-container>
       }
   </aside>
-  <div class="divider" role="separator" aria-label="Divider"></div>
-  <div class="content">
-    <h1 class="headline-with-icon">
-      <img src="favicon.ico" alt="Camel Icon">
-      KEML Graphical Editor
-    </h1>
+  <div class="content" [attr.asideHidden]="hideAside">
+    <div class="headline-with-button">
+      <button class="toggle-aside" (click)="toggleAside()">Learn more</button>
+      <h1 class="headline-with-icon">
+        <img src="favicon.ico" alt="Camel Icon">
+        KEML Graphical Editor
+      </h1>
+    </div>
     <keml-editor>
     </keml-editor>
   </div>

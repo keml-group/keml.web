@@ -11,5 +11,11 @@ import {NgTemplateOutlet} from "@angular/common";
     styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'KEMLeditor';
+  title = 'KEML-Editor';
+
+  hideAside: boolean = false;
+
+  toggleAside() {
+    this.hideAside = !this.hideAside;
+  }
 }
