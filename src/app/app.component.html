@@ -29,7 +29,9 @@
   </aside>
   <div class="content" [attr.asideHidden]="hideAside">
     <div class="headline-with-button">
-      <button class="toggle-aside" (click)="toggleAside()">Learn more</button>
+      <button class="toggle-aside" (click)="toggleAside()">
+        {{text}}
+      </button>
       <h1 class="headline-with-icon">
         <img src="favicon.ico" alt="Camel Icon">
         KEML Graphical Editor
