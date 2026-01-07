@@ -1,20 +1,29 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  flex: 1;            /* fills available space in .content */
+  min-height: 0;  /* ensures internal sidebar fits */
+}
 
-.editor-panel{
-  position: absolute;
-  top: 114px;                /* same as toolbar height */
-  bottom: 0;
-  left: 0;
-  right: 0;
+.file-handling {
+  flex: 0 0 auto;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid red;
+}
+
+.editor-panel {
+  flex: 1;            /* takes all remaining height */
+  display: flex;
+  min-height: 0;      /* allows children to shrink */
 }
 
 .edit-tools{
-  width: 80px;              /* fixed width */
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
+  width: 80px;
+  flex-shrink: 0;
   border-right: 1px solid var(--bright-orange);
-  overflow: auto;
+  overflow-y: auto;
   p {
     color: var(--bright-orange);
   }
@@ -55,20 +64,15 @@
 }
 
 .svg-container {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 80px;              /* same as drawing-tools width */
-  right: 0;
-  overflow: auto;           /* scroll only here */
-  background: var(--color-bg);
-  border: 1px solid var(--bright-orange);
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow: auto;
+  position: relative;
+  outline: 4px solid blue;
 }
 
 .svg-container svg {
-  display: block;
-  width: auto;
-  height: auto;
-  max-width: none;
-  max-height: none;
+  width: 100%; height: 100%; overflow: visible;
+  outline: 4px solid green;
 }

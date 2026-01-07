@@ -11,8 +11,11 @@ footer{
 }
 
 .content {
+  display: flex;
+  flex-direction: column;
   flex: 1; /* take remaining space */
   position: relative; /* if you need positioning inside */
+  min-height: 0;
 }
 
 .headline-with-icon {

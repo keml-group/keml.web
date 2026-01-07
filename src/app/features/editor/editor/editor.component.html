@@ -81,7 +81,7 @@
         </button>
       </div>
       <div class="svg-container">
-        <svg #svg id="svg" width="1500" [attr.height]="convLength">
+        <svg #svg id="svg" [attr.viewBox]="'0 0 2000 ' + convLength">
           <g convG
              [conversation]="kemlService.conversation"
              [showInfos]="true"
