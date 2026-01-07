@@ -38,39 +38,24 @@ h1 {
 
 footer{
   font-size: small;
+  max-height: 5rem;
 }
 
 main {
-  height: 100%;
-  width: 100%;
-  position: relative;
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh; /* full height, but grows with content */
 }
-
 .content {
-  /* Main view to the right of global sidebar */
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 121px;               /* same as global-left-bar width +1px for border */
-  &[asideHidden="true"] {
-    left: 0;
-  };
-  right: 0;
-}
-
-.divider {
-  width: 1px;
-  background: var(--red-to-orange-vertical-gradient);
-  margin-inline: 0.5rem;
+  flex: 1; /* take remaining space */
+  position: relative; /* if you need positioning inside */
 }
 
 .pill-group {
   width: 120px;              /* or any fixed width */
   max-width: 120px;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
+  flex-shrink: 0; /* prevents collapsing on mobile */
+  z-index: 2; /* ensures it stays above content if needed */
   background: var(--antique-white);
   border-right: 1px solid var(--hot-red);
   overflow: auto;           /* optional */
@@ -123,28 +108,4 @@ main {
   height: 1em;
   width: auto;
   fill: currentColor;
-}
-
-@media screen and (max-width: 650px) {
-  .main {
-    flex-direction: column;
-    width: max-content;
-  }
-
-  .content {
-    order: 1;
-  }
-
-  .divider {
-    order: 2;
-    height: 1px;
-    width: 100%;
-    background: var(--red-to-orange-horizontal-gradient);
-    margin-block: 1.5rem;
-  }
-
-  .pill-group{
-    order: 3;
-    margin-top: 0;
-  }
 }
