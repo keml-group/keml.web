@@ -57,6 +57,7 @@
   }
 }
 
+<!-- not used -->
 .svg-container {
   flex: 1;
   min-height: 0;
@@ -66,6 +67,7 @@
   outline: 4px solid blue;
 }
 
+<!-- not used -->
 .svg-container svg {
   width: max-content; height: max-content;
   overflow: visible;

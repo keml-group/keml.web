@@ -78,8 +78,8 @@
           Link
         </button>
       </div>
-      <div class="svg-container">
-        <svg #svg id="svg" [attr.viewBox]="'0 0 2000 ' + convLength">
+      <div style="width: 1500px; height: 1000px; overflow: auto;">
+          <svg #svg id="svg" style="border: 1px solid black;" width="1500" [attr.height]="convLength" overflow="scroll">
           <g convG
              [conversation]="kemlService.conversation"
              [showInfos]="true"
