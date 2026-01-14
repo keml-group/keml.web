@@ -13,6 +13,7 @@ import {
 import {InfoTrustDetailsService} from "@app/features/simulator/info-trust-details/info-trust-details.service";
 import {ConversationComponent} from "@app/shared/keml/graphical/conversation/conversation.component";
 import {KemlService} from "@app/shared/keml/edit/keml.service";
+import {KemlHistoryService} from "@app/shared/keml/edit/keml-history.service";
 
 @Component({
     selector: 'app-simulator',
@@ -43,6 +44,7 @@ export class SimulatorComponent implements OnInit {
     public incrementalSimulationService: IncrementalSimulationService,
     private trustComputationService: TrustComputationService,
     public kemlService: KemlService,
+    public history: KemlHistoryService,
     private ioService: IoService,
   ) {}
 

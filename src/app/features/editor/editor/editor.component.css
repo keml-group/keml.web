@@ -1,57 +1,47 @@
-.file-level-bar{
-  background-color: antiquewhite;
-}
-.file-level-button{
-  text-align: center;
-  color: orange;
-  margin-right: 1rem;
-  border: 2px solid orange;
-  border-radius: 8px;
-  background-color: antiquewhite;
-}
-.file-level-button:hover {
-  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-}
-
-.mat-icon{
-  color: orange;
-  background: transparent;
-}
-
-.editor-panel{
-  width: 100%;
-  min-height: 100%;
+.editor {
   display: flex;
-  justify-content: center;
-  align-items: first;
-  box-sizing: inherit;
-  position: relative;
+  flex-direction: column;
+  flex: 1;            /* fills available space in .content */
+  min-height: 0;  /* ensures internal sidebar fits */
+  min-width: 0;
+}
+
+.editor-panel {
+  flex: 1;            /* takes all remaining height */
+  display: flex;
+  min-height: 0;      /* allows children to shrink */
+  min-width: 0;
 }
 
 .edit-tools{
-  width: 5rem;
-  height: 5rem;
-  flex-direction: column;
-  display: block;
+  width: 80px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--bright-orange);
+  overflow-y: auto;
+  p {
+    color: var(--bright-orange);
+  }
 }
 
 .tool-button{
+  --accent-color: var(--bright-orange);
   text-align: center;
   align-items: center;
-  color: orange;
+  color: var(--accent-color);
   margin: 1rem;
   height: 3rem;
   width: 3rem;
-  background: white;
-  border: 2px solid orange;
+  background: transparent;
+  border: 2px solid var(--accent-color);
   border-radius: 4px;
-  .svg-dis{
-    stroke: orange;
+  svg {
+    stroke: var(--accent-color);
   }
 }
 .tool-button:hover {
   box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 }
+
 
 .tool-button:disabled,
 .tool-button[disabled]{
@@ -67,14 +57,17 @@
   }
 }
 
-.filter-to-orange{
-  filter: invert(73%) sepia(61%) saturate(3593%) hue-rotate(360deg) brightness(103%) contrast(104%);
+.svg-container {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow: auto;
+  position: relative;
+  outline: 4px solid blue;
 }
 
-.v-divider{
-  width: 1px;              /* thin line */
-  height: 20px;
-  color: orangered;           /* line color */
-  border: none;            /* remove default border */
-  margin: 1rem;
+.svg-container svg {
+  width: max-content; height: max-content;
+  overflow: visible;
+  outline: 4px solid green;
 }

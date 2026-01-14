@@ -1,45 +1,61 @@
-<h1>Trust Simulator</h1>
-<mat-toolbar class="file-level-bar">
-  <button class="file-level-button" (click)="saveSVG()" >
-    <mat-icon aria-hidden="false" fontIcon="photo_library" ></mat-icon>
-    Save SVG
-  </button>
-    <button class="file-level-button" (click)="saveSVGasPNG()">
+<h1>KEML Trust Simulator</h1>
+
+<div class="editor-panel">
+  <div class="left-panel">
+    <trust-fallback-controls
+      [trustFallbacks]="trustFallbacks"
+      (trustFallbacksChange)="recompute($event)">
+    </trust-fallback-controls>
+    <mat-toolbar class="file-level-bar multi-line">
+      <button (click)="simulateIncrementally()" [disabled]="showIncremental" >
+        <mat-icon aria-hidden="false" fontIcon="play_circle_outline" ></mat-icon>
+        Simulate
+      </button>
+      <button (click)="pauseAndResume()" [disabled]="!showIncremental">
+        <mat-icon aria-hidden="false" fontIcon="autorenew" ></mat-icon>
+        Pause/Resume
+      </button>
+    </mat-toolbar>
+  </div>
+  <div class="right-side">
+    <mat-toolbar class="file-level-bar">
+      <button (click)="history.undo()" [disabled]="history.isUndoNotPossible()">
+        <mat-icon aria-hidden="false" fontIcon="undo" ></mat-icon>
+        Undo</button>
+      <button (click)="history.redo()" [disabled]="history.isRedoNotPossible()">
+        <mat-icon aria-hidden="false" fontIcon="redo" ></mat-icon>
+        Redo</button>
+      <hr />
+      <button (click)="saveSVG()" >
+        <mat-icon aria-hidden="false" fontIcon="photo_library" ></mat-icon>
+        Save SVG
+      </button>
+      <button (click)="saveSVGasPNG()">
         <mat-icon aria-hidden="false" fontIcon="photo_library" ></mat-icon>
         Save PNG
-    </button>
-    <button class="file-level-button" (click)="saveSVGasJPEG()">
+      </button>
+      <button (click)="saveSVGasJPEG()">
         <mat-icon aria-hidden="false" fontIcon="photo_library" ></mat-icon>
         Save JPEG
-    </button>
-  <button class="file-level-button" (click)="simulateIncrementally()" [disabled]="showIncremental" >
-    <mat-icon aria-hidden="false" fontIcon="play_circle_outline" ></mat-icon>
-    Simulate Incrementally
-  </button>
-  <button class="file-level-button" (click)="pauseAndResume()" [disabled]="!showIncremental">
-    <mat-icon aria-hidden="false" fontIcon="autorenew" ></mat-icon>
-    Pause/Resume
-  </button>
-  <button class="close-button" (click)="close()">
-    <mat-icon aria-hidden="false" fontIcon="close"></mat-icon>
-  </button>
-</mat-toolbar>
-<div class="editor-panel">
-  <trust-fallback-controls
-    [trustFallbacks]="trustFallbacks"
-    (trustFallbacksChange)="recompute($event)">
-  </trust-fallback-controls>
-  <div style="width: 1500px; height: 1000px; overflow: auto;">
-    <svg #simulation id="svg" style="border: 1px solid black;" width="1500" [attr.height]="convLength" overflow="scroll">
-      <g convG
-         [conversation]="showIncremental?incrementalSimulationService.incrementalConv: conversation"
-         [showInfos]="true"
-         [showInfoTrusts]="true"
-         [msgCount]="showIncremental?incrementalSimulationService.msgCount():kemlService.msgCount()"
-         (chooseInfo)="infoTrustDetailsService.openInfoTrusts($event, conversation, trustFallbacks)"
-         (conversationLength)="updateConvLength($event)"
-      ></g>
-    </svg>
+      </button>
+      <hr />
+      <button (click)="close()">
+        <mat-icon aria-hidden="false" fontIcon="close"></mat-icon>
+        Back to Edit
+      </button>
+    </mat-toolbar>
+    <div style="width: 1500px; height: 1000px; overflow: auto;">
+      <svg #simulation id="svg" style="border: 1px solid black;" width="1500" [attr.height]="convLength" overflow="scroll">
+        <g convG
+           [conversation]="showIncremental?incrementalSimulationService.incrementalConv: conversation"
+           [showInfos]="true"
+           [showInfoTrusts]="true"
+           [msgCount]="showIncremental?incrementalSimulationService.msgCount():kemlService.msgCount()"
+           (chooseInfo)="infoTrustDetailsService.openInfoTrusts($event, conversation, trustFallbacks)"
+           (conversationLength)="updateConvLength($event)"
+        ></g>
+      </svg>
+    </div>
   </div>
 </div>
 

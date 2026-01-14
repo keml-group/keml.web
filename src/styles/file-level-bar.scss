@@ -1,0 +1,37 @@
+@use "mixins" as mixin;
+
+.mat-toolbar.file-level-bar {
+  background-color: var(--antique-white);
+  --accent-color: var(--bright-orange);
+  height: 60px;             /* fixed height */
+  border-bottom: 1px solid var(--bright-orange);
+  overflow: auto;
+
+  hr {
+    width: 1px;
+    height: 100%;
+    background-color: var(--accent-color);
+    border: none;
+    margin: 0 12px;
+  }
+
+  button {
+    text-align: center;
+    color: var(--accent-color);
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+    border: 2px solid var(--accent-color);
+    border-radius: 8px;
+    background-color: transparent;
+  }
+  button:enabled:hover,
+  button[enabled]:hover {
+    @include mixin.hovering();
+  }
+
+  button:disabled,
+  button[disabled] {
+    @include  mixin.disable();
+  }
+
+}

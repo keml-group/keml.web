@@ -1,0 +1,36 @@
+@use "functions" as f;
+
+$hot-red: oklch(61.42% 0.238 15.34);
+$hot-red-dark: oklch(55.28% 0.238 15.34);
+
+$orange-red: oklch(63.32% 0.24 31.68);
+$orange-red-dark: oklch(60.99% 0.24 31.68);
+
+$bright-orange: oklch(70% 0.1825 58.76);
+$bright-orange-dark: oklch(63% 0.1825 58.76);
+
+$orange-yellow: oklch(81.33% 0.1554 68.29);
+$orange-yellow-dark: oklch(73.20% 0.1554 68.29);
+
+$opace-orange: oklch(90% 0.1225 58.76);
+$opace-orange-dark: oklch(86% 0.1225 58.76);
+
+$orange-white:  oklch(96% 0.0725 48.76);
+$orange-white-dark:  oklch(90% 0.0725 48.76);
+
+$antique-white:  oklch(94.67% 0.03 75.22);
+$antique-white-dark:  oklch(90.67% 0.03 75.22);
+
+$bright-yellow: oklch(89.26% 0.1603 89.76);
+$bright-yellow-dark: oklch(80.33% 0.1603 89.76);
+
+
+
+
+$red-to-green-horizontal-gradient: f.horizontal-gradient(
+#ff0000,
+#ffff00,
+#00ff00
+)
+
+

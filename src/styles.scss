@@ -1,0 +1,17 @@
+/* You can add global styles to this file, and also import other style files */
+
+@use "styles/custom-theme.scss";
+@use "styles/mixins" as mixins;
+@import 'material-icons/iconfont/material-icons.css';
+
+html, body {
+  font-family: var(--font-family), sans-serif; }
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+a {
+  color: var(--hot-red);
+}

@@ -1,58 +1,60 @@
 <div class="editor" id="editor">
-  <div class="file-handling">
     <input id="openKEML" type="file" class="file-upload" style="display: none" (change)="kemlIOService.loadKEMLfromFile($event)" (click)="InputHandler.clearElem($event)">
     <input id="openChatGptConvList" type="file" class="file-upload" style="display: none" (change)="conversationPickService.startWithAllConvs($event)" (click)="InputHandler.clearElem($event)">
     <mat-toolbar class="file-level-bar">
-      <button class="file-level-button" (click)="kemlService.newConversation()">
+      <button (click)="kemlService.newConversation()">
         <mat-icon aria-hidden="false" fontIcon="insert_drive_file" ></mat-icon>
         New
       </button>
-      <button class="file-level-button"
-              [matTooltip]="'Upload your complete conv.json'"
+      <button [matTooltip]="'Upload your complete conv.json'"
               (click)="newFromChatGPTList()">
         <mat-icon aria-hidden="false" fontIcon="insert_drive_file" ></mat-icon>
         From ChatGPT
       </button>
-      <button class="file-level-button" (click)="openKeml()">
+      <button (click)="openKeml()">
         <mat-icon aria-hidden="false" fontIcon="file_upload" ></mat-icon>
         Open KEML
       </button>
-      <hr class="v-divider">
-      <undo-redo></undo-redo>
-      <hr class="v-divider">
-      <button class="file-level-button" (click)="kemlIOService.saveKEML()">
+      <hr/>
+        <button (click)="history.undo()" [disabled]="history.isUndoNotPossible()">
+            <mat-icon aria-hidden="false" fontIcon="undo" ></mat-icon>
+            Undo</button>
+        <button (click)="history.redo()" [disabled]="history.isRedoNotPossible()">
+            <mat-icon aria-hidden="false" fontIcon="redo" ></mat-icon>
+            Redo</button>
+      <hr />
+      <button (click)="kemlIOService.saveKEML()">
         <mat-icon aria-hidden="false" fontIcon="file_download" ></mat-icon>
         Save KEML
       </button>
-      <button class="file-level-button" (click)="saveSVG()">
+      <button (click)="saveSVG()">
         <mat-icon aria-hidden="false" fontIcon="photo_library" ></mat-icon>
         Save SVG
       </button>
-      <button class="file-level-button" (click)="saveSVGasPNG()">
+      <button (click)="saveSVGasPNG()">
         <mat-icon aria-hidden="false" fontIcon="photo_library" ></mat-icon>
         Save PNG
       </button>
-      <button class="file-level-button" (click)="saveSVGasJPEG()">
+      <button (click)="saveSVGasJPEG()">
         <mat-icon aria-hidden="false" fontIcon="photo_library" ></mat-icon>
         Save JPEG
       </button>
-      <hr class="v-divider">
-      <button class="file-level-button" (click)="openSimulation()">
+      <hr />
+      <button  (click)="openSimulation()">
         <!--fontIcon="open_in_new" lightbulb_outline-->
         <mat-icon aria-hidden="false" fontIcon="schedule" ></mat-icon>
         Simulate Trust
       </button>
     </mat-toolbar>
-  </div>
   <div class="editor-panel">
       <div class="edit-tools">
-        <p style="color: orange">
+        <p>
           <mat-icon aria-hidden="true" fontIcon="add"></mat-icon>
           Add
         </p>
         <button class="tool-button" title="Add conversation partner" (click)="addConversationPartner()">
           <svg width="20" height="35">
-            <g person [w]="20" [h]="35" [stroke]="'orange'"></g>
+            <g person [w]="20" [h]="35" [stroke]="'var(--accent-color, orange)'"></g>
           </svg>
         </button>
         <button class="tool-button" title="Add send message" (click)="addMessage(true)" [disabled]="kemlService.isAddNewMessageDisabled()">
@@ -63,7 +65,7 @@
         </button>
         <button class="tool-button" title="Add preknowledge" (click)="addPreknowledge()">
           <svg width="32" height="24">
-            <g database [w]="32" [h]="9" [fill]="'white'" [stroke]="'orange'" [strokewidth]="1.5"></g>
+            <g database [w]="32" [h]="9" [fill]="'white'" [stroke]="'var(--accent-color, orange)'" [strokewidth]="1.5"></g>
           </svg>
         </button>
         <button class="tool-button" title="Add new information" (click)="addNewInfo()" [disabled]="kemlService.isAddNewNewInfoDisabled()">
@@ -77,7 +79,7 @@
         </button>
       </div>
       <div style="width: 1500px; height: 1000px; overflow: auto;">
-        <svg #svg id="svg" style="border: 1px solid black;" width="1500" [attr.height]="convLength" overflow="scroll">
+          <svg #svg id="svg" style="border: 1px solid black;" width="1500" [attr.height]="convLength" overflow="scroll">
           <g convG
              [conversation]="kemlService.conversation"
              [showInfos]="true"

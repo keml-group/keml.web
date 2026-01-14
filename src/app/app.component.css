@@ -1,144 +1,89 @@
-:host {
-  --bright-blue: oklch(51.01% 0.274 263.83);
-  --electric-violet: oklch(53.18% 0.28 296.97);
-  --french-violet: oklch(47.66% 0.246 305.88);
-  --vivid-pink: oklch(69.02% 0.277 332.77);
-  --hot-red: oklch(61.42% 0.238 15.34);
-  --orange-red: oklch(63.32% 0.24 31.68);
-  --bright-orange: oklch(70% 0.1825 58.76);
-  --orange-yellow: oklch(81.33% 0.1554 68.29);
-  --opace-orange: oklch(90% 0.1225 58.76);
-  --bright-yellow: oklch(89.26% 0.1603 89.76);
+main {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh; /* full height, but grows with content */
+  min-width: 0;
+}
 
+footer{
+  font-size: small;
+  max-height: 5rem;
+  text-align: center;
+}
 
-  --gray-900: oklch(19.37% 0.006 300.98);
-  --gray-700: oklch(36.98% 0.014 302.71);
-  --gray-400: oklch(70.9% 0.015 304.04);
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* take remaining space */
+  position: relative; /* if you need positioning inside */
+  min-height: 0;
+  min-width: 0;
+}
 
-  --red-to-pink-to-purple-vertical-gradient: linear-gradient(
-    180deg,
-    var(--orange-red) 0%,
-    var(--vivid-pink) 50%,
-    var(--electric-violet) 100%
-  );
+.headline-with-icon {
+  display: flex;
+  align-items: center; /* vertically centers image with text */
+  gap: 0.5rem;         /* spacing between icon and text */
+  img {
+    height: 1em;         /* match the text height */
+    width: auto;         /* keep aspect ratio */
+    display: block;
+  }
+}
 
-  --red-to-orange-vertical-gradient: linear-gradient(
-    180deg,
-    var(--orange-red) 0%,
-    var(--bright-orange) 50%,
-    var(--orange-yellow) 100%
-  );
-
-  --red-to-pink-to-purple-horizontal-gradient: linear-gradient(
-    90deg,
-    var(--orange-red) 0%,
-    var(--vivid-pink) 50%,
-    var(--electric-violet) 100%
-  );
-
-  --red-to-green-horizontal-gradient: linear-gradient(
-    90deg,
-    #ff0000 0%,
-    #ffff00 50%,
-    #00ff00 100%
-  );
-
-  --pill-accent: var(--bright-blue);
-
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-  Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-  "Segoe UI Symbol";
-  box-sizing: border-box;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.headline-with-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.toggle-aside {
+  background: var(--antique-white);
+  border: 1px solid var(--orange-white);
+  border-radius: 5px;
+  text-align: center;
+  color: var(--bright-orange);
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
 }
 
 h1 {
   font-size: 3.125rem;
-  background-image: -webkit-gradient(
-    linear,
-    left top,
-    right top,
-    color-stop(0.03, rgb(250,3,3)),
-    color-stop(0.52, rgb(240,255,127)),
-    color-stop(0.76, rgb(42,24,173))
-  );;
+  background-image: var(--red-to-orange-horizontal-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 500;
   line-height: 100%;
   letter-spacing: -0.125rem;
   margin: 0;
-  font-family: "Inter Tight", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-  Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-  "Segoe UI Symbol";
-}
-
-p {
-  margin: 0;
-  color: var(--gray-700);
-}
-
-main {
-  width: 100%;
-  min-height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
-  box-sizing: inherit;
-  position: relative;
-}
-
-.angular-logo {
-  max-width: 9.2rem;
-}
-
-.content {
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-  margin-bottom: 3rem;
-}
-
-.content h1 {
-  margin-top: 1.75rem;
-}
-
-.content p {
-  margin-top: 1.5rem;
-}
-
-.right-side{
-  margin-top: 8rem;
-}
-
-.divider {
-  width: 1px;
-  background: var(--red-to-orange-vertical-gradient);
-  margin-inline: 0.5rem;
 }
 
 .pill-group {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  flex-wrap: wrap;
-  gap: 1.25rem;
+  width: 120px;              /* or any fixed width */
+  max-width: 120px;
+  flex-shrink: 0; /* prevents collapsing on mobile */
+  z-index: 2; /* ensures it stays above content if needed */
+  background: var(--antique-white);
+  border-right: 1px solid var(--hot-red);
+  overflow: auto;           /* optional */
+
+  h3 {
+    text-align: center;
+    color: var(--hot-red);
+  }
 }
 
 .pill {
   display: flex;
   align-items: center;
-  --pill-accent: var(--bright-blue);
-  background: color-mix(in srgb, var(--pill-accent) 5%, transparent);
+  --pill-accent: var(--hot-red);
+  background: color-mix(in srgb, var(--pill-accent) 8%, transparent);
   color: var(--pill-accent);
   padding-inline: 0.75rem;
   padding-block: 0.375rem;
   border-radius: 2.75rem;
   border: 0;
   transition: background 0.3s ease;
-  font-family: var(--inter-font);
   font-size: 0.875rem;
   font-style: normal;
   font-weight: 500;
@@ -151,51 +96,23 @@ main {
   background: color-mix(in srgb, var(--pill-accent) 15%, transparent);
 }
 
-.pill-group .pill:nth-child(6n + 1) {
+.pill-group .pill:nth-child(6n+2) {
   --pill-accent: var(--orange-red);
 }
-.pill-group .pill:nth-child(6n + 2) {
+.pill-group .pill:nth-child(6n+3),
+.pill-group .pill:nth-child(6n + 4) {
   --pill-accent: var(--bright-orange);
 }
-.pill-group .pill:nth-child(6n + 3),
-.pill-group .pill:nth-child(6n + 4),
-.pill-group .pill:nth-child(6n + 5) {
+.pill-group .pill:nth-child(6n + 5),
+.pill-group .pill:nth-child(6n + 6) {
   --pill-accent: var(--orange-yellow);
 }
-.pill-group .pill:nth-child(6n + 6) {
+.pill-group .pill:nth-child(6n + 7) {
   --pill-accent: var(--bright-yellow);
 }
 
-.pill-group svg {
-  margin-inline-start: 0.25rem;
-}
-
-.social-links {
-  display: flex;
-  align-items: center;
-  gap: 0.73rem;
-  margin-top: 1.5rem;
-}
-
-.social-links path {
-  transition: fill 0.3s ease;
-  fill: var(--gray-400);
-}
-
-.social-links a:hover svg path {
-  fill: var(--gray-900);
-}
-
-@media screen and (max-width: 650px) {
-  .content {
-    flex-direction: column;
-    width: max-content;
-  }
-
-  .divider {
-    height: 1px;
-    width: 100%;
-    background: var(--red-to-pink-to-purple-horizontal-gradient);
-    margin-block: 1.5rem;
-  }
+.pill svg {
+  height: 1em;
+  width: auto;
+  fill: currentColor;
 }
