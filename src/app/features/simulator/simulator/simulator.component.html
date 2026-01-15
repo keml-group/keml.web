@@ -51,6 +51,7 @@
            [showInfos]="true"
            [showInfoTrusts]="true"
            [msgCount]="showIncremental?incrementalSimulationService.msgCount():kemlService.msgCount()"
+           [cpCount]="this.kemlService.cpCount()"
            (chooseInfo)="infoTrustDetailsService.openInfoTrusts($event, conversation, trustFallbacks)"
            (conversationLength)="updateConvLength($event)"
         ></g>

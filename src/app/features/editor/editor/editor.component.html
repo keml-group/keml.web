@@ -85,6 +85,7 @@
              [showInfos]="true"
              [showInfoTrusts]="false"
              [msgCount]="this.kemlService.msgCount()"
+             [cpCount]="this.kemlService.cpCount()"
              (chooseCp)="detailsService.openConversationPartnerDetails($event)"
              (chooseMsg)="detailsService.openMessageDetails($event)"
              (chooseInfo)="detailsService.openInfoDetails($event)"

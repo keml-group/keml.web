@@ -27,6 +27,7 @@ export class KemlService {
   public conversation!: Conversation;
 
   msgCount: WritableSignal<number>;
+  cpCount: WritableSignal<number>;
 
 
   constructor(
@@ -38,6 +39,7 @@ export class KemlService {
     this.conversation = new Conversation();
     this.layoutingService.positionConversationPartners(this.conversation.conversationPartners)
     this.msgCount = signal<number>(this.conversation.author.messages.length);
+    this.cpCount = signal<number>(this.conversation.conversationPartners.length);
     this.historyService.state$.subscribe(state => {
       if (state) {
         this.deserializeConversation(state);
@@ -56,6 +58,7 @@ export class KemlService {
   newConversationNoHistory(title?: string) {
     this.conversation = new Conversation(title);
     this.msgCount.set(this.conversation.author.messages.length)
+    this.cpCount.set(this.conversation.conversationPartners.length)
   }
 
   newConversation(title?: string) {
@@ -79,7 +82,12 @@ export class KemlService {
     LayoutingService.positionInfos(conv.author.preknowledge, conv.author.messages);
     this.conversation = conv;
     this.msgCount.set(this.conversation.author.messages.length)
+    this.setCPCount()
     return conv;
+  }
+
+  private setCPCount() {
+    this.cpCount.set(this.conversation.conversationPartners.length)
   }
 
   private static timeMessages(msgs: Message[]) {
@@ -115,6 +123,7 @@ export class KemlService {
       this.layoutingService.nextConversationPartnerPosition(cps[cps.length-1]?.xPosition), //todo
     );
     cps.push(cp);
+    this.cpCount.update(n => n+1)
     return cp;
   }
 
@@ -155,6 +164,7 @@ export class KemlService {
     this.deleteMsgsWithCP(cp)
     cp.destruct()
     ListUpdater.removeFromList(cp, this.conversation.conversationPartners)
+    this.cpCount.update(n => n-1)
     this.saveCurrentState()
   }
 
@@ -174,6 +184,7 @@ export class KemlService {
     )
     cps.splice(pos+1, 0, newCp);
     this.layoutingService.positionConversationPartners(cps); // complete re-positioning
+    this.cpCount.update(n => n+1);
     this.saveCurrentState()
     return newCp;
   }
