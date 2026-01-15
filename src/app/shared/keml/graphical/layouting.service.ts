@@ -11,7 +11,7 @@ import {Injectable} from "@angular/core";
 })
 export class LayoutingService {
   static heightOverCPs = 150
-  static infoWidth = 500
+  static infoWidth = 750
 
   // distance to first partner should be bigger than distance in between:
   static distanceToFirstCP: number = 300;

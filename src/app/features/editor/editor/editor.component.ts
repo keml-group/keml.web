@@ -25,6 +25,7 @@ export class EditorComponent {
   @ViewChild("svg") svg!: ElementRef<SVGElement>;
 
   convLength: number = 150
+  convWidth: number = 1000;
 
   constructor(
     public detailsService: DetailsService,
@@ -38,6 +39,10 @@ export class EditorComponent {
 
   updateConvLength(event: number) {
     this.convLength = Math.max(event, 1000)
+  }
+
+  updateConvWidth(event: number) {
+    this.convWidth = event
   }
 
   saveSVG() {

@@ -36,6 +36,7 @@ export class SimulatorComponent implements OnInit {
 
   @ViewChild("simulation") simulationSvg!: ElementRef<SVGElement>;
   convLength: number = 150
+  convWidth: number = 1000;
 
   constructor(
     public dialogRef: MatDialogRef<SimulatorComponent>,
@@ -61,6 +62,10 @@ export class SimulatorComponent implements OnInit {
 
   updateConvLength(event: number) {
     this.convLength = Math.max(event, 1000)
+  }
+
+  updateConvWidth(event: number) {
+    this.convWidth = event
   }
 
   recompute(_: TrustFallbacks) {
