@@ -30,6 +30,7 @@ describe('EditorComponent', () => {
       'isMoveConversationPartnerLeftDisabled',
       'isMoveConversationPartnerRightDisabled',
       'msgCount',
+      'cpCount',
       'conversation'
     ]);
     kemlService.conversation = new Conversation()

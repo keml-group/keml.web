@@ -19,6 +19,7 @@ describe('ConversationComponent', () => {
     component = fixture.componentInstance;
     componentRef = fixture.componentRef;
     componentRef.setInput('msgCount', 5)
+    componentRef.setInput('cpCount', 1)
     component.conversation = new Conversation();
     fixture.detectChanges();
   });
