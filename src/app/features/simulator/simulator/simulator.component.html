@@ -45,14 +45,16 @@
       </button>
     </mat-toolbar>
     <div style="width: 1500px; height: 1000px; overflow: auto;">
-      <svg #simulation id="svg" style="border: 1px solid black;" width="1500" [attr.height]="convLength" overflow="scroll">
+      <svg #simulation id="svg" style="border: 1px solid black;" [attr.width]="convWidth" [attr.height]="convLength" overflow="scroll">
         <g convG
            [conversation]="showIncremental?incrementalSimulationService.incrementalConv: conversation"
            [showInfos]="true"
            [showInfoTrusts]="true"
            [msgCount]="showIncremental?incrementalSimulationService.msgCount():kemlService.msgCount()"
+           [cpCount]="this.kemlService.cpCount()"
            (chooseInfo)="infoTrustDetailsService.openInfoTrusts($event, conversation, trustFallbacks)"
            (conversationLength)="updateConvLength($event)"
+           (conversationWidth)="updateConvWidth($event)"
         ></g>
       </svg>
     </div>

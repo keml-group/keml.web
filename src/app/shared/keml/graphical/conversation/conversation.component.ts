@@ -31,6 +31,7 @@ export class ConversationComponent {
 
   @Input() conversation!: Conversation;
   msgCount: InputSignal<number> = input.required<number>();
+  cpCount: InputSignal<number> = input.required<number>();
   @Input() showInfos = true;
   @Input() showInfoTrusts = false;
   @Output() chooseCp: EventEmitter<ConversationPartner> = new EventEmitter();
@@ -38,17 +39,31 @@ export class ConversationComponent {
   @Output() chooseInfo = new EventEmitter<Information>();
   @Output() chooseInfoLink: EventEmitter<InformationLink> = new EventEmitter<InformationLink>()
   @Output() conversationLength: EventEmitter<number> = new EventEmitter<number>();
+  @Output() conversationWidth: EventEmitter<number> = new EventEmitter<number>();
 
-   lifeLineLength: Signal<number> = computed(() =>
+  lifeLineLength: Signal<number> = computed(() =>
     this.layoutingService.determineLifeLineLength(this.msgCount())
+  )
+
+  cpWidth: Signal<number> = computed(() =>
+    this.layoutingService.determineCPWidth(this.cpCount())
   )
 
   constructor(
     private layoutingService: LayoutingService,
   ) {
     effect(() =>
-      this.conversationLength.next(this.lifeLineLength()+150)
-    )
+      // this.conversationLength.next(this.lifeLineLength()+LayoutingService.heightOverCPs)
+      // todo test:
+      this.conversationLength.next(
+        this.layoutingService.determineConversationLength(this.msgCount())
+      )
+    );
+    effect(() =>
+      this.conversationWidth.next(
+        this.layoutingService.determineWidth(this.cpCount())
+      )
+    );
   }
 
 

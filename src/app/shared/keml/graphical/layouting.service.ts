@@ -11,6 +11,7 @@ import {Injectable} from "@angular/core";
 })
 export class LayoutingService {
   static heightOverCPs = 150
+  static infoWidth = 750
 
   // distance to first partner should be bigger than distance in between:
   static distanceToFirstCP: number = 300;
@@ -34,6 +35,14 @@ export class LayoutingService {
   determineLifeLineLength(msgCount: number): number {
     return LayoutingService.distanceToFirstMessage +
       (msgCount+2)*LayoutingService.distanceBetweenMessages;
+  }
+
+  determineCPWidth(cpCount: number): number {
+    return LayoutingService.distanceToFirstCP +cpCount*LayoutingService.distanceBetweenCP;
+  }
+
+  determineWidth(cpCount: number): number {
+    return this.determineCPWidth(cpCount)+LayoutingService.infoWidth;
   }
 
   /*
