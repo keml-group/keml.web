@@ -61,7 +61,7 @@ export abstract class Message extends Referencable {
     return Message.isSend(this.ref.eClass);
   }
 
-  toJson(): MessageJson {
+  override toJson(): MessageJson {
     return {
       content: this.content,
       counterPart: this.counterPart.getRef(),
@@ -295,7 +295,7 @@ export abstract class Information extends Referencable implements Positionable {
 
   abstract duplicate(): Information;
 
-  toJson(): InformationJson {
+  override toJson(): InformationJson {
     return {
       causes: this.causes.map(c => c.toJson()),
       currentTrust: this.currentTrust,
@@ -477,7 +477,7 @@ export class InformationLink extends Referencable {
     this.linkText = linkText;
   }
 
-  toJson(): InformationLinkJson {
+  override toJson(): InformationLinkJson {
     return {
       eClass: EClasses.InformationLink,
       source: this.source.getRef(),

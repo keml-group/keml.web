@@ -11,7 +11,7 @@ export class ConversationPartner extends LifeLine {
       super(name, xPosition, refC);
     }
 
-    toJson(): ConversationPartnerJson {
+    override toJson(): ConversationPartnerJson {
       return {
         name: this.name,
         xPosition: this.xPosition,

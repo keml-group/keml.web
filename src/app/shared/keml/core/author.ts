@@ -39,7 +39,7 @@ export class Author extends LifeLine{
     this.$treeChildren.push(this._preknowledge, this._messages)
   }
 
-  toJson(): AuthorJson {
+  override toJson(): AuthorJson {
     return {
       name: this.name,
       xPosition: this.xPosition,
