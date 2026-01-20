@@ -41,8 +41,8 @@ export class Author extends LifeLine{
 
   override toJson(): AuthorJson {
     let json: AuthorJson = (<AuthorJson>super.toJson())
-    json.preknowledge = this.preknowledge.map(p=> p.toJson())//todo make work: this._preknowledge.toJson()
-    json.messages = this.messages.map(m => m.toJson()) //this._messages.toJson()
+    json.preknowledge = this._preknowledge.toJson()
+    json.messages = this._messages.toJson()
     return json
   }
 
