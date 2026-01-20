@@ -40,12 +40,10 @@ export class Author extends LifeLine{
   }
 
   override toJson(): AuthorJson {
-    return {
-      name: this.name,
-      xPosition: this.xPosition,
-      messages: this.messages.map(m => m.toJson()),
-      preknowledge: this.preknowledge.map(p => p.toJson()),
-    }
+    let json: AuthorJson = (<AuthorJson>super.toJson())
+    json.preknowledge = this.preknowledge.map(p=> p.toJson())//todo make work: this._preknowledge.toJson()
+    json.messages = this.messages.map(m => m.toJson()) //this._messages.toJson()
+    return json
   }
 
   static createTreeBackbone(ref: Ref, context: Deserializer): Author {
