@@ -23,14 +23,14 @@ export interface PreknowledgeJson extends InformationJson {
 }
 
 export interface NewInformationJson extends InformationJson {
-  source: Ref;//ReceiveMessage; //backwards but main
+  source?: Ref;//ReceiveMessage; //tree parent
 }
 
 export interface InformationLinkJson {
   eClass: string;
   linkText?: string;
   type: InformationLinkType;
-  source: Ref; //backwards but main
+  source?: Ref; //tree parent
   target: Ref;
 }
 

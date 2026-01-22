@@ -64,7 +64,7 @@ export abstract class Message extends Referencable {
   override toJson(): MessageJson {
     return {
       content: this.content,
-      counterPart: this._counterPart.toJson(),
+      counterPart: this._counterPart.toJson()!!,
       eClass: this.ref.eClass,
       originalContent: this.originalContent,
       timing: this.timing
@@ -481,7 +481,7 @@ export class InformationLink extends Referencable {
     return {
       eClass: EClasses.InformationLink,
       source: this._source.toJson(),
-      target: this._target.toJson(),
+      target: this._target.toJson()!!,
       type: this.type,
       linkText: this.linkText,
     }
@@ -489,7 +489,7 @@ export class InformationLink extends Referencable {
 
   static createTreeBackbone(ref: Ref, context: Deserializer): InformationLink {
     let infoLinkJson: InformationLinkJson = context.getJsonFromTree(ref.$ref)
-    let srcRef = RefHandler.createRef(RefHandler.getParentAddress(ref.$ref), infoLinkJson.source.eClass)
+    let srcRef = RefHandler.createRef(RefHandler.getParentAddress(ref.$ref), infoLinkJson.source!.eClass)
     let src: Information = context.get(srcRef.$ref)
     let dummyTarget = new Preknowledge()
     let infoLink: InformationLink = new InformationLink(src, dummyTarget, infoLinkJson.type, infoLinkJson.linkText, ref)
