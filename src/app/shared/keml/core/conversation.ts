@@ -1,7 +1,7 @@
 import {Author} from "./author";
 import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
-import {Deserializer, Ref, Referencable, RefHandler, ReferencableTreeSingletonContainer, ReferencableTreeListContainer} from "emfular";
+import {Deserializer, Ref, Referencable, RefHandler, ReTreeSingleContainer, ReTreeListContainer} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
 
 
@@ -9,14 +9,14 @@ export class Conversation extends Referencable {
   static readonly authorPrefix = 'author';
   static readonly conversationPartnersPrefix = 'conversationPartners';
   title: string;
-  _author: ReferencableTreeSingletonContainer<Author>;
+  _author: ReTreeSingleContainer<Author>;
   get author(): Author {
     return this._author.get()!!
   }
   set author(author: Author) {
     this._author.add(author);
   }
-  _conversationPartners: ReferencableTreeListContainer<ConversationPartner>;
+  _conversationPartners: ReTreeListContainer<ConversationPartner>;
   get conversationPartners(): ConversationPartner[] {
     return this._conversationPartners.get()
   }
@@ -32,8 +32,8 @@ export class Conversation extends Referencable {
   ) {
     let ref = RefHandler.createRef(RefHandler.rootPath, EClasses.Conversation)
     super(ref);
-    this._author = new ReferencableTreeSingletonContainer<Author>(this, Conversation.authorPrefix);
-    this._conversationPartners = new ReferencableTreeListContainer<ConversationPartner>(this, Conversation.conversationPartnersPrefix);
+    this._author = new ReTreeSingleContainer<Author>(this, Conversation.authorPrefix);
+    this._conversationPartners = new ReTreeListContainer<ConversationPartner>(this, Conversation.conversationPartnersPrefix);
     this.$treeChildren.push(this._author, this._conversationPartners);
     this.title = title;
     this.author = author;

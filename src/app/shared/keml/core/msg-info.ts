@@ -13,10 +13,10 @@ import {
   Ref,
   Referencable,
   RefHandler,
-  ReferencableListContainer,
-  ReferencableSingletonContainer,
-  ReferencableTreeListContainer,
-  ReferencableTreeParentContainer
+  ReLinkListContainer,
+  ReLinkSingleContainer,
+  ReTreeListContainer,
+  ReTreeParentContainer
 } from "emfular";
 
 import {BoundingBox, Positionable, PositionHelper} from "ngx-svg-graphics";
@@ -25,7 +25,7 @@ import {BoundingBox, Positionable, PositionHelper} from "ngx-svg-graphics";
 export abstract class Message extends Referencable {
   public static readonly counterPartPrefix = 'counterPart'
 
-  _counterPart: ReferencableSingletonContainer<ConversationPartner> = new ReferencableSingletonContainer<ConversationPartner>(this, Message.counterPartPrefix)
+  _counterPart: ReLinkSingleContainer<ConversationPartner> = new ReLinkSingleContainer<ConversationPartner>(this, Message.counterPartPrefix)
   get counterPart(): ConversationPartner {
     return this._counterPart.get()!! //todo
   }
@@ -91,7 +91,7 @@ export abstract class Message extends Referencable {
 export class SendMessage extends Message {
   public static readonly usesPrefix = 'uses'
 
-  private readonly _uses: ReferencableListContainer<Information>;
+  private readonly _uses: ReLinkListContainer<Information>;
   get uses(): Information[] {
     return this._uses.get();
   }
@@ -112,7 +112,7 @@ export class SendMessage extends Message {
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.SendMessage, ref)
     super(refC, counterPart, timing, content, originalContent);
-    this._uses  = new ReferencableListContainer<Information>(this, SendMessage.usesPrefix, Information.isUsedOnPrefix);
+    this._uses  = new ReLinkListContainer<Information>(this, SendMessage.usesPrefix, Information.isUsedOnPrefix);
     this.$otherReferences.push(this._uses);
     uses.map(u => this.addUsage(u))
   }
@@ -139,7 +139,7 @@ export class ReceiveMessage extends Message {
   static readonly repeatsPrefix: string = 'repeats';
 
 
-  _generates: ReferencableTreeListContainer<NewInformation>;
+  _generates: ReTreeListContainer<NewInformation>;
   get generates(): NewInformation[] {
     return this._generates.get()!!
   }
@@ -148,7 +148,7 @@ export class ReceiveMessage extends Message {
   }
 
 
-  _repeats: ReferencableListContainer<Information>;
+  _repeats: ReLinkListContainer<Information>;
   get repeats(): Information[] {
     return this._repeats.get();
   }
@@ -172,8 +172,8 @@ export class ReceiveMessage extends Message {
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.ReceiveMessage, ref)
     super(refC, counterPart, timing, content ? content : "New receive content", originalContent);
-    this._generates = new ReferencableTreeListContainer<NewInformation>(this, ReceiveMessage.generatesPrefix, NewInformation.sourcePrefix);
-    this._repeats = new ReferencableListContainer<Information>(this, ReceiveMessage.repeatsPrefix, Information.repeatedByPrefix);
+    this._generates = new ReTreeListContainer<NewInformation>(this, ReceiveMessage.generatesPrefix, NewInformation.sourcePrefix);
+    this._repeats = new ReLinkListContainer<Information>(this, ReceiveMessage.repeatsPrefix, Information.repeatedByPrefix);
     this.$treeChildren.push(this._generates)
     this.$otherReferences.push(this._repeats)
     repeats.map(r => this.addRepetition(r));
@@ -222,7 +222,7 @@ export abstract class Information extends Referencable implements Positionable {
   static readonly isUsedOnPrefix: string = 'isUsedOn'
   static readonly repeatedByPrefix: string = 'repeatedBy'
   static readonly targetedByPrefix: string = 'targetedBy'
-  readonly _causes: ReferencableTreeListContainer<InformationLink>;
+  readonly _causes: ReTreeListContainer<InformationLink>;
   get causes(): InformationLink[] {
     return this._causes.get();
   }
@@ -233,7 +233,7 @@ export abstract class Information extends Referencable implements Positionable {
     this._causes.remove(link)
   }
 
-  readonly _targetedBy: ReferencableListContainer<InformationLink>
+  readonly _targetedBy: ReLinkListContainer<InformationLink>
   get targetedBy(): InformationLink[] {
     return this._targetedBy.get();
   }
@@ -244,7 +244,7 @@ export abstract class Information extends Referencable implements Positionable {
     this._targetedBy.remove(link)
   }
 
-  readonly _isUsedOn: ReferencableListContainer<SendMessage>
+  readonly _isUsedOn: ReLinkListContainer<SendMessage>
   get isUsedOn(): SendMessage[] {
     return this._isUsedOn.get();
   }
@@ -255,7 +255,7 @@ export abstract class Information extends Referencable implements Positionable {
     this._isUsedOn.remove(send)
   }
 
-  readonly _repeatedBy: ReferencableListContainer<ReceiveMessage>
+  readonly _repeatedBy: ReLinkListContainer<ReceiveMessage>
   get repeatedBy(): ReceiveMessage[] {
     return this._repeatedBy.get();
   }
@@ -275,10 +275,10 @@ export abstract class Information extends Referencable implements Positionable {
   ) {
     super(ref);
 
-    this._causes = new ReferencableTreeListContainer<InformationLink>(this, NewInformation.causesPrefix, InformationLink.sourcePrefix);
-    this._targetedBy = new ReferencableListContainer<InformationLink>(this, Information.targetedByPrefix, InformationLink.targetPrefix)
-    this._isUsedOn = new ReferencableListContainer<SendMessage>(this, 'isUsedOn', 'uses');
-    this._repeatedBy = new ReferencableListContainer(this, NewInformation.repeatedByPrefix, ReceiveMessage.repeatsPrefix);
+    this._causes = new ReTreeListContainer<InformationLink>(this, NewInformation.causesPrefix, InformationLink.sourcePrefix);
+    this._targetedBy = new ReLinkListContainer<InformationLink>(this, Information.targetedByPrefix, InformationLink.targetPrefix)
+    this._isUsedOn = new ReLinkListContainer<SendMessage>(this, 'isUsedOn', 'uses');
+    this._repeatedBy = new ReLinkListContainer(this, NewInformation.repeatedByPrefix, ReceiveMessage.repeatsPrefix);
     this.$treeChildren.push(this._causes)
     this.$otherReferences.push(this._targetedBy, this._isUsedOn, this._repeatedBy)
 
@@ -322,7 +322,7 @@ export class NewInformation extends Information {
 
   public static readonly sourcePrefix = 'source'
 
-  readonly _source: ReferencableTreeParentContainer<ReceiveMessage>;
+  readonly _source: ReTreeParentContainer<ReceiveMessage>;
   set source(rec: ReceiveMessage) {
     this._source.add(rec)
   }
@@ -342,7 +342,7 @@ export class NewInformation extends Information {
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.NewInformation, ref)
     super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards);
-    this._source = new ReferencableTreeParentContainer(this, NewInformation.sourcePrefix, ReceiveMessage.generatesPrefix);
+    this._source = new ReTreeParentContainer(this, NewInformation.sourcePrefix, ReceiveMessage.generatesPrefix);
     this.$otherReferences.push(this._source) //todo tree backwards
     this.source = source
   }
@@ -430,7 +430,7 @@ export class InformationLink extends Referencable {
 
   public static readonly sourcePrefix = 'source'
   public static readonly targetPrefix = 'target'
-  readonly _source: ReferencableTreeParentContainer<Information>
+  readonly _source: ReTreeParentContainer<Information>
   get source(): Information {
     return this._source.get()!!; //todo
   }
@@ -438,7 +438,7 @@ export class InformationLink extends Referencable {
     this._source.add(source)
   }
 
-  readonly _target: ReferencableSingletonContainer<Information>
+  readonly _target: ReLinkSingleContainer<Information>
   get target(): Information {
     return this._target.get()!!;
   }
@@ -467,8 +467,8 @@ export class InformationLink extends Referencable {
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.InformationLink, ref)
     super(refC);
-    this._source = new ReferencableTreeParentContainer<Information>(this, InformationLink.sourcePrefix, NewInformation.causesPrefix);
-    this._target = new ReferencableSingletonContainer<Information>(this, InformationLink.targetPrefix, Information.targetedByPrefix);
+    this._source = new ReTreeParentContainer<Information>(this, InformationLink.sourcePrefix, NewInformation.causesPrefix);
+    this._target = new ReLinkSingleContainer<Information>(this, InformationLink.targetPrefix, Information.targetedByPrefix);
     this.$otherReferences.push(this._source, this._target)
 
     this.source = source;

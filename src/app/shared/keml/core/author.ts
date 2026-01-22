@@ -4,13 +4,13 @@ import {AuthorJson} from "@app/shared/keml/json/sequence-diagram-models"
 import {Preknowledge} from "./msg-info";
 import {Deserializer, Ref} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
-import {RefHandler, ReferencableTreeListContainer} from "emfular";
+import {RefHandler, ReTreeListContainer} from "emfular";
 
 export class Author extends LifeLine{
   static readonly preknowledgePrefix: string = 'preknowledge';
   static readonly messagesPrefix: string = 'messages';
 
-  _preknowledge: ReferencableTreeListContainer<Preknowledge>;
+  _preknowledge: ReTreeListContainer<Preknowledge>;
   get preknowledge(): Preknowledge[] {
     return this._preknowledge.get()
   }
@@ -20,7 +20,7 @@ export class Author extends LifeLine{
     })
   }
 
-  _messages: ReferencableTreeListContainer<Message>;
+  _messages: ReTreeListContainer<Message>;
   get messages(): Message[] {
     return this._messages.get()
   }
@@ -34,8 +34,8 @@ export class Author extends LifeLine{
               ref?: Ref) {
     let refC = RefHandler.createRefIfMissing(EClasses.Author, ref)
     super(name, xPosition, refC);
-    this._preknowledge = new ReferencableTreeListContainer<Preknowledge>(this, Author.preknowledgePrefix)
-    this._messages = new ReferencableTreeListContainer<Message>(this, Author.messagesPrefix)
+    this._preknowledge = new ReTreeListContainer<Preknowledge>(this, Author.preknowledgePrefix)
+    this._messages = new ReTreeListContainer<Message>(this, Author.messagesPrefix)
     this.$treeChildren.push(this._preknowledge, this._messages)
   }
 
