@@ -42,13 +42,12 @@ export class Conversation extends Referencable {
 
   override toJson(): ConversationJson {
     this.prepare(Conversation.ownPath);
-    let cps = this.conversationPartners.map(x => x.toJson())
 
     return {
       eClass: this.ref.eClass,
       title: this.title,
-      conversationPartners: cps,
-      author: this.author.toJson(),
+      conversationPartners: this._conversationPartners.toJson(),
+      author: this._author.toJson(),
     };
   }
 

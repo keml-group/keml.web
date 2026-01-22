@@ -64,7 +64,7 @@ export abstract class Message extends Referencable {
   override toJson(): MessageJson {
     return {
       content: this.content,
-      counterPart: this.counterPart.getRef(),
+      counterPart: this._counterPart.toJson(),
       eClass: this.ref.eClass,
       originalContent: this.originalContent,
       timing: this.timing
@@ -353,7 +353,7 @@ export class NewInformation extends Information {
 
   override toJson(): NewInformationJson {
     let res = (<NewInformationJson>super.toJson());
-    res.source = this.source.getRef()
+    res.source = this._source.toJson()
     return res;
   }
 
@@ -480,8 +480,8 @@ export class InformationLink extends Referencable {
   override toJson(): InformationLinkJson {
     return {
       eClass: EClasses.InformationLink,
-      source: this.source.getRef(),
-      target: this.target.getRef(),
+      source: this._source.toJson(),
+      target: this._target.toJson(),
       type: this.type,
       linkText: this.linkText,
     }
