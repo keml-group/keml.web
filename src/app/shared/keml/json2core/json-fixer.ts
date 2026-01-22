@@ -33,7 +33,7 @@ export class JsonFixer {
   for each informationLink check the causes list and add the link itself as source to each entry
    */
   static prepareJsonInfoLinkSources(conv: ConversationJson) {
-    let authorPrefix = RefHandler.computePrefix( Conversation.ownPath, Conversation.authorPrefix)
+    let authorPrefix = RefHandler.computePrefix( RefHandler.rootPath, Conversation.authorPrefix)
     conv.author.preknowledge?.map((p, index) => {
       let ref = RefHandler.createRef(
         RefHandler.mixWithIndex(

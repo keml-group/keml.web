@@ -6,7 +6,6 @@ import {EClasses} from "@app/shared/keml/eclasses";
 
 
 export class Conversation extends Referencable {
-  static readonly ownPath: string = '/'
   static readonly authorPrefix = 'author';
   static readonly conversationPartnersPrefix = 'conversationPartners';
   title: string;
@@ -31,7 +30,7 @@ export class Conversation extends Referencable {
     title: string = 'New Conversation',
     author: Author = new Author(),
   ) {
-    let ref = RefHandler.createRef(Conversation.ownPath, EClasses.Conversation)
+    let ref = RefHandler.createRef(RefHandler.rootPath, EClasses.Conversation)
     super(ref);
     this._author = new ReferencableTreeSingletonContainer<Author>(this, Conversation.authorPrefix);
     this._conversationPartners = new ReferencableTreeListContainer<ConversationPartner>(this, Conversation.conversationPartnersPrefix);
@@ -41,7 +40,7 @@ export class Conversation extends Referencable {
   }
 
   override toJson(): ConversationJson {
-    this.prepare(Conversation.ownPath);
+    this.prepare(RefHandler.rootPath);
 
     return {
       eClass: this.ref.eClass,
@@ -54,7 +53,7 @@ export class Conversation extends Referencable {
   static fromJSON (convJson: ConversationJson): Conversation {
     let context = new Deserializer(convJson);
     let ref: Ref = {
-      $ref: Conversation.ownPath,
+      $ref: RefHandler.rootPath,
       eClass: EClasses.Conversation
     }
     let conv = this.createTreeBackbone(ref, context);
