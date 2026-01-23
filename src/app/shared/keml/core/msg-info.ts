@@ -23,9 +23,9 @@ import {BoundingBox, Positionable, PositionHelper} from "ngx-svg-graphics";
 
 
 export abstract class Message extends Referencable {
-  public static readonly counterPartPrefix = 'counterPart'
+  public static readonly $counterPartName = 'counterPart'
 
-  _counterPart: ReLinkSingleContainer<ConversationPartner> = new ReLinkSingleContainer<ConversationPartner>(this, Message.counterPartPrefix)
+  _counterPart: ReLinkSingleContainer<ConversationPartner> = new ReLinkSingleContainer<ConversationPartner>(this, Message.$counterPartName)
   get counterPart(): ConversationPartner {
     return this._counterPart.get()!! //todo
   }
@@ -87,7 +87,7 @@ export abstract class Message extends Referencable {
 }
 
 export class SendMessage extends Message {
-  public static readonly usesPrefix = 'uses'
+  public static readonly $usesName = 'uses'
 
   private readonly _uses: ReLinkListContainer<Information>;
   get uses(): Information[] {
@@ -110,7 +110,7 @@ export class SendMessage extends Message {
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.SendMessage, ref)
     super(refC, counterPart, timing, content, originalContent);
-    this._uses  = new ReLinkListContainer<Information>(this, SendMessage.usesPrefix, Information.isUsedOnPrefix);
+    this._uses  = new ReLinkListContainer<Information>(this, SendMessage.$usesName, Information.$isUsedOnName);
     uses.map(u => this.addUsage(u))
   }
 
@@ -132,9 +132,8 @@ export class SendMessage extends Message {
 }
 
 export class ReceiveMessage extends Message {
-  static readonly generatesPrefix: string = 'generates';
-  static readonly repeatsPrefix: string = 'repeats';
-
+  static readonly $generatesName: string = 'generates';
+  static readonly $repeatsName: string = 'repeats';
 
   _generates: ReTreeListContainer<NewInformation>;
   get generates(): NewInformation[] {
@@ -143,7 +142,6 @@ export class ReceiveMessage extends Message {
   addGenerates(news: NewInformation) {
     this._generates.add(news)
   }
-
 
   _repeats: ReLinkListContainer<Information>;
   get repeats(): Information[] {
@@ -169,16 +167,16 @@ export class ReceiveMessage extends Message {
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.ReceiveMessage, ref)
     super(refC, counterPart, timing, content ? content : "New receive content", originalContent);
-    this._generates = new ReTreeListContainer<NewInformation>(this, ReceiveMessage.generatesPrefix, NewInformation.sourcePrefix);
-    this._repeats = new ReLinkListContainer<Information>(this, ReceiveMessage.repeatsPrefix, Information.repeatedByPrefix);
+    this._generates = new ReTreeListContainer<NewInformation>(this, ReceiveMessage.$generatesName, NewInformation.$sourceName);
+    this._repeats = new ReLinkListContainer<Information>(this, ReceiveMessage.$repeatsName, Information.$repeatedByName);
     repeats.map(r => this.addRepetition(r));
     this.isInterrupted = isInterrupted;
   }
 
   override toJson(): ReceiveMessageJson {
     let res = (<ReceiveMessageJson>super.toJson());
-    res.generates = this.generates.map(g => g.toJson())
-    res.repeats = this.repeats.map(r => r.getRef())
+    res.generates = this._generates.toJson()
+    res.repeats = this._repeats.toJson()
     res.isInterrupted = this.isInterrupted
     return res;
   }
@@ -190,7 +188,7 @@ export class ReceiveMessage extends Message {
     context.put(rec)
     let generatesRefs = Deserializer.createRefList(
       ref!.$ref,
-      ReceiveMessage.generatesPrefix,
+      ReceiveMessage.$generatesName,
       recJson.generates?.map(_ => EClasses.NewInformation))
     generatesRefs.map(newRef =>
       rec.addGenerates(NewInformation.createTreeBackbone(newRef, context))
@@ -213,10 +211,10 @@ export abstract class Information extends Referencable implements Positionable {
 
   abstract getTiming(): number;
 
-  static readonly causesPrefix: string = 'causes'
-  static readonly isUsedOnPrefix: string = 'isUsedOn'
-  static readonly repeatedByPrefix: string = 'repeatedBy'
-  static readonly targetedByPrefix: string = 'targetedBy'
+  static readonly $causesName: string = 'causes'
+  static readonly $isUsedOnName: string = 'isUsedOn'
+  static readonly $repeatedByName: string = 'repeatedBy'
+  static readonly $targetedByName: string = 'targetedBy'
   readonly _causes: ReTreeListContainer<InformationLink>;
   get causes(): InformationLink[] {
     return this._causes.get();
@@ -270,10 +268,10 @@ export abstract class Information extends Referencable implements Positionable {
   ) {
     super(ref);
 
-    this._causes = new ReTreeListContainer<InformationLink>(this, NewInformation.causesPrefix, InformationLink.sourcePrefix);
-    this._targetedBy = new ReLinkListContainer<InformationLink>(this, Information.targetedByPrefix, InformationLink.targetPrefix)
+    this._causes = new ReTreeListContainer<InformationLink>(this, NewInformation.$causesName, InformationLink.$sourceName);
+    this._targetedBy = new ReLinkListContainer<InformationLink>(this, Information.$targetedByName, InformationLink.$targetName)
     this._isUsedOn = new ReLinkListContainer<SendMessage>(this, 'isUsedOn', 'uses');
-    this._repeatedBy = new ReLinkListContainer(this, NewInformation.repeatedByPrefix, ReceiveMessage.repeatsPrefix);
+    this._repeatedBy = new ReLinkListContainer(this, NewInformation.$repeatedByName, ReceiveMessage.$repeatsName);
     this.message = message;
     this.isInstruction = isInstruction;
     this.position = position? position: PositionHelper.newBoundingBox();
@@ -289,17 +287,17 @@ export abstract class Information extends Referencable implements Positionable {
 
   override toJson(): InformationJson {
     return {
-      causes: this.causes.map(c => c.toJson()),
+      causes: this._causes.toJson(),
       currentTrust: this.currentTrust,
       eClass: this.ref.eClass,
       initialTrust: this.initialTrust,
       feltTrustImmediately: this.feltTrustImmediately,
       feltTrustAfterwards: this.feltTrustAfterwards,
       isInstruction: this.isInstruction,
-      isUsedOn: this.isUsedOn.map(m => m.getRef()),
+      isUsedOn: this._isUsedOn.toJson(),
       message: this.message,
-      repeatedBy:  this.repeatedBy.map(m => m.getRef()),
-      targetedBy:  this.targetedBy.map(l => l.getRef()),
+      repeatedBy:  this._repeatedBy.toJson(),
+      targetedBy:  this._targetedBy.toJson(),
       position: this.position,
     }
   }
@@ -312,7 +310,7 @@ export abstract class Information extends Referencable implements Positionable {
 
 export class NewInformation extends Information {
 
-  public static readonly sourcePrefix = 'source'
+  public static readonly $sourceName = 'source'
 
   readonly _source: ReTreeParentContainer<ReceiveMessage>;
   set source(rec: ReceiveMessage) {
@@ -334,7 +332,7 @@ export class NewInformation extends Information {
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.NewInformation, ref)
     super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards);
-    this._source = new ReTreeParentContainer(this, NewInformation.sourcePrefix, ReceiveMessage.generatesPrefix);
+    this._source = new ReTreeParentContainer(this, NewInformation.$sourceName, ReceiveMessage.$generatesName);
     this.source = source
   }
 
@@ -361,7 +359,7 @@ export class NewInformation extends Information {
         ref);
     context.put(newInfo)
     newInfoJson.causes?.map((_, i) => {
-      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, NewInformation.causesPrefix, i)
+      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, NewInformation.$causesName, i)
       let newRef = RefHandler.createRef(newRefRef, EClasses.InformationLink)
       let link = InformationLink.createTreeBackbone(newRef, context)
       newInfo.addCauses(link)
@@ -408,7 +406,7 @@ export class Preknowledge extends Information {
         ref)
     context.put(pre)
     preJson.causes?.map((_, i) => {
-      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Preknowledge.causesPrefix, i)
+      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Preknowledge.$causesName, i)
       let newRef = RefHandler.createRef(newRefRef, EClasses.InformationLink)
       let link = InformationLink.createTreeBackbone(newRef, context)
       pre.addCauses(link)
@@ -419,8 +417,8 @@ export class Preknowledge extends Information {
 
 export class InformationLink extends Referencable {
 
-  public static readonly sourcePrefix = 'source'
-  public static readonly targetPrefix = 'target'
+  public static readonly $sourceName = 'source'
+  public static readonly $targetName = 'target'
   readonly _source: ReTreeParentContainer<Information>
   get source(): Information {
     return this._source.get()!!; //todo
@@ -458,8 +456,8 @@ export class InformationLink extends Referencable {
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.InformationLink, ref)
     super(refC);
-    this._source = new ReTreeParentContainer<Information>(this, InformationLink.sourcePrefix, NewInformation.causesPrefix);
-    this._target = new ReLinkSingleContainer<Information>(this, InformationLink.targetPrefix, Information.targetedByPrefix);
+    this._source = new ReTreeParentContainer<Information>(this, InformationLink.$sourceName, NewInformation.$causesName);
+    this._target = new ReLinkSingleContainer<Information>(this, InformationLink.$targetName, Information.$targetedByName);
 
     this.source = source;
     this.target = target;

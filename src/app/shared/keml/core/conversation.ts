@@ -6,8 +6,8 @@ import {EClasses} from "@app/shared/keml/eclasses";
 
 
 export class Conversation extends Referencable {
-  static readonly authorPrefix = 'author';
-  static readonly conversationPartnersPrefix = 'conversationPartners';
+  static readonly $authorName = 'author';
+  static readonly $conversationPartnersName = 'conversationPartners';
   title: string;
   _author: ReTreeSingleContainer<Author>;
   get author(): Author {
@@ -32,8 +32,8 @@ export class Conversation extends Referencable {
   ) {
     let ref = RefHandler.createRef(RefHandler.rootPath, EClasses.Conversation)
     super(ref);
-    this._author = new ReTreeSingleContainer<Author>(this, Conversation.authorPrefix);
-    this._conversationPartners = new ReTreeListContainer<ConversationPartner>(this, Conversation.conversationPartnersPrefix);
+    this._author = new ReTreeSingleContainer<Author>(this, Conversation.$authorName);
+    this._conversationPartners = new ReTreeListContainer<ConversationPartner>(this, Conversation.$conversationPartnersName);
     this.title = title;
     this.author = author;
   }
@@ -66,12 +66,12 @@ export class Conversation extends Referencable {
     context.put(conv)
     //trigger children:
     convJson.conversationPartners.map((_, i) => {
-      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Conversation.conversationPartnersPrefix, i)
+      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Conversation.$conversationPartnersName, i)
       let newRef: Ref = RefHandler.createRef(newRefRef, EClasses.ConversationPartner)
       let cp = ConversationPartner.createTreeBackbone(newRef, context)
       conv.addCP(cp)
     })
-    let authorRefRef = RefHandler.computePrefix(ref.$ref, Conversation.authorPrefix)
+    let authorRefRef = RefHandler.computePrefix(ref.$ref, Conversation.$authorName)
     let authorRef: Ref = {$ref: authorRefRef, eClass: EClasses.Author}
     conv.author = Author.createTreeBackbone(authorRef, context)
     return conv;

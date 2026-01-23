@@ -7,8 +7,8 @@ import {EClasses} from "@app/shared/keml/eclasses";
 import {RefHandler, ReTreeListContainer} from "emfular";
 
 export class Author extends LifeLine{
-  static readonly preknowledgePrefix: string = 'preknowledge';
-  static readonly messagesPrefix: string = 'messages';
+  static readonly $preknowledgeName: string = 'preknowledge';
+  static readonly $messagesName: string = 'messages';
 
   _preknowledge: ReTreeListContainer<Preknowledge>;
   get preknowledge(): Preknowledge[] {
@@ -34,8 +34,8 @@ export class Author extends LifeLine{
               ref?: Ref) {
     let refC = RefHandler.createRefIfMissing(EClasses.Author, ref)
     super(name, xPosition, refC);
-    this._preknowledge = new ReTreeListContainer<Preknowledge>(this, Author.preknowledgePrefix)
-    this._messages = new ReTreeListContainer<Message>(this, Author.messagesPrefix)
+    this._preknowledge = new ReTreeListContainer<Preknowledge>(this, Author.$preknowledgeName)
+    this._messages = new ReTreeListContainer<Message>(this, Author.$messagesName)
   }
 
   override toJson(): AuthorJson {
@@ -50,13 +50,13 @@ export class Author extends LifeLine{
     let author = new Author(authorJson.name? authorJson.name : '', authorJson.xPosition, ref)
     context.put(author)
     authorJson.messages.map((mj, i) => {
-      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Author.messagesPrefix, i)
+      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Author.$messagesName, i)
       let newRef = RefHandler.createRef(newRefRef, mj.eClass)
       let m = Message.createTreeBackbone(newRef, context)
       author.addMessage(m)
     } )
     authorJson.preknowledge.map((_, i) => {
-      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Author.preknowledgePrefix, i)
+      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Author.$preknowledgeName, i)
       let newRef = RefHandler.createRef(newRefRef, EClasses.Preknowledge)
       let p = Preknowledge.createTreeBackbone(newRef, context)
       author.addPreknowledge(p)

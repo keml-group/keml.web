@@ -33,11 +33,11 @@ export class JsonFixer {
   for each informationLink check the causes list and add the link itself as source to each entry
    */
   static prepareJsonInfoLinkSources(conv: ConversationJson) {
-    let authorPrefix = RefHandler.computePrefix( RefHandler.rootPath, Conversation.authorPrefix)
+    let authorPrefix = RefHandler.computePrefix( RefHandler.rootPath, Conversation.$authorName)
     conv.author.preknowledge?.map((p, index) => {
       let ref = RefHandler.createRef(
         RefHandler.mixWithIndex(
-          RefHandler.computePrefix(authorPrefix, Author.preknowledgePrefix),
+          RefHandler.computePrefix(authorPrefix, Author.$preknowledgeName),
           index
         ),
         EClasses.Preknowledge
@@ -50,11 +50,11 @@ export class JsonFixer {
     conv.author.messages.map(
       (m, index) => {
         if (!Message.isSend(m.eClass)) {
-          let msgPath = RefHandler.mixWithIndex(RefHandler.computePrefix(authorPrefix, Author.messagesPrefix), index)
+          let msgPath = RefHandler.mixWithIndex(RefHandler.computePrefix(authorPrefix, Author.$messagesName), index)
           let rec = m as ReceiveMessageJson
           rec.generates?.map((newInfo, index2) => {
             let infoPath = RefHandler.mixWithIndex(
-              RefHandler.computePrefix(msgPath, ReceiveMessage.generatesPrefix),
+              RefHandler.computePrefix(msgPath, ReceiveMessage.$generatesName),
               index2)
             let ref = RefHandler.createRef(infoPath, EClasses.NewInformation)
             newInfo.causes?.forEach(infoLink => infoLink.source = ref)
