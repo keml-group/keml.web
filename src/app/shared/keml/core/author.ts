@@ -36,7 +36,6 @@ export class Author extends LifeLine{
     super(name, xPosition, refC);
     this._preknowledge = new ReTreeListContainer<Preknowledge>(this, Author.preknowledgePrefix)
     this._messages = new ReTreeListContainer<Message>(this, Author.messagesPrefix)
-    this.$treeChildren.push(this._preknowledge, this._messages)
   }
 
   override toJson(): AuthorJson {

@@ -34,7 +34,6 @@ export class Conversation extends Referencable {
     super(ref);
     this._author = new ReTreeSingleContainer<Author>(this, Conversation.authorPrefix);
     this._conversationPartners = new ReTreeListContainer<ConversationPartner>(this, Conversation.conversationPartnersPrefix);
-    this.$treeChildren.push(this._author, this._conversationPartners);
     this.title = title;
     this.author = author;
   }

@@ -49,8 +49,6 @@ export abstract class Message extends Referencable {
     this.timing = timing;
     this.content = content;
     this.originalContent = originalContent;
-
-    this.$otherReferences.push(this._counterPart)
   }
 
   static isSend(eClass: string) {
@@ -113,7 +111,6 @@ export class SendMessage extends Message {
     let refC = RefHandler.createRefIfMissing(EClasses.SendMessage, ref)
     super(refC, counterPart, timing, content, originalContent);
     this._uses  = new ReLinkListContainer<Information>(this, SendMessage.usesPrefix, Information.isUsedOnPrefix);
-    this.$otherReferences.push(this._uses);
     uses.map(u => this.addUsage(u))
   }
 
@@ -174,8 +171,6 @@ export class ReceiveMessage extends Message {
     super(refC, counterPart, timing, content ? content : "New receive content", originalContent);
     this._generates = new ReTreeListContainer<NewInformation>(this, ReceiveMessage.generatesPrefix, NewInformation.sourcePrefix);
     this._repeats = new ReLinkListContainer<Information>(this, ReceiveMessage.repeatsPrefix, Information.repeatedByPrefix);
-    this.$treeChildren.push(this._generates)
-    this.$otherReferences.push(this._repeats)
     repeats.map(r => this.addRepetition(r));
     this.isInterrupted = isInterrupted;
   }
@@ -279,9 +274,6 @@ export abstract class Information extends Referencable implements Positionable {
     this._targetedBy = new ReLinkListContainer<InformationLink>(this, Information.targetedByPrefix, InformationLink.targetPrefix)
     this._isUsedOn = new ReLinkListContainer<SendMessage>(this, 'isUsedOn', 'uses');
     this._repeatedBy = new ReLinkListContainer(this, NewInformation.repeatedByPrefix, ReceiveMessage.repeatsPrefix);
-    this.$treeChildren.push(this._causes)
-    this.$otherReferences.push(this._targetedBy, this._isUsedOn, this._repeatedBy)
-
     this.message = message;
     this.isInstruction = isInstruction;
     this.position = position? position: PositionHelper.newBoundingBox();
@@ -343,7 +335,6 @@ export class NewInformation extends Information {
     let refC = RefHandler.createRefIfMissing(EClasses.NewInformation, ref)
     super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards);
     this._source = new ReTreeParentContainer(this, NewInformation.sourcePrefix, ReceiveMessage.generatesPrefix);
-    this.$otherReferences.push(this._source) //todo tree backwards
     this.source = source
   }
 
@@ -469,7 +460,6 @@ export class InformationLink extends Referencable {
     super(refC);
     this._source = new ReTreeParentContainer<Information>(this, InformationLink.sourcePrefix, NewInformation.causesPrefix);
     this._target = new ReLinkSingleContainer<Information>(this, InformationLink.targetPrefix, Information.targetedByPrefix);
-    this.$otherReferences.push(this._source, this._target)
 
     this.source = source;
     this.target = target;
