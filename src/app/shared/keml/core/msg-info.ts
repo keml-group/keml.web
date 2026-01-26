@@ -186,7 +186,7 @@ export class ReceiveMessage extends Message {
     let dummyCp = new ConversationPartner()
     let rec = new ReceiveMessage(dummyCp, recJson.timing, recJson.content, recJson.originalContent, [], recJson.isInterrupted, ref)
     context.put(rec)
-    let generatesRefs = Deserializer.createRefList(
+    let generatesRefs = RefHandler.createRefList(
       ref!.$ref,
       ReceiveMessage.$generatesName,
       recJson.generates?.map(_ => EClasses.NewInformation))
