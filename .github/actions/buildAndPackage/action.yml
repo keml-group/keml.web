@@ -12,9 +12,6 @@ runs:
     - name: 'Install for CI'
       shell: bash
       run: npm ci
-    - name: 'Replace emfular by public 3.0.1'
-      shell: bash
-      run: npm install --no-package-lock --no-save emfular@3.0.1
     - name: 'Test with CI configuration'
       shell: bash
       run: npm run test:ci

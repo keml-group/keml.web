@@ -11,11 +11,8 @@ export class ConversationPartner extends LifeLine {
       super(name, xPosition, refC);
     }
 
-    toJson(): ConversationPartnerJson {
-      return {
-        name: this.name,
-        xPosition: this.xPosition,
-      }
+    override toJson(): ConversationPartnerJson {
+      return super.toJson();
     }
 
     static createTreeBackbone(ref: Ref, context: Deserializer): ConversationPartner {

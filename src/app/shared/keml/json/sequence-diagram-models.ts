@@ -8,7 +8,7 @@ export interface ConversationJson {
   conversationPartners: ConversationPartnerJson[];
 }
 
-interface LifeLineJson {
+export interface LifeLineJson {
   name: string;
   xPosition: number; //int todo
 }
