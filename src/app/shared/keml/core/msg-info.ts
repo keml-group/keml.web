@@ -111,11 +111,12 @@ export class SendMessage extends Message {
     return res;
   }
 
-  static fromJson(json: SendMessageJson): SendMessage {
+  static fromJson(json: SendMessageJson, ref: Ref): SendMessage {
     //todo
     let dummyCp = new ConversationPartner()
 
-    return new SendMessage(dummyCp, json.timing, json.content, json.originalContent)
+    return new SendMessage(dummyCp, json.timing, json.content, json.originalContent,
+      [], ref)
   }
 
 }
@@ -170,10 +171,10 @@ export class ReceiveMessage extends Message {
     return res;
   }
 
-  static fromJson(json: ReceiveMessageJson): ReceiveMessage {
+  static fromJson(json: ReceiveMessageJson, ref: Ref): ReceiveMessage {
     //todo
     let dummyCp = new ConversationPartner()
-    return new ReceiveMessage(dummyCp, json.timing, json.content, json.originalContent)
+    return new ReceiveMessage(dummyCp, json.timing, json.content, json.originalContent, [], false, ref)
   }
 
 }
@@ -326,12 +327,12 @@ export class NewInformation extends Information {
     return res;
   }
 
-  static fromJson( json: NewInformationJson): NewInformation {
+  static fromJson( json: NewInformationJson, ref: Ref): NewInformation {
     //todo
     let dummyCp = new ConversationPartner()
     let dummyRec = new ReceiveMessage(dummyCp, 0)
 
-    return new NewInformation(dummyRec, json.message, json.isInstruction, json.position, [], [], json.initialTrust, json.currentTrust, json.feltTrustImmediately, json.feltTrustAfterwards)
+    return new NewInformation(dummyRec, json.message, json.isInstruction, json.position, [], [], json.initialTrust, json.currentTrust, json.feltTrustImmediately, json.feltTrustAfterwards, ref)
   }
 
 }
@@ -366,10 +367,11 @@ export class Preknowledge extends Information {
     return (<PreknowledgeJson>super.toJson())
   }
 
-  static fromJson( json: PreknowledgeJson): Preknowledge {
+  static fromJson( json: PreknowledgeJson, ref: Ref): Preknowledge {
     return new Preknowledge(json.message, json.isInstruction, json.position,
       [], [],
       json.initialTrust, json.currentTrust, json.feltTrustImmediately, json.feltTrustAfterwards,
+      ref
     )
   }
 
@@ -435,11 +437,11 @@ export class InformationLink extends Referencable {
     }
   }
 
-  static fromJson( json: InformationLinkJson): InformationLink {
+  static fromJson( json: InformationLinkJson, ref: Ref): InformationLink {
     //todo
     let dummySrc = new Preknowledge()
     let dummyTar = new Preknowledge()
-    return new InformationLink(dummySrc, dummyTar, json.type, json.linkText)
+    return new InformationLink(dummySrc, dummyTar, json.type, json.linkText, ref)
   }
 
 }

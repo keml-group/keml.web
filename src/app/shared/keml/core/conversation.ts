@@ -50,7 +50,7 @@ export class Conversation extends Referencable {
     };
   }
 
-  static fromJson(json: ConversationJson): Conversation {
+  static fromJson(json: ConversationJson, _: Ref): Conversation {
     return new Conversation(json.title)
   }
 

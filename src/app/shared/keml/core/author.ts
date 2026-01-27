@@ -45,8 +45,8 @@ export class Author extends LifeLine{
     return json
   }
 
-  static fromJson(json: AuthorJson): Author {
-    return new Author(json.name? json.name: '', json.xPosition)
+  static fromJson(json: AuthorJson, ref: Ref): Author {
+    return new Author(json.name? json.name: '', json.xPosition, ref)
   }
 
 
