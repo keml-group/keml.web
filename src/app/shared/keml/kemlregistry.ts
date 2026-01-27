@@ -9,10 +9,12 @@ import {
 } from "@app/shared/keml/core/msg-info";
 import {Conversation} from "@app/shared/keml/core/conversation";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
+import {Author} from "@app/shared/keml/core/author";
 
 export const KEMLRegistry = new ModelRegistry()
 export function initializeKEMLRegistry(registry: ModelRegistry) {
     registry.set(EClasses.Conversation, Conversation)
+    registry.set(EClasses.Author, Author)
     registry.set(EClasses.ConversationPartner, ConversationPartner)
     registry.set(EClasses.SendMessage, SendMessage)
     registry.set(EClasses.ReceiveMessage, ReceiveMessage)

@@ -156,7 +156,7 @@ export class ReceiveMessage extends Message {
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.ReceiveMessage, ref)
     super(refC, counterPart, timing, content ? content : "New receive content", originalContent);
-    this._generates = new ReTreeListContainer<NewInformation>(this, ReceiveMessage.$generatesName, NewInformation.$sourceName);
+    this._generates = new ReTreeListContainer<NewInformation>(this, ReceiveMessage.$generatesName, NewInformation.$sourceName, EClasses.NewInformation);
     this._repeats = new ReLinkListContainer<Information>(this, ReceiveMessage.$repeatsName, Information.$repeatedByName);
     repeats.map(r => this.addRepetition(r));
     this.isInterrupted = isInterrupted;
@@ -248,7 +248,7 @@ export abstract class Information extends Referencable implements Positionable {
   ) {
     super(ref);
 
-    this._causes = new ReTreeListContainer<InformationLink>(this, NewInformation.$causesName, InformationLink.$sourceName);
+    this._causes = new ReTreeListContainer<InformationLink>(this, NewInformation.$causesName, InformationLink.$sourceName, EClasses.InformationLink);
     this._targetedBy = new ReLinkListContainer<InformationLink>(this, Information.$targetedByName, InformationLink.$targetName)
     this._isUsedOn = new ReLinkListContainer<SendMessage>(this, 'isUsedOn', 'uses');
     this._repeatedBy = new ReLinkListContainer(this, NewInformation.$repeatedByName, ReceiveMessage.$repeatsName);
