@@ -45,23 +45,9 @@ export class Author extends LifeLine{
     return json
   }
 
-  static createTreeBackbone(ref: Ref, context: Deserializer): Author {
-    let authorJson: AuthorJson = context.getJsonFromTree(ref.$ref)
-    let author = new Author(authorJson.name? authorJson.name : '', authorJson.xPosition, ref)
-    context.put(author)
-    authorJson.messages.map((mj, i) => {
-      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Author.$messagesName, i)
-      let newRef = RefHandler.createRef(newRefRef, mj.eClass)
-      let m = Message.createTreeBackbone(newRef, context)
-      author.addMessage(m)
-    } )
-    authorJson.preknowledge.map((_, i) => {
-      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Author.$preknowledgeName, i)
-      let newRef = RefHandler.createRef(newRefRef, EClasses.Preknowledge)
-      let p = Preknowledge.createTreeBackbone(newRef, context)
-      author.addPreknowledge(p)
-    })
-    return author
+  static fromJson(json: AuthorJson): Author {
+    return new Author(json.name, json.xPosition)
   }
+
 
 }
