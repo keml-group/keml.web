@@ -4,6 +4,7 @@ import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
 import {Deserializer, Ref, Referencable, RefHandler, ReTreeSingleContainer, ReTreeListContainer} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
 import {createKemlRegistry} from "@app/shared/keml/kemlregistry";
+import {JsonOf} from "../../../../../../../../EMFular/projects/emfular/src/lib/serialization/json-deserializable";
 
 
 export class Conversation extends Referencable {
@@ -61,7 +62,7 @@ export class Conversation extends Referencable {
       $ref: RefHandler.rootPath,
       eClass: EClasses.Conversation
     }
-    let conv = context.createWithChildren<Conversation>(ref)
+    let conv = context.createWithChildren<Conversation>(ref, convJson as JsonOf<Conversation>);
     context.addAllReferences()
     return conv;
   }
