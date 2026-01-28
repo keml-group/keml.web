@@ -74,6 +74,8 @@ describe('Info (models)', () => {
     let send = new SendMessage(cp, 4)
     pre0.addIsUsedOn(send)
     expect(pre0.getTiming()).toEqual(4)
+    pre0.removeIsUsedOn(send)
+    expect(pre0.getTiming()).toEqual(0)
   })
 
   it('should serialize preknowledge', () => {
