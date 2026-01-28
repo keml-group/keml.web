@@ -11,7 +11,6 @@ import {Conversation} from "@app/shared/keml/core/conversation";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {Author} from "@app/shared/keml/core/author";
 
-export const KEMLRegistry = new ModelRegistry()
 export function initializeKEMLRegistry(registry: ModelRegistry) {
     registry.set(EClasses.Conversation, Conversation)
     registry.set(EClasses.Author, Author)
