@@ -1,6 +1,6 @@
 import {LifeLine} from "./life-line";
 import {ConversationPartnerJson} from "@app/shared/keml/json/sequence-diagram-models"
-import {Deserializer, Ref} from "emfular";
+import {Ref} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
 import {RefHandler} from "emfular";
 
@@ -15,10 +15,8 @@ export class ConversationPartner extends LifeLine {
       return super.toJson();
     }
 
-    static createTreeBackbone(ref: Ref, context: Deserializer): ConversationPartner {
-        let cpJson: ConversationPartnerJson = context.getJsonFromTree(ref.$ref)
-        let cp = new ConversationPartner(cpJson.name, cpJson.xPosition, ref)
-        context.put(cp)
-        return cp;
+    static fromJson(json: ConversationPartnerJson, ref: Ref): ConversationPartner {
+      return new ConversationPartner(json.name, json.xPosition, ref)
     }
+
 }

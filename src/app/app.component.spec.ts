@@ -28,4 +28,11 @@ describe('AppComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain('KEML Graphical Editor');
   });
+
+  it('should change sidebar status', ()=> {
+    fixture.detectChanges();
+    expect(app.hideAside).toBeFalse();
+    app.toggleAside()
+    expect(app.hideAside).toBeTrue();
+  })
 });

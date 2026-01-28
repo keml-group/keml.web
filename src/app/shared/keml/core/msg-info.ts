@@ -9,7 +9,6 @@ import {
 } from "@app/shared/keml/json/knowledge-models";
 import {EClasses} from "@app/shared/keml/eclasses";
 import {
-  Deserializer,
   Ref,
   Referencable,
   RefHandler,
@@ -76,14 +75,6 @@ export abstract class Message extends Referencable {
       return new ReceiveMessage(counterPart, timing, content, originalContent)
     }
   }
-
-  static createTreeBackbone(ref: Ref, context: Deserializer): Message {
-    if (ref.eClass == EClasses.SendMessage) {
-      return SendMessage.createTreeBackbone(ref, context);
-    } else {
-      return ReceiveMessage.createTreeBackbone(ref, context);
-    }
-  }
 }
 
 export class SendMessage extends Message {
@@ -120,13 +111,12 @@ export class SendMessage extends Message {
     return res;
   }
 
-  static override createTreeBackbone(ref: Ref, context: Deserializer): SendMessage {
-    let sendJson: SendMessageJson = context.getJsonFromTree(ref.$ref)
-    //todo make dummy unnecessary?
+  static fromJson(json: SendMessageJson, ref: Ref): SendMessage {
+    //todo
     let dummyCp = new ConversationPartner()
-    let send = new SendMessage(dummyCp, sendJson.timing, sendJson.content, sendJson.originalContent, [], ref)
-    context.put(send)
-    return send
+
+    return new SendMessage(dummyCp, json.timing, json.content, json.originalContent,
+      [], ref)
   }
 
 }
@@ -167,7 +157,7 @@ export class ReceiveMessage extends Message {
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.ReceiveMessage, ref)
     super(refC, counterPart, timing, content ? content : "New receive content", originalContent);
-    this._generates = new ReTreeListContainer<NewInformation>(this, ReceiveMessage.$generatesName, NewInformation.$sourceName);
+    this._generates = new ReTreeListContainer<NewInformation>(this, ReceiveMessage.$generatesName, NewInformation.$sourceName, EClasses.NewInformation);
     this._repeats = new ReLinkListContainer<Information>(this, ReceiveMessage.$repeatsName, Information.$repeatedByName);
     repeats.map(r => this.addRepetition(r));
     this.isInterrupted = isInterrupted;
@@ -181,19 +171,10 @@ export class ReceiveMessage extends Message {
     return res;
   }
 
-  static override createTreeBackbone(ref: Ref, context: Deserializer): ReceiveMessage {
-    let recJson: ReceiveMessageJson = context.getJsonFromTree(ref.$ref)
+  static fromJson(json: ReceiveMessageJson, ref: Ref): ReceiveMessage {
+    //todo
     let dummyCp = new ConversationPartner()
-    let rec = new ReceiveMessage(dummyCp, recJson.timing, recJson.content, recJson.originalContent, [], recJson.isInterrupted, ref)
-    context.put(rec)
-    let generatesRefs = Deserializer.createRefList(
-      ref!.$ref,
-      ReceiveMessage.$generatesName,
-      recJson.generates?.map(_ => EClasses.NewInformation))
-    generatesRefs.map(newRef =>
-      rec.addGenerates(NewInformation.createTreeBackbone(newRef, context))
-    )
-    return rec
+    return new ReceiveMessage(dummyCp, json.timing, json.content, json.originalContent, [], false, ref)
   }
 
 }
@@ -268,7 +249,7 @@ export abstract class Information extends Referencable implements Positionable {
   ) {
     super(ref);
 
-    this._causes = new ReTreeListContainer<InformationLink>(this, NewInformation.$causesName, InformationLink.$sourceName);
+    this._causes = new ReTreeListContainer<InformationLink>(this, NewInformation.$causesName, InformationLink.$sourceName, EClasses.InformationLink);
     this._targetedBy = new ReLinkListContainer<InformationLink>(this, Information.$targetedByName, InformationLink.$targetName)
     this._isUsedOn = new ReLinkListContainer<SendMessage>(this, 'isUsedOn', 'uses');
     this._repeatedBy = new ReLinkListContainer(this, NewInformation.$repeatedByName, ReceiveMessage.$repeatsName);
@@ -346,26 +327,14 @@ export class NewInformation extends Information {
     return res;
   }
 
-  static createTreeBackbone(ref: Ref, context: Deserializer): NewInformation {
-    let newInfoJson: NewInformationJson = context.getJsonFromTree(ref.$ref)
-    // todo source is the tree parent so it already exists...
-    let srcRefRef = RefHandler.getParentAddress(ref.$ref)
-    let srcRef = RefHandler.createRef(srcRefRef, EClasses.ReceiveMessage)
-    let src: ReceiveMessage = context.get(srcRef.$ref)
-    let newInfo = new NewInformation(src,
-        newInfoJson.message, newInfoJson.isInstruction,
-        newInfoJson.position, [], [],
-        newInfoJson.initialTrust, newInfoJson.currentTrust, newInfoJson.feltTrustImmediately, newInfoJson.feltTrustAfterwards,
-        ref);
-    context.put(newInfo)
-    newInfoJson.causes?.map((_, i) => {
-      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, NewInformation.$causesName, i)
-      let newRef = RefHandler.createRef(newRefRef, EClasses.InformationLink)
-      let link = InformationLink.createTreeBackbone(newRef, context)
-      newInfo.addCauses(link)
-    })
-    return newInfo
+  static fromJson( json: NewInformationJson, ref: Ref): NewInformation {
+    //todo
+    let dummyCp = new ConversationPartner()
+    let dummyRec = new ReceiveMessage(dummyCp, 0)
+
+    return new NewInformation(dummyRec, json.message, json.isInstruction, json.position, [], [], json.initialTrust, json.currentTrust, json.feltTrustImmediately, json.feltTrustAfterwards, ref)
   }
+
 }
 
 export class Preknowledge extends Information {
@@ -398,21 +367,14 @@ export class Preknowledge extends Information {
     return (<PreknowledgeJson>super.toJson())
   }
 
-  static createTreeBackbone(ref: Ref, context: Deserializer): Preknowledge {
-    let preJson: PreknowledgeJson = context.getJsonFromTree(ref.$ref)
-    let pre = new Preknowledge(preJson.message, preJson.isInstruction, preJson.position,
-        [], [],
-        preJson.initialTrust, preJson.currentTrust, preJson.feltTrustImmediately, preJson.feltTrustAfterwards,
-        ref)
-    context.put(pre)
-    preJson.causes?.map((_, i) => {
-      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Preknowledge.$causesName, i)
-      let newRef = RefHandler.createRef(newRefRef, EClasses.InformationLink)
-      let link = InformationLink.createTreeBackbone(newRef, context)
-      pre.addCauses(link)
-    })
-    return pre;
+  static fromJson( json: PreknowledgeJson, ref: Ref): Preknowledge {
+    return new Preknowledge(json.message, json.isInstruction, json.position,
+      [], [],
+      json.initialTrust, json.currentTrust, json.feltTrustImmediately, json.feltTrustAfterwards,
+      ref
+    )
   }
+
 }
 
 export class InformationLink extends Referencable {
@@ -475,14 +437,12 @@ export class InformationLink extends Referencable {
     }
   }
 
-  static createTreeBackbone(ref: Ref, context: Deserializer): InformationLink {
-    let infoLinkJson: InformationLinkJson = context.getJsonFromTree(ref.$ref)
-    let srcRef = RefHandler.createRef(RefHandler.getParentAddress(ref.$ref), infoLinkJson.source!.eClass)
-    let src: Information = context.get(srcRef.$ref)
-    let dummyTarget = new Preknowledge()
-    let infoLink: InformationLink = new InformationLink(src, dummyTarget, infoLinkJson.type, infoLinkJson.linkText, ref)
-    context.put(infoLink)
-    return infoLink
+  static fromJson( json: InformationLinkJson, ref: Ref): InformationLink {
+    //todo
+    let dummySrc = new Preknowledge()
+    let dummyTar = new Preknowledge()
+    return new InformationLink(dummySrc, dummyTar, json.type, json.linkText, ref)
   }
+
 }
 

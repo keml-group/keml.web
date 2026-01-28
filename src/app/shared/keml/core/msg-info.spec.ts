@@ -74,6 +74,8 @@ describe('Info (models)', () => {
     let send = new SendMessage(cp, 4)
     pre0.addIsUsedOn(send)
     expect(pre0.getTiming()).toEqual(4)
+    pre0.removeIsUsedOn(send)
+    expect(pre0.getTiming()).toEqual(0)
   })
 
   it('should serialize preknowledge', () => {
@@ -154,6 +156,11 @@ describe('Info (models)', () => {
     expect(m1.repeats.length).toBe(1)
 
     i1.destruct()
+    expect(m1.repeats.length).toBe(0)
+
+    i0.addRepeatedBy(m1);
+    expect(m1.repeats.length).toBe(1)
+    i0.removeRepeatedBy(m1);
     expect(m1.repeats.length).toBe(0)
   })
 
@@ -296,7 +303,22 @@ describe('Info (models)', () => {
   })
 });
 
-describe('deserialize and re-serialize real example', () => {
+describe('deserialize and re-serialize', () => {
+
+  it('should add attributes to preknowledge via fromJson', ()=> {
+    let ref = RefHandler.createRef("", EClasses.Preknowledge)
+    let preJson: PreknowledgeJson = {
+      causes: [],
+      eClass: "",
+      isInstruction: false,
+      isUsedOn: [],
+      message: "pre0",
+      repeatedBy: [],
+      targetedBy: []
+    }
+    let res = Preknowledge.fromJson(preJson, ref)
+    expect(res.message).toEqual("pre0")
+  })
 
   it('should deserialize and re-serialize a real world example', () => {
 

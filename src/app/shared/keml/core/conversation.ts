@@ -1,8 +1,9 @@
 import {Author} from "./author";
 import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
-import {Deserializer, Ref, Referencable, RefHandler, ReTreeSingleContainer, ReTreeListContainer} from "emfular";
+import {Deserializer, Ref, Referencable, RefHandler, ReTreeSingleContainer, ReTreeListContainer, JsonOf} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
+import {createKemlRegistry} from "@app/shared/keml/kemlregistry";
 
 
 export class Conversation extends Referencable {
@@ -32,8 +33,8 @@ export class Conversation extends Referencable {
   ) {
     let ref = RefHandler.createRef(RefHandler.rootPath, EClasses.Conversation)
     super(ref);
-    this._author = new ReTreeSingleContainer<Author>(this, Conversation.$authorName);
-    this._conversationPartners = new ReTreeListContainer<ConversationPartner>(this, Conversation.$conversationPartnersName);
+    this._author = new ReTreeSingleContainer<Author>(this, Conversation.$authorName, undefined, EClasses.Author);
+    this._conversationPartners = new ReTreeListContainer<ConversationPartner>(this, Conversation.$conversationPartnersName, undefined, EClasses.ConversationPartner);
     this.title = title;
     this.author = author;
   }
@@ -49,32 +50,18 @@ export class Conversation extends Referencable {
     };
   }
 
-  static fromJSON (convJson: ConversationJson): Conversation {
-    let context = new Deserializer(convJson);
-    let ref: Ref = {
-      $ref: RefHandler.rootPath,
-      eClass: EClasses.Conversation
-    }
-    let conv = this.createTreeBackbone(ref, context);
-    context.addAllReferences()
-    return conv;
+  static fromJson(json: ConversationJson, _: Ref): Conversation {
+    return new Conversation(json.title)
   }
 
-  static createTreeBackbone(ref: Ref, context: Deserializer): Conversation {
-    let convJson: ConversationJson = context.getJsonFromTree(ref.$ref);
-    let conv = new Conversation(convJson.title)
-    context.put(conv)
-    //trigger children:
-    convJson.conversationPartners.map((_, i) => {
-      let newRefRef = RefHandler.mixWithPrefixAndIndex(ref.$ref, Conversation.$conversationPartnersName, i)
-      let newRef: Ref = RefHandler.createRef(newRefRef, EClasses.ConversationPartner)
-      let cp = ConversationPartner.createTreeBackbone(newRef, context)
-      conv.addCP(cp)
-    })
-    let authorRefRef = RefHandler.computePrefix(ref.$ref, Conversation.$authorName)
-    let authorRef: Ref = {$ref: authorRefRef, eClass: EClasses.Author}
-    conv.author = Author.createTreeBackbone(authorRef, context)
-    return conv;
+  //todo naming
+  static fromJSON (convJson: ConversationJson): Conversation {
+    return Deserializer.fromJSON<typeof Conversation>(
+      Conversation,
+      convJson,
+      createKemlRegistry(),
+      EClasses.Conversation
+    )
   }
 
 }
