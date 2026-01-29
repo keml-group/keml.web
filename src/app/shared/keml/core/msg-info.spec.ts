@@ -58,7 +58,7 @@ describe('Info (models)', () => {
   })
 
   it('should determine the correct timing of a new info', () => {
-    let rec = new ReceiveMessage( 5)
+    let rec = new ReceiveMessage(undefined, 5)
     let newInfo = new NewInformation(rec, 'info1')
     expect(newInfo.getTiming()).toEqual(5)
     rec.timing = 0
@@ -97,7 +97,7 @@ describe('Info (models)', () => {
   });
 
   it('should serialize newInfo', () => {
-    let msg = new ReceiveMessage(1, "receiveContent")
+    let msg = new ReceiveMessage(undefined, 1, "receiveContent")
     let newInfo = new NewInformation(msg, 'New Info')
     let newInfoJson: NewInformationJson = {
       source: msg.getRef(),
@@ -118,7 +118,7 @@ describe('Info (models)', () => {
   });
 
   it('should delete a "used on" on an info', () => {
-    let m0 = new ReceiveMessage(1, "receive1")
+    let m0 = new ReceiveMessage(undefined, 1, "receive1")
     let m1 = new SendMessage(1, "send1")
 
     let i0 = new Preknowledge('pre0')
@@ -137,8 +137,8 @@ describe('Info (models)', () => {
   })
 
   it('should delete a "repeated by" on an info', () => {
-    let m0 = new ReceiveMessage( 0, "receive0")
-    let m1 = new ReceiveMessage( 1, "receive1")
+    let m0 = new ReceiveMessage(undefined, 0, "receive0")
+    let m1 = new ReceiveMessage(undefined, 1, "receive1")
 
     let i0 = new Preknowledge('pre0')
     let i1 = new NewInformation(m0, 'i1', false)
@@ -161,7 +161,7 @@ describe('Info (models)', () => {
   })
 
   it('should serialize information links', () => {
-    let msg = new ReceiveMessage(1, "receiveContent")
+    let msg = new ReceiveMessage(undefined, 1, "receiveContent")
     let newInfo1 = new NewInformation(msg, 'New Info1')
     let newInfo2 = new NewInformation(msg, 'New Info2')
     let preknowledge1 = new Preknowledge('Preknowledge1')

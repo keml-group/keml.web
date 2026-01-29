@@ -33,11 +33,11 @@ export abstract class Message extends Referencable {
     this._counterPart.add(value);
   }
 
-  @attribute
+  @attribute()
   timing: number;
-  @attribute
+  @attribute()
   content: string;
-  @attribute
+  @attribute()
   originalContent?: string;
 
   protected constructor(
@@ -157,15 +157,15 @@ export class ReceiveMessage extends Message {
     return this._repeats.remove(info);
   }
 
-  @attribute
+  @attribute()
   isInterrupted: boolean = false;
 
   constructor(
+    ref?: Ref,
     timing?: number,
-    content: string="New receive content",
+    content: string = "New receive content",
     originalContent?: string,
     isInterrupted: boolean = false,
-    ref?: Ref,
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.ReceiveMessage, ref)
     super(refC, timing, content, originalContent);
@@ -188,13 +188,13 @@ export class ReceiveMessage extends Message {
                 originalContent?: string,
                 isInterrupted: boolean = false,
                 ref?: Ref,): ReceiveMessage {
-    const rec = new ReceiveMessage(timing, content, originalContent, isInterrupted, ref);
+    const rec = new ReceiveMessage(ref, timing, content, originalContent, isInterrupted);
     rec.counterPart = counterPart;
     return rec
   }
 
   static fromJson(json: ReceiveMessageJson, ref: Ref): ReceiveMessage {
-    const rec = new ReceiveMessage(0, "", "", false, ref)
+    const rec = new ReceiveMessage(ref)
     rec.fill(json)
     return rec//new ReceiveMessage(json.timing, json.content, json.originalContent, false, ref)
   }
@@ -347,7 +347,7 @@ export class NewInformation extends Information {
 
   static fromJson( json: NewInformationJson, ref: Ref): NewInformation {
     //todo
-    let dummyRec = new ReceiveMessage(0)
+    let dummyRec = new ReceiveMessage(undefined, 0)
 
     return new NewInformation(dummyRec, json.message, json.isInstruction, json.position, json.initialTrust, json.currentTrust, json.feltTrustImmediately, json.feltTrustAfterwards, ref)
   }
