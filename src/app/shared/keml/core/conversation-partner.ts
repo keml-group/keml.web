@@ -11,7 +11,7 @@ export class ConversationPartner extends LifeLine {
     super(refC, name, xPosition);
   }
 
-  static create(ref?: Ref, name: string = 'NewPartner', xPosition?: number): ConversationPartner {
+  static create(name: string = 'NewPartner', xPosition?: number, ref?: Ref): ConversationPartner {
     const cp = new ConversationPartner(ref)
     cp.name = name
     cp.xPosition = xPosition? xPosition : 0;
@@ -19,7 +19,7 @@ export class ConversationPartner extends LifeLine {
   }
 
   static fromJson(json: ConversationPartnerJson, ref: Ref): ConversationPartner {
-    return ConversationPartner.create(ref, json.name, json.xPosition)
+    return ConversationPartner.create(json.name, json.xPosition, ref)
   }
 
   override toJson(): ConversationPartnerJson {

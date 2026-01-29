@@ -63,7 +63,7 @@ export class IncrementalSimulationService {
     3) add relationships of new preknowledges (linkStep)
    */
   private async stepSend(send: SendMessage) {
-    let msg = new SendMessage(send.counterPart, send.timing, send.content, send.originalContent)
+    let msg = SendMessage.create(send.counterPart, send.timing, send.content, send.originalContent)
     this.msgConnections.set(send.gId, msg)
     this.incrementalConv.author.messages.push(msg)
     this.msgCount.update(n => n+1)

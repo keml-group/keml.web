@@ -70,8 +70,8 @@ describe('Info (models)', () => {
   it('should determine the correct timing of a preknowledge', () => {
     let pre0 = new Preknowledge('pre0')
     expect(pre0.getTiming()).toEqual(0)
-    let cp = new ConversationPartner(undefined, 'cp')
-    let send = new SendMessage(cp, 4)
+    let cp = ConversationPartner.create('cp')
+    let send = SendMessage.create(cp, 4)
     pre0.addIsUsedOn(send)
     expect(pre0.getTiming()).toEqual(4)
     pre0.removeIsUsedOn(send)

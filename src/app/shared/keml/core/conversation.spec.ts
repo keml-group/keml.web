@@ -1,5 +1,4 @@
 import {Conversation} from './conversation';
-import {Author} from "@app/shared/keml/core/author";
 import {
   InformationLink,
   NewInformation,
@@ -22,23 +21,21 @@ describe('Conversation', () => {
     let cp0 = new ConversationPartner({$ref: 'wrong', eClass: 'wronger'}, 'NewPartner', 0);
     conv.addCP(cp0)
     expect(cp0.getRef().$ref).toEqual('wrong')
-    let author = new Author();
-    conv.author = author;
     expect(conv.author.getRef().$ref).toEqual('');
-    let m0 = new SendMessage(cp0, 0)
-    let m1 = new ReceiveMessage(cp0, 1)
-    author.addMessage(m0, m1)
+    let m0 = SendMessage.create(cp0, 0)
+    let m1 = ReceiveMessage.create(cp0, 1)
+    conv.author.addMessage(m0, m1)
     expect(m0.getRef().$ref).toEqual('');
     expect(m1.getRef().$ref).toEqual('');
 
     //infos:
     let p0 = new Preknowledge()
-    author.addPreknowledge(p0)
+    conv.author.addPreknowledge(p0)
     expect(p0.getRef().$ref).toEqual('');
     let n0 = new NewInformation(m1, 'rec')
     expect(n0.getRef().$ref).toEqual('');
 
-    let link0 = new InformationLink(n0, p0, InformationLinkType.STRONG_ATTACK)
+    new InformationLink(n0, p0, InformationLinkType.STRONG_ATTACK)
 
     // serialization:
     let convJson = conv.toJson()

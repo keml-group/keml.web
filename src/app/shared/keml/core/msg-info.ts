@@ -70,9 +70,9 @@ export abstract class Message extends Referencable {
 
   static newMessage(isSend: boolean, counterPart: ConversationPartner, timing: number, content: string, originalContent: string = 'Original content'): Message {
     if (isSend) {
-      return new SendMessage(counterPart, timing, content, originalContent)
+      return SendMessage.create(counterPart, timing, content, originalContent)
     } else {
-      return new ReceiveMessage(counterPart, timing, content, originalContent)
+      return ReceiveMessage.create(counterPart, timing, content, originalContent)
     }
   }
 }
@@ -96,13 +96,11 @@ export class SendMessage extends Message {
     timing: number,
     content: string = 'New send content',
     originalContent?: string,
-    uses: Information[] = [],
     ref?: Ref,
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.SendMessage, ref)
     super(refC, counterPart, timing, content, originalContent);
     this._uses  = new ReLinkListContainer<Information>(this, SendMessage.$usesName, Information.$isUsedOnName);
-    uses.map(u => this.addUsage(u))
   }
 
   override toJson(): SendMessageJson {
@@ -111,12 +109,25 @@ export class SendMessage extends Message {
     return res;
   }
 
+  static create(counterPart: ConversationPartner,
+                timing: number,
+                content: string = 'New send content',
+                originalContent?: string,
+                ref?: Ref,
+                ): SendMessage {
+    const send = new SendMessage(counterPart, timing, content, originalContent, ref);
+    send.counterPart = counterPart;
+    return send;
+  }
+
   static fromJson(json: SendMessageJson, ref: Ref): SendMessage {
     //todo
     let dummyCp = new ConversationPartner()
-
-    return new SendMessage(dummyCp, json.timing, json.content, json.originalContent,
-      [], ref)
+    return new SendMessage(
+      dummyCp,
+      json.timing, json.content, json.originalContent,
+      ref
+    )
   }
 
 }
@@ -151,7 +162,6 @@ export class ReceiveMessage extends Message {
     timing: number,
     content?: string,
     originalContent?: string,
-    repeats: Information[] = [],
     isInterrupted: boolean = false,
     ref?: Ref,
   ) {
@@ -159,7 +169,6 @@ export class ReceiveMessage extends Message {
     super(refC, counterPart, timing, content ? content : "New receive content", originalContent);
     this._generates = new ReTreeListContainer<NewInformation>(this, ReceiveMessage.$generatesName, NewInformation.$sourceName, EClasses.NewInformation);
     this._repeats = new ReLinkListContainer<Information>(this, ReceiveMessage.$repeatsName, Information.$repeatedByName);
-    repeats.map(r => this.addRepetition(r));
     this.isInterrupted = isInterrupted;
   }
 
@@ -171,10 +180,19 @@ export class ReceiveMessage extends Message {
     return res;
   }
 
+  static create(counterPart: ConversationPartner,
+                timing: number,
+                content?: string,
+                originalContent?: string,
+                isInterrupted: boolean = false,
+                ref?: Ref,): ReceiveMessage {
+    return new ReceiveMessage(counterPart, timing, content, originalContent, isInterrupted, ref)
+  }
+
   static fromJson(json: ReceiveMessageJson, ref: Ref): ReceiveMessage {
     //todo
     let dummyCp = new ConversationPartner()
-    return new ReceiveMessage(dummyCp, json.timing, json.content, json.originalContent, [], false, ref)
+    return new ReceiveMessage(dummyCp, json.timing, json.content, json.originalContent, false, ref)
   }
 
 }

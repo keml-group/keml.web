@@ -176,10 +176,11 @@ describe('KEML-Service', () => {
       "      \"generates\" : [ "+newInfo0Str +", "+newInfo1Str+
       "       ]\n" +
       "   } ]\n"
-    let msg0 = new SendMessage(cp0,0, "m0", "msg0long", [pre0],
+    let msg0 = new SendMessage(cp0,0, "m0", "msg0long",
       RefHandler.createRef('//@author/@messages.0', 'http://www.unikoblenz.de/keml#//SendMessage'))
-    let msg1 = new ReceiveMessage(cp1, 1, "m1", "msg1long",
-      undefined, false,
+    msg0.addUsage(pre0)
+    let msg1 = ReceiveMessage.create(
+      cp1, 1, "m1", "msg1long", false,
       RefHandler.createRef('//@author/@messages.1', 'http://www.unikoblenz.de/keml#//ReceiveMessage')
     )
     let msgs: Message[] = [msg0, msg1]
