@@ -190,14 +190,12 @@ describe('TrustComputationService', () => {
   it('should adapt the current trusts', () => {
     let pre0 = new Preknowledge(
       'pre0', false, undefined,
-      undefined, undefined,
       0.5, 0 )
     let pre1 = new Preknowledge('pre1',
       false, undefined,
-      undefined, undefined,
       0.5, 0 )
     let pre2 = new Preknowledge('pre2',
-      false, undefined, undefined, undefined,
+      false, undefined,
       0.5, 0 )
 
     let cp0 = new ConversationPartner(undefined, 'cp0')

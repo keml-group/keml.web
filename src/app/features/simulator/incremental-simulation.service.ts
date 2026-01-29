@@ -106,8 +106,6 @@ export class IncrementalSimulationService {
       pre.message,
       pre.isInstruction,
       pre.position,
-      [],
-      [],
       pre.initialTrust,
       undefined,
       pre.feltTrustImmediately,

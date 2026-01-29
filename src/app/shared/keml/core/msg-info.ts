@@ -237,8 +237,8 @@ export abstract class Information extends Referencable implements Positionable {
   get isUsedOn(): SendMessage[] {
     return this._isUsedOn.get();
   }
-  addIsUsedOn(send: SendMessage){
-    this._isUsedOn.add(send)
+  addIsUsedOn(...send: SendMessage[]){
+    send.map(s => this._isUsedOn.add(s))
   }
   removeIsUsedOn(send: SendMessage){
     this._isUsedOn.remove(send)
@@ -259,7 +259,6 @@ export abstract class Information extends Referencable implements Positionable {
   protected constructor(
     ref: Ref,
     message: string, isInstruction: boolean = false, position?: BoundingBox,
-    isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
     initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number, feltTrustAfterwards?: number,
   ) {
     super(ref);
@@ -275,8 +274,6 @@ export abstract class Information extends Referencable implements Positionable {
     this.currentTrust = currentTrust;
     this.feltTrustImmediately = feltTrustImmediately;
     this.feltTrustAfterwards = feltTrustAfterwards;
-    isUsedOn?.map(u => this.addIsUsedOn(u))
-    repeatedBy?.map(m => this.addRepeatedBy(m));
   }
 
   abstract duplicate(): Information;
@@ -326,7 +323,7 @@ export class NewInformation extends Information {
               ref?: Ref,
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.NewInformation, ref)
-    super(refC, message, isInstruction, position, [], [], initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards);
+    super(refC, message, isInstruction, position, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards);
     this._source = new ReTreeParentContainer(this, NewInformation.$sourceName, ReceiveMessage.$generatesName);
     this.source = source
   }
@@ -353,13 +350,12 @@ export class NewInformation extends Information {
 export class Preknowledge extends Information {
 
   constructor(message: string = 'Preknowledge', isInstruction: boolean = false, position?: BoundingBox,
-              isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
               initialTrust?: number, currentTrust?: number,
               feltTrustImmediately?: number, feltTrustAfterwards?: number,
               ref?: Ref
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.Preknowledge, ref)
-    super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards);
+    super(refC, message, isInstruction, position, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards);
   }
 
   getTiming(): number {
@@ -373,7 +369,7 @@ export class Preknowledge extends Information {
   }
 
   override duplicate(): Preknowledge {
-    return new Preknowledge('Copy of ' + this.message, this.isInstruction, this.position, [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
+    return new Preknowledge('Copy of ' + this.message, this.isInstruction, this.position, this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
   }
 
   override toJson(): PreknowledgeJson {
@@ -382,7 +378,6 @@ export class Preknowledge extends Information {
 
   static fromJson( json: PreknowledgeJson, ref: Ref): Preknowledge {
     return new Preknowledge(json.message, json.isInstruction, json.position,
-      [], [],
       json.initialTrust, json.currentTrust, json.feltTrustImmediately, json.feltTrustAfterwards,
       ref
     )

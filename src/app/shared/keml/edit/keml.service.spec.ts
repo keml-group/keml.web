@@ -122,11 +122,11 @@ describe('KEML-Service', () => {
       "    } ]\n"
     let pre0 = new Preknowledge(
       'pre0', false, undefined,
-      undefined, undefined, 0.5, 0.5, undefined, undefined,
+       0.5, 0.5, undefined, undefined,
       RefHandler.createRef('//@author/@preknowledge.0', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
     let pre1 = new Preknowledge(
       'pre1', false, undefined,
-      undefined, undefined, 0.5, 0.5, undefined, undefined,
+       0.5, 0.5, undefined, undefined,
       RefHandler.createRef('//@author/@preknowledge.1', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
 
     let preknowledge = [pre0, pre1]
