@@ -38,15 +38,13 @@ export abstract class Message extends Referencable {
 
   protected constructor(
     ref: Ref,
-    counterPart: ConversationPartner,
-    timing: number,
-    content: string,
+    timing?: number,
+    content?: string,
     originalContent?: string,
   ) {
     super(ref);
-    this._counterPart.add(counterPart);
-    this.timing = timing;
-    this.content = content;
+    if(timing) this.timing = timing;
+    this.content = content? content: "";
     this.originalContent = originalContent;
   }
 
@@ -92,14 +90,13 @@ export class SendMessage extends Message {
   }
 
   constructor(
-    counterPart: ConversationPartner,
-    timing: number,
+    timing?: number,
     content: string = 'New send content',
     originalContent?: string,
     ref?: Ref,
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.SendMessage, ref)
-    super(refC, counterPart, timing, content, originalContent);
+    super(refC, timing? timing:0, content, originalContent);
     this._uses  = new ReLinkListContainer<Information>(this, SendMessage.$usesName, Information.$isUsedOnName);
   }
 
@@ -115,16 +112,13 @@ export class SendMessage extends Message {
                 originalContent?: string,
                 ref?: Ref,
                 ): SendMessage {
-    const send = new SendMessage(counterPart, timing, content, originalContent, ref);
+    const send = new SendMessage(timing, content, originalContent, ref);
     send.counterPart = counterPart;
     return send;
   }
 
   static fromJson(json: SendMessageJson, ref: Ref): SendMessage {
-    //todo
-    let dummyCp = new ConversationPartner()
     return new SendMessage(
-      dummyCp,
       json.timing, json.content, json.originalContent,
       ref
     )
@@ -158,7 +152,6 @@ export class ReceiveMessage extends Message {
   isInterrupted: boolean = false;
 
   constructor(
-    counterPart: ConversationPartner,
     timing: number,
     content?: string,
     originalContent?: string,
@@ -166,7 +159,7 @@ export class ReceiveMessage extends Message {
     ref?: Ref,
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.ReceiveMessage, ref)
-    super(refC, counterPart, timing, content ? content : "New receive content", originalContent);
+    super(refC, timing, content ? content : "New receive content", originalContent);
     this._generates = new ReTreeListContainer<NewInformation>(this, ReceiveMessage.$generatesName, NewInformation.$sourceName, EClasses.NewInformation);
     this._repeats = new ReLinkListContainer<Information>(this, ReceiveMessage.$repeatsName, Information.$repeatedByName);
     this.isInterrupted = isInterrupted;
@@ -186,13 +179,14 @@ export class ReceiveMessage extends Message {
                 originalContent?: string,
                 isInterrupted: boolean = false,
                 ref?: Ref,): ReceiveMessage {
-    return new ReceiveMessage(counterPart, timing, content, originalContent, isInterrupted, ref)
+    const rec = new ReceiveMessage(timing, content, originalContent, isInterrupted, ref);
+    rec.counterPart = counterPart;
+    return rec
   }
 
   static fromJson(json: ReceiveMessageJson, ref: Ref): ReceiveMessage {
     //todo
-    let dummyCp = new ConversationPartner()
-    return new ReceiveMessage(dummyCp, json.timing, json.content, json.originalContent, false, ref)
+    return new ReceiveMessage(json.timing, json.content, json.originalContent, false, ref)
   }
 
 }
@@ -347,8 +341,7 @@ export class NewInformation extends Information {
 
   static fromJson( json: NewInformationJson, ref: Ref): NewInformation {
     //todo
-    let dummyCp = new ConversationPartner()
-    let dummyRec = new ReceiveMessage(dummyCp, 0)
+    let dummyRec = new ReceiveMessage(0)
 
     return new NewInformation(dummyRec, json.message, json.isInstruction, json.position, [], [], json.initialTrust, json.currentTrust, json.feltTrustImmediately, json.feltTrustAfterwards, ref)
   }

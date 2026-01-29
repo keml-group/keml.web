@@ -3,19 +3,11 @@ import {
   NewInformation,
   Preknowledge,
   ReceiveMessage,
-  SendMessage
 } from "@app/shared/keml/core/msg-info";
-import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 
 export function newRec(): ReceiveMessage {
-  const cp = new ConversationPartner()
-    return new ReceiveMessage(cp, 4)
-}
-
-export function newSend(): SendMessage {
-  const cp = new ConversationPartner()
-    return new SendMessage(cp, 3)
+    return new ReceiveMessage(4)
 }
 
 export function newNewInfo(): NewInformation {

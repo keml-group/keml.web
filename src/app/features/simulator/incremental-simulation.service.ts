@@ -82,7 +82,7 @@ export class IncrementalSimulationService {
    3) add relationships of those new infos (linkStep)
    */
   private async stepReceive(rec: ReceiveMessage) {
-    let msg = new ReceiveMessage(rec.counterPart, rec.timing, rec.content, rec.originalContent)
+    let msg = ReceiveMessage.create(rec.counterPart, rec.timing, rec.content, rec.originalContent)
     this.msgConnections.set(rec.gId, msg)
     this.incrementalConv.author.messages.push(msg)
     this.msgCount.update(n => n+1)

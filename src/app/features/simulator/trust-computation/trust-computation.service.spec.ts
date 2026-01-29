@@ -60,8 +60,8 @@ describe('TrustComputationService', () => {
 
   it('should compute the repetition score of a single node correctly', () => {
     let cp = new ConversationPartner(undefined, 'cp')
-    let r1 = new ReceiveMessage(cp, 1)
-    let r2 = new ReceiveMessage(cp, 3)
+    let r1 = ReceiveMessage.create(cp, 1)
+    let r2 = ReceiveMessage.create(cp, 3)
     let info = new Preknowledge('info')
     expect(service.computeRepetitionScore(info, 0)).toEqual(0)
     expect(service.computeRepetitionScore(info, 1)).toEqual(0)
@@ -73,8 +73,8 @@ describe('TrustComputationService', () => {
   it('should determineInitialTrustForInfo correctly', () => {
     let cp0 = new ConversationPartner(undefined, '0')
     let cp1 = new ConversationPartner(undefined, '1')
-    let r1 = new ReceiveMessage(cp0, 1)
-    let r2 = new ReceiveMessage(cp1, 2)
+    let r1 = ReceiveMessage.create(cp0, 1)
+    let r2 = ReceiveMessage.create(cp1, 2)
     let newInfo1 = new NewInformation(r1, 'm1')
     let newInfo2 = new NewInformation(r2, 'm2')
     let simInputs: TrustFallbacks = new TrustFallbacks()
@@ -204,10 +204,10 @@ describe('TrustComputationService', () => {
     let cp1 = new ConversationPartner(undefined, 'cp1')
     let cps = [cp0, cp1]
 
-    let rec0 = new ReceiveMessage(cp0, 0, 'm0')
-    let rec1 = new ReceiveMessage(cp1, 1, 'm1')
-    let rec2 = new ReceiveMessage(cp0, 2, 'm2')
-    let rec3 = new ReceiveMessage(cp0, 3, 'm3')
+    let rec0 = ReceiveMessage.create(cp0, 0, 'm0')
+    let rec1 = ReceiveMessage.create(cp1, 1, 'm1')
+    let rec2 = ReceiveMessage.create(cp0, 2, 'm2')
+    let rec3 = ReceiveMessage.create(cp0, 3, 'm3')
 
     //todo add infos and Links
     let conv = Conversation.create('trusts')

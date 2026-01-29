@@ -23,7 +23,7 @@ describe('MsgDetailsComponent', () => {
 
     fixture = TestBed.createComponent(MsgDetailsComponent);
     component = fixture.componentInstance;
-    component.msg = new ReceiveMessage(new ConversationPartner(), 0,'msg')
+    component.msg = ReceiveMessage.create(new ConversationPartner(), 0,'msg')
     fixture.detectChanges();
   });
 
