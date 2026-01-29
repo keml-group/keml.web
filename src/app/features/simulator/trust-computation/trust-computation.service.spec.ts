@@ -182,8 +182,8 @@ describe('TrustComputationService', () => {
     new InformationLink(p0, p1, InformationLinkType.SUPPORT)
     new InformationLink(p1, p0, InformationLinkType.STRONG_ATTACK)
     new InformationLink(p2, p1, InformationLinkType.STRONG_ATTACK)
-    let auth = new Author('auth', 0)
-    auth.addPreknowledge(p0, p1, p2)
+    let auth = new Author()
+      auth.addPreknowledge(p0, p1, p2)
     let conv = new Conversation('cycle', auth)
     expect(() => service.computeCurrentTrusts(conv, new TrustFallbacks())).toThrow(Error('Endless loops of 2 nodes - please check the InformationLinks'))
   })
@@ -212,8 +212,8 @@ describe('TrustComputationService', () => {
 
     //todo add infos and Links
 
-    let author = new Author('author', 0)
-    author.addPreknowledge(pre0, pre1, pre2)
+    let author = new Author()
+      author.addPreknowledge(pre0, pre1, pre2)
     author.addMessage(rec0, rec1, rec2, rec3)
     let conv = new Conversation('trusts', author)
     conv.addCP(...cps)

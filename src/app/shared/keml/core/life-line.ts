@@ -6,7 +6,7 @@ export abstract class LifeLine extends Referencable{
   name: string;
   xPosition: number; //int todo
 
-  protected constructor(name: string, xPosition: number = 0, ref: Ref) {
+  protected constructor(ref: Ref, name?: string, xPosition: number = 0) {
     super(ref);
     this.name = name? name: '';
     this.xPosition = xPosition;

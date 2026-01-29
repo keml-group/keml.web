@@ -200,7 +200,7 @@ describe('KEML-Service', () => {
       preknowledgeStr + "\n"+
       "}"
 
-    let author = new Author(undefined,0 )
+    let author = new Author()
     author.addPreknowledge(...preknowledge)
     author.addMessage(...msgs)
 
