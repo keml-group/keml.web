@@ -44,15 +44,15 @@ export class Author extends LifeLine{
     return auth
   }
 
+  static fromJson(json: AuthorJson, ref: Ref): Author {
+    return Author.create(ref, json.name ? json.name : '', json.xPosition)
+  }
+
   override toJson(): AuthorJson {
     let json: AuthorJson = (<AuthorJson>super.toJson())
     json.preknowledge = this._preknowledge.toJson()
     json.messages = this._messages.toJson()
     return json
-  }
-
-  static fromJson(json: AuthorJson, ref: Ref): Author {
-    return Author.create(ref, json.name ? json.name : '', json.xPosition)
   }
 
 }

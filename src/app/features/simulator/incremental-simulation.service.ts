@@ -35,8 +35,8 @@ export class IncrementalSimulationService {
   private prepare(simulationInputs: TrustFallbacks, conv: Conversation) {
     this.simulationInputs = simulationInputs;
     this.completeConv = conv;
-    let author = Author.create(undefined, conv.author.name, conv.author.xPosition)
-      this.incrementalConv = new Conversation(conv.title, author)
+    this.incrementalConv = Conversation.create(conv.title)
+    this.incrementalConv.author = Author.create(undefined, conv.author.name, conv.author.xPosition);
     this.incrementalConv.addCP(...conv.conversationPartners) //todo duplicate cps?
     this.msgConnections = new Map<string, Message>();
     this.infoConnections = new Map<string, Information>();
