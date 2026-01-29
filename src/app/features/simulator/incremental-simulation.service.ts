@@ -123,8 +123,6 @@ export class IncrementalSimulationService {
       newInfo.message,
       newInfo.isInstruction,
       newInfo.position,
-      [],
-      [],
       newInfo.initialTrust,
       undefined,
       newInfo.feltTrustImmediately,

@@ -185,10 +185,10 @@ describe('KEML-Service', () => {
     )
     let msgs: Message[] = [msg0, msg1]
     let newInfo0 = new NewInformation(msg1, "ni0", true,
-      undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
+      undefined, undefined, undefined, 0.5, 0.5,
       RefHandler.createRef('//@author/@messages.1/@generates.0', 'http://www.unikoblenz.de/keml#//NewInformation'))
     let newInfo1 = new NewInformation(msg1, "ni1",
-      false,undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
+      false,undefined, undefined, undefined, 0.5, 0.5,
       RefHandler.createRef('//@author/@messages.1/@generates.1', 'http://www.unikoblenz.de/keml#//NewInformation'))
 
     LayoutingService.initializeInfoPos(msgs)

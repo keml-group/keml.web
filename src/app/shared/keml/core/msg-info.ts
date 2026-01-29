@@ -156,7 +156,7 @@ export class ReceiveMessage extends Message {
   isInterrupted: boolean = false;
 
   constructor(
-    timing: number,
+    timing?: number,
     content: string="New receive content",
     originalContent?: string,
     isInterrupted: boolean = false,
@@ -322,18 +322,17 @@ export class NewInformation extends Information {
 
   constructor(source: ReceiveMessage,
               message: string, isInstruction: boolean = false, position?: BoundingBox,
-              isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
               initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number , feltTrustAfterwards?: number,
               ref?: Ref,
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.NewInformation, ref)
-    super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards);
+    super(refC, message, isInstruction, position, [], [], initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards);
     this._source = new ReTreeParentContainer(this, NewInformation.$sourceName, ReceiveMessage.$generatesName);
     this.source = source
   }
 
   override duplicate(): NewInformation {
-    return new NewInformation(this.source, 'Copy of ' + this.message, this.isInstruction, this.position, [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
+    return new NewInformation(this.source, 'Copy of ' + this.message, this.isInstruction, this.position, this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
   }
 
   override toJson(): NewInformationJson {
@@ -346,7 +345,7 @@ export class NewInformation extends Information {
     //todo
     let dummyRec = new ReceiveMessage(0)
 
-    return new NewInformation(dummyRec, json.message, json.isInstruction, json.position, [], [], json.initialTrust, json.currentTrust, json.feltTrustImmediately, json.feltTrustAfterwards, ref)
+    return new NewInformation(dummyRec, json.message, json.isInstruction, json.position, json.initialTrust, json.currentTrust, json.feltTrustImmediately, json.feltTrustAfterwards, ref)
   }
 
 }
