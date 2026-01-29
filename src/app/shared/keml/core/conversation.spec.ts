@@ -19,7 +19,7 @@ describe('Conversation', () => {
   it('verify that refs are correctly set for toJson: should serialize a conversation with missing or wrong refs correctly', () => {
     let conv = new Conversation();
     conv.title = "Change conv"
-    let cp0 = new ConversationPartner('NewPartner', 0, {$ref: 'wrong', eClass: 'wronger'});
+    let cp0 = new ConversationPartner({$ref: 'wrong', eClass: 'wronger'}, 'NewPartner', 0);
     conv.addCP(cp0)
     expect(cp0.getRef().$ref).toEqual('wrong')
     let author = new Author();

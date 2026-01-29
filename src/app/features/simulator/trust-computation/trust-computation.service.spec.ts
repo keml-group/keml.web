@@ -59,7 +59,7 @@ describe('TrustComputationService', () => {
   )
 
   it('should compute the repetition score of a single node correctly', () => {
-    let cp = new ConversationPartner('cp')
+    let cp = new ConversationPartner(undefined, 'cp')
     let r1 = new ReceiveMessage(cp, 1)
     let r2 = new ReceiveMessage(cp, 3)
     let info = new Preknowledge('info')
@@ -71,8 +71,8 @@ describe('TrustComputationService', () => {
   })
 
   it('should determineInitialTrustForInfo correctly', () => {
-    let cp0 = new ConversationPartner('0')
-    let cp1 = new ConversationPartner('1')
+    let cp0 = new ConversationPartner(undefined, '0')
+    let cp1 = new ConversationPartner(undefined, '1')
     let r1 = new ReceiveMessage(cp0, 1)
     let r2 = new ReceiveMessage(cp1, 2)
     let newInfo1 = new NewInformation(r1, 'm1')
@@ -200,8 +200,8 @@ describe('TrustComputationService', () => {
       false, undefined, undefined, undefined,
       0.5, 0 )
 
-    let cp0 = new ConversationPartner('cp0')
-    let cp1 = new ConversationPartner('cp1')
+    let cp0 = new ConversationPartner(undefined, 'cp0')
+    let cp1 = new ConversationPartner(undefined, 'cp1')
     let cps = [cp0, cp1]
 
     let rec0 = new ReceiveMessage(cp0, 0, 'm0')

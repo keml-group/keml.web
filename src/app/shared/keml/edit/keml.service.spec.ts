@@ -29,7 +29,7 @@ describe('KEML-Service', () => {
   });
 
   it('should determine if a repetition is allowed', () => {
-    let cp = new ConversationPartner('cp')
+    let cp = new ConversationPartner(undefined, 'cp')
     let rec = new ReceiveMessage(cp, 5)
     let newInfo = new NewInformation(rec, 'info1')
     let pre0 = new Preknowledge('pre0')
@@ -93,8 +93,8 @@ describe('KEML-Service', () => {
       "  }, {\n" +
       "    \"name\" : \"Other\"\n" +
       "  } ]"
-    let cp0 = new ConversationPartner('LLM', 300, RefHandler.createRef('//@conversationPartners.0', 'http://www.unikoblenz.de/keml#//ConversationPartner'))
-    let cp1 = new ConversationPartner('Other', 450, RefHandler.createRef('//@conversationPartners.1', 'http://www.unikoblenz.de/keml#//ConversationPartner'))
+    let cp0 = new ConversationPartner(RefHandler.createRef('//@conversationPartners.0', 'http://www.unikoblenz.de/keml#//ConversationPartner'), 'LLM', 300)
+    let cp1 = new ConversationPartner(RefHandler.createRef('//@conversationPartners.1', 'http://www.unikoblenz.de/keml#//ConversationPartner'), 'Other', 450)
     let cps = [cp0, cp1]
 
     let preknowledgeStr =
@@ -377,7 +377,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
   })
 
   it("should not call history on cp isMoveDisabled", () => {
-    let cp = new ConversationPartner("cp")
+    let cp = new ConversationPartner(undefined, "cp")
     expect(historyStub.save).toHaveBeenCalledTimes(0)
     kemlService.isMoveConversationPartnerLeftDisabled(cp)
     expect(historyStub.save).toHaveBeenCalledTimes(0)

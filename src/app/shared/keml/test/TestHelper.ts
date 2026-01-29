@@ -10,12 +10,12 @@ import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 
 export function newRec(): ReceiveMessage {
   const cp = new ConversationPartner()
-  return new ReceiveMessage(cp, 4)
+    return new ReceiveMessage(cp, 4)
 }
 
 export function newSend(): SendMessage {
   const cp = new ConversationPartner()
-  return new SendMessage(cp, 3)
+    return new SendMessage(cp, 3)
 }
 
 export function newNewInfo(): NewInformation {

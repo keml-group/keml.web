@@ -9,8 +9,8 @@ import {Conversation} from "@app/shared/keml/core/conversation";
 
 describe("Msg-models", () => {
   it('should set a message counterpart correctly', () => {
-    let cp0 = new ConversationPartner('cp0')
-    let cp1 = new ConversationPartner('cp1')
+    let cp0 = new ConversationPartner(undefined, 'cp0')
+    let cp1 = new ConversationPartner(undefined, 'cp1')
     let rec = new ReceiveMessage(cp0, 1, 'msg')
     expect(rec.counterPart).toEqual(cp0)
     rec.counterPart = cp1
@@ -58,7 +58,7 @@ describe('Info (models)', () => {
   })
 
   it('should determine the correct timing of a new info', () => {
-    let cp = new ConversationPartner('cp')
+    let cp = new ConversationPartner(undefined, 'cp')
     let rec = new ReceiveMessage(cp, 5)
     let newInfo = new NewInformation(rec, 'info1')
     expect(newInfo.getTiming()).toEqual(5)
@@ -70,7 +70,7 @@ describe('Info (models)', () => {
   it('should determine the correct timing of a preknowledge', () => {
     let pre0 = new Preknowledge('pre0')
     expect(pre0.getTiming()).toEqual(0)
-    let cp = new ConversationPartner('cp')
+    let cp = new ConversationPartner(undefined, 'cp')
     let send = new SendMessage(cp, 4)
     pre0.addIsUsedOn(send)
     expect(pre0.getTiming()).toEqual(4)
@@ -120,7 +120,7 @@ describe('Info (models)', () => {
   });
 
   it('should delete a "used on" on an info', () => {
-    let cp = new ConversationPartner('cp')
+    let cp = new ConversationPartner(undefined, 'cp')
     let m0 = new ReceiveMessage(cp, 1, "receive1")
     let m1 = new SendMessage(cp, 1, "send1")
 
@@ -140,7 +140,7 @@ describe('Info (models)', () => {
   })
 
   it('should delete a "repeated by" on an info', () => {
-    let cp = new ConversationPartner('cp')
+    let cp = new ConversationPartner(undefined, 'cp')
     let m0 = new ReceiveMessage(cp, 0, "receive0")
     let m1 = new ReceiveMessage(cp, 1, "receive1")
 

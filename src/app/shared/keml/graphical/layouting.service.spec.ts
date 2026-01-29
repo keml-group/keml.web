@@ -17,8 +17,8 @@ describe('LayoutingService', () => {
   });
 
   it('should positionPreknowledge correctly', () => {
-    let cp = new ConversationPartner('cp0')
-    let s1 = new SendMessage(cp, 1, 's1')
+    let cp = new ConversationPartner(undefined, 'cp0')
+      let s1 = new SendMessage(cp, 1, 's1')
     let s1BB = LayoutingService.bbForPreknowledge(LayoutingService.computeMessageY(1))
     let s2 = new SendMessage(cp, 2, 's2')
     let s2BB = LayoutingService.bbForPreknowledge(LayoutingService.computeMessageY(2))

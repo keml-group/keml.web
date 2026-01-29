@@ -118,10 +118,7 @@ export class KemlService {
 
   addNewConversationPartnerNoHistory(name?: string): ConversationPartner {
     const cps = this.conversation.conversationPartners;
-    const cp: ConversationPartner = new ConversationPartner(
-      name? name : 'New Partner',
-      this.layoutingService.nextConversationPartnerPosition(cps[cps.length-1]?.xPosition), //todo
-    );
+    const cp: ConversationPartner = new ConversationPartner(undefined, name ? name : 'New Partner', this.layoutingService.nextConversationPartnerPosition(cps[cps.length - 1]?.xPosition));
     cps.push(cp);
     this.cpCount.update(n => n+1)
     return cp;
@@ -178,10 +175,7 @@ export class KemlService {
   duplicateConversationPartner(cp: ConversationPartner): ConversationPartner {
     const cps = this.conversation.conversationPartners;
     const pos = cps.indexOf(cp);
-    const newCp: ConversationPartner = new ConversationPartner(
-      'Duplicate of '+ cp.name,
-      0 //todo how would we later compute a good position?
-    )
+    const newCp: ConversationPartner = new ConversationPartner(undefined, 'Duplicate of ' + cp.name, 0)
     cps.splice(pos+1, 0, newCp);
     this.layoutingService.positionConversationPartners(cps); // complete re-positioning
     this.cpCount.update(n => n+1);
