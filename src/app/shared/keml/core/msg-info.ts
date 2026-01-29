@@ -9,6 +9,7 @@ import {
 } from "@app/shared/keml/json/knowledge-models";
 import {EClasses} from "@app/shared/keml/eclasses";
 import {
+  attribute,
   Ref,
   Referencable,
   RefHandler,
@@ -32,8 +33,11 @@ export abstract class Message extends Referencable {
     this._counterPart.add(value);
   }
 
+  @attribute
   timing: number;
+  @attribute
   content: string;
+  @attribute
   originalContent?: string;
 
   protected constructor(
@@ -153,6 +157,7 @@ export class ReceiveMessage extends Message {
     return this._repeats.remove(info);
   }
 
+  @attribute
   isInterrupted: boolean = false;
 
   constructor(
@@ -189,7 +194,9 @@ export class ReceiveMessage extends Message {
   }
 
   static fromJson(json: ReceiveMessageJson, ref: Ref): ReceiveMessage {
-    return new ReceiveMessage(json.timing, json.content, json.originalContent, false, ref)
+    const rec = new ReceiveMessage(0, "", "", false, ref)
+    rec.fill(json)
+    return rec//new ReceiveMessage(json.timing, json.content, json.originalContent, false, ref)
   }
 
 }
