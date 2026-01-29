@@ -6,9 +6,9 @@ import {MatIcon} from "@angular/material/icon";
 import {NO_ERRORS_SCHEMA} from "@angular/core";
 import {KemlService} from "@app/shared/keml/edit/keml.service";
 import {DetailsService} from "@app/features/editor/details/details.service";
-import {Preknowledge} from "@app/shared/keml/core/msg-info";
+import {Preknowledge, ReceiveMessage} from "@app/shared/keml/core/msg-info";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
-import {newNewInfo, newRec} from "@app/shared/keml/test/TestHelper"
+import {newNewInfo} from "@app/shared/keml/test/TestHelper"
 import {Conversation} from "@app/shared/keml/core/conversation";
 
 describe('EditorComponent', () => {
@@ -68,7 +68,7 @@ describe('EditorComponent', () => {
   })
 
   it('should open details after message creation', () => {
-    const fakeMsg = newRec();
+    const fakeMsg = new ReceiveMessage(4);
     kemlService.addNewMessage.and.returnValue(fakeMsg);
     component.addMessage(true)
     expect(kemlService.addNewMessage).toHaveBeenCalled();

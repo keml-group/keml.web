@@ -32,19 +32,19 @@ export abstract class Message extends Referencable {
     this._counterPart.add(value);
   }
 
-  timing: number = 0;
+  timing: number;
   content: string;
   originalContent?: string;
 
   protected constructor(
     ref: Ref,
-    timing?: number,
-    content?: string,
+    timing: number=0,
+    content: string="",
     originalContent?: string,
   ) {
     super(ref);
-    if(timing) this.timing = timing;
-    this.content = content? content: "";
+    this.timing = timing;
+    this.content = content;
     this.originalContent = originalContent;
   }
 
@@ -96,7 +96,7 @@ export class SendMessage extends Message {
     ref?: Ref,
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.SendMessage, ref)
-    super(refC, timing? timing:0, content, originalContent);
+    super(refC, timing, content, originalContent);
     this._uses  = new ReLinkListContainer<Information>(this, SendMessage.$usesName, Information.$isUsedOnName);
   }
 
@@ -153,13 +153,13 @@ export class ReceiveMessage extends Message {
 
   constructor(
     timing: number,
-    content?: string,
+    content: string="New receive content",
     originalContent?: string,
     isInterrupted: boolean = false,
     ref?: Ref,
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.ReceiveMessage, ref)
-    super(refC, timing, content ? content : "New receive content", originalContent);
+    super(refC, timing, content, originalContent);
     this._generates = new ReTreeListContainer<NewInformation>(this, ReceiveMessage.$generatesName, NewInformation.$sourceName, EClasses.NewInformation);
     this._repeats = new ReLinkListContainer<Information>(this, ReceiveMessage.$repeatsName, Information.$repeatedByName);
     this.isInterrupted = isInterrupted;
