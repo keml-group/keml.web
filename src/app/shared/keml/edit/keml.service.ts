@@ -336,18 +336,16 @@ export class KemlService {
   }
 
   getReceives() {
-    return this.conversation.author.messages.filter(msg => !msg.isSend())
-      .map(msg => msg as ReceiveMessage)
+    return this.conversation.author.messages.filter(msg => msg.isReceive())
   }
 
   getFirstReceive(): ReceiveMessage | undefined {
     const msgs = this.conversation.author.messages;
-    return (msgs.find(m => !m.isSend()) as ReceiveMessage)
+    return (msgs.find(m => m.isReceive()))
   }
 
   getSends(): SendMessage[] {
     return this.conversation.author.messages.filter(msg => msg.isSend())
-      .map(msg => msg as SendMessage)
   }
 
   static isRepetitionAllowed(msg: ReceiveMessage, info: Information): boolean {

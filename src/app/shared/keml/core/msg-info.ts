@@ -52,8 +52,12 @@ export abstract class Message extends Referencable {
     return eClass.endsWith("SendMessage");
   }
 
-  isSend(): boolean {
-    return Message.isSend(this.ref.eClass);
+  isSend(): this is SendMessage {
+    return this instanceof SendMessage
+  }
+
+  isReceive(): this is ReceiveMessage {
+    return this instanceof ReceiveMessage
   }
 
   override toJson(): MessageJson {
@@ -185,7 +189,6 @@ export class ReceiveMessage extends Message {
   }
 
   static fromJson(json: ReceiveMessageJson, ref: Ref): ReceiveMessage {
-    //todo
     return new ReceiveMessage(json.timing, json.content, json.originalContent, false, ref)
   }
 
