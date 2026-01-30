@@ -134,7 +134,7 @@ export class IncrementalSimulationService {
     info.causes.map(link => {
       let src = this.infoConnections.get(info.gId)
       let tar = this.infoConnections.get(link.target.gId)
-      new InformationLink(src!, tar!, link.type, link.linkText)
+      InformationLink.create(src!, tar!, link.type, link.linkText)
     })
   }
 

@@ -35,7 +35,7 @@ describe('Conversation', () => {
     let n0 = new NewInformation(m1, 'rec')
     expect(n0.getRef().$ref).toEqual('');
 
-    new InformationLink(n0, p0, InformationLinkType.STRONG_ATTACK)
+    InformationLink.create(n0, p0, InformationLinkType.STRONG_ATTACK)
 
     // serialization:
     let convJson = conv.toJson()

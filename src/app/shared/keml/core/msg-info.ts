@@ -20,6 +20,7 @@ import {
 } from "emfular";
 
 import {BoundingBox, Positionable, PositionHelper} from "ngx-svg-graphics";
+import {Author} from "@app/shared/keml/core/author";
 
 
 export abstract class Message extends Referencable {
@@ -412,34 +413,16 @@ export class InformationLink extends Referencable {
     this._target.add(target);
   }
 
-  private _type: InformationLinkType = InformationLinkType.SUPPLEMENT;
-  get type(): InformationLinkType {
-    return this._type;
-  }
-  set type(type: InformationLinkType) {
-    this._type = type;
-  }
+  @attribute({default: InformationLinkType.SUPPLEMENT})
+  type: InformationLinkType = InformationLinkType.SUPPLEMENT;
+  @attribute()
+  linkText?: string;
 
-  private _linkText?: string;
-  get linkText(): string | undefined {
-    return this._linkText;
-  }
-  set linkText(linkText: string | undefined) {
-    this._linkText = linkText;
-  }
-
-  constructor(source: Information, target: Information, type: InformationLinkType, linkText?: string,
-              ref?: Ref,
-  ) {
+  constructor(ref?: Ref) {
     let refC = RefHandler.createRefIfMissing(EClasses.InformationLink, ref)
     super(refC);
     this._source = new ReTreeParentContainer<Information>(this, InformationLink.$sourceName, NewInformation.$causesName);
     this._target = new ReLinkSingleContainer<Information>(this, InformationLink.$targetName, Information.$targetedByName);
-
-    this.source = source;
-    this.target = target;
-    this.type = type;
-    this.linkText = linkText;
   }
 
   override toJson(): InformationLinkJson {
@@ -452,11 +435,22 @@ export class InformationLink extends Referencable {
     }
   }
 
+  static create(source: Information, target: Information, type: InformationLinkType, linkText?: string,
+                ref?: Ref,): InformationLink {
+    const link = new InformationLink(ref)
+    link.source = source
+    link.target = target;
+    link.type = type
+    link.linkText = linkText
+    return link
+  }
+
   static fromJson( json: InformationLinkJson, ref: Ref): InformationLink {
-    //todo
-    let dummySrc = new Preknowledge()
-    let dummyTar = new Preknowledge()
-    return new InformationLink(dummySrc, dummyTar, json.type, json.linkText, ref)
+    let res = new InformationLink( ref)
+    res.fill(json)
+    //res.type = json.type
+    //res.linkText = json.linkText
+    return res
   }
 
 }

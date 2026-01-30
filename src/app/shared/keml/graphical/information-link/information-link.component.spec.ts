@@ -21,7 +21,7 @@ describe('InformationLinkComponent', () => {
 
     let info1 = new Preknowledge()
     let info2 = new Preknowledge()
-    component.infoLink = new InformationLink(info1, info2, InformationLinkType.STRONG_SUPPORT)
+    component.infoLink = InformationLink.create(info1, info2, InformationLinkType.STRONG_SUPPORT)
     fixture.detectChanges();
   });
 

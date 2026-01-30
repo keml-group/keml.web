@@ -168,7 +168,7 @@ describe('Info (models)', () => {
     let preknowledge2 = new Preknowledge('Preknowledge2')
 
     // ***** candidates **********
-    let infoLink_new_new = new InformationLink(newInfo1, newInfo2, InformationLinkType.SUPPLEMENT, 'text')
+    let infoLink_new_new = InformationLink.create(newInfo1, newInfo2, InformationLinkType.SUPPLEMENT, 'text')
     let infoLink_new_new_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
       linkText: "text",
@@ -178,7 +178,7 @@ describe('Info (models)', () => {
     }
     expect(infoLink_new_new.toJson()).toEqual(infoLink_new_new_Json);
 
-    let infoLink_new_pre = new InformationLink(newInfo1, preknowledge1, InformationLinkType.STRONG_ATTACK, 'text')
+    let infoLink_new_pre = InformationLink.create(newInfo1, preknowledge1, InformationLinkType.STRONG_ATTACK, 'text')
     let infoLink_new_pre_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
       linkText: "text",
@@ -188,7 +188,7 @@ describe('Info (models)', () => {
     }
     expect(infoLink_new_pre.toJson()).toEqual(infoLink_new_pre_Json);
 
-    let infoLink_pre_new = new InformationLink(preknowledge1, newInfo1, InformationLinkType.SUPPORT)
+    let infoLink_pre_new = InformationLink.create(preknowledge1, newInfo1, InformationLinkType.SUPPORT)
     let infoLink_pre_new_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
       linkText: undefined,
@@ -198,7 +198,7 @@ describe('Info (models)', () => {
     }
     expect(infoLink_pre_new.toJson()).toEqual(infoLink_pre_new_Json);
 
-    let infoLink_pre_pre = new InformationLink(preknowledge1, preknowledge2, InformationLinkType.STRONG_SUPPORT)
+    let infoLink_pre_pre = InformationLink.create(preknowledge1, preknowledge2, InformationLinkType.STRONG_SUPPORT)
     let infoLink_pre_pre_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
       linkText: undefined,
@@ -208,7 +208,7 @@ describe('Info (models)', () => {
     }
     expect(infoLink_pre_pre.toJson()).toEqual(infoLink_pre_pre_Json);
 
-    let infoLink_pre_pre_2 = new InformationLink(preknowledge1, preknowledge2, InformationLinkType.ATTACK)
+    let infoLink_pre_pre_2 = InformationLink.create(preknowledge1, preknowledge2, InformationLinkType.ATTACK)
     let infoLink_pre_pre_2_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
       linkText: undefined,
@@ -222,7 +222,7 @@ describe('Info (models)', () => {
   it('should delete an info link completely', () => {
     let p0 = new Preknowledge('p0')
     let p1 = new Preknowledge('p1')
-    let link = new InformationLink(p1, p0, InformationLinkType.SUPPORT)
+    let link = InformationLink.create(p1, p0, InformationLinkType.SUPPORT)
 
     expect(p0.targetedBy.length).toEqual(1)
     link.destruct()
@@ -234,8 +234,8 @@ describe('Info (models)', () => {
     let p1 = new Preknowledge('p1')
     let p2 = new Preknowledge('p2')
 
-    let link1 = new InformationLink( p0, p1, InformationLinkType.SUPPORT)
-    let link2 = new InformationLink( p0, p2, InformationLinkType.SUPPLEMENT)
+    let link1 = InformationLink.create( p0, p1, InformationLinkType.SUPPORT)
+    let link2 = InformationLink.create( p0, p2, InformationLinkType.SUPPLEMENT)
     expect(p0.causes.length).toEqual(2)
     expect(p1.targetedBy.length).toEqual(1)
     expect(p2.targetedBy.length).toEqual(1)
@@ -251,8 +251,8 @@ describe('Info (models)', () => {
     let p0 = new Preknowledge('p0')
     let p1 = new Preknowledge('p1')
     let p2 = new Preknowledge('p2')
-    let link1 = new InformationLink(p1, p0, InformationLinkType.SUPPORT)
-    let link2 = new InformationLink(p2, p0, InformationLinkType.SUPPLEMENT)
+    let link1 = InformationLink.create(p1, p0, InformationLinkType.SUPPORT)
+    let link2 = InformationLink.create(p2, p0, InformationLinkType.SUPPLEMENT)
     expect(p0.targetedBy.length).toEqual(2)
     expect(p1.causes.length).toEqual(1)
     expect(p2.causes.length).toEqual(1)

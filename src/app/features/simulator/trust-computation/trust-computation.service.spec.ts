@@ -33,8 +33,8 @@ describe('TrustComputationService', () => {
   })
 
   it('should compute the score of a single Link correctly', () => {
-      let l0 = new InformationLink(p2, p0, InformationLinkType.STRONG_ATTACK)
-      //let l1 = new InformationLink(p1, p0, InformationLinkType.SUPPORT)
+      let l0 = InformationLink.create(p2, p0, InformationLinkType.STRONG_ATTACK)
+      //let l1 = InformationLink.create(p1, p0, InformationLinkType.SUPPORT)
       expect(service.score(l0)).toEqual(undefined)
       p2.currentTrust = 0.5
       expect(service.score(l0)).toEqual(-0.5)
@@ -46,8 +46,8 @@ describe('TrustComputationService', () => {
   )
 
   it('should compute the argumentation score of a single node correctly', () => {
-      new InformationLink(p2, p0, InformationLinkType.ATTACK)
-      new InformationLink(p1, p0, InformationLinkType.STRONG_SUPPORT)
+      InformationLink.create(p2, p0, InformationLinkType.ATTACK)
+      InformationLink.create(p1, p0, InformationLinkType.STRONG_SUPPORT)
       expect(service.computeArgumentationScore(p1)).toEqual(0)
       expect(service.computeArgumentationScore(p2)).toEqual(0)
       expect(service.computeArgumentationScore(p0)).toEqual(undefined)
@@ -110,8 +110,8 @@ describe('TrustComputationService', () => {
 
   it('should evaluate a single node correctly', () => {
     let simInputs: TrustFallbacks = new TrustFallbacks()
-    new InformationLink(p2, p0, InformationLinkType.STRONG_ATTACK)
-    new InformationLink(p1, p0, InformationLinkType.SUPPORT)
+    InformationLink.create(p2, p0, InformationLinkType.STRONG_ATTACK)
+    InformationLink.create(p1, p0, InformationLinkType.SUPPORT)
     expect(service.computeTrust(p0, recLength, simInputs)).toEqual(undefined)
     expect(service.computeTrust(p1, recLength, simInputs)).toEqual(1.0)
     expect(service.computeTrust(p2, recLength, simInputs)).toEqual(1.0)
@@ -179,9 +179,9 @@ describe('TrustComputationService', () => {
   })
 
   it('should throw an error when evaluating a cycle', () => {
-    new InformationLink(p0, p1, InformationLinkType.SUPPORT)
-    new InformationLink(p1, p0, InformationLinkType.STRONG_ATTACK)
-    new InformationLink(p2, p1, InformationLinkType.STRONG_ATTACK)
+    InformationLink.create(p0, p1, InformationLinkType.SUPPORT)
+    InformationLink.create(p1, p0, InformationLinkType.STRONG_ATTACK)
+    InformationLink.create(p2, p1, InformationLinkType.STRONG_ATTACK)
     let conv = Conversation.create('cycle')
     conv.author.addPreknowledge(p0, p1, p2)
     expect(() => service.computeCurrentTrusts(conv, new TrustFallbacks())).toThrow(Error('Endless loops of 2 nodes - please check the InformationLinks'))
@@ -262,9 +262,9 @@ describe('TrustComputationService', () => {
     verify()
 
     // add info links
-    new InformationLink(pre2, pre0, InformationLinkType.STRONG_ATTACK)
-    new InformationLink(info1, pre0, InformationLinkType.SUPPORT)
-    new InformationLink(info2, pre2, InformationLinkType.STRONG_SUPPORT)
+    InformationLink.create(pre2, pre0, InformationLinkType.STRONG_ATTACK)
+    InformationLink.create(info1, pre0, InformationLinkType.SUPPORT)
+    InformationLink.create(info2, pre2, InformationLinkType.STRONG_SUPPORT)
 
     expectations.set(pre2, 1)
     expectations.set(pre0, -0.5)
@@ -274,7 +274,7 @@ describe('TrustComputationService', () => {
   it('should show that the case of 0 receives is handled correctly', () => {
     let conv = new Conversation()
     conv.author.addPreknowledge(p0, p1)
-    new InformationLink(p0, p1, InformationLinkType.ATTACK)
+    InformationLink.create(p0, p1, InformationLinkType.ATTACK)
     service.computeCurrentTrusts(conv, new TrustFallbacks())
     expect(p0.currentTrust).toEqual(1.0)
     expect(p1.currentTrust).toEqual(0)

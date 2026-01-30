@@ -476,7 +476,7 @@ export class KemlService {
   }
 
   addInformationLink(src: Information, target: Information, type: InformationLinkType = InformationLinkType.SUPPLEMENT, text?: string): InformationLink {
-    let link = new InformationLink(src, target, type, text);
+    let link = InformationLink.create(src, target, type, text);
     this.saveCurrentState()
     return link
   }
@@ -489,7 +489,7 @@ export class KemlService {
   }
 
   duplicateLink(link: InformationLink): InformationLink {
-    let newlink = new InformationLink(link.source, link.target, link.type, link.linkText)
+    let newlink = InformationLink.create(link.source, link.target, link.type, link.linkText)
     this.saveCurrentState()
     return newlink;
   }
