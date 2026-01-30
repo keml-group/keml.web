@@ -413,7 +413,7 @@ export class InformationLink extends Referencable {
     this._target.add(target);
   }
 
-  @attribute({default: InformationLinkType.SUPPLEMENT})
+  @attribute()
   type: InformationLinkType = InformationLinkType.SUPPLEMENT;
   @attribute()
   linkText?: string;
@@ -448,8 +448,6 @@ export class InformationLink extends Referencable {
   static fromJson( json: InformationLinkJson, ref: Ref): InformationLink {
     let res = new InformationLink( ref)
     res.fill(json)
-    //res.type = json.type
-    //res.linkText = json.linkText
     return res
   }
 

@@ -74,7 +74,6 @@ export class KemlService {
 
   private deserializeConversation(convJson: ConversationJson): Conversation {
     JsonFixer.prepareJsonInfoLinkSources(convJson);
-    JsonFixer.addMissingSupplementType(convJson);
 
     let conv = Conversation.fromJSON(convJson);
     this.layoutingService.positionConversationPartners(conv.conversationPartners)

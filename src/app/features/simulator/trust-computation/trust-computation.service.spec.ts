@@ -284,7 +284,6 @@ describe('TrustComputationService', () => {
     let json = require('@assets/test/3-2-fromTrustComp.json')
     let convJson: ConversationJson = json as ConversationJson;
     JsonFixer.prepareJsonInfoLinkSources(convJson);
-    JsonFixer.addMissingSupplementType(convJson);
     let conv = Conversation.fromJSON(convJson)
     service.computeCurrentTrusts(conv, new TrustFallbacks())
     expect(conv.author.preknowledge[0].currentTrust).toEqual(1.0)

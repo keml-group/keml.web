@@ -320,7 +320,6 @@ describe('deserialize and re-serialize', () => {
     let json = require('@assets/test/3-2-keml-jackson.json');
     let convJson: ConversationJson = json as ConversationJson
     JsonFixer.prepareJsonInfoLinkSources(convJson);
-    JsonFixer.addMissingSupplementType(convJson);
     let conv = Conversation.fromJSON(convJson)
     let convJson2 = conv.toJson()
 
