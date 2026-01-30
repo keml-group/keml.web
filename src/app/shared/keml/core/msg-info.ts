@@ -20,7 +20,6 @@ import {
 } from "emfular";
 
 import {BoundingBox, Positionable, PositionHelper} from "ngx-svg-graphics";
-import {Author} from "@app/shared/keml/core/author";
 
 
 export abstract class Message extends Referencable {
