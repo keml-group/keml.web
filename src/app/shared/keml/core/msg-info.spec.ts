@@ -119,7 +119,7 @@ describe('Info (models)', () => {
 
   it('should delete a "used on" on an info', () => {
     let m0 = new ReceiveMessage(undefined, 1, "receive1")
-    let m1 = new SendMessage(1, "send1")
+    let m1 = new SendMessage(undefined, 1, "send1")
 
     let i0 = new Preknowledge('pre0')
     let i1 = new NewInformation(m0, 'i1', false)

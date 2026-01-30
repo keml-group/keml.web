@@ -34,7 +34,7 @@ describe('KEML-Service', () => {
     let newInfo = new NewInformation(rec, 'info1')
     let pre0 = new Preknowledge('pre0')
     let pre1 = new Preknowledge('pre1')
-    let send3 = new SendMessage(3)
+    let send3 = new SendMessage(undefined, 3)
     pre0.addIsUsedOn(send3)
     expect(KemlService.isRepetitionAllowed(rec, newInfo)).toBe(false)
     expect(KemlService.isRepetitionAllowed(rec, pre1)).toBe(true)

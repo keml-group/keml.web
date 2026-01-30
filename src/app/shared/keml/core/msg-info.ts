@@ -98,10 +98,10 @@ export class SendMessage extends Message {
   }
 
   constructor(
+    ref?: Ref,
     timing?: number,
     content: string = 'New send content',
     originalContent?: string,
-    ref?: Ref,
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.SendMessage, ref)
     super(refC, timing, content, originalContent);
@@ -120,16 +120,15 @@ export class SendMessage extends Message {
                 originalContent?: string,
                 ref?: Ref,
                 ): SendMessage {
-    const send = new SendMessage(timing, content, originalContent, ref);
+    const send = new SendMessage(ref, timing, content, originalContent);
     send.counterPart = counterPart;
     return send;
   }
 
   static fromJson(json: SendMessageJson, ref: Ref): SendMessage {
-    return new SendMessage(
-      json.timing, json.content, json.originalContent,
-      ref
-    )
+    const send = new SendMessage(ref)
+    send.fill(json)
+    return send;
   }
 
 }
@@ -196,7 +195,7 @@ export class ReceiveMessage extends Message {
   static fromJson(json: ReceiveMessageJson, ref: Ref): ReceiveMessage {
     const rec = new ReceiveMessage(ref)
     rec.fill(json)
-    return rec//new ReceiveMessage(json.timing, json.content, json.originalContent, false, ref)
+    return rec
   }
 
 }
