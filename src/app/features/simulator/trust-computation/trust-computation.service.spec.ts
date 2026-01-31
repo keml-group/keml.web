@@ -75,8 +75,8 @@ describe('TrustComputationService', () => {
     let cp1 = new ConversationPartner(undefined, '1')
     let r1 = ReceiveMessage.create(cp0, 1)
     let r2 = ReceiveMessage.create(cp1, 2)
-    let newInfo1 = new NewInformation(r1, 'm1')
-    let newInfo2 = new NewInformation(r2, 'm2')
+    let newInfo1 = NewInformation.create(r1, 'm1')
+    let newInfo2 = NewInformation.create(r2, 'm2')
     let simInputs: TrustFallbacks = new TrustFallbacks()
     // no entries, hence real defaults should be used:
     expect(
@@ -246,10 +246,10 @@ describe('TrustComputationService', () => {
     verify()
 
     // add new infos:
-    let info0 = new NewInformation(rec0, 'n0')
-    let info1 = new NewInformation(rec0, 'n1')
-    let info2 = new NewInformation(rec2, 'n2')
-    let info3 = new NewInformation(rec3, 'n3')
+    let info0 = NewInformation.create(rec0, 'n0')
+    let info1 = NewInformation.create(rec0, 'n1')
+    let info2 = NewInformation.create(rec2, 'n2')
+    let info3 = NewInformation.create(rec3, 'n3')
 
     addRep(info0, rec1)
     addRep(info0, rec3)

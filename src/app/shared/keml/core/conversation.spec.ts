@@ -32,7 +32,7 @@ describe('Conversation', () => {
     let p0 = new Preknowledge()
     conv.author.addPreknowledge(p0)
     expect(p0.getRef().$ref).toEqual('');
-    let n0 = new NewInformation(m1, 'rec')
+    let n0 = NewInformation.create(m1, 'rec')
     expect(n0.getRef().$ref).toEqual('');
 
     InformationLink.create(n0, p0, InformationLinkType.STRONG_ATTACK)

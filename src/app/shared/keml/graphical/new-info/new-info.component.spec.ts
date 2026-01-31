@@ -20,7 +20,7 @@ describe('NewInfoComponent', () => {
     component = fixture.componentInstance;
 
     let srcMsg = ReceiveMessage.create(new ConversationPartner(), 0,'msg')
-    component.info = new NewInformation(srcMsg, 'info')
+    component.info = NewInformation.create(srcMsg, 'info')
 
     fixture.detectChanges();
   });

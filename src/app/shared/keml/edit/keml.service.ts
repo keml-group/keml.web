@@ -413,7 +413,7 @@ export class KemlService {
   addNewNewInfo(causeMsg?: ReceiveMessage): NewInformation | undefined {
     const source = causeMsg? causeMsg : this.getFirstReceive()
     if (source) {
-      const newInfo = new NewInformation(
+      const newInfo = NewInformation.create(
         source, 'New Information', false, LayoutingService.bbForNewInfo(source.generates.length)
       );
       this.historyService.save(this.conversation.toJson())

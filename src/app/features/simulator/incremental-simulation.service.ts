@@ -116,7 +116,7 @@ export class IncrementalSimulationService {
   }
 
   private copyNewInfo(newInfo: NewInformation): NewInformation {
-    let newNew = new NewInformation(
+    let newNew = NewInformation.create(
       (this.msgConnections.get(newInfo.source.gId) as ReceiveMessage)!,
       newInfo.message,
       newInfo.isInstruction,

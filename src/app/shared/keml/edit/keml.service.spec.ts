@@ -31,7 +31,7 @@ describe('KEML-Service', () => {
   it('should determine if a repetition is allowed', () => {
     let cp = new ConversationPartner(undefined, 'cp')
     let rec = ReceiveMessage.create(cp, 5)
-    let newInfo = new NewInformation(rec, 'info1')
+    let newInfo = NewInformation.create(rec, 'info1')
     let pre0 = new Preknowledge('pre0')
     let pre1 = new Preknowledge('pre1')
     let send3 = new SendMessage(undefined, 3)
@@ -184,10 +184,10 @@ describe('KEML-Service', () => {
       RefHandler.createRef('//@author/@messages.1', 'http://www.unikoblenz.de/keml#//ReceiveMessage')
     )
     let msgs: Message[] = [msg0, msg1]
-    let newInfo0 = new NewInformation(msg1, "ni0", true,
+    let newInfo0 = NewInformation.create(msg1, "ni0", true,
       undefined, undefined, undefined, 0.5, 0.5,
       RefHandler.createRef('//@author/@messages.1/@generates.0', 'http://www.unikoblenz.de/keml#//NewInformation'))
-    let newInfo1 = new NewInformation(msg1, "ni1",
+    let newInfo1 = NewInformation.create(msg1, "ni1",
       false,undefined, undefined, undefined, 0.5, 0.5,
       RefHandler.createRef('//@author/@messages.1/@generates.1', 'http://www.unikoblenz.de/keml#//NewInformation'))
 
@@ -587,8 +587,8 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     const m1: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "m1") as ReceiveMessage
     const m3: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "m3") as ReceiveMessage
 
-    let n0 = new NewInformation(m1, "i0")
-    let n1 = new NewInformation(m3, "i1")
+    let n0 = NewInformation.create(m1, "i0")
+    let n1 = NewInformation.create(m3, "i1")
 
     let convInit = kemlService.conversation
 
@@ -622,7 +622,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     const m3: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "m3") as ReceiveMessage
     const m4: SendMessage = kemlService.addNewMessageNoHistory(true, cp0, "m4") as SendMessage
 
-    let n1 = new NewInformation(m3, "i1")
+    let n1 = NewInformation.create(m3, "i1")
 
     let pre0 = new Preknowledge("pre0")
 
@@ -685,7 +685,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
 
     const msg1: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp, "rec1") as ReceiveMessage
     const msg2: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp, "rec2") as ReceiveMessage
-    let newInfo = new NewInformation(msg2, 'newInfo', false)
+    let newInfo = NewInformation.create(msg2, 'newInfo', false)
     expect(msg1.generates.length).toEqual(0)
     expect(msg2.generates.length).toEqual(1)
     expect(newInfo.source).toEqual(msg2)
@@ -768,7 +768,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     /*
     // since rec exists, call works:
     const rec2 = new ReceiveMessage(cp0, 5, "not contained")
-    const n1 = new NewInformation(rec2, "Not contained")
+    const n1 = NewInformation.create(rec2, "Not contained")
     expect(historyStub.save).toHaveBeenCalledTimes(4)
     kemlService.deleteInfo(n1)
     expect(historyStub.save).toHaveBeenCalledTimes(5)*/

@@ -59,7 +59,7 @@ describe('Info (models)', () => {
 
   it('should determine the correct timing of a new info', () => {
     let rec = new ReceiveMessage(undefined, 5)
-    let newInfo = new NewInformation(rec, 'info1')
+    let newInfo = NewInformation.create(rec, 'info1')
     expect(newInfo.getTiming()).toEqual(5)
     rec.timing = 0
     expect(newInfo.getTiming()).toEqual(0)
@@ -98,7 +98,7 @@ describe('Info (models)', () => {
 
   it('should serialize newInfo', () => {
     let msg = new ReceiveMessage(undefined, 1, "receiveContent")
-    let newInfo = new NewInformation(msg, 'New Info')
+    let newInfo = NewInformation.create(msg, 'New Info')
     let newInfoJson: NewInformationJson = {
       source: msg.getRef(),
       causes: [],
@@ -122,7 +122,7 @@ describe('Info (models)', () => {
     let m1 = new SendMessage(undefined, 1, "send1")
 
     let i0 = new Preknowledge('pre0')
-    let i1 = new NewInformation(m0, 'i1', false)
+    let i1 = NewInformation.create(m0, 'i1', false)
 
     i0.addIsUsedOn(m1);
     i1.addIsUsedOn(m1);
@@ -141,7 +141,7 @@ describe('Info (models)', () => {
     let m1 = new ReceiveMessage(undefined, 1, "receive1")
 
     let i0 = new Preknowledge('pre0')
-    let i1 = new NewInformation(m0, 'i1', false)
+    let i1 = NewInformation.create(m0, 'i1', false)
 
     i0.addRepeatedBy(m1);
     i1.addRepeatedBy(m1);
@@ -162,8 +162,8 @@ describe('Info (models)', () => {
 
   it('should serialize information links', () => {
     let msg = new ReceiveMessage(undefined, 1, "receiveContent")
-    let newInfo1 = new NewInformation(msg, 'New Info1')
-    let newInfo2 = new NewInformation(msg, 'New Info2')
+    let newInfo1 = NewInformation.create(msg, 'New Info1')
+    let newInfo2 = NewInformation.create(msg, 'New Info2')
     let preknowledge1 = new Preknowledge('Preknowledge1')
     let preknowledge2 = new Preknowledge('Preknowledge2')
 

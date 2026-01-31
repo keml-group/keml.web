@@ -203,8 +203,8 @@ export class ReceiveMessage extends Message {
 
 export abstract class Information extends Referencable implements Positionable {
 
-  message: string;
-  isInstruction: boolean;
+  message: string = "";
+  isInstruction: boolean = false;
   position: BoundingBox;
   initialTrust: number | undefined;
   currentTrust: number | undefined;
@@ -264,7 +264,7 @@ export abstract class Information extends Referencable implements Positionable {
 
   protected constructor(
     ref: Ref,
-    message: string, isInstruction: boolean = false, position?: BoundingBox,
+    message?: string, isInstruction: boolean = false, position?: BoundingBox,
     initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number, feltTrustAfterwards?: number,
   ) {
     super(ref);
@@ -273,13 +273,17 @@ export abstract class Information extends Referencable implements Positionable {
     this._targetedBy = new ReLinkListContainer<InformationLink>(this, Information.$targetedByName, InformationLink.$targetName)
     this._isUsedOn = new ReLinkListContainer<SendMessage>(this, 'isUsedOn', 'uses');
     this._repeatedBy = new ReLinkListContainer(this, NewInformation.$repeatedByName, ReceiveMessage.$repeatsName);
-    this.message = message;
+    if(message) this.message = message
     this.isInstruction = isInstruction;
-    this.position = position? position: PositionHelper.newBoundingBox();
+    this.position = Information.createBB(position);
     this.initialTrust = initialTrust;
     this.currentTrust = currentTrust;
     this.feltTrustImmediately = feltTrustImmediately;
     this.feltTrustAfterwards = feltTrustAfterwards;
+  }
+
+  static createBB(bb?: BoundingBox): BoundingBox {
+    return bb? bb : PositionHelper.newBoundingBox()
   }
 
   abstract duplicate(): Information;
@@ -323,19 +327,17 @@ export class NewInformation extends Information {
     return this.source.timing
   }
 
-  constructor(source: ReceiveMessage,
-              message: string, isInstruction: boolean = false, position?: BoundingBox,
-              initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number , feltTrustAfterwards?: number,
-              ref?: Ref,
+  constructor(ref?: Ref, message: string = "?", isInstruction: boolean = false,
+              position?: BoundingBox, initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number,
+              feltTrustAfterwards?: number,
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.NewInformation, ref)
     super(refC, message, isInstruction, position, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards);
     this._source = new ReTreeParentContainer(this, NewInformation.$sourceName, ReceiveMessage.$generatesName);
-    this.source = source
   }
 
   override duplicate(): NewInformation {
-    return new NewInformation(this.source, 'Copy of ' + this.message, this.isInstruction, this.position, this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
+    return NewInformation.create(this.source, 'Copy of ' + this.message, this.isInstruction, this.position, this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
   }
 
   override toJson(): NewInformationJson {
@@ -348,7 +350,23 @@ export class NewInformation extends Information {
     //todo
     let dummyRec = new ReceiveMessage(undefined, 0)
 
-    return new NewInformation(dummyRec, json.message, json.isInstruction, json.position, json.initialTrust, json.currentTrust, json.feltTrustImmediately, json.feltTrustAfterwards, ref)
+    return NewInformation.create(dummyRec, json.message, json.isInstruction, json.position, json.initialTrust, json.currentTrust, json.feltTrustImmediately, json.feltTrustAfterwards, ref)
+  }
+
+  static create(source: ReceiveMessage,
+         message: string, isInstruction: boolean = false, position?: BoundingBox,
+         initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number , feltTrustAfterwards?: number,
+         ref?: Ref,): NewInformation {
+    const info = new NewInformation(ref);
+    info.source = source;
+    info.message = message;
+    info.isInstruction = isInstruction;
+    info.position = Information.createBB(position);
+    info.initialTrust = initialTrust;
+    info.currentTrust = currentTrust;
+    info.feltTrustImmediately = feltTrustImmediately;
+    info.feltTrustAfterwards = feltTrustAfterwards;
+    return info;
   }
 
 }
