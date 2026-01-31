@@ -203,12 +203,19 @@ export class ReceiveMessage extends Message {
 
 export abstract class Information extends Referencable implements Positionable {
 
+  @attribute()
   message: string = "";
+  @attribute()
   isInstruction: boolean = false;
+  @attribute()
   position: BoundingBox;
+  @attribute()
   initialTrust: number | undefined;
+  @attribute()
   currentTrust: number | undefined;
+  @attribute()
   feltTrustImmediately: number | undefined;
+  @attribute()
   feltTrustAfterwards: number | undefined;
 
   abstract getTiming(): number;
@@ -327,12 +334,9 @@ export class NewInformation extends Information {
     return this.source.timing
   }
 
-  constructor(ref?: Ref, message: string = "?", isInstruction: boolean = false,
-              position?: BoundingBox, initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number,
-              feltTrustAfterwards?: number,
-  ) {
+  constructor(ref?: Ref) {
     let refC = RefHandler.createRefIfMissing(EClasses.NewInformation, ref)
-    super(refC, message, isInstruction, position, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards);
+    super(refC);
     this._source = new ReTreeParentContainer(this, NewInformation.$sourceName, ReceiveMessage.$generatesName);
   }
 
@@ -347,10 +351,9 @@ export class NewInformation extends Information {
   }
 
   static fromJson( json: NewInformationJson, ref: Ref): NewInformation {
-    //todo
-    let dummyRec = new ReceiveMessage(undefined, 0)
-
-    return NewInformation.create(dummyRec, json.message, json.isInstruction, json.position, json.initialTrust, json.currentTrust, json.feltTrustImmediately, json.feltTrustAfterwards, ref)
+    const newInfo = new NewInformation(ref)
+    newInfo.fill(json)
+    return newInfo
   }
 
   static create(source: ReceiveMessage,
