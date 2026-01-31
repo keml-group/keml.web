@@ -208,7 +208,7 @@ export abstract class Information extends Referencable implements Positionable {
   @attribute()
   isInstruction: boolean = false;
   @attribute()
-  position: BoundingBox;
+  position: BoundingBox = Information.createBB();
   @attribute()
   initialTrust: number | undefined;
   @attribute()
@@ -269,24 +269,13 @@ export abstract class Information extends Referencable implements Positionable {
     this._repeatedBy.remove(msg)
   }
 
-  protected constructor(
-    ref: Ref,
-    message?: string, isInstruction: boolean = false, position?: BoundingBox,
-    initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number, feltTrustAfterwards?: number,
-  ) {
+  protected constructor(ref: Ref) {
     super(ref);
 
     this._causes = new ReTreeListContainer<InformationLink>(this, NewInformation.$causesName, InformationLink.$sourceName, EClasses.InformationLink);
     this._targetedBy = new ReLinkListContainer<InformationLink>(this, Information.$targetedByName, InformationLink.$targetName)
     this._isUsedOn = new ReLinkListContainer<SendMessage>(this, 'isUsedOn', 'uses');
     this._repeatedBy = new ReLinkListContainer(this, NewInformation.$repeatedByName, ReceiveMessage.$repeatsName);
-    if(message) this.message = message
-    this.isInstruction = isInstruction;
-    this.position = Information.createBB(position);
-    this.initialTrust = initialTrust;
-    this.currentTrust = currentTrust;
-    this.feltTrustImmediately = feltTrustImmediately;
-    this.feltTrustAfterwards = feltTrustAfterwards;
   }
 
   static createBB(bb?: BoundingBox): BoundingBox {
