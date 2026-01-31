@@ -376,13 +376,9 @@ export class NewInformation extends Information {
 
 export class Preknowledge extends Information {
 
-  constructor(message: string = 'Preknowledge', isInstruction: boolean = false, position?: BoundingBox,
-              initialTrust?: number, currentTrust?: number,
-              feltTrustImmediately?: number, feltTrustAfterwards?: number,
-              ref?: Ref
-  ) {
+  constructor(ref?: Ref) {
     let refC = RefHandler.createRefIfMissing(EClasses.Preknowledge, ref)
-    super(refC, message, isInstruction, position, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards);
+    super(refC);
   }
 
   getTiming(): number {
@@ -396,7 +392,7 @@ export class Preknowledge extends Information {
   }
 
   override duplicate(): Preknowledge {
-    return new Preknowledge('Copy of ' + this.message, this.isInstruction, this.position, this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
+    return Preknowledge.create('Copy of ' + this.message, this.isInstruction, this.position, this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
   }
 
   override toJson(): PreknowledgeJson {
@@ -404,10 +400,24 @@ export class Preknowledge extends Information {
   }
 
   static fromJson( json: PreknowledgeJson, ref: Ref): Preknowledge {
-    return new Preknowledge(json.message, json.isInstruction, json.position,
-      json.initialTrust, json.currentTrust, json.feltTrustImmediately, json.feltTrustAfterwards,
-      ref
-    )
+    const pre = new Preknowledge(ref)
+    pre.fill(json)
+    return pre
+  }
+
+  static create(message: string = 'Preknowledge', isInstruction: boolean = false, position?: BoundingBox,
+                initialTrust?: number, currentTrust?: number,
+                feltTrustImmediately?: number, feltTrustAfterwards?: number,
+                ref?: Ref): Preknowledge {
+    const pre = new Preknowledge(ref)
+    pre.message = message
+    pre.isInstruction = isInstruction
+    pre.position = Information.createBB(position)
+    pre.initialTrust = initialTrust
+    pre.currentTrust = currentTrust
+    pre.feltTrustImmediately = feltTrustImmediately
+    pre.feltTrustAfterwards = feltTrustAfterwards
+    return pre
   }
 
 }

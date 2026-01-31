@@ -29,7 +29,7 @@ describe('Conversation', () => {
     expect(m1.getRef().$ref).toEqual('');
 
     //infos:
-    let p0 = new Preknowledge()
+    let p0 = Preknowledge.create()
     conv.author.addPreknowledge(p0)
     expect(p0.getRef().$ref).toEqual('');
     let n0 = NewInformation.create(m1, 'rec')

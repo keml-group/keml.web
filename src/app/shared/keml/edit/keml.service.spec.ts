@@ -32,8 +32,8 @@ describe('KEML-Service', () => {
     let cp = new ConversationPartner(undefined, 'cp')
     let rec = ReceiveMessage.create(cp, 5)
     let newInfo = NewInformation.create(rec, 'info1')
-    let pre0 = new Preknowledge('pre0')
-    let pre1 = new Preknowledge('pre1')
+    let pre0 = Preknowledge.create('pre0')
+    let pre1 = Preknowledge.create('pre1')
     let send3 = new SendMessage(undefined, 3)
     pre0.addIsUsedOn(send3)
     expect(KemlService.isRepetitionAllowed(rec, newInfo)).toBe(false)
@@ -120,11 +120,11 @@ describe('KEML-Service', () => {
       "        }\n" +
       "      } ]\n"+
       "    } ]\n"
-    let pre0 = new Preknowledge(
+    let pre0 = Preknowledge.create(
       'pre0', false, undefined,
        0.5, 0.5, undefined, undefined,
       RefHandler.createRef('//@author/@preknowledge.0', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
-    let pre1 = new Preknowledge(
+    let pre1 = Preknowledge.create(
       'pre1', false, undefined,
        0.5, 0.5, undefined, undefined,
       RefHandler.createRef('//@author/@preknowledge.1', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
@@ -624,7 +624,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
 
     let n1 = NewInformation.create(m3, "i1")
 
-    let pre0 = new Preknowledge("pre0")
+    let pre0 = Preknowledge.create("pre0")
 
     let convInit = kemlService.conversation
 
@@ -699,7 +699,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
   })
 
-  it('should add a new preknowledge (with history)', () => {
+  it('should add a Preknowledge.create (with history)', () => {
     let p0 = kemlService.addNewPreknowledge()
     expect(kemlService.conversation.author.preknowledge.length).toEqual(1)
     expect(kemlService.conversation.author.preknowledge).toContain(p0)
@@ -760,7 +760,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(rec0.generates.length).toBe(0)
     expect(historyStub.save).toHaveBeenCalledTimes(4)
 
-    const p1 = new Preknowledge("Not contained")
+    const p1 = Preknowledge.create("Not contained")
     expect(historyStub.save).toHaveBeenCalledTimes(4)
     kemlService.deleteInfo(p1)
     expect(historyStub.save).toHaveBeenCalledTimes(4)

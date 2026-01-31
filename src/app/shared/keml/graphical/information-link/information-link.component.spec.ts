@@ -19,8 +19,8 @@ describe('InformationLinkComponent', () => {
     fixture = TestBed.createComponent(InformationLinkComponent);
     component = fixture.componentInstance;
 
-    let info1 = new Preknowledge()
-    let info2 = new Preknowledge()
+    let info1 = Preknowledge.create()
+    let info2 = Preknowledge.create()
     component.infoLink = InformationLink.create(info1, info2, InformationLinkType.STRONG_SUPPORT)
     fixture.detectChanges();
   });

@@ -17,7 +17,7 @@ describe('IsInstrSvgComponent', () => {
 
     fixture = TestBed.createComponent(IsInstrSvgComponent);
     component = fixture.componentInstance;
-    component.info = new Preknowledge()
+    component.info = Preknowledge.create()
 
     fixture.detectChanges();
   });

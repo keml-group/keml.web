@@ -94,7 +94,7 @@ describe('EditorComponent', () => {
   });
 
   it('should open details when preknowledge is created', () => {
-    const fakePre = new Preknowledge();
+    const fakePre = Preknowledge.create();
     kemlService.addNewPreknowledge.and.returnValue(fakePre);
     component.addPreknowledge();
     expect(kemlService.addNewPreknowledge).toHaveBeenCalled();

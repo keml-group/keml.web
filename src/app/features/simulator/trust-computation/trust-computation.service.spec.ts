@@ -27,9 +27,9 @@ describe('TrustComputationService', () => {
   let recLength = 2;
 
   beforeEach(function () {
-    p0 = new Preknowledge('p0')
-    p1 = new Preknowledge('p1')
-    p2 = new Preknowledge('p2')
+    p0 = Preknowledge.create('p0')
+    p1 = Preknowledge.create('p1')
+    p2 = Preknowledge.create('p2')
   })
 
   it('should compute the score of a single Link correctly', () => {
@@ -62,7 +62,7 @@ describe('TrustComputationService', () => {
     let cp = new ConversationPartner(undefined, 'cp')
     let r1 = ReceiveMessage.create(cp, 1)
     let r2 = ReceiveMessage.create(cp, 3)
-    let info = new Preknowledge('info')
+    let info = Preknowledge.create('info')
     expect(service.computeRepetitionScore(info, 0)).toEqual(0)
     expect(service.computeRepetitionScore(info, 1)).toEqual(0)
     info.repeatedBy.push(r1, r2)
@@ -188,13 +188,13 @@ describe('TrustComputationService', () => {
   })
 
   it('should adapt the current trusts', () => {
-    let pre0 = new Preknowledge(
+    let pre0 = Preknowledge.create(
       'pre0', false, undefined,
       0.5, 0 )
-    let pre1 = new Preknowledge('pre1',
+    let pre1 = Preknowledge.create('pre1',
       false, undefined,
       0.5, 0 )
-    let pre2 = new Preknowledge('pre2',
+    let pre2 = Preknowledge.create('pre2',
       false, undefined,
       0.5, 0 )
 

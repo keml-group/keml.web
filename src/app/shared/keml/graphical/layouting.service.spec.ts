@@ -25,20 +25,20 @@ describe('LayoutingService', () => {
     let s7BB = LayoutingService.bbForPreknowledge(LayoutingService.computeMessageY(7))
     let defaultBB = LayoutingService.bbForPreknowledge(LayoutingService.computeMessageY(0))
 
-    let p0 = new Preknowledge('p0')
+    let p0 = Preknowledge.create('p0')
     p0.addIsUsedOn(s7, s2)
     let p0BB: BoundingBox = {x: -20, y: -50, h: 50, w:200}
-    let p0wbb = new Preknowledge('p0', false, p0BB)
+    let p0wbb = Preknowledge.create('p0', false, p0BB)
     p0wbb.addIsUsedOn(s7, s2)
-    let p1 = new Preknowledge('p1')
-    let p2 = new Preknowledge('p2', true)
+    let p1 = Preknowledge.create('p1')
+    let p2 = Preknowledge.create('p2', true)
     p2.addIsUsedOn(s7)
-    let p3 = new Preknowledge('p3', false)
+    let p3 = Preknowledge.create('p3', false)
     p3.addIsUsedOn(s1)
     let p3BB: BoundingBox = {x: -200, y: 500, h: 50, w:200}
-    let p3wbb = new Preknowledge('p3', false, p3BB)
+    let p3wbb = Preknowledge.create('p3', false, p3BB)
     p3wbb.addIsUsedOn(s1)
-    let p4 = new Preknowledge('p4')
+    let p4 = Preknowledge.create('p4')
     p4.addIsUsedOn(s1, s7, s2)
 
     let allOrdered: Preknowledge[] = [
