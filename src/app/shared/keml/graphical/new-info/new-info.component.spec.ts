@@ -1,9 +1,9 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { NewInfoComponent } from './new-info.component';
+import {NewInfoComponent} from './new-info.component';
 import {NO_ERRORS_SCHEMA} from "@angular/core";
-import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {NewInformation, ReceiveMessage} from "@app/shared/keml/core/msg-info";
+import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 
 describe('NewInfoComponent', () => {
   let component: NewInfoComponent;
@@ -19,9 +19,8 @@ describe('NewInfoComponent', () => {
     fixture = TestBed.createComponent(NewInfoComponent);
     component = fixture.componentInstance;
 
-    let srcMsg = new ReceiveMessage(new ConversationPartner(), 0,'msg')
-    let info = new NewInformation(srcMsg, 'info')
-    component.info = info
+    let srcMsg = ReceiveMessage.create(new ConversationPartner(), 0,'msg')
+    component.info = NewInformation.create(srcMsg, 'info')
 
     fixture.detectChanges();
   });

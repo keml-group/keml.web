@@ -35,8 +35,8 @@ export class IncrementalSimulationService {
   private prepare(simulationInputs: TrustFallbacks, conv: Conversation) {
     this.simulationInputs = simulationInputs;
     this.completeConv = conv;
-    let author = new Author(conv.author.name, conv.author.xPosition)
-    this.incrementalConv = new Conversation(conv.title, author)
+    this.incrementalConv = Conversation.create(conv.title)
+    this.incrementalConv.author = Author.create(undefined, conv.author.name, conv.author.xPosition);
     this.incrementalConv.addCP(...conv.conversationPartners) //todo duplicate cps?
     this.msgConnections = new Map<string, Message>();
     this.infoConnections = new Map<string, Information>();
@@ -63,7 +63,7 @@ export class IncrementalSimulationService {
     3) add relationships of new preknowledges (linkStep)
    */
   private async stepSend(send: SendMessage) {
-    let msg = new SendMessage(send.counterPart, send.timing, send.content, send.originalContent)
+    let msg = SendMessage.create(send.counterPart, send.timing, send.content, send.originalContent)
     this.msgConnections.set(send.gId, msg)
     this.incrementalConv.author.messages.push(msg)
     this.msgCount.update(n => n+1)
@@ -82,7 +82,7 @@ export class IncrementalSimulationService {
    3) add relationships of those new infos (linkStep)
    */
   private async stepReceive(rec: ReceiveMessage) {
-    let msg = new ReceiveMessage(rec.counterPart, rec.timing, rec.content, rec.originalContent)
+    let msg = ReceiveMessage.create(rec.counterPart, rec.timing, rec.content, rec.originalContent)
     this.msgConnections.set(rec.gId, msg)
     this.incrementalConv.author.messages.push(msg)
     this.msgCount.update(n => n+1)
@@ -102,12 +102,10 @@ export class IncrementalSimulationService {
   }
 
   private copyPreknowledge(pre: Preknowledge): Preknowledge {
-    let preNew = new Preknowledge(
+    let preNew = Preknowledge.create(
       pre.message,
       pre.isInstruction,
       pre.position,
-      [],
-      [],
       pre.initialTrust,
       undefined,
       pre.feltTrustImmediately,
@@ -118,13 +116,11 @@ export class IncrementalSimulationService {
   }
 
   private copyNewInfo(newInfo: NewInformation): NewInformation {
-    let newNew = new NewInformation(
+    let newNew = NewInformation.create(
       (this.msgConnections.get(newInfo.source.gId) as ReceiveMessage)!,
       newInfo.message,
       newInfo.isInstruction,
       newInfo.position,
-      [],
-      [],
       newInfo.initialTrust,
       undefined,
       newInfo.feltTrustImmediately,
@@ -138,7 +134,7 @@ export class IncrementalSimulationService {
     info.causes.map(link => {
       let src = this.infoConnections.get(info.gId)
       let tar = this.infoConnections.get(link.target.gId)
-      new InformationLink(src!, tar!, link.type, link.linkText)
+      InformationLink.create(src!, tar!, link.type, link.linkText)
     })
   }
 

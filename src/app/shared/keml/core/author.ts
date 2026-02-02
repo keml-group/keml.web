@@ -30,24 +30,22 @@ export class Author extends LifeLine{
     })
   }
 
-  constructor(name = 'Author', xPosition: number = 0,
-              ref?: Ref) {
+  constructor(ref?: Ref) {
     let refC = RefHandler.createRefIfMissing(EClasses.Author, ref)
-    super(name, xPosition, refC);
+    super(refC);
     this._preknowledge = new ReTreeListContainer<Preknowledge>(this, Author.$preknowledgeName, undefined, EClasses.Preknowledge)
     this._messages = new ReTreeListContainer<Message>(this, Author.$messagesName)
   }
 
-  override toJson(): AuthorJson {
-    let json: AuthorJson = (<AuthorJson>super.toJson())
-    json.preknowledge = this._preknowledge.toJson()
-    json.messages = this._messages.toJson()
-    return json
+  static create(ref?: Ref, name?: string, xPosition: number = 0): Author {
+    const auth = new Author(ref)
+    auth.name = name? name: ''
+    auth.xPosition = xPosition
+    return auth
   }
 
   static fromJson(json: AuthorJson, ref: Ref): Author {
-    return new Author(json.name? json.name: '', json.xPosition, ref)
+    return Author.create(ref, json.name ? json.name : '', json.xPosition)
   }
-
 
 }

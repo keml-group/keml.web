@@ -37,7 +37,7 @@ export class MsgDetailsComponent implements OnInit {
 
   ngOnInit() {
     if (this.msg.isSend()) {
-      this.sendMsg = (this.msg as SendMessage)
+      this.sendMsg = this.msg
     } else {
       this.receiveMsg = (this.msg as ReceiveMessage)
     }

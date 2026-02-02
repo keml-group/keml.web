@@ -29,12 +29,12 @@ describe('KEML-Service', () => {
   });
 
   it('should determine if a repetition is allowed', () => {
-    let cp = new ConversationPartner('cp')
-    let rec = new ReceiveMessage(cp, 5)
-    let newInfo = new NewInformation(rec, 'info1')
-    let pre0 = new Preknowledge('pre0')
-    let pre1 = new Preknowledge('pre1')
-    let send3 = new SendMessage(cp, 3)
+    let cp = new ConversationPartner(undefined, 'cp')
+    let rec = ReceiveMessage.create(cp, 5)
+    let newInfo = NewInformation.create(rec, 'info1')
+    let pre0 = Preknowledge.create('pre0')
+    let pre1 = Preknowledge.create('pre1')
+    let send3 = new SendMessage(undefined, 3)
     pre0.addIsUsedOn(send3)
     expect(KemlService.isRepetitionAllowed(rec, newInfo)).toBe(false)
     expect(KemlService.isRepetitionAllowed(rec, pre1)).toBe(true)
@@ -93,8 +93,8 @@ describe('KEML-Service', () => {
       "  }, {\n" +
       "    \"name\" : \"Other\"\n" +
       "  } ]"
-    let cp0 = new ConversationPartner('LLM', 300, RefHandler.createRef('//@conversationPartners.0', 'http://www.unikoblenz.de/keml#//ConversationPartner'))
-    let cp1 = new ConversationPartner('Other', 450, RefHandler.createRef('//@conversationPartners.1', 'http://www.unikoblenz.de/keml#//ConversationPartner'))
+    let cp0 = new ConversationPartner(RefHandler.createRef('//@conversationPartners.0', 'http://www.unikoblenz.de/keml#//ConversationPartner'), 'LLM', 300)
+    let cp1 = new ConversationPartner(RefHandler.createRef('//@conversationPartners.1', 'http://www.unikoblenz.de/keml#//ConversationPartner'), 'Other', 450)
     let cps = [cp0, cp1]
 
     let preknowledgeStr =
@@ -120,13 +120,13 @@ describe('KEML-Service', () => {
       "        }\n" +
       "      } ]\n"+
       "    } ]\n"
-    let pre0 = new Preknowledge(
+    let pre0 = Preknowledge.create(
       'pre0', false, undefined,
-      undefined, undefined, 0.5, 0.5, undefined, undefined,
+       0.5, 0.5, undefined, undefined,
       RefHandler.createRef('//@author/@preknowledge.0', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
-    let pre1 = new Preknowledge(
+    let pre1 = Preknowledge.create(
       'pre1', false, undefined,
-      undefined, undefined, 0.5, 0.5, undefined, undefined,
+       0.5, 0.5, undefined, undefined,
       RefHandler.createRef('//@author/@preknowledge.1', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
 
     let preknowledge = [pre0, pre1]
@@ -176,31 +176,32 @@ describe('KEML-Service', () => {
       "      \"generates\" : [ "+newInfo0Str +", "+newInfo1Str+
       "       ]\n" +
       "   } ]\n"
-    let msg0 = new SendMessage(cp0,0, "m0", "msg0long", [pre0],
+    let msg0 = SendMessage.create(cp0,0, "m0", "msg0long",
       RefHandler.createRef('//@author/@messages.0', 'http://www.unikoblenz.de/keml#//SendMessage'))
-    let msg1 = new ReceiveMessage(cp1, 1, "m1", "msg1long",
-      undefined, false,
+    msg0.addUsage(pre0)
+    let msg1 = ReceiveMessage.create(
+      cp1, 1, "m1", "msg1long", false,
       RefHandler.createRef('//@author/@messages.1', 'http://www.unikoblenz.de/keml#//ReceiveMessage')
     )
     let msgs: Message[] = [msg0, msg1]
-    let newInfo0 = new NewInformation(msg1, "ni0", true,
-      undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
+    let newInfo0 = NewInformation.create(msg1, "ni0", true,
+      undefined, undefined, undefined, 0.5, 0.5,
       RefHandler.createRef('//@author/@messages.1/@generates.0', 'http://www.unikoblenz.de/keml#//NewInformation'))
-    let newInfo1 = new NewInformation(msg1, "ni1",
-      false,undefined, undefined, undefined, 0.5, 0.5, undefined, undefined,
+    let newInfo1 = NewInformation.create(msg1, "ni1",
+      false,undefined, undefined, undefined, 0.5, 0.5,
       RefHandler.createRef('//@author/@messages.1/@generates.1', 'http://www.unikoblenz.de/keml#//NewInformation'))
 
     LayoutingService.initializeInfoPos(msgs)
 
-    let infoLink0 = new InformationLink(newInfo0, pre0, InformationLinkType.SUPPLEMENT, undefined, RefHandler.createRef('//@author/@messages.1/@generates.0/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink')) // necessary to test JsonFixer.addMissingSupplementType
-    let infoLink1 = new InformationLink(pre1, newInfo1, InformationLinkType.STRONG_ATTACK, '', RefHandler.createRef( '//@author/@preknowledge.1/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink'))
+    let infoLink0 = InformationLink.create(newInfo0, pre0, InformationLinkType.SUPPLEMENT, undefined, RefHandler.createRef('//@author/@messages.1/@generates.0/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink')) // necessary to test JsonFixer.addMissingSupplementType
+    let infoLink1 = InformationLink.create(pre1, newInfo1, InformationLinkType.STRONG_ATTACK, '', RefHandler.createRef( '//@author/@preknowledge.1/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink'))
 
     let authorStr = "\"author\" : {" +
       msgsStr +",\n" +
       preknowledgeStr + "\n"+
       "}"
 
-    let author = new Author(undefined,0 )
+    let author = new Author()
     author.addPreknowledge(...preknowledge)
     author.addMessage(...msgs)
 
@@ -211,7 +212,7 @@ describe('KEML-Service', () => {
       cpsText +
       "}\n"
 
-    let conv = new Conversation("Test1", author)
+    let conv = Conversation.create("Test1", author)
     conv.addCP(...cps)
 
     let callResult = service.loadConversation(JSON.parse(str))
@@ -377,7 +378,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
   })
 
   it("should not call history on cp isMoveDisabled", () => {
-    let cp = new ConversationPartner("cp")
+    let cp = new ConversationPartner(undefined, "cp")
     expect(historyStub.save).toHaveBeenCalledTimes(0)
     kemlService.isMoveConversationPartnerLeftDisabled(cp)
     expect(historyStub.save).toHaveBeenCalledTimes(0)
@@ -586,8 +587,8 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     const m1: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "m1") as ReceiveMessage
     const m3: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "m3") as ReceiveMessage
 
-    let n0 = new NewInformation(m1, "i0")
-    let n1 = new NewInformation(m3, "i1")
+    let n0 = NewInformation.create(m1, "i0")
+    let n1 = NewInformation.create(m3, "i1")
 
     let convInit = kemlService.conversation
 
@@ -621,9 +622,9 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     const m3: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "m3") as ReceiveMessage
     const m4: SendMessage = kemlService.addNewMessageNoHistory(true, cp0, "m4") as SendMessage
 
-    let n1 = new NewInformation(m3, "i1")
+    let n1 = NewInformation.create(m3, "i1")
 
-    let pre0 = new Preknowledge("pre0")
+    let pre0 = Preknowledge.create("pre0")
 
     let convInit = kemlService.conversation
 
@@ -684,7 +685,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
 
     const msg1: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp, "rec1") as ReceiveMessage
     const msg2: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp, "rec2") as ReceiveMessage
-    let newInfo = new NewInformation(msg2, 'newInfo', false)
+    let newInfo = NewInformation.create(msg2, 'newInfo', false)
     expect(msg1.generates.length).toEqual(0)
     expect(msg2.generates.length).toEqual(1)
     expect(newInfo.source).toEqual(msg2)
@@ -698,7 +699,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
   })
 
-  it('should add a new preknowledge (with history)', () => {
+  it('should add a Preknowledge.create (with history)', () => {
     let p0 = kemlService.addNewPreknowledge()
     expect(kemlService.conversation.author.preknowledge.length).toEqual(1)
     expect(kemlService.conversation.author.preknowledge).toContain(p0)
@@ -759,7 +760,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(rec0.generates.length).toBe(0)
     expect(historyStub.save).toHaveBeenCalledTimes(4)
 
-    const p1 = new Preknowledge("Not contained")
+    const p1 = Preknowledge.create("Not contained")
     expect(historyStub.save).toHaveBeenCalledTimes(4)
     kemlService.deleteInfo(p1)
     expect(historyStub.save).toHaveBeenCalledTimes(4)
@@ -767,7 +768,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     /*
     // since rec exists, call works:
     const rec2 = new ReceiveMessage(cp0, 5, "not contained")
-    const n1 = new NewInformation(rec2, "Not contained")
+    const n1 = NewInformation.create(rec2, "Not contained")
     expect(historyStub.save).toHaveBeenCalledTimes(4)
     kemlService.deleteInfo(n1)
     expect(historyStub.save).toHaveBeenCalledTimes(5)*/

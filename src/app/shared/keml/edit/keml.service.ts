@@ -74,7 +74,6 @@ export class KemlService {
 
   private deserializeConversation(convJson: ConversationJson): Conversation {
     JsonFixer.prepareJsonInfoLinkSources(convJson);
-    JsonFixer.addMissingSupplementType(convJson);
 
     let conv = Conversation.fromJSON(convJson);
     this.layoutingService.positionConversationPartners(conv.conversationPartners)
@@ -118,10 +117,7 @@ export class KemlService {
 
   addNewConversationPartnerNoHistory(name?: string): ConversationPartner {
     const cps = this.conversation.conversationPartners;
-    const cp: ConversationPartner = new ConversationPartner(
-      name? name : 'New Partner',
-      this.layoutingService.nextConversationPartnerPosition(cps[cps.length-1]?.xPosition), //todo
-    );
+    const cp: ConversationPartner = new ConversationPartner(undefined, name ? name : 'New Partner', this.layoutingService.nextConversationPartnerPosition(cps[cps.length - 1]?.xPosition));
     cps.push(cp);
     this.cpCount.update(n => n+1)
     return cp;
@@ -178,10 +174,7 @@ export class KemlService {
   duplicateConversationPartner(cp: ConversationPartner): ConversationPartner {
     const cps = this.conversation.conversationPartners;
     const pos = cps.indexOf(cp);
-    const newCp: ConversationPartner = new ConversationPartner(
-      'Duplicate of '+ cp.name,
-      0 //todo how would we later compute a good position?
-    )
+    const newCp: ConversationPartner = new ConversationPartner(undefined, 'Duplicate of ' + cp.name, 0)
     cps.splice(pos+1, 0, newCp);
     this.layoutingService.positionConversationPartners(cps); // complete re-positioning
     this.cpCount.update(n => n+1);
@@ -342,18 +335,16 @@ export class KemlService {
   }
 
   getReceives() {
-    return this.conversation.author.messages.filter(msg => !msg.isSend())
-      .map(msg => msg as ReceiveMessage)
+    return this.conversation.author.messages.filter(msg => msg.isReceive())
   }
 
   getFirstReceive(): ReceiveMessage | undefined {
     const msgs = this.conversation.author.messages;
-    return (msgs.find(m => !m.isSend()) as ReceiveMessage)
+    return (msgs.find(m => m.isReceive()))
   }
 
   getSends(): SendMessage[] {
     return this.conversation.author.messages.filter(msg => msg.isSend())
-      .map(msg => msg as SendMessage)
   }
 
   static isRepetitionAllowed(msg: ReceiveMessage, info: Information): boolean {
@@ -409,7 +400,7 @@ export class KemlService {
   }
 
   addNewPreknowledge(): Preknowledge {
-    const preknowledge: Preknowledge = new Preknowledge("New preknowledge", false, LayoutingService.bbForPreknowledge(LayoutingService.positionForNewPreknowledge));
+    const preknowledge: Preknowledge = Preknowledge.create("New Preknowledge", false, LayoutingService.bbForPreknowledge(LayoutingService.positionForNewPreknowledge));
     this.conversation.author.preknowledge.push(preknowledge);
     this.saveCurrentState()
     return preknowledge;
@@ -422,7 +413,7 @@ export class KemlService {
   addNewNewInfo(causeMsg?: ReceiveMessage): NewInformation | undefined {
     const source = causeMsg? causeMsg : this.getFirstReceive()
     if (source) {
-      const newInfo = new NewInformation(
+      const newInfo = NewInformation.create(
         source, 'New Information', false, LayoutingService.bbForNewInfo(source.generates.length)
       );
       this.historyService.save(this.conversation.toJson())
@@ -484,7 +475,7 @@ export class KemlService {
   }
 
   addInformationLink(src: Information, target: Information, type: InformationLinkType = InformationLinkType.SUPPLEMENT, text?: string): InformationLink {
-    let link = new InformationLink(src, target, type, text);
+    let link = InformationLink.create(src, target, type, text);
     this.saveCurrentState()
     return link
   }
@@ -497,7 +488,7 @@ export class KemlService {
   }
 
   duplicateLink(link: InformationLink): InformationLink {
-    let newlink = new InformationLink(link.source, link.target, link.type, link.linkText)
+    let newlink = InformationLink.create(link.source, link.target, link.type, link.linkText)
     this.saveCurrentState()
     return newlink;
   }

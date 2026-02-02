@@ -1,7 +1,6 @@
 import {ConversationPartner} from "./conversation-partner";
-import {MessageJson, ReceiveMessageJson, SendMessageJson,} from "@app/shared/keml/json/sequence-diagram-models";
+import { ReceiveMessageJson, SendMessageJson,} from "@app/shared/keml/json/sequence-diagram-models";
 import {
-  InformationJson,
   InformationLinkJson,
   InformationLinkType,
   NewInformationJson,
@@ -9,6 +8,7 @@ import {
 } from "@app/shared/keml/json/knowledge-models";
 import {EClasses} from "@app/shared/keml/eclasses";
 import {
+  attribute,
   Ref,
   Referencable,
   RefHandler,
@@ -32,19 +32,20 @@ export abstract class Message extends Referencable {
     this._counterPart.add(value);
   }
 
-  timing: number = 0;
+  @attribute()
+  timing: number;
+  @attribute()
   content: string;
+  @attribute()
   originalContent?: string;
 
   protected constructor(
     ref: Ref,
-    counterPart: ConversationPartner,
-    timing: number,
-    content: string,
+    timing: number=0,
+    content: string="",
     originalContent?: string,
   ) {
     super(ref);
-    this._counterPart.add(counterPart);
     this.timing = timing;
     this.content = content;
     this.originalContent = originalContent;
@@ -54,25 +55,19 @@ export abstract class Message extends Referencable {
     return eClass.endsWith("SendMessage");
   }
 
-  isSend(): boolean {
-    return Message.isSend(this.ref.eClass);
+  isSend(): this is SendMessage {
+    return this instanceof SendMessage
   }
 
-  override toJson(): MessageJson {
-    return {
-      content: this.content,
-      counterPart: this._counterPart.toJson()!!,
-      eClass: this.ref.eClass,
-      originalContent: this.originalContent,
-      timing: this.timing
-    }
+  isReceive(): this is ReceiveMessage {
+    return this instanceof ReceiveMessage
   }
 
   static newMessage(isSend: boolean, counterPart: ConversationPartner, timing: number, content: string, originalContent: string = 'Original content'): Message {
     if (isSend) {
-      return new SendMessage(counterPart, timing, content, originalContent)
+      return SendMessage.create(counterPart, timing, content, originalContent)
     } else {
-      return new ReceiveMessage(counterPart, timing, content, originalContent)
+      return ReceiveMessage.create(counterPart, timing, content, originalContent)
     }
   }
 }
@@ -92,31 +87,31 @@ export class SendMessage extends Message {
   }
 
   constructor(
-    counterPart: ConversationPartner,
-    timing: number,
+    ref?: Ref,
+    timing?: number,
     content: string = 'New send content',
     originalContent?: string,
-    uses: Information[] = [],
-    ref?: Ref,
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.SendMessage, ref)
-    super(refC, counterPart, timing, content, originalContent);
+    super(refC, timing, content, originalContent);
     this._uses  = new ReLinkListContainer<Information>(this, SendMessage.$usesName, Information.$isUsedOnName);
-    uses.map(u => this.addUsage(u))
   }
 
-  override toJson(): SendMessageJson {
-    let res = (<SendMessageJson>super.toJson());
-    res.uses = this.uses.map(u => u.getRef())
-    return res;
+  static create(counterPart: ConversationPartner,
+                timing: number,
+                content: string = 'New send content',
+                originalContent?: string,
+                ref?: Ref,
+                ): SendMessage {
+    const send = new SendMessage(ref, timing, content, originalContent);
+    send.counterPart = counterPart;
+    return send;
   }
 
   static fromJson(json: SendMessageJson, ref: Ref): SendMessage {
-    //todo
-    let dummyCp = new ConversationPartner()
-
-    return new SendMessage(dummyCp, json.timing, json.content, json.originalContent,
-      [], ref)
+    const send = new SendMessage(ref)
+    send.fill(json)
+    return send;
   }
 
 }
@@ -144,37 +139,38 @@ export class ReceiveMessage extends Message {
     return this._repeats.remove(info);
   }
 
+  @attribute()
   isInterrupted: boolean = false;
 
   constructor(
-    counterPart: ConversationPartner,
-    timing: number,
-    content?: string,
-    originalContent?: string,
-    repeats: Information[] = [],
-    isInterrupted: boolean = false,
     ref?: Ref,
+    timing?: number,
+    content: string = "New receive content",
+    originalContent?: string,
+    isInterrupted: boolean = false,
   ) {
     let refC = RefHandler.createRefIfMissing(EClasses.ReceiveMessage, ref)
-    super(refC, counterPart, timing, content ? content : "New receive content", originalContent);
+    super(refC, timing, content, originalContent);
     this._generates = new ReTreeListContainer<NewInformation>(this, ReceiveMessage.$generatesName, NewInformation.$sourceName, EClasses.NewInformation);
     this._repeats = new ReLinkListContainer<Information>(this, ReceiveMessage.$repeatsName, Information.$repeatedByName);
-    repeats.map(r => this.addRepetition(r));
     this.isInterrupted = isInterrupted;
   }
 
-  override toJson(): ReceiveMessageJson {
-    let res = (<ReceiveMessageJson>super.toJson());
-    res.generates = this._generates.toJson()
-    res.repeats = this._repeats.toJson()
-    res.isInterrupted = this.isInterrupted
-    return res;
+  static create(counterPart: ConversationPartner,
+                timing: number,
+                content?: string,
+                originalContent?: string,
+                isInterrupted: boolean = false,
+                ref?: Ref,): ReceiveMessage {
+    const rec = new ReceiveMessage(ref, timing, content, originalContent, isInterrupted);
+    rec.counterPart = counterPart;
+    return rec
   }
 
   static fromJson(json: ReceiveMessageJson, ref: Ref): ReceiveMessage {
-    //todo
-    let dummyCp = new ConversationPartner()
-    return new ReceiveMessage(dummyCp, json.timing, json.content, json.originalContent, [], false, ref)
+    const rec = new ReceiveMessage(ref)
+    rec.fill(json)
+    return rec
   }
 
 }
@@ -182,12 +178,19 @@ export class ReceiveMessage extends Message {
 
 export abstract class Information extends Referencable implements Positionable {
 
-  message: string;
-  isInstruction: boolean;
-  position: BoundingBox;
+  @attribute()
+  message: string = "";
+  @attribute()
+  isInstruction: boolean = false;
+  @attribute()
+  position: BoundingBox = Information.createBB();
+  @attribute()
   initialTrust: number | undefined;
+  @attribute()
   currentTrust: number | undefined;
+  @attribute()
   feltTrustImmediately: number | undefined;
+  @attribute()
   feltTrustAfterwards: number | undefined;
 
   abstract getTiming(): number;
@@ -222,8 +225,8 @@ export abstract class Information extends Referencable implements Positionable {
   get isUsedOn(): SendMessage[] {
     return this._isUsedOn.get();
   }
-  addIsUsedOn(send: SendMessage){
-    this._isUsedOn.add(send)
+  addIsUsedOn(...send: SendMessage[]){
+    send.map(s => this._isUsedOn.add(s))
   }
   removeIsUsedOn(send: SendMessage){
     this._isUsedOn.remove(send)
@@ -241,47 +244,20 @@ export abstract class Information extends Referencable implements Positionable {
     this._repeatedBy.remove(msg)
   }
 
-  protected constructor(
-    ref: Ref,
-    message: string, isInstruction: boolean = false, position?: BoundingBox,
-    isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
-    initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number, feltTrustAfterwards?: number,
-  ) {
+  protected constructor(ref: Ref) {
     super(ref);
 
     this._causes = new ReTreeListContainer<InformationLink>(this, NewInformation.$causesName, InformationLink.$sourceName, EClasses.InformationLink);
     this._targetedBy = new ReLinkListContainer<InformationLink>(this, Information.$targetedByName, InformationLink.$targetName)
     this._isUsedOn = new ReLinkListContainer<SendMessage>(this, 'isUsedOn', 'uses');
     this._repeatedBy = new ReLinkListContainer(this, NewInformation.$repeatedByName, ReceiveMessage.$repeatsName);
-    this.message = message;
-    this.isInstruction = isInstruction;
-    this.position = position? position: PositionHelper.newBoundingBox();
-    this.initialTrust = initialTrust;
-    this.currentTrust = currentTrust;
-    this.feltTrustImmediately = feltTrustImmediately;
-    this.feltTrustAfterwards = feltTrustAfterwards;
-    isUsedOn?.map(u => this.addIsUsedOn(u))
-    repeatedBy?.map(m => this.addRepeatedBy(m));
+  }
+
+  static createBB(bb?: BoundingBox): BoundingBox {
+    return bb? bb : PositionHelper.newBoundingBox()
   }
 
   abstract duplicate(): Information;
-
-  override toJson(): InformationJson {
-    return {
-      causes: this._causes.toJson(),
-      currentTrust: this.currentTrust,
-      eClass: this.ref.eClass,
-      initialTrust: this.initialTrust,
-      feltTrustImmediately: this.feltTrustImmediately,
-      feltTrustAfterwards: this.feltTrustAfterwards,
-      isInstruction: this.isInstruction,
-      isUsedOn: this._isUsedOn.toJson(),
-      message: this.message,
-      repeatedBy:  this._repeatedBy.toJson(),
-      targetedBy:  this._targetedBy.toJson(),
-      position: this.position,
-    }
-  }
 
   override destruct() {
     this._targetedBy.delete() //necessary to have a link die on target death
@@ -305,48 +281,45 @@ export class NewInformation extends Information {
     return this.source.timing
   }
 
-  constructor(source: ReceiveMessage,
-              message: string, isInstruction: boolean = false, position?: BoundingBox,
-              isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
-              initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number , feltTrustAfterwards?: number,
-              ref?: Ref,
-  ) {
+  constructor(ref?: Ref) {
     let refC = RefHandler.createRefIfMissing(EClasses.NewInformation, ref)
-    super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards);
+    super(refC);
     this._source = new ReTreeParentContainer(this, NewInformation.$sourceName, ReceiveMessage.$generatesName);
-    this.source = source
   }
 
   override duplicate(): NewInformation {
-    return new NewInformation(this.source, 'Copy of ' + this.message, this.isInstruction, this.position, [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
-  }
-
-  override toJson(): NewInformationJson {
-    let res = (<NewInformationJson>super.toJson());
-    res.source = this._source.toJson()
-    return res;
+    return NewInformation.create(this.source, 'Copy of ' + this.message, this.isInstruction, this.position, this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
   }
 
   static fromJson( json: NewInformationJson, ref: Ref): NewInformation {
-    //todo
-    let dummyCp = new ConversationPartner()
-    let dummyRec = new ReceiveMessage(dummyCp, 0)
+    const newInfo = new NewInformation(ref)
+    newInfo.fill(json)
+    return newInfo
+  }
 
-    return new NewInformation(dummyRec, json.message, json.isInstruction, json.position, [], [], json.initialTrust, json.currentTrust, json.feltTrustImmediately, json.feltTrustAfterwards, ref)
+  static create(source: ReceiveMessage,
+         message: string, isInstruction: boolean = false, position?: BoundingBox,
+         initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number , feltTrustAfterwards?: number,
+         ref?: Ref,): NewInformation {
+    const info = new NewInformation(ref);
+    info.source = source;
+    info.message = message;
+    info.isInstruction = isInstruction;
+    info.position = Information.createBB(position);
+    info.initialTrust = initialTrust;
+    info.currentTrust = currentTrust;
+    info.feltTrustImmediately = feltTrustImmediately;
+    info.feltTrustAfterwards = feltTrustAfterwards;
+    return info;
   }
 
 }
 
 export class Preknowledge extends Information {
 
-  constructor(message: string = 'Preknowledge', isInstruction: boolean = false, position?: BoundingBox,
-              isUsedOn: SendMessage[] = [], repeatedBy: ReceiveMessage[] = [],
-              initialTrust?: number, currentTrust?: number,
-              feltTrustImmediately?: number, feltTrustAfterwards?: number,
-              ref?: Ref
-  ) {
+  constructor(ref?: Ref) {
     let refC = RefHandler.createRefIfMissing(EClasses.Preknowledge, ref)
-    super(refC, message, isInstruction, position, isUsedOn, repeatedBy, initialTrust, currentTrust, feltTrustImmediately, feltTrustAfterwards);
+    super(refC);
   }
 
   getTiming(): number {
@@ -360,19 +333,28 @@ export class Preknowledge extends Information {
   }
 
   override duplicate(): Preknowledge {
-    return new Preknowledge('Copy of ' + this.message, this.isInstruction, this.position, [], [], this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
-  }
-
-  override toJson(): PreknowledgeJson {
-    return (<PreknowledgeJson>super.toJson())
+    return Preknowledge.create('Copy of ' + this.message, this.isInstruction, this.position, this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
   }
 
   static fromJson( json: PreknowledgeJson, ref: Ref): Preknowledge {
-    return new Preknowledge(json.message, json.isInstruction, json.position,
-      [], [],
-      json.initialTrust, json.currentTrust, json.feltTrustImmediately, json.feltTrustAfterwards,
-      ref
-    )
+    const pre = new Preknowledge(ref)
+    pre.fill(json)
+    return pre
+  }
+
+  static create(message: string = 'Preknowledge', isInstruction: boolean = false, position?: BoundingBox,
+                initialTrust?: number, currentTrust?: number,
+                feltTrustImmediately?: number, feltTrustAfterwards?: number,
+                ref?: Ref): Preknowledge {
+    const pre = new Preknowledge(ref)
+    pre.message = message
+    pre.isInstruction = isInstruction
+    pre.position = Information.createBB(position)
+    pre.initialTrust = initialTrust
+    pre.currentTrust = currentTrust
+    pre.feltTrustImmediately = feltTrustImmediately
+    pre.feltTrustAfterwards = feltTrustAfterwards
+    return pre
   }
 
 }
@@ -397,51 +379,32 @@ export class InformationLink extends Referencable {
     this._target.add(target);
   }
 
-  private _type: InformationLinkType = InformationLinkType.SUPPLEMENT;
-  get type(): InformationLinkType {
-    return this._type;
-  }
-  set type(type: InformationLinkType) {
-    this._type = type;
-  }
+  @attribute()
+  type: InformationLinkType = InformationLinkType.SUPPLEMENT;
+  @attribute()
+  linkText?: string;
 
-  private _linkText?: string;
-  get linkText(): string | undefined {
-    return this._linkText;
-  }
-  set linkText(linkText: string | undefined) {
-    this._linkText = linkText;
-  }
-
-  constructor(source: Information, target: Information, type: InformationLinkType, linkText?: string,
-              ref?: Ref,
-  ) {
+  constructor(ref?: Ref) {
     let refC = RefHandler.createRefIfMissing(EClasses.InformationLink, ref)
     super(refC);
     this._source = new ReTreeParentContainer<Information>(this, InformationLink.$sourceName, NewInformation.$causesName);
     this._target = new ReLinkSingleContainer<Information>(this, InformationLink.$targetName, Information.$targetedByName);
-
-    this.source = source;
-    this.target = target;
-    this.type = type;
-    this.linkText = linkText;
   }
 
-  override toJson(): InformationLinkJson {
-    return {
-      eClass: EClasses.InformationLink,
-      source: this._source.toJson(),
-      target: this._target.toJson()!!,
-      type: this.type,
-      linkText: this.linkText,
-    }
+  static create(source: Information, target: Information, type: InformationLinkType, linkText?: string,
+                ref?: Ref,): InformationLink {
+    const link = new InformationLink(ref)
+    link.source = source
+    link.target = target;
+    link.type = type
+    link.linkText = linkText
+    return link
   }
 
   static fromJson( json: InformationLinkJson, ref: Ref): InformationLink {
-    //todo
-    let dummySrc = new Preknowledge()
-    let dummyTar = new Preknowledge()
-    return new InformationLink(dummySrc, dummyTar, json.type, json.linkText, ref)
+    let res = new InformationLink( ref)
+    res.fill(json)
+    return res
   }
 
 }

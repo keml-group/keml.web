@@ -1,7 +1,7 @@
 import {Author} from "./author";
 import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
-import {Deserializer, Ref, Referencable, RefHandler, ReTreeSingleContainer, ReTreeListContainer, JsonOf} from "emfular";
+import {Deserializer, Ref, Referencable, RefHandler, ReTreeSingleContainer, ReTreeListContainer, attribute} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
 import {createKemlRegistry} from "@app/shared/keml/kemlregistry";
 
@@ -9,7 +9,10 @@ import {createKemlRegistry} from "@app/shared/keml/kemlregistry";
 export class Conversation extends Referencable {
   static readonly $authorName = 'author';
   static readonly $conversationPartnersName = 'conversationPartners';
+
+  @attribute()
   title: string;
+
   _author: ReTreeSingleContainer<Author>;
   get author(): Author {
     return this._author.get()!!
@@ -28,30 +31,31 @@ export class Conversation extends Referencable {
   }
 
   constructor(
-    title: string = 'New Conversation',
-    author: Author = new Author(),
+    title: string = 'New Conversation'
   ) {
     let ref = RefHandler.createRef(RefHandler.rootPath, EClasses.Conversation)
     super(ref);
     this._author = new ReTreeSingleContainer<Author>(this, Conversation.$authorName, undefined, EClasses.Author);
     this._conversationPartners = new ReTreeListContainer<ConversationPartner>(this, Conversation.$conversationPartnersName, undefined, EClasses.ConversationPartner);
     this.title = title;
-    this.author = author;
+    this.author = new Author();
+  }
+
+  static create(title: string, author?: Author): Conversation {
+    const conv = new Conversation();
+    conv.title = title;
+    conv.author = author? author: new Author();
+    return conv;
   }
 
   override toJson(): ConversationJson {
     this.prepare(RefHandler.rootPath);
 
-    return {
-      eClass: this.ref.eClass,
-      title: this.title,
-      conversationPartners: this._conversationPartners.toJson(),
-      author: this._author.toJson(),
-    };
+    return (super.toJson() as ConversationJson);
   }
 
   static fromJson(json: ConversationJson, _: Ref): Conversation {
-    return new Conversation(json.title)
+    return Conversation.create(json.title)
   }
 
   //todo naming

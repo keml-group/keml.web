@@ -2,32 +2,10 @@ import {Author} from "@app/shared/keml/core/author";
 import {Message, ReceiveMessage} from "@app/shared/keml/core/msg-info";
 import {ConversationJson, ReceiveMessageJson,} from '@app/shared/keml/json/sequence-diagram-models'
 import {Conversation} from "@app/shared/keml/core/conversation";
-import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {EClasses} from "@app/shared/keml/eclasses";
 import {RefHandler} from "emfular";
 
 export class JsonFixer {
-
-  //since Supplement is =0 on the original KEML enum, it is not exported into the json
-  static addMissingSupplementType(conv: ConversationJson) {
-    conv.author.preknowledge?.forEach(pre => {
-      pre.causes?.forEach(cause => {
-        if (!cause.type) {
-          cause.type = InformationLinkType.SUPPLEMENT
-        }
-      })
-    })
-    let receives = (conv.author.messages?.filter(r => !Message.isSend(r.eClass)) as ReceiveMessageJson[])
-    receives?.forEach(rec => {
-      rec.generates?.forEach(g => {
-        g.causes?.forEach(cause => {
-          if (!cause.type) {
-            cause.type = InformationLinkType.SUPPLEMENT
-          }
-        })
-      })
-    })
-  }
 
   /* idea:
   for each informationLink check the causes list and add the link itself as source to each entry

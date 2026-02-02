@@ -19,7 +19,7 @@ describe('SendComponent', () => {
 
     fixture = TestBed.createComponent(MsgComponent);
     component = fixture.componentInstance;
-    component.msg = new SendMessage(new ConversationPartner(), 5,'msg')
+    component.msg = SendMessage.create(new ConversationPartner(), 5,'msg')
     componentRef = fixture.componentRef;
     componentRef.setInput('msgTiming', component.msg.timing);
     fixture.detectChanges();

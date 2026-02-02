@@ -18,7 +18,7 @@ describe('MsgInnerComponent', () => {
 
     fixture = TestBed.createComponent(MsgInnerComponent);
     component = fixture.componentInstance;
-    component.msg = new SendMessage(new ConversationPartner(), 0,'msg')
+    component.msg = SendMessage.create(new ConversationPartner(), 0,'msg')
     fixture.detectChanges();
   });
 

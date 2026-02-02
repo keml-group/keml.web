@@ -6,17 +6,20 @@ import {RefHandler} from "emfular";
 
 export class ConversationPartner extends LifeLine {
 
-    constructor(name: string = 'NewPartner', xPosition?: number, ref?: Ref) {
-      let refC = RefHandler.createRefIfMissing(EClasses.ConversationPartner, ref)
-      super(name, xPosition, refC);
-    }
+  constructor(ref?: Ref, name: string = 'NewPartner', xPosition?: number) {
+    let refC = RefHandler.createRefIfMissing(EClasses.ConversationPartner, ref)
+    super(refC, name, xPosition);
+  }
 
-    override toJson(): ConversationPartnerJson {
-      return super.toJson();
-    }
+  static create(name: string = 'NewPartner', xPosition?: number, ref?: Ref): ConversationPartner {
+    const cp = new ConversationPartner(ref)
+    cp.name = name
+    cp.xPosition = xPosition? xPosition : 0;
+    return cp;
+  }
 
-    static fromJson(json: ConversationPartnerJson, ref: Ref): ConversationPartner {
-      return new ConversationPartner(json.name, json.xPosition, ref)
-    }
+  static fromJson(json: ConversationPartnerJson, ref: Ref): ConversationPartner {
+    return ConversationPartner.create(json.name, json.xPosition, ref)
+  }
 
 }

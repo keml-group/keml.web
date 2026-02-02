@@ -27,14 +27,14 @@ describe('TrustComputationService', () => {
   let recLength = 2;
 
   beforeEach(function () {
-    p0 = new Preknowledge('p0')
-    p1 = new Preknowledge('p1')
-    p2 = new Preknowledge('p2')
+    p0 = Preknowledge.create('p0')
+    p1 = Preknowledge.create('p1')
+    p2 = Preknowledge.create('p2')
   })
 
   it('should compute the score of a single Link correctly', () => {
-      let l0 = new InformationLink(p2, p0, InformationLinkType.STRONG_ATTACK)
-      //let l1 = new InformationLink(p1, p0, InformationLinkType.SUPPORT)
+      let l0 = InformationLink.create(p2, p0, InformationLinkType.STRONG_ATTACK)
+      //let l1 = InformationLink.create(p1, p0, InformationLinkType.SUPPORT)
       expect(service.score(l0)).toEqual(undefined)
       p2.currentTrust = 0.5
       expect(service.score(l0)).toEqual(-0.5)
@@ -46,8 +46,8 @@ describe('TrustComputationService', () => {
   )
 
   it('should compute the argumentation score of a single node correctly', () => {
-      new InformationLink(p2, p0, InformationLinkType.ATTACK)
-      new InformationLink(p1, p0, InformationLinkType.STRONG_SUPPORT)
+      InformationLink.create(p2, p0, InformationLinkType.ATTACK)
+      InformationLink.create(p1, p0, InformationLinkType.STRONG_SUPPORT)
       expect(service.computeArgumentationScore(p1)).toEqual(0)
       expect(service.computeArgumentationScore(p2)).toEqual(0)
       expect(service.computeArgumentationScore(p0)).toEqual(undefined)
@@ -59,10 +59,10 @@ describe('TrustComputationService', () => {
   )
 
   it('should compute the repetition score of a single node correctly', () => {
-    let cp = new ConversationPartner('cp')
-    let r1 = new ReceiveMessage(cp, 1)
-    let r2 = new ReceiveMessage(cp, 3)
-    let info = new Preknowledge('info')
+    let cp = new ConversationPartner(undefined, 'cp')
+    let r1 = ReceiveMessage.create(cp, 1)
+    let r2 = ReceiveMessage.create(cp, 3)
+    let info = Preknowledge.create('info')
     expect(service.computeRepetitionScore(info, 0)).toEqual(0)
     expect(service.computeRepetitionScore(info, 1)).toEqual(0)
     info.repeatedBy.push(r1, r2)
@@ -71,12 +71,12 @@ describe('TrustComputationService', () => {
   })
 
   it('should determineInitialTrustForInfo correctly', () => {
-    let cp0 = new ConversationPartner('0')
-    let cp1 = new ConversationPartner('1')
-    let r1 = new ReceiveMessage(cp0, 1)
-    let r2 = new ReceiveMessage(cp1, 2)
-    let newInfo1 = new NewInformation(r1, 'm1')
-    let newInfo2 = new NewInformation(r2, 'm2')
+    let cp0 = new ConversationPartner(undefined, '0')
+    let cp1 = new ConversationPartner(undefined, '1')
+    let r1 = ReceiveMessage.create(cp0, 1)
+    let r2 = ReceiveMessage.create(cp1, 2)
+    let newInfo1 = NewInformation.create(r1, 'm1')
+    let newInfo2 = NewInformation.create(r2, 'm2')
     let simInputs: TrustFallbacks = new TrustFallbacks()
     // no entries, hence real defaults should be used:
     expect(
@@ -110,8 +110,8 @@ describe('TrustComputationService', () => {
 
   it('should evaluate a single node correctly', () => {
     let simInputs: TrustFallbacks = new TrustFallbacks()
-    new InformationLink(p2, p0, InformationLinkType.STRONG_ATTACK)
-    new InformationLink(p1, p0, InformationLinkType.SUPPORT)
+    InformationLink.create(p2, p0, InformationLinkType.STRONG_ATTACK)
+    InformationLink.create(p1, p0, InformationLinkType.SUPPORT)
     expect(service.computeTrust(p0, recLength, simInputs)).toEqual(undefined)
     expect(service.computeTrust(p1, recLength, simInputs)).toEqual(1.0)
     expect(service.computeTrust(p2, recLength, simInputs)).toEqual(1.0)
@@ -179,44 +179,39 @@ describe('TrustComputationService', () => {
   })
 
   it('should throw an error when evaluating a cycle', () => {
-    new InformationLink(p0, p1, InformationLinkType.SUPPORT)
-    new InformationLink(p1, p0, InformationLinkType.STRONG_ATTACK)
-    new InformationLink(p2, p1, InformationLinkType.STRONG_ATTACK)
-    let auth = new Author('auth', 0)
-    auth.addPreknowledge(p0, p1, p2)
-    let conv = new Conversation('cycle', auth)
+    InformationLink.create(p0, p1, InformationLinkType.SUPPORT)
+    InformationLink.create(p1, p0, InformationLinkType.STRONG_ATTACK)
+    InformationLink.create(p2, p1, InformationLinkType.STRONG_ATTACK)
+    let conv = Conversation.create('cycle')
+    conv.author.addPreknowledge(p0, p1, p2)
     expect(() => service.computeCurrentTrusts(conv, new TrustFallbacks())).toThrow(Error('Endless loops of 2 nodes - please check the InformationLinks'))
   })
 
   it('should adapt the current trusts', () => {
-    let pre0 = new Preknowledge(
+    let pre0 = Preknowledge.create(
       'pre0', false, undefined,
-      undefined, undefined,
       0.5, 0 )
-    let pre1 = new Preknowledge('pre1',
+    let pre1 = Preknowledge.create('pre1',
       false, undefined,
-      undefined, undefined,
       0.5, 0 )
-    let pre2 = new Preknowledge('pre2',
-      false, undefined, undefined, undefined,
+    let pre2 = Preknowledge.create('pre2',
+      false, undefined,
       0.5, 0 )
 
-    let cp0 = new ConversationPartner('cp0')
-    let cp1 = new ConversationPartner('cp1')
+    let cp0 = new ConversationPartner(undefined, 'cp0')
+    let cp1 = new ConversationPartner(undefined, 'cp1')
     let cps = [cp0, cp1]
 
-    let rec0 = new ReceiveMessage(cp0, 0, 'm0')
-    let rec1 = new ReceiveMessage(cp1, 1, 'm1')
-    let rec2 = new ReceiveMessage(cp0, 2, 'm2')
-    let rec3 = new ReceiveMessage(cp0, 3, 'm3')
+    let rec0 = ReceiveMessage.create(cp0, 0, 'm0')
+    let rec1 = ReceiveMessage.create(cp1, 1, 'm1')
+    let rec2 = ReceiveMessage.create(cp0, 2, 'm2')
+    let rec3 = ReceiveMessage.create(cp0, 3, 'm3')
 
     //todo add infos and Links
-
-    let author = new Author('author', 0)
-    author.addPreknowledge(pre0, pre1, pre2)
-    author.addMessage(rec0, rec1, rec2, rec3)
-    let conv = new Conversation('trusts', author)
+    let conv = Conversation.create('trusts')
     conv.addCP(...cps)
+    conv.author.addPreknowledge(pre0, pre1, pre2)
+    conv.author.addMessage(rec0, rec1, rec2, rec3)
 
     function verify() {
       //call to test:
@@ -251,10 +246,10 @@ describe('TrustComputationService', () => {
     verify()
 
     // add new infos:
-    let info0 = new NewInformation(rec0, 'n0')
-    let info1 = new NewInformation(rec0, 'n1')
-    let info2 = new NewInformation(rec2, 'n2')
-    let info3 = new NewInformation(rec3, 'n3')
+    let info0 = NewInformation.create(rec0, 'n0')
+    let info1 = NewInformation.create(rec0, 'n1')
+    let info2 = NewInformation.create(rec2, 'n2')
+    let info3 = NewInformation.create(rec3, 'n3')
 
     addRep(info0, rec1)
     addRep(info0, rec3)
@@ -267,9 +262,9 @@ describe('TrustComputationService', () => {
     verify()
 
     // add info links
-    new InformationLink(pre2, pre0, InformationLinkType.STRONG_ATTACK)
-    new InformationLink(info1, pre0, InformationLinkType.SUPPORT)
-    new InformationLink(info2, pre2, InformationLinkType.STRONG_SUPPORT)
+    InformationLink.create(pre2, pre0, InformationLinkType.STRONG_ATTACK)
+    InformationLink.create(info1, pre0, InformationLinkType.SUPPORT)
+    InformationLink.create(info2, pre2, InformationLinkType.STRONG_SUPPORT)
 
     expectations.set(pre2, 1)
     expectations.set(pre0, -0.5)
@@ -279,7 +274,7 @@ describe('TrustComputationService', () => {
   it('should show that the case of 0 receives is handled correctly', () => {
     let conv = new Conversation()
     conv.author.addPreknowledge(p0, p1)
-    new InformationLink(p0, p1, InformationLinkType.ATTACK)
+    InformationLink.create(p0, p1, InformationLinkType.ATTACK)
     service.computeCurrentTrusts(conv, new TrustFallbacks())
     expect(p0.currentTrust).toEqual(1.0)
     expect(p1.currentTrust).toEqual(0)
@@ -289,7 +284,6 @@ describe('TrustComputationService', () => {
     let json = require('@assets/test/3-2-fromTrustComp.json')
     let convJson: ConversationJson = json as ConversationJson;
     JsonFixer.prepareJsonInfoLinkSources(convJson);
-    JsonFixer.addMissingSupplementType(convJson);
     let conv = Conversation.fromJSON(convJson)
     service.computeCurrentTrusts(conv, new TrustFallbacks())
     expect(conv.author.preknowledge[0].currentTrust).toEqual(1.0)

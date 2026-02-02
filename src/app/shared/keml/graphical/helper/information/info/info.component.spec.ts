@@ -17,7 +17,7 @@ describe('InfoComponent', () => {
 
     fixture = TestBed.createComponent(InfoComponent);
     component = fixture.componentInstance;
-    component.info = new Preknowledge()
+    component.info = Preknowledge.create()
     fixture.detectChanges();
   });
 

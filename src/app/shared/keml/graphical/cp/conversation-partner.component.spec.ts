@@ -19,7 +19,7 @@ describe('ConversationPartnerComponent', () => {
     fixture = TestBed.createComponent(ConversationPartnerComponent);
     component = fixture.componentInstance;
     component.conversationPartner = new ConversationPartner()
-    componentRef = fixture.componentRef;
+      componentRef = fixture.componentRef;
     componentRef.setInput('lineLength', 5); //todo
     fixture.detectChanges();
   });

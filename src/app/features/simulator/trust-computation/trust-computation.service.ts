@@ -15,8 +15,7 @@ export class TrustComputationService {
 
   computeCurrentTrusts(conv: Conversation, simulationInputs: TrustFallbacks) {
     let pres: Preknowledge[] = conv.author.preknowledge
-    let receives = conv.author.messages.filter(m => !m.isSend())
-      .map(m => m as ReceiveMessage)
+    let receives = conv.author.messages.filter(m => m.isReceive())
     let newInfos: NewInformation[] = receives.flatMap(m => m.generates)
     this.computeCTFromKnowledge(pres, newInfos, receives.length, simulationInputs)
   }
