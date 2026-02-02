@@ -1,7 +1,6 @@
 import {ConversationPartner} from "./conversation-partner";
-import {MessageJson, ReceiveMessageJson, SendMessageJson,} from "@app/shared/keml/json/sequence-diagram-models";
+import { ReceiveMessageJson, SendMessageJson,} from "@app/shared/keml/json/sequence-diagram-models";
 import {
-  InformationJson,
   InformationLinkJson,
   InformationLinkType,
   NewInformationJson,
@@ -260,23 +259,6 @@ export abstract class Information extends Referencable implements Positionable {
 
   abstract duplicate(): Information;
 
-  override toJson(): InformationJson {
-    return {
-      causes: this._causes.toJson(),
-      currentTrust: this.currentTrust,
-      eClass: this.ref.eClass,
-      initialTrust: this.initialTrust,
-      feltTrustImmediately: this.feltTrustImmediately,
-      feltTrustAfterwards: this.feltTrustAfterwards,
-      isInstruction: this.isInstruction,
-      isUsedOn: this._isUsedOn.toJson(),
-      message: this.message,
-      repeatedBy:  this._repeatedBy.toJson(),
-      targetedBy:  this._targetedBy.toJson(),
-      position: this.position,
-    }
-  }
-
   override destruct() {
     this._targetedBy.delete() //necessary to have a link die on target death
     super.destruct();
@@ -307,12 +289,6 @@ export class NewInformation extends Information {
 
   override duplicate(): NewInformation {
     return NewInformation.create(this.source, 'Copy of ' + this.message, this.isInstruction, this.position, this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
-  }
-
-  override toJson(): NewInformationJson {
-    let res = (<NewInformationJson>super.toJson());
-    res.source = this._source.toJson()
-    return res;
   }
 
   static fromJson( json: NewInformationJson, ref: Ref): NewInformation {
@@ -358,10 +334,6 @@ export class Preknowledge extends Information {
 
   override duplicate(): Preknowledge {
     return Preknowledge.create('Copy of ' + this.message, this.isInstruction, this.position, this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
-  }
-
-  override toJson(): PreknowledgeJson {
-    return (<PreknowledgeJson>super.toJson())
   }
 
   static fromJson( json: PreknowledgeJson, ref: Ref): Preknowledge {
@@ -417,16 +389,6 @@ export class InformationLink extends Referencable {
     super(refC);
     this._source = new ReTreeParentContainer<Information>(this, InformationLink.$sourceName, NewInformation.$causesName);
     this._target = new ReLinkSingleContainer<Information>(this, InformationLink.$targetName, Information.$targetedByName);
-  }
-
-  override toJson(): InformationLinkJson {
-    return {
-      eClass: EClasses.InformationLink,
-      source: this._source.toJson(),
-      target: this._target.toJson()!!,
-      type: this.type,
-      linkText: this.linkText,
-    }
   }
 
   static create(source: Information, target: Information, type: InformationLinkType, linkText?: string,
