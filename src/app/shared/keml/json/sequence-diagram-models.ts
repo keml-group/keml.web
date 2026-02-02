@@ -9,8 +9,8 @@ export interface ConversationJson {
 }
 
 export interface LifeLineJson {
-  name: string;
-  xPosition: number; //int todo
+  name?: string;
+  xPosition?: number; //int todo
 }
 
 export interface ConversationPartnerJson extends LifeLineJson {

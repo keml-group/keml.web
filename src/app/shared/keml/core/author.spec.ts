@@ -10,10 +10,10 @@ describe('Author', () => {
 
   it('should deserialize an authorJson', () => {
     let ref = RefHandler.createRef("", EClasses.Author)
-    let authorJson: AuthorJson = {messages: [], name: "", preknowledge: [], xPosition: 0}
+    let authorJson: AuthorJson = {}
     let author = Author.fromJson(authorJson, ref)
-    expect(authorJson.messages?.length).toBe(0);
-    expect(authorJson.preknowledge?.length).toEqual(0)
+    expect(author.messages?.length).toBe(0);
+    expect(author.preknowledge?.length).toEqual(0)
     expect(author.name).toEqual("")
     expect(author.xPosition).toEqual(0)
   })
