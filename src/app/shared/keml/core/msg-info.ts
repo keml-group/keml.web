@@ -64,16 +64,6 @@ export abstract class Message extends Referencable {
     return this instanceof ReceiveMessage
   }
 
-  override toJson(): MessageJson {
-    return {
-      content: this.content,
-      counterPart: this._counterPart.toJson()!!,
-      eClass: this.ref.eClass,
-      originalContent: this.originalContent,
-      timing: this.timing
-    }
-  }
-
   static newMessage(isSend: boolean, counterPart: ConversationPartner, timing: number, content: string, originalContent: string = 'Original content'): Message {
     if (isSend) {
       return SendMessage.create(counterPart, timing, content, originalContent)
@@ -106,12 +96,6 @@ export class SendMessage extends Message {
     let refC = RefHandler.createRefIfMissing(EClasses.SendMessage, ref)
     super(refC, timing, content, originalContent);
     this._uses  = new ReLinkListContainer<Information>(this, SendMessage.$usesName, Information.$isUsedOnName);
-  }
-
-  override toJson(): SendMessageJson {
-    let res = (<SendMessageJson>super.toJson());
-    res.uses = this.uses.map(u => u.getRef())
-    return res;
   }
 
   static create(counterPart: ConversationPartner,
@@ -171,14 +155,6 @@ export class ReceiveMessage extends Message {
     this._generates = new ReTreeListContainer<NewInformation>(this, ReceiveMessage.$generatesName, NewInformation.$sourceName, EClasses.NewInformation);
     this._repeats = new ReLinkListContainer<Information>(this, ReceiveMessage.$repeatsName, Information.$repeatedByName);
     this.isInterrupted = isInterrupted;
-  }
-
-  override toJson(): ReceiveMessageJson {
-    let res = (<ReceiveMessageJson>super.toJson());
-    res.generates = this._generates.toJson()
-    res.repeats = this._repeats.toJson()
-    res.isInterrupted = this.isInterrupted
-    return res;
   }
 
   static create(counterPart: ConversationPartner,
