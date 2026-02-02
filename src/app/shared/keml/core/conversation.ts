@@ -1,7 +1,7 @@
 import {Author} from "./author";
 import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
-import {Deserializer, Ref, Referencable, RefHandler, ReTreeSingleContainer, ReTreeListContainer} from "emfular";
+import {Deserializer, Ref, Referencable, RefHandler, ReTreeSingleContainer, ReTreeListContainer, attribute} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
 import {createKemlRegistry} from "@app/shared/keml/kemlregistry";
 
@@ -9,7 +9,10 @@ import {createKemlRegistry} from "@app/shared/keml/kemlregistry";
 export class Conversation extends Referencable {
   static readonly $authorName = 'author';
   static readonly $conversationPartnersName = 'conversationPartners';
+
+  @attribute()
   title: string;
+
   _author: ReTreeSingleContainer<Author>;
   get author(): Author {
     return this._author.get()!!
@@ -48,12 +51,7 @@ export class Conversation extends Referencable {
   override toJson(): ConversationJson {
     this.prepare(RefHandler.rootPath);
 
-    return {
-      eClass: this.ref.eClass,
-      title: this.title,
-      conversationPartners: this._conversationPartners.toJson(),
-      author: this._author.toJson(),
-    };
+    return (super.toJson() as ConversationJson);
   }
 
   static fromJson(json: ConversationJson, _: Ref): Conversation {
