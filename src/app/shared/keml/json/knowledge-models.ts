@@ -2,19 +2,19 @@ import {Ref} from "emfular";
 import {BoundingBox} from "ngx-svg-graphics";
 
 export interface InformationJson {
-  eClass: string;
-  message: string;
-  isInstruction: boolean;
+  eClass?: string;
+  message?: string;
+  isInstruction?: boolean;
   initialTrust?: number;
   currentTrust?: number;
   feltTrustImmediately?: number;
   feltTrustAfterwards?: number;
 
-  causes: InformationLinkJson[];
-  targetedBy: Ref[];
+  causes?: InformationLinkJson[];
+  targetedBy?: Ref[];
 
-  isUsedOn: Ref[];
-  repeatedBy: Ref[];
+  isUsedOn?: Ref[];
+  repeatedBy?: Ref[];
   position?: BoundingBox;
 }
 
@@ -27,11 +27,11 @@ export interface NewInformationJson extends InformationJson {
 }
 
 export interface InformationLinkJson {
-  eClass: string;
+  eClass?: string;
   linkText?: string;
-  type: InformationLinkType;
+  type?: InformationLinkType;
   source?: Ref; //tree parent
-  target: Ref;
+  target?: Ref;
 }
 
 export enum InformationLinkType {

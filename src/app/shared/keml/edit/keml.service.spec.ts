@@ -374,7 +374,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(historyStub.save).toHaveBeenCalledTimes(1)
     let res = kemlService.serializeConversation()
     expect(historyStub.save).toHaveBeenCalledOnceWith(res)
-    expect(res.conversationPartners.map(cp=> cp.name)).toEqual(["cp0", "cp1"])
+    expect(res.conversationPartners?.map(cp=> cp.name)).toEqual(["cp0", "cp1"])
   })
 
   it("should not call history on cp isMoveDisabled", () => {

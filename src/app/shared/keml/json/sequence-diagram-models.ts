@@ -4,8 +4,8 @@ import {Ref} from "emfular";
 export interface ConversationJson {
   eClass: string;
   title: string;
-  author: AuthorJson;
-  conversationPartners: ConversationPartnerJson[];
+  author?: AuthorJson;
+  conversationPartners?: ConversationPartnerJson[];
 }
 
 export interface LifeLineJson {
@@ -18,14 +18,14 @@ export interface ConversationPartnerJson extends LifeLineJson {
 }
 
 export interface AuthorJson extends LifeLineJson {
-  messages: MessageJson[];
-  preknowledge: PreknowledgeJson[];
+  messages?: MessageJson[];
+  preknowledge?: PreknowledgeJson[];
 }
 export interface MessageJson {
   eClass: string;
-  content: string;
+  content?: string;
   originalContent?: string;
-  timing: number;
+  timing?: number;
   counterPart: Ref;
 }
 
@@ -34,9 +34,9 @@ export interface SendMessageJson extends MessageJson {
 }
 
 export interface ReceiveMessageJson extends MessageJson {
-  generates: NewInformationJson[];
+  generates?: NewInformationJson[];
   repeats?: Ref[];
-  isInterrupted: boolean;
+  isInterrupted?: boolean;
 }
 
 

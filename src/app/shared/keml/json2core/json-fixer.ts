@@ -12,7 +12,7 @@ export class JsonFixer {
    */
   static prepareJsonInfoLinkSources(conv: ConversationJson) {
     let authorPrefix = RefHandler.computePrefix( RefHandler.rootPath, Conversation.$authorName)
-    conv.author.preknowledge?.map((p, index) => {
+    conv.author?.preknowledge?.map((p, index) => {
       let ref = RefHandler.createRef(
         RefHandler.mixWithIndex(
           RefHandler.computePrefix(authorPrefix, Author.$preknowledgeName),
@@ -25,7 +25,7 @@ export class JsonFixer {
       )
     })
 
-    conv.author.messages.map(
+    conv.author?.messages?.map(
       (m, index) => {
         if (!Message.isSend(m.eClass)) {
           let msgPath = RefHandler.mixWithIndex(RefHandler.computePrefix(authorPrefix, Author.$messagesName), index)
