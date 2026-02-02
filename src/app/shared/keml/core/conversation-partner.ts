@@ -22,8 +22,4 @@ export class ConversationPartner extends LifeLine {
     return ConversationPartner.create(json.name, json.xPosition, ref)
   }
 
-  override toJson(): ConversationPartnerJson {
-    return super.toJson();
-  }
-
 }

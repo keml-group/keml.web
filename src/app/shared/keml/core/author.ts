@@ -48,11 +48,4 @@ export class Author extends LifeLine{
     return Author.create(ref, json.name ? json.name : '', json.xPosition)
   }
 
-  override toJson(): AuthorJson {
-    let json: AuthorJson = (<AuthorJson>super.toJson())
-    json.preknowledge = this._preknowledge.toJson()
-    json.messages = this._messages.toJson()
-    return json
-  }
-
 }
