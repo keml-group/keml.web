@@ -1,4 +1,4 @@
-import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "./msg-info";
+import {InformationLink, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "./msg-info";
 import {InformationLinkJson, InformationLinkType, NewInformationJson, PreknowledgeJson} from "@app/shared/keml/json/knowledge-models";
 import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson, ReceiveMessageJson, SendMessageJson} from "@app/shared/keml/json/sequence-diagram-models";
@@ -23,10 +23,7 @@ describe("Msg-models", () => {
     let msgJson: SendMessageJson = {
       eClass: EClasses.SendMessage,
       content: "sendContent",
-      originalContent: undefined,
-      timing: 0,
       counterPart: cp.getRef(),
-      uses: []
     }
     expect(msg.toJson()).toEqual(msgJson);
   });
@@ -37,14 +34,19 @@ describe("Msg-models", () => {
     let msgJson: ReceiveMessageJson = {
       eClass: EClasses.ReceiveMessage,
       content: "receiveContent",
-      originalContent: undefined,
       timing: 1,
       counterPart: cp.getRef(),
-      isInterrupted: false,
-      generates: [],
-      repeats: []
     }
     expect(msg.toJson()).toEqual(msgJson);
+    msg.timing = 0; //default
+    msg.isInterrupted = true;
+    let msgJson2 : ReceiveMessageJson = {
+      eClass: EClasses.ReceiveMessage,
+      content: "receiveContent",
+      counterPart: cp.getRef(),
+      isInterrupted: true,
+    }
+    expect(msg.toJson()).toEqual(msgJson2);
   });
 
 });
@@ -80,18 +82,9 @@ describe('Info (models)', () => {
   it('should serialize preknowledge', () => {
     let preknowledge = Preknowledge.create()
     let preknowledgeJson : PreknowledgeJson = {
-      causes: [],
-      currentTrust: undefined,
       eClass: EClasses.Preknowledge,
       position: {x: 0, y: 0, w: 5, h: 5},
-      feltTrustAfterwards: undefined,
-      feltTrustImmediately: undefined,
-      initialTrust: undefined,
-      isInstruction: false,
-      isUsedOn: [],
       message: "Preknowledge",
-      repeatedBy: [],
-      targetedBy: []
     }
     expect(preknowledge.toJson()).toEqual(preknowledgeJson);
   });
@@ -101,18 +94,9 @@ describe('Info (models)', () => {
     let newInfo = NewInformation.create(msg, 'New Info')
     let newInfoJson: NewInformationJson = {
       source: msg.getRef(),
-      causes: [],
-      currentTrust: undefined,
       eClass: EClasses.NewInformation,
-      feltTrustAfterwards: undefined,
-      feltTrustImmediately: undefined,
-      initialTrust: undefined,
-      isInstruction: false,
-      isUsedOn: [],
       message: 'New Info',
       position: {x: 0, y: 0, w: 5, h: 5},
-      repeatedBy: [],
-      targetedBy: []
     }
     expect(newInfo.toJson()).toEqual(newInfoJson);
   });
@@ -191,7 +175,6 @@ describe('Info (models)', () => {
     let infoLink_pre_new = InformationLink.create(preknowledge1, newInfo1, InformationLinkType.SUPPORT)
     let infoLink_pre_new_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
-      linkText: undefined,
       source: RefHandler.createRef('', EClasses.Preknowledge),
       target: RefHandler.createRef('', EClasses.NewInformation),
       type: InformationLinkType.SUPPORT
@@ -201,7 +184,6 @@ describe('Info (models)', () => {
     let infoLink_pre_pre = InformationLink.create(preknowledge1, preknowledge2, InformationLinkType.STRONG_SUPPORT)
     let infoLink_pre_pre_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
-      linkText: undefined,
       source: RefHandler.createRef('', EClasses.Preknowledge),
       target: RefHandler.createRef('', EClasses.Preknowledge),
       type: InformationLinkType.STRONG_SUPPORT
@@ -211,7 +193,6 @@ describe('Info (models)', () => {
     let infoLink_pre_pre_2 = InformationLink.create(preknowledge1, preknowledge2, InformationLinkType.ATTACK)
     let infoLink_pre_pre_2_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
-      linkText: undefined,
       source: RefHandler.createRef('', EClasses.Preknowledge),
       target: RefHandler.createRef('', EClasses.Preknowledge),
       type: InformationLinkType.ATTACK
@@ -234,8 +215,8 @@ describe('Info (models)', () => {
     let p1 = Preknowledge.create('p1')
     let p2 = Preknowledge.create('p2')
 
-    let link1 = InformationLink.create( p0, p1, InformationLinkType.SUPPORT)
-    let link2 = InformationLink.create( p0, p2, InformationLinkType.SUPPLEMENT)
+    InformationLink.create( p0, p1, InformationLinkType.SUPPORT)
+    InformationLink.create( p0, p2, InformationLinkType.SUPPLEMENT)
     expect(p0.causes.length).toEqual(2)
     expect(p1.targetedBy.length).toEqual(1)
     expect(p2.targetedBy.length).toEqual(1)
@@ -303,13 +284,7 @@ describe('deserialize and re-serialize', () => {
   it('should add attributes to preknowledge via fromJson', ()=> {
     let ref = RefHandler.createRef("", EClasses.Preknowledge)
     let preJson: PreknowledgeJson = {
-      causes: [],
-      eClass: "",
-      isInstruction: false,
-      isUsedOn: [],
       message: "pre0",
-      repeatedBy: [],
-      targetedBy: []
     }
     let res = Preknowledge.fromJson(preJson, ref)
     expect(res.message).toEqual("pre0")
