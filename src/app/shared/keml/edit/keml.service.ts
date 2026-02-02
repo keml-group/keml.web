@@ -400,7 +400,7 @@ export class KemlService {
   }
 
   addNewPreknowledge(): Preknowledge {
-    const preknowledge: Preknowledge = Preknowledge.create("Preknowledge.create", false, LayoutingService.bbForPreknowledge(LayoutingService.positionForNewPreknowledge));
+    const preknowledge: Preknowledge = Preknowledge.create("New Preknowledge", false, LayoutingService.bbForPreknowledge(LayoutingService.positionForNewPreknowledge));
     this.conversation.author.preknowledge.push(preknowledge);
     this.saveCurrentState()
     return preknowledge;

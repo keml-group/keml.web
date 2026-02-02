@@ -60,7 +60,7 @@ export class IncrementalSimulationService {
   three steps:
     1) add send msg itself
     2) add "new" Preknowledges and all isUsedOn of the send
-    3) add relationships of Preknowledge.creates (linkStep)
+    3) add relationships of new preknowledges (linkStep)
    */
   private async stepSend(send: SendMessage) {
     let msg = SendMessage.create(send.counterPart, send.timing, send.content, send.originalContent)
