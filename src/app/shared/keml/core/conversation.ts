@@ -54,11 +54,6 @@ export class Conversation extends Referencable {
     return (super.toJson() as ConversationJson);
   }
 
-  static fromJson(json: ConversationJson, _: Ref): Conversation {
-    return Conversation.create(json.title)
-  }
-
-  //todo naming
   static fromJSON (convJson: ConversationJson): Conversation {
     return Deserializer.fromJSON<typeof Conversation>(
       Conversation,

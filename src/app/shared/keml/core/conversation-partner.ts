@@ -1,5 +1,4 @@
 import {LifeLine} from "./life-line";
-import {ConversationPartnerJson} from "@app/shared/keml/json/sequence-diagram-models"
 import {Ref} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
 import {RefHandler} from "emfular";
@@ -16,10 +15,6 @@ export class ConversationPartner extends LifeLine {
     cp.name = name
     cp.xPosition = xPosition? xPosition : 0;
     return cp;
-  }
-
-  static fromJson(json: ConversationPartnerJson, ref: Ref): ConversationPartner {
-    return ConversationPartner.create(json.name, json.xPosition, ref)
   }
 
 }

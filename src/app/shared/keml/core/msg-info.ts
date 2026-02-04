@@ -1,10 +1,6 @@
 import {ConversationPartner} from "./conversation-partner";
-import { ReceiveMessageJson, SendMessageJson,} from "@app/shared/keml/json/sequence-diagram-models";
 import {
-  InformationLinkJson,
   InformationLinkType,
-  NewInformationJson,
-  PreknowledgeJson,
 } from "@app/shared/keml/json/knowledge-models";
 import {EClasses} from "@app/shared/keml/eclasses";
 import {
@@ -108,12 +104,6 @@ export class SendMessage extends Message {
     return send;
   }
 
-  static fromJson(json: SendMessageJson, ref: Ref): SendMessage {
-    const send = new SendMessage(ref)
-    send.fill(json)
-    return send;
-  }
-
 }
 
 export class ReceiveMessage extends Message {
@@ -164,12 +154,6 @@ export class ReceiveMessage extends Message {
                 ref?: Ref,): ReceiveMessage {
     const rec = new ReceiveMessage(ref, timing, content, originalContent, isInterrupted);
     rec.counterPart = counterPart;
-    return rec
-  }
-
-  static fromJson(json: ReceiveMessageJson, ref: Ref): ReceiveMessage {
-    const rec = new ReceiveMessage(ref)
-    rec.fill(json)
     return rec
   }
 
@@ -291,12 +275,6 @@ export class NewInformation extends Information {
     return NewInformation.create(this.source, 'Copy of ' + this.message, this.isInstruction, this.position, this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
   }
 
-  static fromJson( json: NewInformationJson, ref: Ref): NewInformation {
-    const newInfo = new NewInformation(ref)
-    newInfo.fill(json)
-    return newInfo
-  }
-
   static create(source: ReceiveMessage,
          message: string, isInstruction: boolean = false, position?: BoundingBox,
          initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number , feltTrustAfterwards?: number,
@@ -334,12 +312,6 @@ export class Preknowledge extends Information {
 
   override duplicate(): Preknowledge {
     return Preknowledge.create('Copy of ' + this.message, this.isInstruction, this.position, this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
-  }
-
-  static fromJson( json: PreknowledgeJson, ref: Ref): Preknowledge {
-    const pre = new Preknowledge(ref)
-    pre.fill(json)
-    return pre
   }
 
   static create(message: string = 'Preknowledge', isInstruction: boolean = false, position?: BoundingBox,
@@ -399,12 +371,6 @@ export class InformationLink extends Referencable {
     link.type = type
     link.linkText = linkText
     return link
-  }
-
-  static fromJson( json: InformationLinkJson, ref: Ref): InformationLink {
-    let res = new InformationLink( ref)
-    res.fill(json)
-    return res
   }
 
 }

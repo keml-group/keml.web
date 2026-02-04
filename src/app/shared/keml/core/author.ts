@@ -1,6 +1,5 @@
 import {LifeLine} from "./life-line";
 import {Message} from "./msg-info";
-import {AuthorJson} from "@app/shared/keml/json/sequence-diagram-models"
 import {Preknowledge} from "./msg-info";
 import {Ref} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
@@ -42,10 +41,6 @@ export class Author extends LifeLine{
     auth.name = name? name: ''
     auth.xPosition = xPosition
     return auth
-  }
-
-  static fromJson(json: AuthorJson, ref: Ref): Author {
-    return Author.create(ref, json.name ? json.name : '', json.xPosition)
   }
 
 }
