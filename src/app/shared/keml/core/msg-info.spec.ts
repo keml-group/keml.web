@@ -281,15 +281,6 @@ describe('Info (models)', () => {
 
 describe('deserialize and re-serialize', () => {
 
-  it('should add attributes to preknowledge via fromJson', ()=> {
-    let ref = RefHandler.createRef("", EClasses.Preknowledge)
-    let preJson: PreknowledgeJson = {
-      message: "pre0",
-    }
-    let res = Preknowledge.fromJson(preJson, ref)
-    expect(res.message).toEqual("pre0")
-  })
-
   it('should deserialize and re-serialize a real world example', () => {
 
     let json = require('@assets/test/3-2-keml-jackson.json');

@@ -13,6 +13,7 @@ import {ReceiveMessageJson} from "@app/shared/keml/json/sequence-diagram-models"
 describe('Conversation', () => {
   it('should create an instance', () => {
     expect(new Conversation()).toBeTruthy();
+    expect(Conversation.create()).toBeTruthy();
   });
 
   it('verify that refs are correctly set for toJson: should serialize a conversation with missing or wrong refs correctly', () => {

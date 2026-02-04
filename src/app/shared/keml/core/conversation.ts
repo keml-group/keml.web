@@ -31,18 +31,19 @@ export class Conversation extends Referencable {
   }
 
   constructor(
+    _?: Ref,
     title: string = 'New Conversation'
   ) {
-    let ref = RefHandler.createRef(RefHandler.rootPath, EClasses.Conversation)
-    super(ref);
+    let refC = RefHandler.createRef(RefHandler.rootPath, EClasses.Conversation)
+    super(refC);
     this._author = new ReTreeSingleContainer<Author>(this, Conversation.$authorName, undefined, EClasses.Author);
     this._conversationPartners = new ReTreeListContainer<ConversationPartner>(this, Conversation.$conversationPartnersName, undefined, EClasses.ConversationPartner);
     this.title = title;
     this.author = new Author();
   }
 
-  static create(title: string, author?: Author): Conversation {
-    const conv = new Conversation();
+  static create(title: string = 'New conversation', author?: Author): Conversation {
+    const conv = new Conversation(undefined, 'New Conversation');
     conv.title = title;
     conv.author = author? author: new Author();
     return conv;

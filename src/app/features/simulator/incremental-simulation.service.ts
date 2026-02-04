@@ -18,7 +18,7 @@ export class IncrementalSimulationService {
   msgCount: WritableSignal<number> = signal(0)
 
   simulationInputs: TrustFallbacks = new TrustFallbacks();
-  completeConv: Conversation = new Conversation();
+  completeConv: Conversation = Conversation.create();
   incrementalConv: Conversation = this.completeConv
   //todo maybe export current msgCount here? this way, the line could be adapted on incremental conv
 

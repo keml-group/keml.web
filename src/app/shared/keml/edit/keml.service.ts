@@ -36,7 +36,7 @@ export class KemlService {
     private layoutingService: LayoutingService,
     private historyService: KemlHistoryService,
   ) {
-    this.conversation = new Conversation();
+    this.conversation = Conversation.create('New Conversation');
     this.layoutingService.positionConversationPartners(this.conversation.conversationPartners)
     this.msgCount = signal<number>(this.conversation.author.messages.length);
     this.cpCount = signal<number>(this.conversation.conversationPartners.length);
@@ -56,7 +56,7 @@ export class KemlService {
   }
 
   newConversationNoHistory(title?: string) {
-    this.conversation = new Conversation(title);
+    this.conversation = Conversation.create(title);
     this.msgCount.set(this.conversation.author.messages.length)
     this.cpCount.set(this.conversation.conversationPartners.length)
   }

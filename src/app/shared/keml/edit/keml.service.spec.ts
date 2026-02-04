@@ -331,16 +331,16 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     kemlService.newConversationNoHistory("test")
     expect(historyStub.save).toHaveBeenCalledTimes(0)
     const res = kemlService.conversation.toJson()
-    expect(res).toEqual(new Conversation("test").toJson())
+    expect(res).toEqual(Conversation.create("test").toJson())
 
     kemlService.newConversation("test1")
     expect(historyStub.save).toHaveBeenCalledTimes(1)
-    expect(historyStub.save).toHaveBeenCalledOnceWith(new Conversation("test1").toJson())
+    expect(historyStub.save).toHaveBeenCalledOnceWith(Conversation.create("test1").toJson())
   })
 
   //(cannot test deserialize to not call history) it is private
   it('should call history once on load', () => {
-    const exampleConv = new Conversation("testLoad").toJson()
+    const exampleConv = new Conversation(undefined, "testLoad").toJson()
     expect(historyStub.save).toHaveBeenCalledTimes(0)
     expect(kemlService.conversation.title == exampleConv.title).toBeFalse()
     kemlService.loadConversation(exampleConv)

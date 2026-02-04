@@ -20,7 +20,7 @@ describe('ConversationComponent', () => {
     componentRef = fixture.componentRef;
     componentRef.setInput('msgCount', 5)
     componentRef.setInput('cpCount', 1)
-    component.conversation = new Conversation();
+    component.conversation = Conversation.create();
     fixture.detectChanges();
   });
 

@@ -33,7 +33,7 @@ describe('EditorComponent', () => {
       'cpCount',
       'conversation'
     ]);
-    kemlService.conversation = new Conversation()
+    kemlService.conversation = Conversation.create()
     detailsService = jasmine.createSpyObj<DetailsService>('detailsService', [
       'openConversationPartnerDetails',
       'openMessageDetails',
