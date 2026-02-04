@@ -56,8 +56,7 @@ export class Conversation extends Referencable {
   }
 
   static fromJSON (convJson: ConversationJson): Conversation {
-    return Deserializer.fromJSON<typeof Conversation>(
-      Conversation,
+    return Deserializer.fromJSON<Conversation>(
       convJson,
       createKemlRegistry(),
       EClasses.Conversation
