@@ -399,8 +399,8 @@ export class KemlService {
     this.saveCurrentState()
   }
 
-  addNewPreknowledge(): Preknowledge {
-    const preknowledge: Preknowledge = Preknowledge.create("New Preknowledge", false, LayoutingService.bbForPreknowledge(LayoutingService.positionForNewPreknowledge));
+  addNewPreknowledge(msg?:string): Preknowledge {
+    const preknowledge: Preknowledge = Preknowledge.create(msg?msg:"New Preknowledge", false, LayoutingService.bbForPreknowledge(LayoutingService.positionForNewPreknowledge));
     this.conversation.author.preknowledge.push(preknowledge);
     this.saveCurrentState()
     return preknowledge;
@@ -410,11 +410,11 @@ export class KemlService {
     return !this.getFirstReceive();
   }
 
-  addNewNewInfo(causeMsg?: ReceiveMessage): NewInformation | undefined {
+  addNewNewInfo(causeMsg?: ReceiveMessage, msg?: string): NewInformation | undefined {
     const source = causeMsg? causeMsg : this.getFirstReceive()
     if (source) {
       const newInfo = NewInformation.create(
-        source, 'New Information', false, LayoutingService.bbForNewInfo(source.generates.length)
+        source, msg?msg:'New Information', false, LayoutingService.bbForNewInfo(source.generates.length)
       );
       this.historyService.save(this.conversation.toJson())
       return newInfo
