@@ -2,7 +2,7 @@ import {InformationLink, NewInformation, Preknowledge, ReceiveMessage, SendMessa
 import {InformationLinkJson, InformationLinkType, NewInformationJson, PreknowledgeJson} from "@app/shared/keml/json/knowledge-models";
 import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson, ReceiveMessageJson, SendMessageJson} from "@app/shared/keml/json/sequence-diagram-models";
-import {RefHandler, JsonComparer} from "emfular";
+import {RefHandler, JsonComparer, SerializationContext} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
 import {JsonFixer} from "@app/shared/keml/json2core/json-fixer";
 import {Conversation} from "@app/shared/keml/core/conversation";
@@ -19,34 +19,38 @@ describe("Msg-models", () => {
 
   it('should serialize a send msg', () => {
     let cp = new ConversationPartner()
+    let ctx = new SerializationContext(cp);
     let msg = SendMessage.create(cp, 0, "sendContent")
     let msgJson: SendMessageJson = {
       eClass: EClasses.SendMessage,
       content: "sendContent",
-      counterPart: cp.getRef(),
+      counterPart: ctx.get(cp),
     }
-    expect(msg.toJson()).toEqual(msgJson);
+    expect(msg.toJson(ctx)).toEqual(msgJson)
+    expect(() => msg.toJson()).toThrow();
   });
 
   it('should serialize a receive msg', () => {
     let cp = new ConversationPartner()
+    let ctx = new SerializationContext(cp);
     let msg = ReceiveMessage.create(cp, 1, "receiveContent")
     let msgJson: ReceiveMessageJson = {
       eClass: EClasses.ReceiveMessage,
       content: "receiveContent",
       timing: 1,
-      counterPart: cp.getRef(),
+      counterPart: ctx.get(cp),
     }
-    expect(msg.toJson()).toEqual(msgJson);
+    expect(msg.toJson(ctx)).toEqual(msgJson);
     msg.timing = 0; //default
     msg.isInterrupted = true;
     let msgJson2 : ReceiveMessageJson = {
       eClass: EClasses.ReceiveMessage,
       content: "receiveContent",
-      counterPart: cp.getRef(),
+      counterPart: ctx.get(cp),
       isInterrupted: true,
     }
-    expect(msg.toJson()).toEqual(msgJson2);
+    expect(msg.toJson(ctx)).toEqual(msgJson2);
+    expect(() => msg.toJson()).toThrow();
   });
 
 });
@@ -92,13 +96,16 @@ describe('Info (models)', () => {
   it('should serialize newInfo', () => {
     let msg = new ReceiveMessage(undefined, 1, "receiveContent")
     let newInfo = NewInformation.create(msg, 'New Info')
+
+    const ctx = new SerializationContext(msg)
+
     let newInfoJson: NewInformationJson = {
-      source: msg.getRef(),
+      source: ctx.get(msg),
       eClass: EClasses.NewInformation,
       message: 'New Info',
       position: {x: 0, y: 0, w: 5, h: 5},
     }
-    expect(newInfo.toJson()).toEqual(newInfoJson);
+    expect(newInfo.toJson(ctx)).toEqual(newInfoJson);
   });
 
   it('should delete a "used on" on an info', () => {
@@ -151,53 +158,62 @@ describe('Info (models)', () => {
     let preknowledge1 = Preknowledge.create('Preknowledge1')
     let preknowledge2 = Preknowledge.create('Preknowledge2')
 
+    const ctx = new SerializationContext(newInfo1)
+    const refNew1 = RefHandler.createRef(RefHandler.rootPath, EClasses.NewInformation)
+    const refNew2 = RefHandler.createRef("new2", EClasses.NewInformation)
+    ctx.put(newInfo2, refNew2)
+    const refPre1 = RefHandler.createRef("pre1", EClasses.Preknowledge)
+    ctx.put(preknowledge1, refPre1)
+    const refPre2 = RefHandler.createRef("pre2", EClasses.Preknowledge)
+    ctx.put(preknowledge2, refPre2)
+
     // ***** candidates **********
     let infoLink_new_new = InformationLink.create(newInfo1, newInfo2, InformationLinkType.SUPPLEMENT, 'text')
     let infoLink_new_new_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
       linkText: "text",
-      source: RefHandler.createRef('', EClasses.NewInformation),
-      target: RefHandler.createRef('', EClasses.NewInformation),
+      source: refNew1,
+      target: refNew2,
       type: InformationLinkType.SUPPLEMENT
     }
-    expect(infoLink_new_new.toJson()).toEqual(infoLink_new_new_Json);
+    expect(infoLink_new_new.toJson(ctx)).toEqual(infoLink_new_new_Json);
 
     let infoLink_new_pre = InformationLink.create(newInfo1, preknowledge1, InformationLinkType.STRONG_ATTACK, 'text')
     let infoLink_new_pre_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
       linkText: "text",
-      source: RefHandler.createRef('', EClasses.NewInformation),
-      target: RefHandler.createRef('', EClasses.Preknowledge),
+      source: refNew1,
+      target: refPre1,
       type: InformationLinkType.STRONG_ATTACK
     }
-    expect(infoLink_new_pre.toJson()).toEqual(infoLink_new_pre_Json);
+    expect(infoLink_new_pre.toJson(ctx)).toEqual(infoLink_new_pre_Json);
 
     let infoLink_pre_new = InformationLink.create(preknowledge1, newInfo1, InformationLinkType.SUPPORT)
     let infoLink_pre_new_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
-      source: RefHandler.createRef('', EClasses.Preknowledge),
-      target: RefHandler.createRef('', EClasses.NewInformation),
+      source: refPre1,
+      target: refNew1,
       type: InformationLinkType.SUPPORT
     }
-    expect(infoLink_pre_new.toJson()).toEqual(infoLink_pre_new_Json);
+    expect(infoLink_pre_new.toJson(ctx)).toEqual(infoLink_pre_new_Json);
 
     let infoLink_pre_pre = InformationLink.create(preknowledge1, preknowledge2, InformationLinkType.STRONG_SUPPORT)
     let infoLink_pre_pre_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
-      source: RefHandler.createRef('', EClasses.Preknowledge),
-      target: RefHandler.createRef('', EClasses.Preknowledge),
+      source: refPre1,
+      target: refPre2,
       type: InformationLinkType.STRONG_SUPPORT
     }
-    expect(infoLink_pre_pre.toJson()).toEqual(infoLink_pre_pre_Json);
+    expect(infoLink_pre_pre.toJson(ctx)).toEqual(infoLink_pre_pre_Json);
 
     let infoLink_pre_pre_2 = InformationLink.create(preknowledge1, preknowledge2, InformationLinkType.ATTACK)
     let infoLink_pre_pre_2_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
-      source: RefHandler.createRef('', EClasses.Preknowledge),
-      target: RefHandler.createRef('', EClasses.Preknowledge),
+      source: refPre1,
+      target: refPre2,
       type: InformationLinkType.ATTACK
     }
-    expect(infoLink_pre_pre_2.toJson()).toEqual(infoLink_pre_pre_2_Json);
+    expect(infoLink_pre_pre_2.toJson(ctx)).toEqual(infoLink_pre_pre_2_Json);
   });
 
   it('should delete an info link completely', () => {

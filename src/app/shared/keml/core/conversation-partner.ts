@@ -1,8 +1,8 @@
 import {LifeLine} from "./life-line";
-import {Ref} from "emfular";
+import {Ref, RefHandler, eClass} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
-import {RefHandler} from "emfular";
 
+@eClass(EClasses.ConversationPartner)
 export class ConversationPartner extends LifeLine {
 
   constructor(ref?: Ref, name: string = 'NewPartner', xPosition?: number) {

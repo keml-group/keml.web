@@ -5,6 +5,7 @@ import {
 import {EClasses} from "@app/shared/keml/eclasses";
 import {
   attribute,
+  eClass,
   Ref,
   Referencable,
   RefHandler,
@@ -68,6 +69,7 @@ export abstract class Message extends Referencable {
   }
 }
 
+@eClass(EClasses.SendMessage)
 export class SendMessage extends Message {
   public static readonly $usesName = 'uses'
 
@@ -106,6 +108,7 @@ export class SendMessage extends Message {
 
 }
 
+@eClass(EClasses.ReceiveMessage)
 export class ReceiveMessage extends Message {
   static readonly $generatesName: string = 'generates';
   static readonly $repeatsName: string = 'repeats';
@@ -249,6 +252,7 @@ export abstract class Information extends Referencable implements Positionable {
   }
 }
 
+@eClass(EClasses.NewInformation)
 export class NewInformation extends Information {
 
   public static readonly $sourceName = 'source'
@@ -293,6 +297,7 @@ export class NewInformation extends Information {
 
 }
 
+@eClass(EClasses.Preknowledge)
 export class Preknowledge extends Information {
 
   constructor(ref?: Ref) {
@@ -331,6 +336,7 @@ export class Preknowledge extends Information {
 
 }
 
+@eClass(EClasses.InformationLink)
 export class InformationLink extends Referencable {
 
   public static readonly $sourceName = 'source'

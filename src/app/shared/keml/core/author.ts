@@ -1,10 +1,10 @@
 import {LifeLine} from "./life-line";
 import {Message} from "./msg-info";
 import {Preknowledge} from "./msg-info";
-import {Ref} from "emfular";
+import {eClass, Ref, RefHandler, ReTreeListContainer} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
-import {RefHandler, ReTreeListContainer} from "emfular";
 
+@eClass(EClasses.Author)
 export class Author extends LifeLine{
   static readonly $preknowledgeName: string = 'preknowledge';
   static readonly $messagesName: string = 'messages';
