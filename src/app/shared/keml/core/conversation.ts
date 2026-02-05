@@ -3,7 +3,6 @@ import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
 import {Deserializer, Referencable, ReTreeSingleContainer, ReTreeListContainer, attribute, eClass} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
-import {createKemlRegistry} from "@app/shared/keml/kemlregistry";
 
 @eClass(EClasses.Conversation)
 export class Conversation extends Referencable {
@@ -50,7 +49,6 @@ export class Conversation extends Referencable {
   static fromJSON (convJson: ConversationJson): Conversation {
     return Deserializer.fromJSON<Conversation>(
       convJson,
-      createKemlRegistry(),
       EClasses.Conversation
     )
   }
