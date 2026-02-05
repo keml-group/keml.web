@@ -111,9 +111,6 @@ export class ReceiveMessage extends Message {
   get generates(): NewInformation[] {
     return this._generates.get()!!
   }
-  addGenerates(news: NewInformation) {
-    this._generates.add(news)
-  }
 
   _repeats: ReLinkListContainer<Information>;
   get repeats(): Information[] {
@@ -181,22 +178,10 @@ export abstract class Information extends Referencable implements Positionable {
   get causes(): InformationLink[] {
     return this._causes.get();
   }
-  addCauses(...link: InformationLink[]) {
-    link?.map(l => this._causes.add(l))
-  }
-  removeCauses(link: InformationLink) {
-    this._causes.remove(link)
-  }
 
   readonly _targetedBy: ReLinkListContainer<InformationLink>
   get targetedBy(): InformationLink[] {
     return this._targetedBy.get();
-  }
-  addTargetedBy(link: InformationLink) {
-    this._targetedBy.add(link)
-  }
-  removeTargetedBy(link: InformationLink) {
-    this._targetedBy.remove(link)
   }
 
   readonly _isUsedOn: ReLinkListContainer<SendMessage>
