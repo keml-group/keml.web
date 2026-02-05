@@ -43,13 +43,16 @@ describe('Conversation', () => {
 
   it("should produce only minimal output for a conversation with mostly defaults", () => {
     let conv = new Conversation();
-    let json = {
+    let json: any = {
       "eClass": EClasses.Conversation,
       "title": conv.title,
       "author": {
         "eClass": EClasses.Author
       }
     }
+    expect(conv.toJson()).toEqual(json)
+    conv.author.xPosition = 5
+    json["author"]["xPosition"] = 5
     expect(conv.toJson()).toEqual(json)
   })
 });
