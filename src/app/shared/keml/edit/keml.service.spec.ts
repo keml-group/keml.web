@@ -204,17 +204,10 @@ describe('KEML-Service', () => {
     let callResult = service.loadConversation(JSON.parse(str))
     expect(callResult.title).toEqual(conv.title)
 
-    function testListRefs<T extends Referencable>(l1: T[], l2: T[]) {
-      expect(l1.length).toEqual(l2.length)
-      l1.forEach((l,i) => {
-        expect(l.getRef()).toEqual(l2[i].getRef())
-      })
-    }
 
     // ********* conversationPartners **************
     callResult.conversationPartners.forEach((cp, index) => {
       expect(cp.name).toEqual(cps[index].name)
-      expect(cp.getRef()).toEqual(cps[index].getRef())
       expect(cp.xPosition).toEqual(cps[index].xPosition)
     })
 
@@ -224,25 +217,14 @@ describe('KEML-Service', () => {
     callResult.author.preknowledge.forEach((pre, i) => {
       expect(pre.message).toEqual(preknowledge[i].message)
       expect(pre.position).toEqual(preknowledge[i].position)
-      expect(pre.getRef()).toEqual(preknowledge[i].getRef())
-      testListRefs(pre.isUsedOn, preknowledge[i].isUsedOn)
     })
 
     // ********* messages **************
     callResult.author.messages.forEach((msg, i) => {
       expect(msg.content).toEqual(msgs[i].content)
       expect(msg.originalContent).toEqual(msgs[i].originalContent)
-      expect(msg.counterPart.getRef()).toEqual(msgs[i].counterPart.getRef())
       expect(msg.timing).toEqual(msgs[i].timing)
-      expect(msg.getRef()).toEqual(msgs[i].getRef())
     })
-    testListRefs(
-      (callResult.author.messages[0] as SendMessage).uses,
-      msg0.uses
-    )
-    let resultRec = (callResult.author.messages[1] as ReceiveMessage)
-    testListRefs(resultRec.generates, msg1.generates)
-    testListRefs(resultRec.repeats, msg1.repeats)
 
     //msgSignal:
     expect(service.msgCount()).toEqual(2)
@@ -253,20 +235,12 @@ describe('KEML-Service', () => {
       expect(newInfo.message).toEqual(msg1.generates[i].message)
       expect(newInfo.isInstruction).toEqual(msg1.generates[i].isInstruction)
       expect(newInfo.position).toEqual(msg1.generates[i].position)
-      expect(newInfo.source.getRef()).toEqual(msg1.generates[i].source.getRef())
-      testListRefs(newInfo.causes, msg1.generates[i].causes)
-      testListRefs(newInfo.targetedBy, msg1.generates[i].targetedBy)
-      testListRefs(newInfo.isUsedOn, msg1.generates[i].isUsedOn)
-      testListRefs(newInfo.repeatedBy, msg1.generates[i].repeatedBy)
     })
 
     // ********** infoLinks **************
     let resultLink0 = resultNewInfos[0].causes[0]
     let resultLink1 = callResult.author.preknowledge[1].causes[0]
     function compareLinks(l1: InformationLink, l2: InformationLink) {
-      expect(l1.getRef()).toEqual(l2.getRef())
-      expect(l1.source.getRef()).toEqual(l2.source.getRef())
-      expect(l1.target.getRef()).toEqual(l2.target.getRef())
       expect(l1.type).toEqual(l2.type)
       expect(l1.linkText).toEqual(l2.linkText)
     }

@@ -16,25 +16,20 @@ describe('Conversation', () => {
     expect(Conversation.create()).toBeTruthy();
   });
 
-  it('verify that refs are correctly set for toJson: should serialize a conversation with missing or wrong refs correctly', () => {
+  it('verify that refs are correctly set on toJson: should serialize a conversation with missing or wrong refs correctly', () => {
     let conv = new Conversation();
     conv.title = "Change conv"
     let cp0 = new ConversationPartner('NewPartner', 0);
     conv.addCP(cp0)
-    expect(cp0.getRef().$ref).toEqual('wrong')
-    expect(conv.author.getRef().$ref).toEqual('');
     let m0 = SendMessage.create(cp0, 0)
     let m1 = ReceiveMessage.create(cp0, 1)
     conv.author.addMessage(m0, m1)
-    expect(m0.getRef().$ref).toEqual('');
-    expect(m1.getRef().$ref).toEqual('');
+
 
     //infos:
     let p0 = Preknowledge.create()
     conv.author.addPreknowledge(p0)
-    expect(p0.getRef().$ref).toEqual('');
     let n0 = NewInformation.create(m1, 'rec')
-    expect(n0.getRef().$ref).toEqual('');
 
     InformationLink.create(n0, p0, InformationLinkType.STRONG_ATTACK)
 

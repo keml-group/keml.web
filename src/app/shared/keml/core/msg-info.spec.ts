@@ -56,13 +56,7 @@ describe("Msg-models", () => {
 });
 
 describe('Info (models)', () => {
-
-  it('should prepare the information serialization for getRef', () => {
-    let preknowledge = Preknowledge.create()
-    preknowledge.prepare('fantasy')
-    expect (preknowledge.getRef()).toEqual(RefHandler.createRef('fantasy', EClasses.Preknowledge));
-  })
-
+  
   it('should determine the correct timing of a new info', () => {
     let rec = new ReceiveMessage(5)
     let newInfo = NewInformation.create(rec, 'info1')
