@@ -1,7 +1,7 @@
 import {LifeLine} from "./life-line";
 import {Message} from "./msg-info";
 import {Preknowledge} from "./msg-info";
-import {eClass, Ref, RefHandler, ReTreeListContainer} from "emfular";
+import {eClass, ReTreeListContainer} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
 
 @eClass(EClasses.Author)
@@ -29,15 +29,14 @@ export class Author extends LifeLine{
     })
   }
 
-  constructor(ref?: Ref) {
-    let refC = RefHandler.createRefIfMissing(EClasses.Author, ref)
+  constructor() {
     super();
     this._preknowledge = new ReTreeListContainer<Preknowledge>(this, Author.$preknowledgeName, undefined, EClasses.Preknowledge)
     this._messages = new ReTreeListContainer<Message>(this, Author.$messagesName)
   }
 
-  static create(ref?: Ref, name?: string, xPosition: number = 0): Author {
-    const auth = new Author(ref)
+  static create(name?: string, xPosition: number = 0): Author {
+    const auth = new Author()
     auth.name = name? name: ''
     auth.xPosition = xPosition
     return auth
