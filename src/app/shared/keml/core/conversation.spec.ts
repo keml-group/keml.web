@@ -9,6 +9,7 @@ import {
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {ReceiveMessageJson} from "@app/shared/keml/json/sequence-diagram-models";
+import { EClasses } from '../eclasses';
 
 describe('Conversation', () => {
   it('should create an instance', () => {
@@ -38,5 +39,17 @@ describe('Conversation', () => {
     expect(convJson.author?.messages![0].counterPart.$ref).toEqual('//@conversationPartners.0')
     expect(convJson.author?.preknowledge![0].targetedBy![0].$ref).toEqual('//@author/@messages.1/@generates.0/@causes.0')
     expect((convJson.author?.messages![1] as ReceiveMessageJson)?.generates![0].causes![0].target!.$ref ).toEqual('//@author/@preknowledge.0')
+  })
+
+  it("should produce only minimal output for a conversation with mostly defaults", () => {
+    let conv = new Conversation();
+    let json = {
+      "eClass": EClasses.Conversation,
+      "title": conv.title,
+      "author": {
+        "eClass": EClasses.Author
+      }
+    }
+    expect(conv.toJson()).toEqual(json)
   })
 });
