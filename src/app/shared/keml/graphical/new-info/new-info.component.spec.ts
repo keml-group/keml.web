@@ -19,7 +19,7 @@ describe('NewInfoComponent', () => {
     fixture = TestBed.createComponent(NewInfoComponent);
     component = fixture.componentInstance;
 
-    let srcMsg = ReceiveMessage.create(new ConversationPartner(), 0,'msg')
+    let srcMsg = ReceiveMessage.create(new ConversationPartner(), 0, 'msg')
     component.info = NewInformation.create(srcMsg, 'info')
 
     fixture.detectChanges();

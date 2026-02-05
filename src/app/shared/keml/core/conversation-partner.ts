@@ -1,17 +1,16 @@
 import {LifeLine} from "./life-line";
-import {Ref, RefHandler, eClass} from "emfular";
+import {Ref, eClass} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
 
 @eClass(EClasses.ConversationPartner)
 export class ConversationPartner extends LifeLine {
 
-  constructor(ref?: Ref, name: string = 'NewPartner', xPosition?: number) {
-    let refC = RefHandler.createRefIfMissing(EClasses.ConversationPartner, ref)
-    super(refC, name, xPosition);
+  constructor(name: string = 'NewPartner', xPosition?: number) {
+    super(name, xPosition);
   }
 
   static create(name: string = 'NewPartner', xPosition?: number, ref?: Ref): ConversationPartner {
-    const cp = new ConversationPartner(ref)
+    const cp = new ConversationPartner()
     cp.name = name
     cp.xPosition = xPosition? xPosition : 0;
     return cp;

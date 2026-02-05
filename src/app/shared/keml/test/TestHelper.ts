@@ -4,6 +4,6 @@ import {
 } from "@app/shared/keml/core/msg-info";
 
 export function newNewInfo(): NewInformation {
-  const rec = new ReceiveMessage(undefined, 4)
-  return NewInformation.create(rec, 'newInfo')
+  const rec = new ReceiveMessage(4)
+    return NewInformation.create(rec, 'newInfo')
 }

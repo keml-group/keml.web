@@ -6,9 +6,7 @@ import {EClasses} from "@app/shared/keml/eclasses";
 import {
   attribute,
   eClass,
-  Ref,
   Referencable,
-  RefHandler,
   ReLinkListContainer,
   ReLinkSingleContainer,
   ReTreeListContainer,
@@ -37,12 +35,11 @@ export abstract class Message extends Referencable {
   originalContent?: string;
 
   protected constructor(
-    ref: Ref,
-    timing: number=0,
-    content: string="",
+    timing: number = 0,
+    content: string = "",
     originalContent?: string,
   ) {
-    super(ref);
+    super();
     this.timing = timing;
     this.content = content;
     this.originalContent = originalContent;
@@ -85,13 +82,11 @@ export class SendMessage extends Message {
   }
 
   constructor(
-    ref?: Ref,
     timing?: number,
     content: string = 'New send content',
     originalContent?: string,
   ) {
-    let refC = RefHandler.createRefIfMissing(EClasses.SendMessage, ref)
-    super(refC, timing, content, originalContent);
+    super(timing, content, originalContent);
     this._uses  = new ReLinkListContainer<Information>(this, SendMessage.$usesName, Information.$isUsedOnName);
   }
 
@@ -99,9 +94,8 @@ export class SendMessage extends Message {
                 timing: number,
                 content: string = 'New send content',
                 originalContent?: string,
-                ref?: Ref,
-                ): SendMessage {
-    const send = new SendMessage(ref, timing, content, originalContent);
+  ): SendMessage {
+    const send = new SendMessage(timing, content, originalContent);
     send.counterPart = counterPart;
     return send;
   }
@@ -136,14 +130,12 @@ export class ReceiveMessage extends Message {
   isInterrupted: boolean = false;
 
   constructor(
-    ref?: Ref,
     timing?: number,
     content: string = "New receive content",
     originalContent?: string,
     isInterrupted: boolean = false,
   ) {
-    let refC = RefHandler.createRefIfMissing(EClasses.ReceiveMessage, ref)
-    super(refC, timing, content, originalContent);
+    super(timing, content, originalContent);
     this._generates = new ReTreeListContainer<NewInformation>(this, ReceiveMessage.$generatesName, NewInformation.$sourceName, EClasses.NewInformation);
     this._repeats = new ReLinkListContainer<Information>(this, ReceiveMessage.$repeatsName, Information.$repeatedByName);
     this.isInterrupted = isInterrupted;
@@ -153,9 +145,8 @@ export class ReceiveMessage extends Message {
                 timing: number,
                 content?: string,
                 originalContent?: string,
-                isInterrupted: boolean = false,
-                ref?: Ref,): ReceiveMessage {
-    const rec = new ReceiveMessage(ref, timing, content, originalContent, isInterrupted);
+                isInterrupted: boolean = false,): ReceiveMessage {
+    const rec = new ReceiveMessage(timing, content, originalContent, isInterrupted);
     rec.counterPart = counterPart;
     return rec
   }
@@ -231,8 +222,8 @@ export abstract class Information extends Referencable implements Positionable {
     this._repeatedBy.remove(msg)
   }
 
-  protected constructor(ref: Ref) {
-    super(ref);
+  protected constructor() {
+    super();
 
     this._causes = new ReTreeListContainer<InformationLink>(this, NewInformation.$causesName, InformationLink.$sourceName, EClasses.InformationLink);
     this._targetedBy = new ReLinkListContainer<InformationLink>(this, Information.$targetedByName, InformationLink.$targetName)
@@ -269,9 +260,8 @@ export class NewInformation extends Information {
     return this.source.timing
   }
 
-  constructor(ref?: Ref) {
-    let refC = RefHandler.createRefIfMissing(EClasses.NewInformation, ref)
-    super(refC);
+  constructor() {
+    super();
     this._source = new ReTreeParentContainer(this, NewInformation.$sourceName, ReceiveMessage.$generatesName);
   }
 
@@ -280,10 +270,9 @@ export class NewInformation extends Information {
   }
 
   static create(source: ReceiveMessage,
-         message: string, isInstruction: boolean = false, position?: BoundingBox,
-         initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number , feltTrustAfterwards?: number,
-         ref?: Ref,): NewInformation {
-    const info = new NewInformation(ref);
+                message: string, isInstruction: boolean = false, position?: BoundingBox,
+                initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number, feltTrustAfterwards?: number,): NewInformation {
+    const info = new NewInformation();
     info.source = source;
     info.message = message;
     info.isInstruction = isInstruction;
@@ -300,9 +289,8 @@ export class NewInformation extends Information {
 @eClass(EClasses.Preknowledge)
 export class Preknowledge extends Information {
 
-  constructor(ref?: Ref) {
-    let refC = RefHandler.createRefIfMissing(EClasses.Preknowledge, ref)
-    super(refC);
+  constructor() {
+    super();
   }
 
   getTiming(): number {
@@ -321,9 +309,8 @@ export class Preknowledge extends Information {
 
   static create(message: string = 'Preknowledge', isInstruction: boolean = false, position?: BoundingBox,
                 initialTrust?: number, currentTrust?: number,
-                feltTrustImmediately?: number, feltTrustAfterwards?: number,
-                ref?: Ref): Preknowledge {
-    const pre = new Preknowledge(ref)
+                feltTrustImmediately?: number, feltTrustAfterwards?: number): Preknowledge {
+    const pre = new Preknowledge()
     pre.message = message
     pre.isInstruction = isInstruction
     pre.position = Information.createBB(position)
@@ -362,16 +349,14 @@ export class InformationLink extends Referencable {
   @attribute()
   linkText?: string;
 
-  constructor(ref?: Ref) {
-    let refC = RefHandler.createRefIfMissing(EClasses.InformationLink, ref)
-    super(refC);
+  constructor() {
+    super();
     this._source = new ReTreeParentContainer<Information>(this, InformationLink.$sourceName, NewInformation.$causesName);
     this._target = new ReLinkSingleContainer<Information>(this, InformationLink.$targetName, Information.$targetedByName);
   }
 
-  static create(source: Information, target: Information, type: InformationLinkType, linkText?: string,
-                ref?: Ref,): InformationLink {
-    const link = new InformationLink(ref)
+  static create(source: Information, target: Information, type: InformationLinkType, linkText?: string,): InformationLink {
+    const link = new InformationLink()
     link.source = source
     link.target = target;
     link.type = type

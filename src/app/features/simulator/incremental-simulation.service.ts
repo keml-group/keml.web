@@ -102,30 +102,13 @@ export class IncrementalSimulationService {
   }
 
   private copyPreknowledge(pre: Preknowledge): Preknowledge {
-    let preNew = Preknowledge.create(
-      pre.message,
-      pre.isInstruction,
-      pre.position,
-      pre.initialTrust,
-      undefined,
-      pre.feltTrustImmediately,
-      pre.feltTrustAfterwards
-    )
+    let preNew = Preknowledge.create(pre.message, pre.isInstruction, pre.position, pre.initialTrust, undefined, pre.feltTrustImmediately, pre.feltTrustAfterwards)
     this.infoConnections.set(pre.gId, preNew)
     return preNew
   }
 
   private copyNewInfo(newInfo: NewInformation): NewInformation {
-    let newNew = NewInformation.create(
-      (this.msgConnections.get(newInfo.source.gId) as ReceiveMessage)!,
-      newInfo.message,
-      newInfo.isInstruction,
-      newInfo.position,
-      newInfo.initialTrust,
-      undefined,
-      newInfo.feltTrustImmediately,
-      newInfo.feltTrustAfterwards
-    )
+    let newNew = NewInformation.create((this.msgConnections.get(newInfo.source.gId) as ReceiveMessage)!, newInfo.message, newInfo.isInstruction, newInfo.position, newInfo.initialTrust, undefined, newInfo.feltTrustImmediately, newInfo.feltTrustAfterwards)
     this.infoConnections.set(newInfo.gId, newNew)
     return newNew
   }

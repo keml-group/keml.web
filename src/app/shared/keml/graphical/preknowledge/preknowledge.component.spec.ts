@@ -18,7 +18,7 @@ describe('PreknowledgeComponent', () => {
     fixture = TestBed.createComponent(PreknowledgeComponent);
     component = fixture.componentInstance;
     component.info = Preknowledge.create()
-    fixture.detectChanges();
+      fixture.detectChanges();
   });
 
   it('should create', () => {

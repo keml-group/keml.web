@@ -117,7 +117,7 @@ export class KemlService {
 
   addNewConversationPartnerNoHistory(name?: string): ConversationPartner {
     const cps = this.conversation.conversationPartners;
-    const cp: ConversationPartner = new ConversationPartner(undefined, name ? name : 'New Partner', this.layoutingService.nextConversationPartnerPosition(cps[cps.length - 1]?.xPosition));
+    const cp: ConversationPartner = new ConversationPartner(name ? name : 'New Partner', this.layoutingService.nextConversationPartnerPosition(cps[cps.length - 1]?.xPosition));
     cps.push(cp);
     this.cpCount.update(n => n+1)
     return cp;
@@ -174,7 +174,7 @@ export class KemlService {
   duplicateConversationPartner(cp: ConversationPartner): ConversationPartner {
     const cps = this.conversation.conversationPartners;
     const pos = cps.indexOf(cp);
-    const newCp: ConversationPartner = new ConversationPartner(undefined, 'Duplicate of ' + cp.name, 0)
+    const newCp: ConversationPartner = new ConversationPartner('Duplicate of ' + cp.name, 0)
     cps.splice(pos+1, 0, newCp);
     this.layoutingService.positionConversationPartners(cps); // complete re-positioning
     this.cpCount.update(n => n+1);
@@ -400,7 +400,7 @@ export class KemlService {
   }
 
   addNewPreknowledge(msg?:string): Preknowledge {
-    const preknowledge: Preknowledge = Preknowledge.create(msg?msg:"New Preknowledge", false, LayoutingService.bbForPreknowledge(LayoutingService.positionForNewPreknowledge));
+    const preknowledge: Preknowledge = Preknowledge.create(msg ? msg : "New Preknowledge", false, LayoutingService.bbForPreknowledge(LayoutingService.positionForNewPreknowledge));
     this.conversation.author.preknowledge.push(preknowledge);
     this.saveCurrentState()
     return preknowledge;
@@ -413,9 +413,7 @@ export class KemlService {
   addNewNewInfo(causeMsg?: ReceiveMessage, msg?: string): NewInformation | undefined {
     const source = causeMsg? causeMsg : this.getFirstReceive()
     if (source) {
-      const newInfo = NewInformation.create(
-        source, msg?msg:'New Information', false, LayoutingService.bbForNewInfo(source.generates.length)
-      );
+      const newInfo = NewInformation.create(source, msg ? msg : 'New Information', false, LayoutingService.bbForNewInfo(source.generates.length));
       this.historyService.save(this.conversation.toJson())
       return newInfo
     } else {

@@ -23,7 +23,7 @@ describe('ConversationPartnerDetailsComponent', () => {
     fixture = TestBed.createComponent(ConversationPartnerDetailsComponent);
     component = fixture.componentInstance;
     component.cp = new ConversationPartner()
-    fixture.detectChanges();
+      fixture.detectChanges();
   });
 
   it('should create', () => {

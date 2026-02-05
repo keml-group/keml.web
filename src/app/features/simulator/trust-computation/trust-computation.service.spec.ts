@@ -34,7 +34,7 @@ describe('TrustComputationService', () => {
 
   it('should compute the score of a single Link correctly', () => {
       let l0 = InformationLink.create(p2, p0, InformationLinkType.STRONG_ATTACK)
-      //let l1 = InformationLink.create(p1, p0, InformationLinkType.SUPPORT)
+    //let l1 = InformationLink.create(p1, p0, InformationLinkType.SUPPORT)
       expect(service.score(l0)).toEqual(undefined)
       p2.currentTrust = 0.5
       expect(service.score(l0)).toEqual(-0.5)
@@ -47,8 +47,8 @@ describe('TrustComputationService', () => {
 
   it('should compute the argumentation score of a single node correctly', () => {
       InformationLink.create(p2, p0, InformationLinkType.ATTACK)
-      InformationLink.create(p1, p0, InformationLinkType.STRONG_SUPPORT)
-      expect(service.computeArgumentationScore(p1)).toEqual(0)
+    InformationLink.create(p1, p0, InformationLinkType.STRONG_SUPPORT)
+    expect(service.computeArgumentationScore(p1)).toEqual(0)
       expect(service.computeArgumentationScore(p2)).toEqual(0)
       expect(service.computeArgumentationScore(p0)).toEqual(undefined)
       p1.currentTrust = 0.5
@@ -59,7 +59,7 @@ describe('TrustComputationService', () => {
   )
 
   it('should compute the repetition score of a single node correctly', () => {
-    let cp = new ConversationPartner(undefined, 'cp')
+    let cp = new ConversationPartner('cp')
     let r1 = ReceiveMessage.create(cp, 1)
     let r2 = ReceiveMessage.create(cp, 3)
     let info = Preknowledge.create('info')
@@ -71,8 +71,8 @@ describe('TrustComputationService', () => {
   })
 
   it('should determineInitialTrustForInfo correctly', () => {
-    let cp0 = new ConversationPartner(undefined, '0')
-    let cp1 = new ConversationPartner(undefined, '1')
+    let cp0 = new ConversationPartner('0')
+    let cp1 = new ConversationPartner('1')
     let r1 = ReceiveMessage.create(cp0, 1)
     let r2 = ReceiveMessage.create(cp1, 2)
     let newInfo1 = NewInformation.create(r1, 'm1')
@@ -188,18 +188,12 @@ describe('TrustComputationService', () => {
   })
 
   it('should adapt the current trusts', () => {
-    let pre0 = Preknowledge.create(
-      'pre0', false, undefined,
-      0.5, 0 )
-    let pre1 = Preknowledge.create('pre1',
-      false, undefined,
-      0.5, 0 )
-    let pre2 = Preknowledge.create('pre2',
-      false, undefined,
-      0.5, 0 )
+    let pre0 = Preknowledge.create('pre0', false, undefined, 0.5, 0)
+    let pre1 = Preknowledge.create('pre1', false, undefined, 0.5, 0)
+    let pre2 = Preknowledge.create('pre2', false, undefined, 0.5, 0)
 
-    let cp0 = new ConversationPartner(undefined, 'cp0')
-    let cp1 = new ConversationPartner(undefined, 'cp1')
+    let cp0 = new ConversationPartner('cp0')
+    let cp1 = new ConversationPartner('cp1')
     let cps = [cp0, cp1]
 
     let rec0 = ReceiveMessage.create(cp0, 0, 'm0')

@@ -31,7 +31,7 @@ export class Author extends LifeLine{
 
   constructor(ref?: Ref) {
     let refC = RefHandler.createRefIfMissing(EClasses.Author, ref)
-    super(refC);
+    super();
     this._preknowledge = new ReTreeListContainer<Preknowledge>(this, Author.$preknowledgeName, undefined, EClasses.Preknowledge)
     this._messages = new ReTreeListContainer<Message>(this, Author.$messagesName)
   }

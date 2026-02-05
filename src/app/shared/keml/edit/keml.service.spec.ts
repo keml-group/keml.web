@@ -29,12 +29,12 @@ describe('KEML-Service', () => {
   });
 
   it('should determine if a repetition is allowed', () => {
-    let cp = new ConversationPartner(undefined, 'cp')
+    let cp = new ConversationPartner('cp')
     let rec = ReceiveMessage.create(cp, 5)
     let newInfo = NewInformation.create(rec, 'info1')
     let pre0 = Preknowledge.create('pre0')
     let pre1 = Preknowledge.create('pre1')
-    let send3 = new SendMessage(undefined, 3)
+    let send3 = new SendMessage(3)
     pre0.addIsUsedOn(send3)
     expect(KemlService.isRepetitionAllowed(rec, newInfo)).toBe(false)
     expect(KemlService.isRepetitionAllowed(rec, pre1)).toBe(true)
@@ -93,8 +93,8 @@ describe('KEML-Service', () => {
       "  }, {\n" +
       "    \"name\" : \"Other\"\n" +
       "  } ]"
-    let cp0 = new ConversationPartner(RefHandler.createRef('//@conversationPartners.0', 'http://www.unikoblenz.de/keml#//ConversationPartner'), 'LLM', 300)
-    let cp1 = new ConversationPartner(RefHandler.createRef('//@conversationPartners.1', 'http://www.unikoblenz.de/keml#//ConversationPartner'), 'Other', 450)
+    let cp0 = new ConversationPartner('LLM', 300)
+    let cp1 = new ConversationPartner('Other', 450)
     let cps = [cp0, cp1]
 
     let preknowledgeStr =
@@ -120,14 +120,8 @@ describe('KEML-Service', () => {
       "        }\n" +
       "      } ]\n"+
       "    } ]\n"
-    let pre0 = Preknowledge.create(
-      'pre0', false, undefined,
-       0.5, 0.5, undefined, undefined,
-      RefHandler.createRef('//@author/@preknowledge.0', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
-    let pre1 = Preknowledge.create(
-      'pre1', false, undefined,
-       0.5, 0.5, undefined, undefined,
-      RefHandler.createRef('//@author/@preknowledge.1', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
+    let pre0 = Preknowledge.create('pre0', false, undefined, 0.5, 0.5, undefined, undefined)
+    let pre1 = Preknowledge.create('pre1', false, undefined, 0.5, 0.5, undefined, undefined)
 
     let preknowledge = [pre0, pre1]
     LayoutingService.positionPreknowledge(preknowledge)
@@ -176,25 +170,17 @@ describe('KEML-Service', () => {
       "      \"generates\" : [ "+newInfo0Str +", "+newInfo1Str+
       "       ]\n" +
       "   } ]\n"
-    let msg0 = SendMessage.create(cp0,0, "m0", "msg0long",
-      RefHandler.createRef('//@author/@messages.0', 'http://www.unikoblenz.de/keml#//SendMessage'))
+    let msg0 = SendMessage.create(cp0, 0, "m0", "msg0long")
     msg0.addUsage(pre0)
-    let msg1 = ReceiveMessage.create(
-      cp1, 1, "m1", "msg1long", false,
-      RefHandler.createRef('//@author/@messages.1', 'http://www.unikoblenz.de/keml#//ReceiveMessage')
-    )
+    let msg1 = ReceiveMessage.create(cp1, 1, "m1", "msg1long", false)
     let msgs: Message[] = [msg0, msg1]
-    let newInfo0 = NewInformation.create(msg1, "ni0", true,
-      undefined, undefined, undefined, 0.5, 0.5,
-      RefHandler.createRef('//@author/@messages.1/@generates.0', 'http://www.unikoblenz.de/keml#//NewInformation'))
-    let newInfo1 = NewInformation.create(msg1, "ni1",
-      false,undefined, undefined, undefined, 0.5, 0.5,
-      RefHandler.createRef('//@author/@messages.1/@generates.1', 'http://www.unikoblenz.de/keml#//NewInformation'))
+    let newInfo0 = NewInformation.create(msg1, "ni0", true, undefined, undefined, undefined, 0.5, 0.5)
+    let newInfo1 = NewInformation.create(msg1, "ni1", false, undefined, undefined, undefined, 0.5, 0.5)
 
     LayoutingService.initializeInfoPos(msgs)
 
-    let infoLink0 = InformationLink.create(newInfo0, pre0, InformationLinkType.SUPPLEMENT, undefined, RefHandler.createRef('//@author/@messages.1/@generates.0/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink')) // necessary to test JsonFixer.addMissingSupplementType
-    let infoLink1 = InformationLink.create(pre1, newInfo1, InformationLinkType.STRONG_ATTACK, '', RefHandler.createRef( '//@author/@preknowledge.1/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink'))
+    let infoLink0 = InformationLink.create(newInfo0, pre0, InformationLinkType.SUPPLEMENT, undefined) // necessary to test JsonFixer.addMissingSupplementType
+    let infoLink1 = InformationLink.create(pre1, newInfo1, InformationLinkType.STRONG_ATTACK, '')
 
     let authorStr = "\"author\" : {" +
       msgsStr +",\n" +
@@ -340,7 +326,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
 
   //(cannot test deserialize to not call history) it is private
   it('should call history once on load', () => {
-    const exampleConv = new Conversation(undefined, "testLoad").toJson()
+    const exampleConv = new Conversation("testLoad").toJson()
     expect(historyStub.save).toHaveBeenCalledTimes(0)
     expect(kemlService.conversation.title == exampleConv.title).toBeFalse()
     kemlService.loadConversation(exampleConv)
@@ -378,7 +364,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
   })
 
   it("should not call history on cp isMoveDisabled", () => {
-    let cp = new ConversationPartner(undefined, "cp")
+    let cp = new ConversationPartner("cp")
     expect(historyStub.save).toHaveBeenCalledTimes(0)
     kemlService.isMoveConversationPartnerLeftDisabled(cp)
     expect(historyStub.save).toHaveBeenCalledTimes(0)

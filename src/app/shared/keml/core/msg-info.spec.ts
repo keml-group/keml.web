@@ -9,8 +9,8 @@ import {Conversation} from "@app/shared/keml/core/conversation";
 
 describe("Msg-models", () => {
   it('should set a message counterpart correctly', () => {
-    let cp0 = new ConversationPartner(undefined, 'cp0')
-    let cp1 = new ConversationPartner(undefined, 'cp1')
+    let cp0 = new ConversationPartner('cp0')
+    let cp1 = new ConversationPartner('cp1')
     let rec = ReceiveMessage.create(cp0, 1, 'msg')
     expect(rec.counterPart).toEqual(cp0)
     rec.counterPart = cp1
@@ -59,12 +59,12 @@ describe('Info (models)', () => {
 
   it('should prepare the information serialization for getRef', () => {
     let preknowledge = Preknowledge.create()
-     preknowledge.prepare('fantasy')
+    preknowledge.prepare('fantasy')
     expect (preknowledge.getRef()).toEqual(RefHandler.createRef('fantasy', EClasses.Preknowledge));
   })
 
   it('should determine the correct timing of a new info', () => {
-    let rec = new ReceiveMessage(undefined, 5)
+    let rec = new ReceiveMessage(5)
     let newInfo = NewInformation.create(rec, 'info1')
     expect(newInfo.getTiming()).toEqual(5)
     rec.timing = 0
@@ -94,7 +94,7 @@ describe('Info (models)', () => {
   });
 
   it('should serialize newInfo', () => {
-    let msg = new ReceiveMessage(undefined, 1, "receiveContent")
+    let msg = new ReceiveMessage(1, "receiveContent")
     let newInfo = NewInformation.create(msg, 'New Info')
 
     const ctx = new SerializationContext(msg)
@@ -109,8 +109,8 @@ describe('Info (models)', () => {
   });
 
   it('should delete a "used on" on an info', () => {
-    let m0 = new ReceiveMessage(undefined, 1, "receive1")
-    let m1 = new SendMessage(undefined, 1, "send1")
+    let m0 = new ReceiveMessage(1, "receive1")
+    let m1 = new SendMessage(1, "send1")
 
     let i0 = Preknowledge.create('pre0')
     let i1 = NewInformation.create(m0, 'i1', false)
@@ -128,8 +128,8 @@ describe('Info (models)', () => {
   })
 
   it('should delete a "repeated by" on an info', () => {
-    let m0 = new ReceiveMessage(undefined, 0, "receive0")
-    let m1 = new ReceiveMessage(undefined, 1, "receive1")
+    let m0 = new ReceiveMessage(0, "receive0")
+    let m1 = new ReceiveMessage(1, "receive1")
 
     let i0 = Preknowledge.create('pre0')
     let i1 = NewInformation.create(m0, 'i1', false)
@@ -152,7 +152,7 @@ describe('Info (models)', () => {
   })
 
   it('should serialize information links', () => {
-    let msg = new ReceiveMessage(undefined, 1, "receiveContent")
+    let msg = new ReceiveMessage(1, "receiveContent")
     let newInfo1 = NewInformation.create(msg, 'New Info1')
     let newInfo2 = NewInformation.create(msg, 'New Info2')
     let preknowledge1 = Preknowledge.create('Preknowledge1')
@@ -231,8 +231,8 @@ describe('Info (models)', () => {
     let p1 = Preknowledge.create('p1')
     let p2 = Preknowledge.create('p2')
 
-    InformationLink.create( p0, p1, InformationLinkType.SUPPORT)
-    InformationLink.create( p0, p2, InformationLinkType.SUPPLEMENT)
+    InformationLink.create(p0, p1, InformationLinkType.SUPPORT)
+    InformationLink.create(p0, p2, InformationLinkType.SUPPLEMENT)
     expect(p0.causes.length).toEqual(2)
     expect(p1.targetedBy.length).toEqual(1)
     expect(p2.targetedBy.length).toEqual(1)
@@ -263,10 +263,10 @@ describe('Info (models)', () => {
 
   it('should time a preknowledge correctly', () => {
     let cp0 = new ConversationPartner()
-    let m0 = SendMessage.create( cp0, 0, 'm0')
-    let m1 = SendMessage.create( cp0, 2, 'm1')
-    let m2 = SendMessage.create( cp0, 5, 'm2')
-    let m3 = SendMessage.create( cp0, 6, 'm3')
+    let m0 = SendMessage.create(cp0, 0, 'm0')
+    let m1 = SendMessage.create(cp0, 2, 'm1')
+    let m2 = SendMessage.create(cp0, 5, 'm2')
+    let m3 = SendMessage.create(cp0, 6, 'm3')
 
     let pre0 = Preknowledge.create('p0', false)
     let pre1 = Preknowledge.create('p1', false)

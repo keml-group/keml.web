@@ -20,7 +20,7 @@ describe('InfoTrustDetailsComponent', () => {
     fixture = TestBed.createComponent(InfoTrustDetailsComponent);
     component = fixture.componentInstance;
     component.info = Preknowledge.create()
-    fixture.detectChanges();
+      fixture.detectChanges();
   });
 
   it('should create', () => {
