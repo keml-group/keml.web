@@ -1,4 +1,4 @@
-import {Ref, Referencable, attribute} from "emfular";
+import {Referencable, attribute} from "emfular";
 
 export abstract class LifeLine extends Referencable{
   @attribute()
