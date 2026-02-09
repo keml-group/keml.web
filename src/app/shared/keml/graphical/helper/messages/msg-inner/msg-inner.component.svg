@@ -1,5 +1,5 @@
 <svg:g>
-  <rect [attr.id]="msg.gId+'-left'" width="10" height="10" x="0" y="0" fill="grey"></rect>
+  <rect [attr.id]="msg.$gId+'-left'" width="10" height="10" x="0" y="0" fill="grey"></rect>
   <g arrow-between-boxes *ngIf="msg.isSend()" [start]="{x: 0, y: 0, w: 10, h: 10}" [end]="{x: length+5, y: 0, w: 10, h: 10}"></g>
   <g arrow-between-boxes *ngIf="!msg.isSend()" [end]="{x: 0, y: 0, w: 10, h: 10}" [start]="{x: length+5, y: 0, w: 10, h: 10}"></g>
   <g text-area-svg [text]="msg.content" [w]="length-35" [h]="40" [x]="25" [y]="-20"></g>

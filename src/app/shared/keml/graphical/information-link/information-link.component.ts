@@ -35,7 +35,7 @@ export class InformationLinkComponent implements OnInit, OnChanges {
   private getStartRef() {
     if(!this.startRef){
       this.startRef = (
-        document.getElementById(this.infoLink.source.gId+"-main") as unknown as InfoComponent
+        document.getElementById(this.infoLink.source.$gId+"-main") as unknown as InfoComponent
       )
     }
   }
@@ -43,7 +43,7 @@ export class InformationLinkComponent implements OnInit, OnChanges {
   private getEndRef() {
     if(!this.endRef){
       this.endRef = (
-        document.getElementById(this.infoLink.target.gId+"-main") as unknown as InfoComponent
+        document.getElementById(this.infoLink.target.$gId+"-main") as unknown as InfoComponent
       )
     }
   }

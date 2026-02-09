@@ -64,13 +64,13 @@ export class IncrementalSimulationService {
    */
   private async stepSend(send: SendMessage) {
     let msg = SendMessage.create(send.counterPart, send.timing, send.content, send.originalContent)
-    this.msgConnections.set(send.gId, msg)
+    this.msgConnections.set(send.$gId, msg)
     this.incrementalConv.author.messages.push(msg)
     this.msgCount.update(n => n+1)
     await this.sleep(500)
     let pres = this.findNewPreknowledges(send)
     this.incrementalConv.author.preknowledge.push(...pres.map(p => this.copyPreknowledge(p)))
-    let uses = send.uses.map(u => this.infoConnections.get(u.gId)!)
+    let uses = send.uses.map(u => this.infoConnections.get(u.$gId)!)
     uses.map(u => u.addIsUsedOn(msg))
     await this.linkStep(pres)
  }
@@ -83,11 +83,11 @@ export class IncrementalSimulationService {
    */
   private async stepReceive(rec: ReceiveMessage) {
     let msg = ReceiveMessage.create(rec.counterPart, rec.timing, rec.content, rec.originalContent)
-    this.msgConnections.set(rec.gId, msg)
+    this.msgConnections.set(rec.$gId, msg)
     this.incrementalConv.author.messages.push(msg)
     this.msgCount.update(n => n+1)
     await this.sleep(500)
-    let repeats: Information[] = rec.repeats.map(i => this.infoConnections.get(i.gId)!)
+    let repeats: Information[] = rec.repeats.map(i => this.infoConnections.get(i.$gId)!)
     msg.repeats.push(...repeats)
     repeats.forEach(r => r.repeatedBy.push(msg))
     let newInfos = rec.generates
@@ -103,20 +103,20 @@ export class IncrementalSimulationService {
 
   private copyPreknowledge(pre: Preknowledge): Preknowledge {
     let preNew = Preknowledge.create(pre.message, pre.isInstruction, pre.position, pre.initialTrust, undefined, pre.feltTrustImmediately, pre.feltTrustAfterwards)
-    this.infoConnections.set(pre.gId, preNew)
+    this.infoConnections.set(pre.$gId, preNew)
     return preNew
   }
 
   private copyNewInfo(newInfo: NewInformation): NewInformation {
-    let newNew = NewInformation.create((this.msgConnections.get(newInfo.source.gId) as ReceiveMessage)!, newInfo.message, newInfo.isInstruction, newInfo.position, newInfo.initialTrust, undefined, newInfo.feltTrustImmediately, newInfo.feltTrustAfterwards)
-    this.infoConnections.set(newInfo.gId, newNew)
+    let newNew = NewInformation.create((this.msgConnections.get(newInfo.source.$gId) as ReceiveMessage)!, newInfo.message, newInfo.isInstruction, newInfo.position, newInfo.initialTrust, undefined, newInfo.feltTrustImmediately, newInfo.feltTrustAfterwards)
+    this.infoConnections.set(newInfo.$gId, newNew)
     return newNew
   }
 
   private addLinks(info: Information) {
     info.causes.map(link => {
-      let src = this.infoConnections.get(info.gId)
-      let tar = this.infoConnections.get(link.target.gId)
+      let src = this.infoConnections.get(info.$gId)
+      let tar = this.infoConnections.get(link.target.$gId)
       InformationLink.create(src!, tar!, link.type, link.linkText)
     })
   }

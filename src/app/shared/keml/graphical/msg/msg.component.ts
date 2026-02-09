@@ -35,7 +35,7 @@ export class MsgComponent implements OnInit, AfterViewInit {
 
   constructor(private svgAccessService: SVGAccessService) {
     effect(()=> {
-      this.svgAccessService.notifyPositionChange(this.msg.gId)
+      this.svgAccessService.notifyPositionChange(this.msg.$gId)
     });
   }
 
@@ -48,7 +48,7 @@ export class MsgComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.svgAccessService.notifyPositionChange(this.msg.gId)
+    this.svgAccessService.notifyPositionChange(this.msg.$gId)
   }
 
   clickMsg() {
