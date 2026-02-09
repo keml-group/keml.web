@@ -6,10 +6,10 @@ import {EClasses} from "@app/shared/keml/eclasses";
 
 @eClass(EClasses.Author)
 export class Author extends LifeLine{
-  static readonly $preknowledgeName: string = 'preknowledge';
-  static readonly $messagesName: string = 'messages';
+  static readonly $preknowledgeName = 'preknowledge';
+  static readonly $messagesName = 'messages';
 
-  _preknowledge: ReTreeListContainer<Preknowledge>;
+  _preknowledge: ReTreeListContainer<Preknowledge, typeof Author.$preknowledgeName>;
   get preknowledge(): Preknowledge[] {
     return this._preknowledge.get()
   }
@@ -19,7 +19,7 @@ export class Author extends LifeLine{
     })
   }
 
-  _messages: ReTreeListContainer<Message>;
+  _messages: ReTreeListContainer<Message, typeof Author.$messagesName>;
   get messages(): Message[] {
     return this._messages.get()
   }
@@ -31,8 +31,8 @@ export class Author extends LifeLine{
 
   constructor() {
     super();
-    this._preknowledge = new ReTreeListContainer<Preknowledge>(this, Author.$preknowledgeName, undefined, EClasses.Preknowledge)
-    this._messages = new ReTreeListContainer<Message>(this, Author.$messagesName)
+    this._preknowledge = new ReTreeListContainer(this, Author.$preknowledgeName, undefined, EClasses.Preknowledge)
+    this._messages = new ReTreeListContainer(this, Author.$messagesName)
   }
 
   static create(name?: string, xPosition: number = 0): Author {
