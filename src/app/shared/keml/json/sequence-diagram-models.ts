@@ -1,42 +1,14 @@
-import {PreknowledgeJson, NewInformationJson} from "./knowledge-models";
-import {Ref} from "emfular";
+import {JsonOf} from "emfular";
+import {Author} from "@app/shared/keml/core/author";
+import {Conversation} from "@app/shared/keml/core/conversation";
+import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
+import {ReceiveMessage, SendMessage} from "@app/shared/keml/core/msg-info";
 
-export interface ConversationJson {
-  eClass: string;
-  title: string;
-  author?: AuthorJson;
-  conversationPartners?: ConversationPartnerJson[];
-}
+export type ConversationJson = JsonOf<Conversation>
+export type AuthorJson = JsonOf<Author>
+export type ConversationPartnerJson = JsonOf<ConversationPartner>
+export type SendMessageJson = JsonOf<SendMessage>
+export type ReceiveMessageJson= JsonOf<ReceiveMessage>
 
-export interface LifeLineJson {
-  name?: string;
-  xPosition?: number; //int todo
-}
-
-export interface ConversationPartnerJson extends LifeLineJson {
-  color?: number; // todo
-}
-
-export interface AuthorJson extends LifeLineJson {
-  messages?: MessageJson[];
-  preknowledge?: PreknowledgeJson[];
-}
-export interface MessageJson {
-  eClass: string;
-  content?: string;
-  originalContent?: string;
-  timing?: number;
-  counterPart: Ref;
-}
-
-export interface SendMessageJson extends MessageJson {
-  uses?: Ref[];
-}
-
-export interface ReceiveMessageJson extends MessageJson {
-  generates?: NewInformationJson[];
-  repeats?: Ref[];
-  isInterrupted?: boolean;
-}
 
 

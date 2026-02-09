@@ -1,38 +1,10 @@
-import {Ref} from "emfular";
-import {BoundingBox} from "ngx-svg-graphics";
+import {JsonOf} from "emfular";
+import {InformationLink, NewInformation, Preknowledge} from "@app/shared/keml/core/msg-info";
 
-export interface InformationJson {
-  eClass?: string;
-  message?: string;
-  isInstruction?: boolean;
-  initialTrust?: number;
-  currentTrust?: number;
-  feltTrustImmediately?: number;
-  feltTrustAfterwards?: number;
+export type NewInformationJson = JsonOf<NewInformation>
+export type PreknowledgeJson = JsonOf<Preknowledge>
+export type InformationLinkJson = JsonOf<InformationLink>
 
-  causes?: InformationLinkJson[];
-  targetedBy?: Ref[];
-
-  isUsedOn?: Ref[];
-  repeatedBy?: Ref[];
-  position?: BoundingBox;
-}
-
-export interface PreknowledgeJson extends InformationJson {
-
-}
-
-export interface NewInformationJson extends InformationJson {
-  source?: Ref;//ReceiveMessage; //tree parent
-}
-
-export interface InformationLinkJson {
-  eClass?: string;
-  linkText?: string;
-  type?: InformationLinkType;
-  source?: Ref; //tree parent
-  target?: Ref;
-}
 
 export enum InformationLinkType {
   SUPPLEMENT = 'SUPPLEMENT', //needs extra tests, jackson serialization treats it as 0 and hence does not write it

@@ -12,7 +12,7 @@ export class JsonFixer {
    */
   static prepareJsonInfoLinkSources(conv: ConversationJson) {
     let authorPrefix = RefHandler.computePrefix( RefHandler.rootPath, Conversation.$authorName)
-    conv.author?.preknowledge?.map((p, index) => {
+    /*conv.author?.preknowledge?.map((p, index) => {
       let ref = RefHandler.createRef(
         RefHandler.mixWithIndex(
           RefHandler.computePrefix(authorPrefix, Author.$preknowledgeName),
@@ -39,6 +39,6 @@ export class JsonFixer {
           })
         }
       }
-    )
+    )*/
   }
 }

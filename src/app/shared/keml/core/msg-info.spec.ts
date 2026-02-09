@@ -56,7 +56,7 @@ describe("Msg-models", () => {
 });
 
 describe('Info (models)', () => {
-  
+
   it('should determine the correct timing of a new info', () => {
     let rec = new ReceiveMessage(5)
     let newInfo = NewInformation.create(rec, 'info1')
