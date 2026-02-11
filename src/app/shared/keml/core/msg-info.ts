@@ -19,7 +19,7 @@ import {BoundingBox, Positionable, PositionHelper} from "ngx-svg-graphics";
 export abstract class Message extends Referencable {
   public static readonly $counterPartName = 'counterPart'
 
-  _counterPart: ReLinkSingleContainer<ConversationPartner, typeof Message.$counterPartName>;
+  _counterPart: ReLinkSingleContainer<ConversationPartner> = new ReLinkSingleContainer<ConversationPartner>(this, Message.$counterPartName)
   get counterPart(): ConversationPartner {
     return this._counterPart.get()!! //todo
   }
@@ -40,7 +40,6 @@ export abstract class Message extends Referencable {
     originalContent?: string,
   ) {
     super();
-    this._counterPart = new ReLinkSingleContainer(this, Message.$counterPartName);
     this.timing = timing;
     this.content = content;
     this.originalContent = originalContent;
@@ -71,7 +70,7 @@ export abstract class Message extends Referencable {
 export class SendMessage extends Message {
   public static readonly $usesName = 'uses'
 
-  private readonly _uses: ReLinkListContainer<Information, typeof SendMessage.$usesName>;
+  private readonly _uses: ReLinkListContainer<Information>;
   get uses(): Information[] {
     return this._uses.get();
   }
@@ -88,7 +87,7 @@ export class SendMessage extends Message {
     originalContent?: string,
   ) {
     super(timing, content, originalContent);
-    this._uses  = new ReLinkListContainer(this, SendMessage.$usesName, Information.$isUsedOnName);
+    this._uses  = new ReLinkListContainer<Information>(this, SendMessage.$usesName, Information.$isUsedOnName);
   }
 
   static create(counterPart: ConversationPartner,
@@ -108,12 +107,12 @@ export class ReceiveMessage extends Message {
   static readonly $generatesName: string = 'generates';
   static readonly $repeatsName: string = 'repeats';
 
-  _generates: ReTreeListContainer<NewInformation, typeof ReceiveMessage.$generatesName>;
+  _generates: ReTreeListContainer<NewInformation>;
   get generates(): NewInformation[] {
     return this._generates.get()!!
   }
 
-  _repeats: ReLinkListContainer<Information, typeof ReceiveMessage.$repeatsName>;
+  _repeats: ReLinkListContainer<Information>;
   get repeats(): Information[] {
     return this._repeats.get();
   }
@@ -134,8 +133,8 @@ export class ReceiveMessage extends Message {
     isInterrupted: boolean = false,
   ) {
     super(timing, content, originalContent);
-    this._generates = new ReTreeListContainer(this, ReceiveMessage.$generatesName, NewInformation.$sourceName, EClasses.NewInformation);
-    this._repeats = new ReLinkListContainer(this, ReceiveMessage.$repeatsName, Information.$repeatedByName);
+    this._generates = new ReTreeListContainer<NewInformation>(this, ReceiveMessage.$generatesName, NewInformation.$sourceName, EClasses.NewInformation);
+    this._repeats = new ReLinkListContainer<Information>(this, ReceiveMessage.$repeatsName, Information.$repeatedByName);
     this.isInterrupted = isInterrupted;
   }
 
@@ -175,17 +174,17 @@ export abstract class Information extends Referencable implements Positionable {
   static readonly $isUsedOnName: string = 'isUsedOn'
   static readonly $repeatedByName: string = 'repeatedBy'
   static readonly $targetedByName: string = 'targetedBy'
-  readonly _causes: ReTreeListContainer<InformationLink, typeof Information.$causesName>;
+  readonly _causes: ReTreeListContainer<InformationLink>;
   get causes(): InformationLink[] {
     return this._causes.get();
   }
 
-  readonly _targetedBy: ReLinkListContainer<InformationLink, typeof Information.$targetedByName>
+  readonly _targetedBy: ReLinkListContainer<InformationLink>
   get targetedBy(): InformationLink[] {
     return this._targetedBy.get();
   }
 
-  readonly _isUsedOn: ReLinkListContainer<SendMessage, typeof Information.$isUsedOnName>
+  readonly _isUsedOn: ReLinkListContainer<SendMessage>
   get isUsedOn(): SendMessage[] {
     return this._isUsedOn.get();
   }
@@ -196,7 +195,7 @@ export abstract class Information extends Referencable implements Positionable {
     this._isUsedOn.remove(send)
   }
 
-  readonly _repeatedBy: ReLinkListContainer<ReceiveMessage, typeof Information.$repeatedByName>
+  readonly _repeatedBy: ReLinkListContainer<ReceiveMessage>
   get repeatedBy(): ReceiveMessage[] {
     return this._repeatedBy.get();
   }
@@ -211,9 +210,9 @@ export abstract class Information extends Referencable implements Positionable {
   protected constructor() {
     super();
 
-    this._causes = new ReTreeListContainer(this, NewInformation.$causesName, InformationLink.$sourceName, EClasses.InformationLink);
-    this._targetedBy = new ReLinkListContainer(this, Information.$targetedByName, InformationLink.$targetName)
-    this._isUsedOn = new ReLinkListContainer(this, 'isUsedOn', 'uses');
+    this._causes = new ReTreeListContainer<InformationLink>(this, NewInformation.$causesName, InformationLink.$sourceName, EClasses.InformationLink);
+    this._targetedBy = new ReLinkListContainer<InformationLink>(this, Information.$targetedByName, InformationLink.$targetName)
+    this._isUsedOn = new ReLinkListContainer<SendMessage>(this, 'isUsedOn', 'uses');
     this._repeatedBy = new ReLinkListContainer(this, NewInformation.$repeatedByName, ReceiveMessage.$repeatsName);
   }
 
@@ -234,7 +233,7 @@ export class NewInformation extends Information {
 
   public static readonly $sourceName = 'source'
 
-  readonly _source: ReTreeParentContainer<ReceiveMessage, typeof NewInformation.$sourceName>;
+  readonly _source: ReTreeParentContainer<ReceiveMessage>;
   set source(rec: ReceiveMessage) {
     this._source.add(rec)
   }
@@ -314,7 +313,7 @@ export class InformationLink extends Referencable {
 
   public static readonly $sourceName = 'source'
   public static readonly $targetName = 'target'
-  readonly _source: ReTreeParentContainer<Information, typeof InformationLink.$sourceName>
+  readonly _source: ReTreeParentContainer<Information>
   get source(): Information {
     return this._source.get()!!; //todo
   }
@@ -322,7 +321,7 @@ export class InformationLink extends Referencable {
     this._source.add(source)
   }
 
-  readonly _target: ReLinkSingleContainer<Information, typeof InformationLink.$targetName>
+  readonly _target: ReLinkSingleContainer<Information>
   get target(): Information {
     return this._target.get()!!;
   }
@@ -337,8 +336,8 @@ export class InformationLink extends Referencable {
 
   constructor() {
     super();
-    this._source = new ReTreeParentContainer<Information, typeof InformationLink.$sourceName>(this, InformationLink.$sourceName, NewInformation.$causesName);
-    this._target = new ReLinkSingleContainer<Information, typeof InformationLink.$targetName>(this, InformationLink.$targetName, Information.$targetedByName);
+    this._source = new ReTreeParentContainer<Information>(this, InformationLink.$sourceName, NewInformation.$causesName);
+    this._target = new ReLinkSingleContainer<Information>(this, InformationLink.$targetName, Information.$targetedByName);
   }
 
   static create(source: Information, target: Information, type: InformationLinkType, linkText?: string,): InformationLink {

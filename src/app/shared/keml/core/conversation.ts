@@ -12,14 +12,14 @@ export class Conversation extends Referencable {
   @attribute()
   title: string;
 
-  _author: ReTreeSingleContainer<Author, typeof Conversation.$authorName>;
+  _author: ReTreeSingleContainer<Author>;
   get author(): Author {
     return this._author.get()!!
   }
   set author(author: Author) {
     this._author.add(author);
   }
-  _conversationPartners: ReTreeListContainer<ConversationPartner, typeof Conversation.$conversationPartnersName>;
+  _conversationPartners: ReTreeListContainer<ConversationPartner>;
   get conversationPartners(): ConversationPartner[] {
     return this._conversationPartners.get()
   }
@@ -33,8 +33,8 @@ export class Conversation extends Referencable {
     title: string = 'New Conversation'
   ) {
     super();
-    this._author = new ReTreeSingleContainer(this, Conversation.$authorName, undefined, EClasses.Author);
-    this._conversationPartners = new ReTreeListContainer(this, Conversation.$conversationPartnersName, undefined, EClasses.ConversationPartner);
+    this._author = new ReTreeSingleContainer<Author>(this, Conversation.$authorName, undefined, EClasses.Author);
+    this._conversationPartners = new ReTreeListContainer<ConversationPartner>(this, Conversation.$conversationPartnersName, undefined, EClasses.ConversationPartner);
     this.title = title;
     this.author = new Author();
   }
