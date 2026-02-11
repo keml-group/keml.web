@@ -36,8 +36,8 @@ describe('Conversation', () => {
 
     // serialization:
     let convJson = conv.toJson()
-    expect(convJson.author?.messages![0].counterPart.$ref).toEqual('//@conversationPartners.0')
-    expect(convJson.author?.preknowledge![0].targetedBy![0].$ref).toEqual('//@author/@messages.1/@generates.0/@causes.0')
+    expect(convJson.author?.messages![0].counterPart?.$ref).toEqual('//@conversationPartners.0')
+    expect(convJson.author?.preknowledge![0].targetedBy![0]?.$ref).toEqual('//@author/@messages.1/@generates.0/@causes.0')
     expect((convJson.author?.messages![1] as ReceiveMessageJson)?.generates![0].causes![0].target!.$ref ).toEqual('//@author/@preknowledge.0')
   })
 
