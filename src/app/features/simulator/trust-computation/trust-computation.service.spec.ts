@@ -2,10 +2,8 @@ import {TrustComputationService} from './trust-computation.service';
 import {Conversation} from "@app/shared/keml/core/conversation";
 import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "@app/shared/keml/core/msg-info";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
-import {Author} from "@app/shared/keml/core/author";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
-import {JsonFixer} from "@app/shared/keml/json2core/json-fixer";
 import {TrustFallbacks} from "@app/features/simulator/trust-computation/trust-fallbacks";
 import {TestBed} from "@angular/core/testing";
 
@@ -136,7 +134,6 @@ describe('TrustComputationService', () => {
 
   it('should return undefined on a node\'s trust computation if no initial trust exists on it', () => {
     //it('should throw an error on a node\'s trust computation if no initial trust exists on it', () => {
-    //todo we need JSON to get a wrong preknowledge (one without initial trust) in
     let json = '{\n' +
       '  "eClass": "http://www.unikoblenz.de/keml#//Conversation",\n' +
       '  "title": "New Conversation",\n' +
@@ -277,7 +274,6 @@ describe('TrustComputationService', () => {
   it('should deal with real 3-2', () => {
     let json = require('@assets/test/3-2-fromTrustComp.json')
     let convJson: ConversationJson = json as ConversationJson;
-    JsonFixer.prepareJsonInfoLinkSources(convJson);
     let conv = Conversation.fromJSON(convJson)
     service.computeCurrentTrusts(conv, new TrustFallbacks())
     expect(conv.author.preknowledge[0].currentTrust).toEqual(1.0)

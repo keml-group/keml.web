@@ -16,7 +16,6 @@ import {ListUpdater} from "emfular";
 import {MsgPositionChangeService} from "@app/shared/keml/graphical/msg-position-change.service";
 import {AlertService} from "ngx-emfular-helper";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
-import {JsonFixer} from "@app/shared/keml/json2core/json-fixer";
 import {KemlHistoryService} from "@app/shared/keml/edit/keml-history.service";
 
 @Injectable({
@@ -73,7 +72,6 @@ export class KemlService {
   }
 
   private deserializeConversation(convJson: ConversationJson): Conversation {
-    JsonFixer.prepareJsonInfoLinkSources(convJson);
 
     let conv = Conversation.fromJSON(convJson);
     this.layoutingService.positionConversationPartners(conv.conversationPartners)

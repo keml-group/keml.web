@@ -4,7 +4,6 @@ import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson, ReceiveMessageJson, SendMessageJson} from "@app/shared/keml/json/sequence-diagram-models";
 import {RefHandler, JsonComparer, SerializationContext} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
-import {JsonFixer} from "@app/shared/keml/json2core/json-fixer";
 import {Conversation} from "@app/shared/keml/core/conversation";
 
 describe("Msg-models", () => {
@@ -94,7 +93,6 @@ describe('Info (models)', () => {
     const ctx = new SerializationContext(msg)
 
     let newInfoJson: NewInformationJson = {
-      source: ctx.get(msg),
       eClass: EClasses.NewInformation,
       message: 'New Info',
       position: {x: 0, y: 0, w: 5, h: 5},
@@ -166,7 +164,6 @@ describe('Info (models)', () => {
     let infoLink_new_new_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
       linkText: "text",
-      source: refNew1,
       target: refNew2,
       type: InformationLinkType.SUPPLEMENT
     }
@@ -176,7 +173,6 @@ describe('Info (models)', () => {
     let infoLink_new_pre_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
       linkText: "text",
-      source: refNew1,
       target: refPre1,
       type: InformationLinkType.STRONG_ATTACK
     }
@@ -185,7 +181,6 @@ describe('Info (models)', () => {
     let infoLink_pre_new = InformationLink.create(preknowledge1, newInfo1, InformationLinkType.SUPPORT)
     let infoLink_pre_new_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
-      source: refPre1,
       target: refNew1,
       type: InformationLinkType.SUPPORT
     }
@@ -194,7 +189,6 @@ describe('Info (models)', () => {
     let infoLink_pre_pre = InformationLink.create(preknowledge1, preknowledge2, InformationLinkType.STRONG_SUPPORT)
     let infoLink_pre_pre_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
-      source: refPre1,
       target: refPre2,
       type: InformationLinkType.STRONG_SUPPORT
     }
@@ -203,7 +197,6 @@ describe('Info (models)', () => {
     let infoLink_pre_pre_2 = InformationLink.create(preknowledge1, preknowledge2, InformationLinkType.ATTACK)
     let infoLink_pre_pre_2_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
-      source: refPre1,
       target: refPre2,
       type: InformationLinkType.ATTACK
     }
@@ -216,8 +209,10 @@ describe('Info (models)', () => {
     let link = InformationLink.create(p1, p0, InformationLinkType.SUPPORT)
 
     expect(p0.targetedBy.length).toEqual(1)
+    expect(p1.causes.length).toEqual(1)
     link.destruct()
     expect(p0.targetedBy.length).toEqual(0)
+    expect(p1.causes.length).toEqual(0)
   })
 
   it('source destruction: should delete an info that is a link source for two links completely (also deletes the links)', () => {
@@ -295,7 +290,6 @@ describe('deserialize and re-serialize', () => {
 
     let json = require('@assets/test/3-2-keml-jackson.json');
     let convJson: ConversationJson = json as ConversationJson
-    JsonFixer.prepareJsonInfoLinkSources(convJson);
     let conv = Conversation.fromJSON(convJson)
     let convJson2 = conv.toJson()
 
