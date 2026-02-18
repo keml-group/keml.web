@@ -5,7 +5,7 @@ import {Deserializer, Referencable, ReTreeSingleContainer, ReTreeListContainer, 
 import {EClasses} from "@app/shared/keml/eclasses";
 
 @eClass(EClasses.Conversation)
-export class Conversation extends Referencable {
+export class Conversation extends Referencable<any> {
   static readonly $authorName = 'author';
   static readonly $conversationPartnersName = 'conversationPartners';
 

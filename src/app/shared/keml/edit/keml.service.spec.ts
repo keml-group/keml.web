@@ -740,7 +740,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(kemlService.conversation.author.preknowledge.length).toBe(1)
     expect(historyStub.save).toHaveBeenCalledTimes(1)
     expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
-    const p1 = kemlService.duplicateInfo(p0)
+    const p1: Preknowledge = kemlService.duplicateInfo(p0) as Preknowledge
     expect(kemlService.conversation.author.preknowledge.length).toBe(2)
     expect(kemlService.conversation.author.preknowledge).toContain(p1)
     expect(kemlService.conversation.author.preknowledge).toContain(p0)
