@@ -68,7 +68,7 @@ describe('EditorComponent', () => {
   })
 
   it('should open details after message creation', () => {
-    const fakeMsg = new ReceiveMessage(4);
+    const fakeMsg = new ReceiveMessage();
     kemlService.addNewMessage.and.returnValue(fakeMsg);
     component.addMessage(true)
     expect(kemlService.addNewMessage).toHaveBeenCalled();

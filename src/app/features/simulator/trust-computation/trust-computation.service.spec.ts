@@ -32,7 +32,7 @@ describe('TrustComputationService', () => {
 
   it('should compute the score of a single Link correctly', () => {
       let l0 = InformationLink.create(p2, p0, InformationLinkType.STRONG_ATTACK)
-    //let l1 = InformationLink.create(p1, p0, InformationLinkType.SUPPORT)
+      //let l1 = InformationLink.create(p1, p0, InformationLinkType.SUPPORT)
       expect(service.score(l0)).toEqual(undefined)
       p2.currentTrust = 0.5
       expect(service.score(l0)).toEqual(-0.5)
@@ -45,8 +45,8 @@ describe('TrustComputationService', () => {
 
   it('should compute the argumentation score of a single node correctly', () => {
       InformationLink.create(p2, p0, InformationLinkType.ATTACK)
-    InformationLink.create(p1, p0, InformationLinkType.STRONG_SUPPORT)
-    expect(service.computeArgumentationScore(p1)).toEqual(0)
+      InformationLink.create(p1, p0, InformationLinkType.STRONG_SUPPORT)
+      expect(service.computeArgumentationScore(p1)).toEqual(0)
       expect(service.computeArgumentationScore(p2)).toEqual(0)
       expect(service.computeArgumentationScore(p0)).toEqual(undefined)
       p1.currentTrust = 0.5

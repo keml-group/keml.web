@@ -18,7 +18,7 @@ describe('SimulatorComponent', () => {
     .compileComponents();
     fixture = TestBed.createComponent(SimulatorComponent);
     component = fixture.componentInstance;
-    let conv = Conversation.create();
+    let conv = new Conversation();
     component.conversation = conv;
     fixture.detectChanges();
   });
