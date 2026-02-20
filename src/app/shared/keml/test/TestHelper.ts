@@ -5,5 +5,5 @@ import {
 
 export function newNewInfo(): NewInformation {
   const rec = new ReceiveMessage(4)
-    return NewInformation.create(rec, 'newInfo')
+  return NewInformation.create(rec, 'newInfo')
 }

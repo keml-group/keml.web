@@ -19,7 +19,7 @@ describe('AuthorComponent', () => {
     fixture = TestBed.createComponent(AuthorComponent);
     component = fixture.componentInstance;
     component.author = new Author()
-      componentRef = fixture.componentRef;
+    componentRef = fixture.componentRef;
     componentRef.setInput('lineLength', 5); //todo
     fixture.detectChanges();
   });

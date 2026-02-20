@@ -17,7 +17,7 @@ describe('LayoutingService', () => {
   });
 
   it('should positionPreknowledge correctly', () => {
-      let s1 = new SendMessage(1, 's1')
+    let s1 = new SendMessage(1, 's1')
     let s1BB = LayoutingService.bbForPreknowledge(LayoutingService.computeMessageY(1))
     let s2 = new SendMessage(2, 's2')
     let s2BB = LayoutingService.bbForPreknowledge(LayoutingService.computeMessageY(2))
