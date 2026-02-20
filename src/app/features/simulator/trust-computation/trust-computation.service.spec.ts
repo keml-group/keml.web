@@ -2,10 +2,8 @@ import {TrustComputationService} from './trust-computation.service';
 import {Conversation} from "@app/shared/keml/core/conversation";
 import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "@app/shared/keml/core/msg-info";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
-import {Author} from "@app/shared/keml/core/author";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
-import {JsonFixer} from "@app/shared/keml/json2core/json-fixer";
 import {TrustFallbacks} from "@app/features/simulator/trust-computation/trust-fallbacks";
 import {TestBed} from "@angular/core/testing";
 
@@ -59,7 +57,7 @@ describe('TrustComputationService', () => {
   )
 
   it('should compute the repetition score of a single node correctly', () => {
-    let cp = new ConversationPartner(undefined, 'cp')
+    let cp = new ConversationPartner('cp')
     let r1 = ReceiveMessage.create(cp, 1)
     let r2 = ReceiveMessage.create(cp, 3)
     let info = Preknowledge.create('info')
@@ -71,8 +69,8 @@ describe('TrustComputationService', () => {
   })
 
   it('should determineInitialTrustForInfo correctly', () => {
-    let cp0 = new ConversationPartner(undefined, '0')
-    let cp1 = new ConversationPartner(undefined, '1')
+    let cp0 = new ConversationPartner('0')
+    let cp1 = new ConversationPartner('1')
     let r1 = ReceiveMessage.create(cp0, 1)
     let r2 = ReceiveMessage.create(cp1, 2)
     let newInfo1 = NewInformation.create(r1, 'm1')
@@ -136,7 +134,6 @@ describe('TrustComputationService', () => {
 
   it('should return undefined on a node\'s trust computation if no initial trust exists on it', () => {
     //it('should throw an error on a node\'s trust computation if no initial trust exists on it', () => {
-    //todo we need JSON to get a wrong preknowledge (one without initial trust) in
     let json = '{\n' +
       '  "eClass": "http://www.unikoblenz.de/keml#//Conversation",\n' +
       '  "title": "New Conversation",\n' +
@@ -188,18 +185,12 @@ describe('TrustComputationService', () => {
   })
 
   it('should adapt the current trusts', () => {
-    let pre0 = Preknowledge.create(
-      'pre0', false, undefined,
-      0.5, 0 )
-    let pre1 = Preknowledge.create('pre1',
-      false, undefined,
-      0.5, 0 )
-    let pre2 = Preknowledge.create('pre2',
-      false, undefined,
-      0.5, 0 )
+    let pre0 = Preknowledge.create('pre0', false, undefined, 0.5, 0)
+    let pre1 = Preknowledge.create('pre1', false, undefined, 0.5, 0)
+    let pre2 = Preknowledge.create('pre2', false, undefined, 0.5, 0)
 
-    let cp0 = new ConversationPartner(undefined, 'cp0')
-    let cp1 = new ConversationPartner(undefined, 'cp1')
+    let cp0 = new ConversationPartner('cp0')
+    let cp1 = new ConversationPartner('cp1')
     let cps = [cp0, cp1]
 
     let rec0 = ReceiveMessage.create(cp0, 0, 'm0')
@@ -272,7 +263,7 @@ describe('TrustComputationService', () => {
   })
 
   it('should show that the case of 0 receives is handled correctly', () => {
-    let conv = new Conversation()
+    let conv = Conversation.create()
     conv.author.addPreknowledge(p0, p1)
     InformationLink.create(p0, p1, InformationLinkType.ATTACK)
     service.computeCurrentTrusts(conv, new TrustFallbacks())
@@ -283,7 +274,6 @@ describe('TrustComputationService', () => {
   it('should deal with real 3-2', () => {
     let json = require('@assets/test/3-2-fromTrustComp.json')
     let convJson: ConversationJson = json as ConversationJson;
-    JsonFixer.prepareJsonInfoLinkSources(convJson);
     let conv = Conversation.fromJSON(convJson)
     service.computeCurrentTrusts(conv, new TrustFallbacks())
     expect(conv.author.preknowledge[0].currentTrust).toEqual(1.0)

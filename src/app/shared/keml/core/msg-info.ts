@@ -1,17 +1,12 @@
 import {ConversationPartner} from "./conversation-partner";
-import { ReceiveMessageJson, SendMessageJson,} from "@app/shared/keml/json/sequence-diagram-models";
 import {
-  InformationLinkJson,
   InformationLinkType,
-  NewInformationJson,
-  PreknowledgeJson,
 } from "@app/shared/keml/json/knowledge-models";
 import {EClasses} from "@app/shared/keml/eclasses";
 import {
   attribute,
-  Ref,
+  eClass,
   Referencable,
-  RefHandler,
   ReLinkListContainer,
   ReLinkSingleContainer,
   ReTreeListContainer,
@@ -19,12 +14,13 @@ import {
 } from "emfular";
 
 import {BoundingBox, Positionable, PositionHelper} from "ngx-svg-graphics";
+import {Author} from "@app/shared/keml/core/author";
 
 
-export abstract class Message extends Referencable {
+export abstract class Message extends Referencable<Author> {
   public static readonly $counterPartName = 'counterPart'
 
-  _counterPart: ReLinkSingleContainer<ConversationPartner> = new ReLinkSingleContainer<ConversationPartner>(this, Message.$counterPartName)
+  _counterPart: ReLinkSingleContainer<ConversationPartner, this>;
   get counterPart(): ConversationPartner {
     return this._counterPart.get()!! //todo
   }
@@ -40,15 +36,15 @@ export abstract class Message extends Referencable {
   originalContent?: string;
 
   protected constructor(
-    ref: Ref,
-    timing: number=0,
-    content: string="",
+    timing: number = 0,
+    content: string = "",
     originalContent?: string,
   ) {
-    super(ref);
+    super();
     this.timing = timing;
     this.content = content;
     this.originalContent = originalContent;
+    this._counterPart = new ReLinkSingleContainer(this, Message.$counterPartName)
   }
 
   static isSend(eClass: string) {
@@ -72,10 +68,11 @@ export abstract class Message extends Referencable {
   }
 }
 
+@eClass(EClasses.SendMessage)
 export class SendMessage extends Message {
   public static readonly $usesName = 'uses'
 
-  private readonly _uses: ReLinkListContainer<Information>;
+  private readonly _uses: ReLinkListContainer<Information, this>;
   get uses(): Information[] {
     return this._uses.get();
   }
@@ -87,35 +84,27 @@ export class SendMessage extends Message {
   }
 
   constructor(
-    ref?: Ref,
     timing?: number,
     content: string = 'New send content',
     originalContent?: string,
   ) {
-    let refC = RefHandler.createRefIfMissing(EClasses.SendMessage, ref)
-    super(refC, timing, content, originalContent);
-    this._uses  = new ReLinkListContainer<Information>(this, SendMessage.$usesName, Information.$isUsedOnName);
+    super(timing, content, originalContent);
+    this._uses  = new ReLinkListContainer(this, SendMessage.$usesName, Information.$isUsedOnName);
   }
 
   static create(counterPart: ConversationPartner,
                 timing: number,
                 content: string = 'New send content',
                 originalContent?: string,
-                ref?: Ref,
-                ): SendMessage {
-    const send = new SendMessage(ref, timing, content, originalContent);
+  ): SendMessage {
+    const send = new SendMessage(timing, content, originalContent);
     send.counterPart = counterPart;
-    return send;
-  }
-
-  static fromJson(json: SendMessageJson, ref: Ref): SendMessage {
-    const send = new SendMessage(ref)
-    send.fill(json)
     return send;
   }
 
 }
 
+@eClass(EClasses.ReceiveMessage)
 export class ReceiveMessage extends Message {
   static readonly $generatesName: string = 'generates';
   static readonly $repeatsName: string = 'repeats';
@@ -124,11 +113,8 @@ export class ReceiveMessage extends Message {
   get generates(): NewInformation[] {
     return this._generates.get()!!
   }
-  addGenerates(news: NewInformation) {
-    this._generates.add(news)
-  }
 
-  _repeats: ReLinkListContainer<Information>;
+  _repeats: ReLinkListContainer<Information, this>;
   get repeats(): Information[] {
     return this._repeats.get();
   }
@@ -143,16 +129,14 @@ export class ReceiveMessage extends Message {
   isInterrupted: boolean = false;
 
   constructor(
-    ref?: Ref,
     timing?: number,
     content: string = "New receive content",
     originalContent?: string,
     isInterrupted: boolean = false,
   ) {
-    let refC = RefHandler.createRefIfMissing(EClasses.ReceiveMessage, ref)
-    super(refC, timing, content, originalContent);
-    this._generates = new ReTreeListContainer<NewInformation>(this, ReceiveMessage.$generatesName, NewInformation.$sourceName, EClasses.NewInformation);
-    this._repeats = new ReLinkListContainer<Information>(this, ReceiveMessage.$repeatsName, Information.$repeatedByName);
+    super(timing, content, originalContent);
+    this._generates = new ReTreeListContainer(this, ReceiveMessage.$generatesName, NewInformation.$sourceName, EClasses.NewInformation);
+    this._repeats = new ReLinkListContainer(this, ReceiveMessage.$repeatsName, Information.$repeatedByName);
     this.isInterrupted = isInterrupted;
   }
 
@@ -160,23 +144,18 @@ export class ReceiveMessage extends Message {
                 timing: number,
                 content?: string,
                 originalContent?: string,
-                isInterrupted: boolean = false,
-                ref?: Ref,): ReceiveMessage {
-    const rec = new ReceiveMessage(ref, timing, content, originalContent, isInterrupted);
+                isInterrupted: boolean = false,): ReceiveMessage {
+    const rec = new ReceiveMessage(timing, content, originalContent, isInterrupted);
     rec.counterPart = counterPart;
-    return rec
-  }
-
-  static fromJson(json: ReceiveMessageJson, ref: Ref): ReceiveMessage {
-    const rec = new ReceiveMessage(ref)
-    rec.fill(json)
     return rec
   }
 
 }
 
-
-export abstract class Information extends Referencable implements Positionable {
+export abstract class Information<
+  P extends Referencable<any>=Referencable<any>
+> extends Referencable<P>
+  implements Positionable {
 
   @attribute()
   message: string = "";
@@ -203,25 +182,13 @@ export abstract class Information extends Referencable implements Positionable {
   get causes(): InformationLink[] {
     return this._causes.get();
   }
-  addCauses(...link: InformationLink[]) {
-    link?.map(l => this._causes.add(l))
-  }
-  removeCauses(link: InformationLink) {
-    this._causes.remove(link)
-  }
 
-  readonly _targetedBy: ReLinkListContainer<InformationLink>
+  readonly _targetedBy: ReLinkListContainer<InformationLink, this>
   get targetedBy(): InformationLink[] {
     return this._targetedBy.get();
   }
-  addTargetedBy(link: InformationLink) {
-    this._targetedBy.add(link)
-  }
-  removeTargetedBy(link: InformationLink) {
-    this._targetedBy.remove(link)
-  }
 
-  readonly _isUsedOn: ReLinkListContainer<SendMessage>
+  readonly _isUsedOn: ReLinkListContainer<SendMessage, this>
   get isUsedOn(): SendMessage[] {
     return this._isUsedOn.get();
   }
@@ -232,7 +199,7 @@ export abstract class Information extends Referencable implements Positionable {
     this._isUsedOn.remove(send)
   }
 
-  readonly _repeatedBy: ReLinkListContainer<ReceiveMessage>
+  readonly _repeatedBy: ReLinkListContainer<ReceiveMessage, this>
   get repeatedBy(): ReceiveMessage[] {
     return this._repeatedBy.get();
   }
@@ -244,12 +211,12 @@ export abstract class Information extends Referencable implements Positionable {
     this._repeatedBy.remove(msg)
   }
 
-  protected constructor(ref: Ref) {
-    super(ref);
+  protected constructor() {
+    super();
 
     this._causes = new ReTreeListContainer<InformationLink>(this, NewInformation.$causesName, InformationLink.$sourceName, EClasses.InformationLink);
-    this._targetedBy = new ReLinkListContainer<InformationLink>(this, Information.$targetedByName, InformationLink.$targetName)
-    this._isUsedOn = new ReLinkListContainer<SendMessage>(this, 'isUsedOn', 'uses');
+    this._targetedBy = new ReLinkListContainer(this, Information.$targetedByName, InformationLink.$targetName)
+    this._isUsedOn = new ReLinkListContainer(this, 'isUsedOn', 'uses');
     this._repeatedBy = new ReLinkListContainer(this, NewInformation.$repeatedByName, ReceiveMessage.$repeatsName);
   }
 
@@ -265,11 +232,12 @@ export abstract class Information extends Referencable implements Positionable {
   }
 }
 
-export class NewInformation extends Information {
+@eClass(EClasses.NewInformation)
+export class NewInformation extends Information<ReceiveMessage> {
 
   public static readonly $sourceName = 'source'
 
-  readonly _source: ReTreeParentContainer<ReceiveMessage>;
+  readonly _source: ReTreeParentContainer<this>;
   set source(rec: ReceiveMessage) {
     this._source.add(rec)
   }
@@ -281,9 +249,8 @@ export class NewInformation extends Information {
     return this.source.timing
   }
 
-  constructor(ref?: Ref) {
-    let refC = RefHandler.createRefIfMissing(EClasses.NewInformation, ref)
-    super(refC);
+  constructor() {
+    super();
     this._source = new ReTreeParentContainer(this, NewInformation.$sourceName, ReceiveMessage.$generatesName);
   }
 
@@ -291,17 +258,10 @@ export class NewInformation extends Information {
     return NewInformation.create(this.source, 'Copy of ' + this.message, this.isInstruction, this.position, this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
   }
 
-  static fromJson( json: NewInformationJson, ref: Ref): NewInformation {
-    const newInfo = new NewInformation(ref)
-    newInfo.fill(json)
-    return newInfo
-  }
-
   static create(source: ReceiveMessage,
-         message: string, isInstruction: boolean = false, position?: BoundingBox,
-         initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number , feltTrustAfterwards?: number,
-         ref?: Ref,): NewInformation {
-    const info = new NewInformation(ref);
+                message: string, isInstruction: boolean = false, position?: BoundingBox,
+                initialTrust?: number, currentTrust?: number, feltTrustImmediately?: number, feltTrustAfterwards?: number,): NewInformation {
+    const info = new NewInformation();
     info.source = source;
     info.message = message;
     info.isInstruction = isInstruction;
@@ -315,11 +275,11 @@ export class NewInformation extends Information {
 
 }
 
-export class Preknowledge extends Information {
+@eClass(EClasses.Preknowledge)
+export class Preknowledge extends Information<Author> {
 
-  constructor(ref?: Ref) {
-    let refC = RefHandler.createRefIfMissing(EClasses.Preknowledge, ref)
-    super(refC);
+  constructor() {
+    super();
   }
 
   getTiming(): number {
@@ -336,17 +296,10 @@ export class Preknowledge extends Information {
     return Preknowledge.create('Copy of ' + this.message, this.isInstruction, this.position, this.initialTrust, this.currentTrust, this.feltTrustImmediately, this.feltTrustAfterwards);
   }
 
-  static fromJson( json: PreknowledgeJson, ref: Ref): Preknowledge {
-    const pre = new Preknowledge(ref)
-    pre.fill(json)
-    return pre
-  }
-
   static create(message: string = 'Preknowledge', isInstruction: boolean = false, position?: BoundingBox,
                 initialTrust?: number, currentTrust?: number,
-                feltTrustImmediately?: number, feltTrustAfterwards?: number,
-                ref?: Ref): Preknowledge {
-    const pre = new Preknowledge(ref)
+                feltTrustImmediately?: number, feltTrustAfterwards?: number): Preknowledge {
+    const pre = new Preknowledge()
     pre.message = message
     pre.isInstruction = isInstruction
     pre.position = Information.createBB(position)
@@ -359,11 +312,12 @@ export class Preknowledge extends Information {
 
 }
 
-export class InformationLink extends Referencable {
+@eClass(EClasses.InformationLink)
+export class InformationLink extends Referencable<Information> {
 
   public static readonly $sourceName = 'source'
   public static readonly $targetName = 'target'
-  readonly _source: ReTreeParentContainer<Information>
+  readonly _source: ReTreeParentContainer<this>
   get source(): Information {
     return this._source.get()!!; //todo
   }
@@ -371,7 +325,7 @@ export class InformationLink extends Referencable {
     this._source.add(source)
   }
 
-  readonly _target: ReLinkSingleContainer<Information>
+  readonly _target: ReLinkSingleContainer<Information, this>
   get target(): Information {
     return this._target.get()!!;
   }
@@ -384,27 +338,19 @@ export class InformationLink extends Referencable {
   @attribute()
   linkText?: string;
 
-  constructor(ref?: Ref) {
-    let refC = RefHandler.createRefIfMissing(EClasses.InformationLink, ref)
-    super(refC);
-    this._source = new ReTreeParentContainer<Information>(this, InformationLink.$sourceName, NewInformation.$causesName);
-    this._target = new ReLinkSingleContainer<Information>(this, InformationLink.$targetName, Information.$targetedByName);
+  constructor() {
+    super();
+    this._source = new ReTreeParentContainer(this, InformationLink.$sourceName, NewInformation.$causesName);
+    this._target = new ReLinkSingleContainer(this, InformationLink.$targetName, Information.$targetedByName);
   }
 
-  static create(source: Information, target: Information, type: InformationLinkType, linkText?: string,
-                ref?: Ref,): InformationLink {
-    const link = new InformationLink(ref)
+  static create(source: Information, target: Information, type: InformationLinkType, linkText?: string,): InformationLink {
+    const link = new InformationLink()
     link.source = source
     link.target = target;
     link.type = type
     link.linkText = linkText
     return link
-  }
-
-  static fromJson( json: InformationLinkJson, ref: Ref): InformationLink {
-    let res = new InformationLink( ref)
-    res.fill(json)
-    return res
   }
 
 }

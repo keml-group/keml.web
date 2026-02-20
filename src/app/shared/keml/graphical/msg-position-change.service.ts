@@ -12,17 +12,17 @@ export class MsgPositionChangeService {
   ) { }
 
   notifyPositionChangeMessage(msg: Message): void {
-    this.svgAccessService.notifyPositionChange(msg.gId)
+    this.svgAccessService.notifyPositionChange(msg.$gId)
     let rec = (msg as ReceiveMessage)
     rec.generates?.forEach( i => {
-      this.svgAccessService.notifyPositionChange(i.gId)
+      this.svgAccessService.notifyPositionChange(i.$gId)
     })
     rec.repeats?.forEach( i => {
-      this.svgAccessService.notifyPositionChange(i.gId)
+      this.svgAccessService.notifyPositionChange(i.$gId)
     })
     let send = (msg as SendMessage)
     send.uses?.forEach( i => {
-      this.svgAccessService.notifyPositionChange(i.gId)
+      this.svgAccessService.notifyPositionChange(i.$gId)
     })
   }
 

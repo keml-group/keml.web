@@ -1,6 +1,6 @@
-<svg:g [attr.id]="info.gId" [attr.transform]="'translate('+ info.position.x + ', ' + info.position.y +')'">
+<svg:g [attr.id]="info.$gId" [attr.transform]="'translate('+ info.position.x + ', ' + info.position.y +')'">
   <g info-inner
-     [attr.id]="info.gId+'-main'"
+     [attr.id]="info.$gId+'-main'"
      [info]="info"
      [showTrust]="showTrust"
      (mousedown)="startDrag($event)"

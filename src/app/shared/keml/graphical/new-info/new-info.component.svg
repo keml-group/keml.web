@@ -1,6 +1,6 @@
-<svg:g [attr.id]="info.gId">
+<svg:g [attr.id]="info.$gId">
   <g info-inner
-     [attr.id]="info.gId+'-main'"
+     [attr.id]="info.$gId+'-main'"
      [info]="info"
      [showTrust]="showTrust"
      [attr.transform]="'translate('+ (info.position.x) + ', ' + info.position.y +')'"

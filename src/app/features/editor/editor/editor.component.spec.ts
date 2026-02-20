@@ -33,7 +33,7 @@ describe('EditorComponent', () => {
       'cpCount',
       'conversation'
     ]);
-    kemlService.conversation = new Conversation()
+    kemlService.conversation = Conversation.create()
     detailsService = jasmine.createSpyObj<DetailsService>('detailsService', [
       'openConversationPartnerDetails',
       'openMessageDetails',
@@ -68,7 +68,7 @@ describe('EditorComponent', () => {
   })
 
   it('should open details after message creation', () => {
-    const fakeMsg = new ReceiveMessage(undefined, 4);
+    const fakeMsg = new ReceiveMessage();
     kemlService.addNewMessage.and.returnValue(fakeMsg);
     component.addMessage(true)
     expect(kemlService.addNewMessage).toHaveBeenCalled();

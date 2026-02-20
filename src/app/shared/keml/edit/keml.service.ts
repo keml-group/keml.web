@@ -16,7 +16,6 @@ import {ListUpdater} from "emfular";
 import {MsgPositionChangeService} from "@app/shared/keml/graphical/msg-position-change.service";
 import {AlertService} from "ngx-emfular-helper";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
-import {JsonFixer} from "@app/shared/keml/json2core/json-fixer";
 import {KemlHistoryService} from "@app/shared/keml/edit/keml-history.service";
 
 @Injectable({
@@ -36,7 +35,7 @@ export class KemlService {
     private layoutingService: LayoutingService,
     private historyService: KemlHistoryService,
   ) {
-    this.conversation = new Conversation();
+    this.conversation = Conversation.create('New Conversation');
     this.layoutingService.positionConversationPartners(this.conversation.conversationPartners)
     this.msgCount = signal<number>(this.conversation.author.messages.length);
     this.cpCount = signal<number>(this.conversation.conversationPartners.length);
@@ -56,7 +55,7 @@ export class KemlService {
   }
 
   newConversationNoHistory(title?: string) {
-    this.conversation = new Conversation(title);
+    this.conversation = Conversation.create(title);
     this.msgCount.set(this.conversation.author.messages.length)
     this.cpCount.set(this.conversation.conversationPartners.length)
   }
@@ -73,7 +72,6 @@ export class KemlService {
   }
 
   private deserializeConversation(convJson: ConversationJson): Conversation {
-    JsonFixer.prepareJsonInfoLinkSources(convJson);
 
     let conv = Conversation.fromJSON(convJson);
     this.layoutingService.positionConversationPartners(conv.conversationPartners)
@@ -117,7 +115,7 @@ export class KemlService {
 
   addNewConversationPartnerNoHistory(name?: string): ConversationPartner {
     const cps = this.conversation.conversationPartners;
-    const cp: ConversationPartner = new ConversationPartner(undefined, name ? name : 'New Partner', this.layoutingService.nextConversationPartnerPosition(cps[cps.length - 1]?.xPosition));
+    const cp: ConversationPartner = new ConversationPartner(name ? name : 'New Partner', this.layoutingService.nextConversationPartnerPosition(cps[cps.length - 1]?.xPosition));
     cps.push(cp);
     this.cpCount.update(n => n+1)
     return cp;
@@ -174,7 +172,7 @@ export class KemlService {
   duplicateConversationPartner(cp: ConversationPartner): ConversationPartner {
     const cps = this.conversation.conversationPartners;
     const pos = cps.indexOf(cp);
-    const newCp: ConversationPartner = new ConversationPartner(undefined, 'Duplicate of ' + cp.name, 0)
+    const newCp: ConversationPartner = new ConversationPartner('Duplicate of ' + cp.name, 0)
     cps.splice(pos+1, 0, newCp);
     this.layoutingService.positionConversationPartners(cps); // complete re-positioning
     this.cpCount.update(n => n+1);
@@ -399,9 +397,9 @@ export class KemlService {
     this.saveCurrentState()
   }
 
-  addNewPreknowledge(): Preknowledge {
-    const preknowledge: Preknowledge = Preknowledge.create("New Preknowledge", false, LayoutingService.bbForPreknowledge(LayoutingService.positionForNewPreknowledge));
-    this.conversation.author.preknowledge.push(preknowledge);
+  addNewPreknowledge(msg?:string): Preknowledge {
+    const preknowledge: Preknowledge = Preknowledge.create(msg ? msg : "New Preknowledge", false, LayoutingService.bbForPreknowledge(LayoutingService.positionForNewPreknowledge));
+    this.conversation.author.addPreknowledge(preknowledge);
     this.saveCurrentState()
     return preknowledge;
   }
@@ -410,12 +408,10 @@ export class KemlService {
     return !this.getFirstReceive();
   }
 
-  addNewNewInfo(causeMsg?: ReceiveMessage): NewInformation | undefined {
+  addNewNewInfo(causeMsg?: ReceiveMessage, msg?: string): NewInformation | undefined {
     const source = causeMsg? causeMsg : this.getFirstReceive()
     if (source) {
-      const newInfo = NewInformation.create(
-        source, 'New Information', false, LayoutingService.bbForNewInfo(source.generates.length)
-      );
+      const newInfo = NewInformation.create(source, msg ? msg : 'New Information', false, LayoutingService.bbForNewInfo(source.generates.length));
       this.historyService.save(this.conversation.toJson())
       return newInfo
     } else {

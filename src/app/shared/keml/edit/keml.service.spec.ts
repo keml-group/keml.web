@@ -12,7 +12,6 @@ import {LayoutingService} from "@app/shared/keml/graphical/layouting.service";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {Author} from "@app/shared/keml/core/author";
 import {Conversation} from "@app/shared/keml/core/conversation";
-import {Referencable, RefHandler} from "emfular";
 import {of} from "rxjs";
 import {KemlHistoryService} from "@app/shared/keml/edit/keml-history.service";
 
@@ -29,12 +28,12 @@ describe('KEML-Service', () => {
   });
 
   it('should determine if a repetition is allowed', () => {
-    let cp = new ConversationPartner(undefined, 'cp')
+    let cp = new ConversationPartner('cp')
     let rec = ReceiveMessage.create(cp, 5)
     let newInfo = NewInformation.create(rec, 'info1')
     let pre0 = Preknowledge.create('pre0')
     let pre1 = Preknowledge.create('pre1')
-    let send3 = new SendMessage(undefined, 3)
+    let send3 = new SendMessage(3)
     pre0.addIsUsedOn(send3)
     expect(KemlService.isRepetitionAllowed(rec, newInfo)).toBe(false)
     expect(KemlService.isRepetitionAllowed(rec, pre1)).toBe(true)
@@ -93,8 +92,8 @@ describe('KEML-Service', () => {
       "  }, {\n" +
       "    \"name\" : \"Other\"\n" +
       "  } ]"
-    let cp0 = new ConversationPartner(RefHandler.createRef('//@conversationPartners.0', 'http://www.unikoblenz.de/keml#//ConversationPartner'), 'LLM', 300)
-    let cp1 = new ConversationPartner(RefHandler.createRef('//@conversationPartners.1', 'http://www.unikoblenz.de/keml#//ConversationPartner'), 'Other', 450)
+    let cp0 = new ConversationPartner('LLM', 300)
+    let cp1 = new ConversationPartner('Other', 450)
     let cps = [cp0, cp1]
 
     let preknowledgeStr =
@@ -120,14 +119,8 @@ describe('KEML-Service', () => {
       "        }\n" +
       "      } ]\n"+
       "    } ]\n"
-    let pre0 = Preknowledge.create(
-      'pre0', false, undefined,
-       0.5, 0.5, undefined, undefined,
-      RefHandler.createRef('//@author/@preknowledge.0', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
-    let pre1 = Preknowledge.create(
-      'pre1', false, undefined,
-       0.5, 0.5, undefined, undefined,
-      RefHandler.createRef('//@author/@preknowledge.1', 'http://www.unikoblenz.de/keml#//PreKnowledge'))
+    let pre0 = Preknowledge.create('pre0', false, undefined, 0.5, 0.5, undefined, undefined)
+    let pre1 = Preknowledge.create('pre1', false, undefined, 0.5, 0.5, undefined, undefined)
 
     let preknowledge = [pre0, pre1]
     LayoutingService.positionPreknowledge(preknowledge)
@@ -176,25 +169,17 @@ describe('KEML-Service', () => {
       "      \"generates\" : [ "+newInfo0Str +", "+newInfo1Str+
       "       ]\n" +
       "   } ]\n"
-    let msg0 = SendMessage.create(cp0,0, "m0", "msg0long",
-      RefHandler.createRef('//@author/@messages.0', 'http://www.unikoblenz.de/keml#//SendMessage'))
+    let msg0 = SendMessage.create(cp0, 0, "m0", "msg0long")
     msg0.addUsage(pre0)
-    let msg1 = ReceiveMessage.create(
-      cp1, 1, "m1", "msg1long", false,
-      RefHandler.createRef('//@author/@messages.1', 'http://www.unikoblenz.de/keml#//ReceiveMessage')
-    )
+    let msg1 = ReceiveMessage.create(cp1, 1, "m1", "msg1long", false)
     let msgs: Message[] = [msg0, msg1]
-    let newInfo0 = NewInformation.create(msg1, "ni0", true,
-      undefined, undefined, undefined, 0.5, 0.5,
-      RefHandler.createRef('//@author/@messages.1/@generates.0', 'http://www.unikoblenz.de/keml#//NewInformation'))
-    let newInfo1 = NewInformation.create(msg1, "ni1",
-      false,undefined, undefined, undefined, 0.5, 0.5,
-      RefHandler.createRef('//@author/@messages.1/@generates.1', 'http://www.unikoblenz.de/keml#//NewInformation'))
+    let newInfo0 = NewInformation.create(msg1, "ni0", true, undefined, undefined, undefined, 0.5, 0.5)
+    let newInfo1 = NewInformation.create(msg1, "ni1", false, undefined, undefined, undefined, 0.5, 0.5)
 
     LayoutingService.initializeInfoPos(msgs)
 
-    let infoLink0 = InformationLink.create(newInfo0, pre0, InformationLinkType.SUPPLEMENT, undefined, RefHandler.createRef('//@author/@messages.1/@generates.0/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink')) // necessary to test JsonFixer.addMissingSupplementType
-    let infoLink1 = InformationLink.create(pre1, newInfo1, InformationLinkType.STRONG_ATTACK, '', RefHandler.createRef( '//@author/@preknowledge.1/@causes.0', 'http://www.unikoblenz.de/keml#//InformationLink'))
+    let infoLink0 = InformationLink.create(newInfo0, pre0, InformationLinkType.SUPPLEMENT, undefined) // necessary to test JsonFixer.addMissingSupplementType
+    let infoLink1 = InformationLink.create(pre1, newInfo1, InformationLinkType.STRONG_ATTACK, '')
 
     let authorStr = "\"author\" : {" +
       msgsStr +",\n" +
@@ -218,17 +203,10 @@ describe('KEML-Service', () => {
     let callResult = service.loadConversation(JSON.parse(str))
     expect(callResult.title).toEqual(conv.title)
 
-    function testListRefs<T extends Referencable>(l1: T[], l2: T[]) {
-      expect(l1.length).toEqual(l2.length)
-      l1.forEach((l,i) => {
-        expect(l.getRef()).toEqual(l2[i].getRef())
-      })
-    }
 
     // ********* conversationPartners **************
     callResult.conversationPartners.forEach((cp, index) => {
       expect(cp.name).toEqual(cps[index].name)
-      expect(cp.getRef()).toEqual(cps[index].getRef())
       expect(cp.xPosition).toEqual(cps[index].xPosition)
     })
 
@@ -238,25 +216,14 @@ describe('KEML-Service', () => {
     callResult.author.preknowledge.forEach((pre, i) => {
       expect(pre.message).toEqual(preknowledge[i].message)
       expect(pre.position).toEqual(preknowledge[i].position)
-      expect(pre.getRef()).toEqual(preknowledge[i].getRef())
-      testListRefs(pre.isUsedOn, preknowledge[i].isUsedOn)
     })
 
     // ********* messages **************
     callResult.author.messages.forEach((msg, i) => {
       expect(msg.content).toEqual(msgs[i].content)
       expect(msg.originalContent).toEqual(msgs[i].originalContent)
-      expect(msg.counterPart.getRef()).toEqual(msgs[i].counterPart.getRef())
       expect(msg.timing).toEqual(msgs[i].timing)
-      expect(msg.getRef()).toEqual(msgs[i].getRef())
     })
-    testListRefs(
-      (callResult.author.messages[0] as SendMessage).uses,
-      msg0.uses
-    )
-    let resultRec = (callResult.author.messages[1] as ReceiveMessage)
-    testListRefs(resultRec.generates, msg1.generates)
-    testListRefs(resultRec.repeats, msg1.repeats)
 
     //msgSignal:
     expect(service.msgCount()).toEqual(2)
@@ -267,20 +234,12 @@ describe('KEML-Service', () => {
       expect(newInfo.message).toEqual(msg1.generates[i].message)
       expect(newInfo.isInstruction).toEqual(msg1.generates[i].isInstruction)
       expect(newInfo.position).toEqual(msg1.generates[i].position)
-      expect(newInfo.source.getRef()).toEqual(msg1.generates[i].source.getRef())
-      testListRefs(newInfo.causes, msg1.generates[i].causes)
-      testListRefs(newInfo.targetedBy, msg1.generates[i].targetedBy)
-      testListRefs(newInfo.isUsedOn, msg1.generates[i].isUsedOn)
-      testListRefs(newInfo.repeatedBy, msg1.generates[i].repeatedBy)
     })
 
     // ********** infoLinks **************
     let resultLink0 = resultNewInfos[0].causes[0]
     let resultLink1 = callResult.author.preknowledge[1].causes[0]
     function compareLinks(l1: InformationLink, l2: InformationLink) {
-      expect(l1.getRef()).toEqual(l2.getRef())
-      expect(l1.source.getRef()).toEqual(l2.source.getRef())
-      expect(l1.target.getRef()).toEqual(l2.target.getRef())
       expect(l1.type).toEqual(l2.type)
       expect(l1.linkText).toEqual(l2.linkText)
     }
@@ -331,11 +290,11 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     kemlService.newConversationNoHistory("test")
     expect(historyStub.save).toHaveBeenCalledTimes(0)
     const res = kemlService.conversation.toJson()
-    expect(res).toEqual(new Conversation("test").toJson())
+    expect(res).toEqual(Conversation.create("test").toJson())
 
     kemlService.newConversation("test1")
     expect(historyStub.save).toHaveBeenCalledTimes(1)
-    expect(historyStub.save).toHaveBeenCalledOnceWith(new Conversation("test1").toJson())
+    expect(historyStub.save).toHaveBeenCalledOnceWith(Conversation.create("test1").toJson())
   })
 
   //(cannot test deserialize to not call history) it is private
@@ -374,11 +333,11 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(historyStub.save).toHaveBeenCalledTimes(1)
     let res = kemlService.serializeConversation()
     expect(historyStub.save).toHaveBeenCalledOnceWith(res)
-    expect(res.conversationPartners.map(cp=> cp.name)).toEqual(["cp0", "cp1"])
+    expect(res.conversationPartners?.map(cp=> cp.name)).toEqual(["cp0", "cp1"])
   })
 
   it("should not call history on cp isMoveDisabled", () => {
-    let cp = new ConversationPartner(undefined, "cp")
+    let cp = new ConversationPartner("cp")
     expect(historyStub.save).toHaveBeenCalledTimes(0)
     kemlService.isMoveConversationPartnerLeftDisabled(cp)
     expect(historyStub.save).toHaveBeenCalledTimes(0)
@@ -622,20 +581,21 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     const m3: ReceiveMessage = kemlService.addNewMessageNoHistory(false, cp0, "m3") as ReceiveMessage
     const m4: SendMessage = kemlService.addNewMessageNoHistory(true, cp0, "m4") as SendMessage
 
-    let n1 = NewInformation.create(m3, "i1")
+    const n1 = kemlService.addNewNewInfo(m3, "i1")!
 
-    let pre0 = Preknowledge.create("pre0")
+    const pre0 = kemlService.addNewPreknowledge("pre0")
 
     let convInit = kemlService.conversation
 
-    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
     // not working add:
     kemlService.addUsage(m2, n1)
-    expect(historyStub.save).toHaveBeenCalledTimes(0)
+    expect(historyStub.save).toHaveBeenCalledTimes(2)
     expect(kemlService.conversation).toBe(convInit)
     // working add:
     kemlService.addUsage(m4, n1)
-    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
+    expect(historyStub.save).toHaveBeenCalledTimes(3)
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
     expect(m4.uses).toContain(n1)
     expect(n1.isUsedOn).toContain(m4)
     //also add usage for preknowledge (always working):
@@ -644,25 +604,25 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(m4.uses.length).toBe(2)
     expect(pre0.isUsedOn).toContain(m4)
     expect(pre0.getTiming()).toBe(4)
-    expect(historyStub.save).toHaveBeenCalledTimes(2)
+    expect(historyStub.save).toHaveBeenCalledTimes(4)
     expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
     kemlService.addUsage(m0, pre0) //earlier one, makes new first usage
     expect(m0.uses).toContain(pre0)
     expect(pre0.isUsedOn).toContain(m0)
     expect(pre0.getTiming()).toBe(0)
-    expect(historyStub.save).toHaveBeenCalledTimes(3)
+    expect(historyStub.save).toHaveBeenCalledTimes(5)
     expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
 
     //delete usage on pre:
     kemlService.deleteUsage(m4, pre0)
-    expect(historyStub.save).toHaveBeenCalledTimes(4)
+    expect(historyStub.save).toHaveBeenCalledTimes(6)
     expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
     expect(m4.uses).toContain(n1)
     expect(m4.uses.length).toBe(1)
     expect(pre0.isUsedOn).toContain(m0)
     expect(pre0.isUsedOn.length).toBe(1)
     kemlService.deleteUsage(m0, pre0)
-    expect(historyStub.save).toHaveBeenCalledTimes(5)
+    expect(historyStub.save).toHaveBeenCalledTimes(7)
     expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
     expect(m4.uses).toContain(n1)
     expect(m4.uses.length).toBe(1)
@@ -670,12 +630,12 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
 
     // delete usage on new:
     kemlService.deleteUsage(m4, n1)
-    expect(historyStub.save).toHaveBeenCalledTimes(6)
+    expect(historyStub.save).toHaveBeenCalledTimes(8)
     expect(historyStub.save).toHaveBeenCalledWith(convInit.toJson())
     expect(kemlService.conversation).toBe(convInit)
     // new deletion is not possible, hence no new triggering of removal
     kemlService.deleteUsage(m4, n1)
-    expect(historyStub.save).toHaveBeenCalledTimes(6)
+    expect(historyStub.save).toHaveBeenCalledTimes(8)
     expect(kemlService.conversation).toBe(convInit)
   })
 
@@ -780,7 +740,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(kemlService.conversation.author.preknowledge.length).toBe(1)
     expect(historyStub.save).toHaveBeenCalledTimes(1)
     expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
-    const p1 = kemlService.duplicateInfo(p0)
+    const p1: Preknowledge = kemlService.duplicateInfo(p0) as Preknowledge
     expect(kemlService.conversation.author.preknowledge.length).toBe(2)
     expect(kemlService.conversation.author.preknowledge).toContain(p1)
     expect(kemlService.conversation.author.preknowledge).toContain(p0)

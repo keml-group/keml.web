@@ -1,11 +1,10 @@
 import {LifeLine} from "./life-line";
 import {Message} from "./msg-info";
-import {AuthorJson} from "@app/shared/keml/json/sequence-diagram-models"
 import {Preknowledge} from "./msg-info";
-import {Ref} from "emfular";
+import {eClass, ReTreeListContainer} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
-import {RefHandler, ReTreeListContainer} from "emfular";
 
+@eClass(EClasses.Author)
 export class Author extends LifeLine{
   static readonly $preknowledgeName: string = 'preknowledge';
   static readonly $messagesName: string = 'messages';
@@ -30,22 +29,17 @@ export class Author extends LifeLine{
     })
   }
 
-  constructor(ref?: Ref) {
-    let refC = RefHandler.createRefIfMissing(EClasses.Author, ref)
-    super(refC);
+  constructor() {
+    super();
     this._preknowledge = new ReTreeListContainer<Preknowledge>(this, Author.$preknowledgeName, undefined, EClasses.Preknowledge)
     this._messages = new ReTreeListContainer<Message>(this, Author.$messagesName)
   }
 
-  static create(ref?: Ref, name?: string, xPosition: number = 0): Author {
-    const auth = new Author(ref)
+  static create(name?: string, xPosition: number = 0): Author {
+    const auth = new Author()
     auth.name = name? name: ''
     auth.xPosition = xPosition
     return auth
-  }
-
-  static fromJson(json: AuthorJson, ref: Ref): Author {
-    return Author.create(ref, json.name ? json.name : '', json.xPosition)
   }
 
 }

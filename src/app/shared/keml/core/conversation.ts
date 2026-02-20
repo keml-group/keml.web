@@ -1,12 +1,11 @@
 import {Author} from "./author";
 import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
-import {Deserializer, Ref, Referencable, RefHandler, ReTreeSingleContainer, ReTreeListContainer, attribute} from "emfular";
+import {Deserializer, Referencable, ReTreeSingleContainer, ReTreeListContainer, attribute, eClass} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
-import {createKemlRegistry} from "@app/shared/keml/kemlregistry";
 
-
-export class Conversation extends Referencable {
+@eClass(EClasses.Conversation)
+export class Conversation extends Referencable<any> {
   static readonly $authorName = 'author';
   static readonly $conversationPartnersName = 'conversationPartners';
 
@@ -33,37 +32,23 @@ export class Conversation extends Referencable {
   constructor(
     title: string = 'New Conversation'
   ) {
-    let ref = RefHandler.createRef(RefHandler.rootPath, EClasses.Conversation)
-    super(ref);
+    super();
     this._author = new ReTreeSingleContainer<Author>(this, Conversation.$authorName, undefined, EClasses.Author);
     this._conversationPartners = new ReTreeListContainer<ConversationPartner>(this, Conversation.$conversationPartnersName, undefined, EClasses.ConversationPartner);
     this.title = title;
     this.author = new Author();
   }
 
-  static create(title: string, author?: Author): Conversation {
-    const conv = new Conversation();
+  static create(title: string = 'New conversation', author?: Author): Conversation {
+    const conv = new Conversation('New Conversation');
     conv.title = title;
     conv.author = author? author: new Author();
     return conv;
   }
 
-  override toJson(): ConversationJson {
-    this.prepare(RefHandler.rootPath);
-
-    return (super.toJson() as ConversationJson);
-  }
-
-  static fromJson(json: ConversationJson, _: Ref): Conversation {
-    return Conversation.create(json.title)
-  }
-
-  //todo naming
   static fromJSON (convJson: ConversationJson): Conversation {
-    return Deserializer.fromJSON<typeof Conversation>(
-      Conversation,
+    return Deserializer.fromJSON<Conversation>(
       convJson,
-      createKemlRegistry(),
       EClasses.Conversation
     )
   }

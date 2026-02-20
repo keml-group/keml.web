@@ -1,16 +1,15 @@
-import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "./msg-info";
+import {InformationLink, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "./msg-info";
 import {InformationLinkJson, InformationLinkType, NewInformationJson, PreknowledgeJson} from "@app/shared/keml/json/knowledge-models";
 import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson, ReceiveMessageJson, SendMessageJson} from "@app/shared/keml/json/sequence-diagram-models";
-import {RefHandler, JsonComparer} from "emfular";
+import {RefHandler, JsonComparer, SerializationContext} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
-import {JsonFixer} from "@app/shared/keml/json2core/json-fixer";
 import {Conversation} from "@app/shared/keml/core/conversation";
 
 describe("Msg-models", () => {
   it('should set a message counterpart correctly', () => {
-    let cp0 = new ConversationPartner(undefined, 'cp0')
-    let cp1 = new ConversationPartner(undefined, 'cp1')
+    let cp0 = new ConversationPartner('cp0')
+    let cp1 = new ConversationPartner('cp1')
     let rec = ReceiveMessage.create(cp0, 1, 'msg')
     expect(rec.counterPart).toEqual(cp0)
     rec.counterPart = cp1
@@ -19,46 +18,46 @@ describe("Msg-models", () => {
 
   it('should serialize a send msg', () => {
     let cp = new ConversationPartner()
+    let ctx = new SerializationContext(cp);
     let msg = SendMessage.create(cp, 0, "sendContent")
     let msgJson: SendMessageJson = {
       eClass: EClasses.SendMessage,
       content: "sendContent",
-      originalContent: undefined,
-      timing: 0,
-      counterPart: cp.getRef(),
-      uses: []
+      counterPart: ctx.get(cp),
     }
-    expect(msg.toJson()).toEqual(msgJson);
+    expect(msg.toJson(ctx)).toEqual(msgJson)
+    expect(() => msg.toJson()).toThrow();
   });
 
   it('should serialize a receive msg', () => {
     let cp = new ConversationPartner()
+    let ctx = new SerializationContext(cp);
     let msg = ReceiveMessage.create(cp, 1, "receiveContent")
     let msgJson: ReceiveMessageJson = {
       eClass: EClasses.ReceiveMessage,
       content: "receiveContent",
-      originalContent: undefined,
       timing: 1,
-      counterPart: cp.getRef(),
-      isInterrupted: false,
-      generates: [],
-      repeats: []
+      counterPart: ctx.get(cp),
     }
-    expect(msg.toJson()).toEqual(msgJson);
+    expect(msg.toJson(ctx)).toEqual(msgJson);
+    msg.timing = 0; //default
+    msg.isInterrupted = true;
+    let msgJson2 : ReceiveMessageJson = {
+      eClass: EClasses.ReceiveMessage,
+      content: "receiveContent",
+      counterPart: ctx.get(cp),
+      isInterrupted: true,
+    }
+    expect(msg.toJson(ctx)).toEqual(msgJson2);
+    expect(() => msg.toJson()).toThrow();
   });
 
 });
 
 describe('Info (models)', () => {
 
-  it('should prepare the information serialization for getRef', () => {
-    let preknowledge = Preknowledge.create()
-     preknowledge.prepare('fantasy')
-    expect (preknowledge.getRef()).toEqual(RefHandler.createRef('fantasy', EClasses.Preknowledge));
-  })
-
   it('should determine the correct timing of a new info', () => {
-    let rec = new ReceiveMessage(undefined, 5)
+    let rec = new ReceiveMessage(5)
     let newInfo = NewInformation.create(rec, 'info1')
     expect(newInfo.getTiming()).toEqual(5)
     rec.timing = 0
@@ -80,46 +79,30 @@ describe('Info (models)', () => {
   it('should serialize preknowledge', () => {
     let preknowledge = Preknowledge.create()
     let preknowledgeJson : PreknowledgeJson = {
-      causes: [],
-      currentTrust: undefined,
       eClass: EClasses.Preknowledge,
       position: {x: 0, y: 0, w: 5, h: 5},
-      feltTrustAfterwards: undefined,
-      feltTrustImmediately: undefined,
-      initialTrust: undefined,
-      isInstruction: false,
-      isUsedOn: [],
       message: "Preknowledge",
-      repeatedBy: [],
-      targetedBy: []
     }
     expect(preknowledge.toJson()).toEqual(preknowledgeJson);
   });
 
   it('should serialize newInfo', () => {
-    let msg = new ReceiveMessage(undefined, 1, "receiveContent")
+    let msg = new ReceiveMessage(1, "receiveContent")
     let newInfo = NewInformation.create(msg, 'New Info')
+
+    const ctx = new SerializationContext(msg)
+
     let newInfoJson: NewInformationJson = {
-      source: msg.getRef(),
-      causes: [],
-      currentTrust: undefined,
       eClass: EClasses.NewInformation,
-      feltTrustAfterwards: undefined,
-      feltTrustImmediately: undefined,
-      initialTrust: undefined,
-      isInstruction: false,
-      isUsedOn: [],
       message: 'New Info',
       position: {x: 0, y: 0, w: 5, h: 5},
-      repeatedBy: [],
-      targetedBy: []
     }
-    expect(newInfo.toJson()).toEqual(newInfoJson);
+    expect(newInfo.toJson(ctx)).toEqual(newInfoJson);
   });
 
   it('should delete a "used on" on an info', () => {
-    let m0 = new ReceiveMessage(undefined, 1, "receive1")
-    let m1 = new SendMessage(undefined, 1, "send1")
+    let m0 = new ReceiveMessage(1, "receive1")
+    let m1 = new SendMessage(1, "send1")
 
     let i0 = Preknowledge.create('pre0')
     let i1 = NewInformation.create(m0, 'i1', false)
@@ -137,8 +120,8 @@ describe('Info (models)', () => {
   })
 
   it('should delete a "repeated by" on an info', () => {
-    let m0 = new ReceiveMessage(undefined, 0, "receive0")
-    let m1 = new ReceiveMessage(undefined, 1, "receive1")
+    let m0 = new ReceiveMessage(0, "receive0")
+    let m1 = new ReceiveMessage(1, "receive1")
 
     let i0 = Preknowledge.create('pre0')
     let i1 = NewInformation.create(m0, 'i1', false)
@@ -161,62 +144,63 @@ describe('Info (models)', () => {
   })
 
   it('should serialize information links', () => {
-    let msg = new ReceiveMessage(undefined, 1, "receiveContent")
+    let msg = new ReceiveMessage(1, "receiveContent")
     let newInfo1 = NewInformation.create(msg, 'New Info1')
     let newInfo2 = NewInformation.create(msg, 'New Info2')
     let preknowledge1 = Preknowledge.create('Preknowledge1')
     let preknowledge2 = Preknowledge.create('Preknowledge2')
+
+    const ctx = new SerializationContext(newInfo1)
+    const refNew1 = RefHandler.createRef(RefHandler.rootPath, EClasses.NewInformation)
+    const refNew2 = RefHandler.createRef("new2", EClasses.NewInformation)
+    ctx.put(newInfo2, refNew2)
+    const refPre1 = RefHandler.createRef("pre1", EClasses.Preknowledge)
+    ctx.put(preknowledge1, refPre1)
+    const refPre2 = RefHandler.createRef("pre2", EClasses.Preknowledge)
+    ctx.put(preknowledge2, refPre2)
 
     // ***** candidates **********
     let infoLink_new_new = InformationLink.create(newInfo1, newInfo2, InformationLinkType.SUPPLEMENT, 'text')
     let infoLink_new_new_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
       linkText: "text",
-      source: RefHandler.createRef('', EClasses.NewInformation),
-      target: RefHandler.createRef('', EClasses.NewInformation),
+      target: refNew2,
       type: InformationLinkType.SUPPLEMENT
     }
-    expect(infoLink_new_new.toJson()).toEqual(infoLink_new_new_Json);
+    expect(infoLink_new_new.toJson(ctx)).toEqual(infoLink_new_new_Json);
 
     let infoLink_new_pre = InformationLink.create(newInfo1, preknowledge1, InformationLinkType.STRONG_ATTACK, 'text')
     let infoLink_new_pre_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
       linkText: "text",
-      source: RefHandler.createRef('', EClasses.NewInformation),
-      target: RefHandler.createRef('', EClasses.Preknowledge),
+      target: refPre1,
       type: InformationLinkType.STRONG_ATTACK
     }
-    expect(infoLink_new_pre.toJson()).toEqual(infoLink_new_pre_Json);
+    expect(infoLink_new_pre.toJson(ctx)).toEqual(infoLink_new_pre_Json);
 
     let infoLink_pre_new = InformationLink.create(preknowledge1, newInfo1, InformationLinkType.SUPPORT)
     let infoLink_pre_new_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
-      linkText: undefined,
-      source: RefHandler.createRef('', EClasses.Preknowledge),
-      target: RefHandler.createRef('', EClasses.NewInformation),
+      target: refNew1,
       type: InformationLinkType.SUPPORT
     }
-    expect(infoLink_pre_new.toJson()).toEqual(infoLink_pre_new_Json);
+    expect(infoLink_pre_new.toJson(ctx)).toEqual(infoLink_pre_new_Json);
 
     let infoLink_pre_pre = InformationLink.create(preknowledge1, preknowledge2, InformationLinkType.STRONG_SUPPORT)
     let infoLink_pre_pre_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
-      linkText: undefined,
-      source: RefHandler.createRef('', EClasses.Preknowledge),
-      target: RefHandler.createRef('', EClasses.Preknowledge),
+      target: refPre2,
       type: InformationLinkType.STRONG_SUPPORT
     }
-    expect(infoLink_pre_pre.toJson()).toEqual(infoLink_pre_pre_Json);
+    expect(infoLink_pre_pre.toJson(ctx)).toEqual(infoLink_pre_pre_Json);
 
     let infoLink_pre_pre_2 = InformationLink.create(preknowledge1, preknowledge2, InformationLinkType.ATTACK)
     let infoLink_pre_pre_2_Json: InformationLinkJson = {
       eClass: EClasses.InformationLink,
-      linkText: undefined,
-      source: RefHandler.createRef('', EClasses.Preknowledge),
-      target: RefHandler.createRef('', EClasses.Preknowledge),
+      target: refPre2,
       type: InformationLinkType.ATTACK
     }
-    expect(infoLink_pre_pre_2.toJson()).toEqual(infoLink_pre_pre_2_Json);
+    expect(infoLink_pre_pre_2.toJson(ctx)).toEqual(infoLink_pre_pre_2_Json);
   });
 
   it('should delete an info link completely', () => {
@@ -225,8 +209,10 @@ describe('Info (models)', () => {
     let link = InformationLink.create(p1, p0, InformationLinkType.SUPPORT)
 
     expect(p0.targetedBy.length).toEqual(1)
+    expect(p1.causes.length).toEqual(1)
     link.destruct()
     expect(p0.targetedBy.length).toEqual(0)
+    expect(p1.causes.length).toEqual(0)
   })
 
   it('source destruction: should delete an info that is a link source for two links completely (also deletes the links)', () => {
@@ -234,8 +220,8 @@ describe('Info (models)', () => {
     let p1 = Preknowledge.create('p1')
     let p2 = Preknowledge.create('p2')
 
-    let link1 = InformationLink.create( p0, p1, InformationLinkType.SUPPORT)
-    let link2 = InformationLink.create( p0, p2, InformationLinkType.SUPPLEMENT)
+    InformationLink.create(p0, p1, InformationLinkType.SUPPORT)
+    InformationLink.create(p0, p2, InformationLinkType.SUPPLEMENT)
     expect(p0.causes.length).toEqual(2)
     expect(p1.targetedBy.length).toEqual(1)
     expect(p2.targetedBy.length).toEqual(1)
@@ -266,10 +252,10 @@ describe('Info (models)', () => {
 
   it('should time a preknowledge correctly', () => {
     let cp0 = new ConversationPartner()
-    let m0 = SendMessage.create( cp0, 0, 'm0')
-    let m1 = SendMessage.create( cp0, 2, 'm1')
-    let m2 = SendMessage.create( cp0, 5, 'm2')
-    let m3 = SendMessage.create( cp0, 6, 'm3')
+    let m0 = SendMessage.create(cp0, 0, 'm0')
+    let m1 = SendMessage.create(cp0, 2, 'm1')
+    let m2 = SendMessage.create(cp0, 5, 'm2')
+    let m3 = SendMessage.create(cp0, 6, 'm3')
 
     let pre0 = Preknowledge.create('p0', false)
     let pre1 = Preknowledge.create('p1', false)
@@ -300,26 +286,10 @@ describe('Info (models)', () => {
 
 describe('deserialize and re-serialize', () => {
 
-  it('should add attributes to preknowledge via fromJson', ()=> {
-    let ref = RefHandler.createRef("", EClasses.Preknowledge)
-    let preJson: PreknowledgeJson = {
-      causes: [],
-      eClass: "",
-      isInstruction: false,
-      isUsedOn: [],
-      message: "pre0",
-      repeatedBy: [],
-      targetedBy: []
-    }
-    let res = Preknowledge.fromJson(preJson, ref)
-    expect(res.message).toEqual("pre0")
-  })
-
   it('should deserialize and re-serialize a real world example', () => {
 
     let json = require('@assets/test/3-2-keml-jackson.json');
     let convJson: ConversationJson = json as ConversationJson
-    JsonFixer.prepareJsonInfoLinkSources(convJson);
     let conv = Conversation.fromJSON(convJson)
     let convJson2 = conv.toJson()
 
