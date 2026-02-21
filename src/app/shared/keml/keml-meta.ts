@@ -10,15 +10,7 @@ export enum InformationLinkType {
   STRONG_ATTACK = 'STRONG_ATTACK',
 }
 
-export const KemlMeta: ModelDefinition = {
-  name: "keml",
-  prefix: "keml",
-  uri: "http://www.unikoblenz.de/keml",
-
-  enums: {
-    InformationLinkType
-  },
-
+export const KemlMeta = {
   classes: {
     Conversation: {
       references: {
@@ -31,7 +23,6 @@ export const KemlMeta: ModelDefinition = {
         conversationPartners: {
           target: "ConversationPartner",
           containment: true,
-          min: 0,
           max: -1
         }
       }
@@ -50,25 +41,12 @@ export const KemlMeta: ModelDefinition = {
         messages: {
           target: "Message",
           containment: true,
-          min: 0,
           max: -1
         },
         preknowledge: {
           target: "PreKnowledge",
           containment: true,
-          min: 0,
           max: -1
-        }
-      }
-    },
-
-    Message: {
-      references: {
-        counterPart: {
-          target: "ConversationPartner",
-          containment: false,
-          min: 1,
-          max: 1
         }
       }
     },
@@ -77,9 +55,7 @@ export const KemlMeta: ModelDefinition = {
       references: {
         uses: {
           target: "Information",
-          containment: false,
           opposite: "isUsedOn",
-          min: 0,
           max: -1
         }
       }
@@ -91,15 +67,22 @@ export const KemlMeta: ModelDefinition = {
           target: "NewInformation",
           containment: true,
           opposite: "source",
-          min: 0,
           max: -1
         },
         repeats: {
           target: "Information",
-          containment: false,
           opposite: "repeatedBy",
-          min: 0,
           max: -1
+        }
+      }
+    },
+
+    Message: {
+      references: {
+        counterPart: {
+          target: "ConversationPartner",
+          min: 1,
+          max: 1
         }
       }
     },
@@ -108,7 +91,7 @@ export const KemlMeta: ModelDefinition = {
       references: {
         source: {
           target: "ReceiveMessage",
-          containment: false,
+          isParent: true,
           opposite: "generates",
           min: 1,
           max: 1
@@ -124,30 +107,23 @@ export const KemlMeta: ModelDefinition = {
       references: {
         repeatedBy: {
           target: "ReceiveMessage",
-          containment: false,
           opposite: "repeats",
-          min: 0,
           max: -1
         },
         targetedBy: {
           target: "InformationLink",
-          containment: false,
           opposite: "target",
-          min: 0,
           max: -1
         },
         causes: {
           target: "InformationLink",
           containment: true,
           opposite: "source",
-          min: 0,
           max: -1
         },
         isUsedOn: {
           target: "SendMessage",
-          containment: false,
           opposite: "uses",
-          min: 0,
           max: -1
         }
       }
@@ -157,14 +133,13 @@ export const KemlMeta: ModelDefinition = {
       references: {
         target: {
           target: "Information",
-          containment: false,
           opposite: "targetedBy",
           min: 1,
           max: 1
         },
         source: {
           target: "Information",
-          containment: false,
+          isParent: true,
           opposite: "causes",
           min: 1,
           max: 1
