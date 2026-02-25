@@ -7,9 +7,17 @@ import {
   SendMessage
 } from "@app/shared/keml/core/msg-info";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
-import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
+import {
+  InformationLinkJson,
+  InformationLinkType,
+  NewInformationJson,
+  PreknowledgeJson
+} from "@app/shared/keml/json/knowledge-models";
 import {ReceiveMessageJson} from "@app/shared/keml/json/sequence-diagram-models";
 import { EClasses } from '../eclasses';
+import {JsonOf} from "../../../../../../../../EMFular/projects/emfular/src/lib/serialization/json-deserializable";
+import {Author} from "@app/shared/keml/core/author";
+import {Ref} from "../../../../../../../../EMFular/projects/emfular/src/lib/referencing/ref/ref";
 
 describe('Conversation', () => {
   it('should create an instance', () => {
@@ -36,9 +44,10 @@ describe('Conversation', () => {
 
     // serialization:
     let convJson = conv.toJson()
-    expect(convJson.author?.messages![0].counterPart?.$ref).toEqual('//@conversationPartners.0')
-    expect(convJson.author?.preknowledge![0].targetedBy![0]?.$ref).toEqual('//@author/@messages.1/@generates.0/@causes.0')
-    expect((convJson.author?.messages![1] as ReceiveMessageJson)?.generates![0].causes![0].target!.$ref ).toEqual('//@author/@preknowledge.0')
+    let convAuthorJson = convJson.author as JsonOf<Author>
+    expect(((convAuthorJson.messages![0] as ReceiveMessageJson).counterPart as Ref)?.$ref).toEqual('//@conversationPartners.0')
+    expect(((convAuthorJson.preknowledge as PreknowledgeJson[])![0].targetedBy![0]as Ref)?.$ref).toEqual('//@author/@messages.1/@generates.0/@causes.0')
+    expect(((((convAuthorJson.messages![1] as ReceiveMessageJson)?.generates![0] as NewInformationJson).causes![0] as InformationLinkJson).target! as Ref).$ref ).toEqual('//@author/@preknowledge.0')
   })
 
   it("should produce only minimal output for a conversation with mostly defaults", () => {

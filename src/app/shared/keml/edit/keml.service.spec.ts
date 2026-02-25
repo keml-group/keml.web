@@ -14,6 +14,7 @@ import {Author} from "@app/shared/keml/core/author";
 import {Conversation} from "@app/shared/keml/core/conversation";
 import {of} from "rxjs";
 import {KemlHistoryService} from "@app/shared/keml/edit/keml-history.service";
+import {JsonOf} from "../../../../../../../../EMFular/projects/emfular/src/lib/serialization/json-deserializable";
 
 describe('KEML-Service', () => {
   let service: KemlService;
@@ -333,7 +334,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(historyStub.save).toHaveBeenCalledTimes(1)
     let res = kemlService.serializeConversation()
     expect(historyStub.save).toHaveBeenCalledOnceWith(res)
-    expect(res.conversationPartners?.map(cp=> cp.name)).toEqual(["cp0", "cp1"])
+    expect(res.conversationPartners?.map(cp=> (cp as JsonOf<ConversationPartner>).name)).toEqual(["cp0", "cp1"])
   })
 
   it("should not call history on cp isMoveDisabled", () => {
