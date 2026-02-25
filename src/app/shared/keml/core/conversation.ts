@@ -1,31 +1,26 @@
 import {Author} from "./author";
 import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
-import {Deserializer, Referencable, ReTreeSingleContainer, ReTreeListContainer, attribute, eClass} from "emfular";
+import {Deserializer, Referencable, attribute, eClass, reference, ModelList} from "emfular";
 import {EClasses} from "@app/shared/keml/eclasses";
+import {ConversationRefs, KemlMeta} from "@app/shared/keml/keml-meta";
 
-@eClass(EClasses.Conversation)
+@eClass(KemlMeta)
 export class Conversation extends Referencable<any> {
-  static readonly $authorName = 'author';
-  static readonly $conversationPartnersName = 'conversationPartners';
 
   @attribute()
   title: string;
 
-  _author: ReTreeSingleContainer<Author>;
-  get author(): Author {
-    return this._author.get()!!
-  }
-  set author(author: Author) {
-    this._author.add(author);
-  }
-  _conversationPartners: ReTreeListContainer<ConversationPartner>;
-  get conversationPartners(): ConversationPartner[] {
-    return this._conversationPartners.get()
-  }
+  @reference(ConversationRefs.author)
+  declare author: Author
+
+  @reference(ConversationRefs.conversationPartners)
+  declare conversationPartners:  ModelList<ConversationPartner>
+
+
   addCP(...cps: ConversationPartner[]) {
     cps.map(cp => {
-      this._conversationPartners.add(cp)
+      this.conversationPartners.push(cp)
     })
   }
 
@@ -33,8 +28,6 @@ export class Conversation extends Referencable<any> {
     title: string = 'New Conversation'
   ) {
     super();
-    this._author = new ReTreeSingleContainer<Author>(this, Conversation.$authorName, undefined, EClasses.Author);
-    this._conversationPartners = new ReTreeListContainer<ConversationPartner>(this, Conversation.$conversationPartnersName, undefined, EClasses.ConversationPartner);
     this.title = title;
     this.author = new Author();
   }

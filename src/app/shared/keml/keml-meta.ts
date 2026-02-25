@@ -1,5 +1,3 @@
-// ===== Enums =====
-
 import { ModelDefinition } from "emfular";
 
 export enum InformationLinkType {
@@ -10,7 +8,10 @@ export enum InformationLinkType {
   STRONG_ATTACK = 'STRONG_ATTACK',
 }
 
-export const KemlMeta = {
+export const KemlMeta: ModelDefinition = {
+  name: "KEML",
+  prefix: "keml",
+  uri: "",
   classes: {
     Conversation: {
       references: {
@@ -146,5 +147,56 @@ export const KemlMeta = {
         }
       }
     }
-  }
+  },
 } as const;
+
+export const ConversationRefs = {
+  author: KemlMeta.classes["Conversation"].references["author"],
+  conversationPartners: KemlMeta.classes["Conversation"].references["conversationPartners"],
+};
+
+export const ConversationPartnerRefs = {
+  // no references
+};
+
+export const LifeLineRefs = {
+  // no references
+};
+
+export const AuthorRefs = {
+  messages: KemlMeta.classes["Author"].references["messages"],
+  preknowledge: KemlMeta.classes["Author"].references["preknowledge"],
+};
+
+export const SendMessageRefs = {
+  uses: KemlMeta.classes["SendMessage"].references["uses"],
+};
+
+export const ReceiveMessageRefs = {
+  generates: KemlMeta.classes["ReceiveMessage"].references["generates"],
+  repeats: KemlMeta.classes["ReceiveMessage"].references["repeats"],
+};
+
+export const MessageRefs = {
+  counterPart: KemlMeta.classes["Message"].references["counterPart"],
+};
+
+export const NewInformationRefs = {
+  source: KemlMeta.classes["NewInformation"].references["source"],
+};
+
+export const PreKnowledgeRefs = {
+  // no references
+};
+
+export const InformationRefs = {
+  repeatedBy: KemlMeta.classes["Information"].references["repeatedBy"],
+  targetedBy: KemlMeta.classes["Information"].references["targetedBy"],
+  causes: KemlMeta.classes["Information"].references["causes"],
+  isUsedOn: KemlMeta.classes["Information"].references["isUsedOn"],
+};
+
+export const InformationLinkRefs = {
+  target: KemlMeta.classes["InformationLink"].references["target"],
+  source: KemlMeta.classes["InformationLink"].references["source"],
+};

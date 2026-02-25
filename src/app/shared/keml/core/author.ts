@@ -1,45 +1,35 @@
 import {LifeLine} from "./life-line";
 import {Message} from "./msg-info";
 import {Preknowledge} from "./msg-info";
-import {eClass, ReTreeListContainer} from "emfular";
-import {EClasses} from "@app/shared/keml/eclasses";
+import {eClass, reference, ModelList} from "emfular";
+import {KemlMeta, AuthorRefs} from "@app/shared/keml/keml-meta";
 
-@eClass(EClasses.Author)
-export class Author extends LifeLine{
-  static readonly $preknowledgeName: string = 'preknowledge';
-  static readonly $messagesName: string = 'messages';
 
-  _preknowledge: ReTreeListContainer<Preknowledge>;
-  get preknowledge(): Preknowledge[] {
-    return this._preknowledge.get()
-  }
-  addPreknowledge(...preknowledge: Preknowledge[]) {
-    preknowledge.map(p => {
-      this._preknowledge.add(p)
-    })
-  }
+@eClass(KemlMeta)
+export class Author extends LifeLine {
 
-  _messages: ReTreeListContainer<Message>;
-  get messages(): Message[] {
-    return this._messages.get()
-  }
-  addMessage(...msgs: Message[]) {
-    msgs.map(m => {
-      this._messages.add(m)
-    })
-  }
+  @reference(AuthorRefs.preknowledge)
+  declare preknowledge: ModelList<Preknowledge>;
+
+  @reference(AuthorRefs.messages)
+  declare messages: ModelList<Message>;
 
   constructor() {
     super();
-    this._preknowledge = new ReTreeListContainer<Preknowledge>(this, Author.$preknowledgeName, undefined, EClasses.Preknowledge)
-    this._messages = new ReTreeListContainer<Message>(this, Author.$messagesName)
+  }
+
+  addPreknowledge(...items: Preknowledge[]) {
+    items.map(i => this.preknowledge.push(i));
+  }
+
+  addMessage(...items: Message[]) {
+    items.map(i => this.messages.push(i));
   }
 
   static create(name?: string, xPosition: number = 0): Author {
-    const auth = new Author()
-    auth.name = name? name: ''
-    auth.xPosition = xPosition
-    return auth
+    const auth = new Author();
+    auth.name = name ?? "";
+    auth.xPosition = xPosition;
+    return auth;
   }
-
 }

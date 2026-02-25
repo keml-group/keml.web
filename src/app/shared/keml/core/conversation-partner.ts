@@ -1,8 +1,8 @@
 import {LifeLine} from "./life-line";
 import {eClass} from "emfular";
-import {EClasses} from "@app/shared/keml/eclasses";
+import {KemlMeta} from "@app/shared/keml/keml-meta";
 
-@eClass(EClasses.ConversationPartner)
+@eClass(KemlMeta)
 export class ConversationPartner extends LifeLine {
 
   constructor(name: string = 'NewPartner', xPosition?: number) {
