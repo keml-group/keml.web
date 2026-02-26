@@ -155,7 +155,6 @@ export class KemlService {
   deleteConversationPartner(cp: ConversationPartner) {
     this.deleteMsgsWithCP(cp)
     cp.destruct()
-    ListUpdater.removeFromList(cp, this.conversation.conversationPartners)
     this.cpCount.update(n => n-1)
     this.saveCurrentState()
   }
