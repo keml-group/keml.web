@@ -179,17 +179,21 @@ export class KemlService {
 
   //************* Messages ********************
 
+  fitMsgTimingWithPosition(msg: Message) {
+    const msgs = this.conversation.author.messages
+    msg.timing = msgs.indexOf(msg)
+    this.msgPositionChangeService.notifyPositionChangeMessage( msg)
+  }
+
   moveMessageUp(msg: Message) {
     if(this.isMoveUpDisabled(msg)) {
       console.error("Cannot move message up");
     } else {
       const msgs = this.conversation.author.messages
       msgs.swap(msg.timing, msg.timing-1);
-      //actually, timing should be equal to the index - can we rely on it?
-      msgs[msg.timing].timing++;
-      msg.timing--;
-      this.msgPositionChangeService.notifyPositionChangeMessage( msgs[msg.timing] )
-      this.msgPositionChangeService.notifyPositionChangeMessage( msg)
+      //actually, timing should be equal to the index
+      this.fitMsgTimingWithPosition(msg)
+      this.fitMsgTimingWithPosition(msgs[msg.timing])
       this.saveCurrentState()
     }
   }
@@ -204,11 +208,9 @@ export class KemlService {
     } else {
       const msgs = this.conversation.author.messages
       msgs.swap(msg.timing, msg.timing+1);
-      //actually, timing should be equal to the index - can we rely on it?
-      msgs[msg.timing].timing--;
-      msg.timing++;
-      this.msgPositionChangeService.notifyPositionChangeMessage( msgs[msg.timing] )
-      this.msgPositionChangeService.notifyPositionChangeMessage( msg)
+      //actually, timing should be equal to the index
+      this.fitMsgTimingWithPosition(msg)
+      this.fitMsgTimingWithPosition(msgs[msg.timing])
       this.saveCurrentState()
     }
   }
@@ -227,12 +229,10 @@ export class KemlService {
     }
     if(affectedMsgs != 0) {
       msgs.move(msg.timing, newPos)
-      msg.timing = newPos
-      this.msgPositionChangeService.notifyPositionChangeMessage(msg)
+      this.fitMsgTimingWithPosition(msg)
       if (affectedMsgs > 0) { // new pos is further down -> just move all msgs starting from msg timing+1 up until affectedMsgs reached
         this.moveMsgTimingsUp(msg.timing + 1, newPos + 1)
       } else {
-        // if neutral: noop, can get handled in any way with 0 affected msgs
         // if negative: msg is further down, hence move all msgs starting from timing-1 one element down
         this.moveMsgTimingsDown(newPos, msg.timing)
       }
