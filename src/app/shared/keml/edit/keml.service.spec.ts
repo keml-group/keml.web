@@ -450,7 +450,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(msg1.timing).toBe(3)
   })
 
-  it('should delete a message', () => {
+  it('should delete a message but only call the history if it was part of the service conversation before', () => {
     prepareCpWith4Messages()
     const msgs = kemlService.conversation.author.messages
     const m0 = msgs[0]
@@ -470,6 +470,17 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(m0.timing).toBe(0)
     expect(m2.timing).toBe(1)
     expect(m3.timing).toBe(2)
+    // second delete works but has no effect on the list, hence no history change
+    kemlService.deleteMessage(m1)
+    expect(historyStub.save).toHaveBeenCalledTimes(1)
+    expect(kemlService.conversation.author.messages.length).toBe(3)
+    expect(kemlService.conversation.author.messages.map(m => m.content)).toEqual([
+      "message0", "message2", "message3"
+    ])
+    expect(m0.timing).toBe(0)
+    expect(m2.timing).toBe(1)
+    expect(m3.timing).toBe(2)
+    //todo even destruct on an element that is not in the model from the start triggers no change - what about one that is connected to a cp in the model?
   })
 
   it('should call history once when duplicating a msg and not if duplication not possible', () => {
