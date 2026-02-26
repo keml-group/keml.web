@@ -184,12 +184,11 @@ export class KemlService {
       console.error("Cannot move message up");
     } else {
       const msgs = this.conversation.author.messages
+      msgs.swap(msg.timing, msg.timing-1);
       //actually, timing should be equal to the index - can we rely on it?
-      msgs[msg.timing] = msgs[msg.timing-1];
       msgs[msg.timing].timing++;
-      this.msgPositionChangeService.notifyPositionChangeMessage( msgs[msg.timing] )
-      msgs[msg.timing-1] = msg;
       msg.timing--;
+      this.msgPositionChangeService.notifyPositionChangeMessage( msgs[msg.timing] )
       this.msgPositionChangeService.notifyPositionChangeMessage( msg)
       this.saveCurrentState()
     }
@@ -204,13 +203,12 @@ export class KemlService {
       console.error("Cannot move message down");
     } else {
       const msgs = this.conversation.author.messages
+      msgs.swap(msg.timing, msg.timing+1);
       //actually, timing should be equal to the index - can we rely on it?
-      msgs[msg.timing] = msgs[msg.timing+1];
-      msgs[msg.timing].timing-=1;
-      this.msgPositionChangeService.notifyPositionChangeMessage(msgs[msg.timing])
-      msgs[msg.timing+1] = msg;
-      msg.timing+=1;
-      this.msgPositionChangeService.notifyPositionChangeMessage(msg)
+      msgs[msg.timing].timing--;
+      msg.timing++;
+      this.msgPositionChangeService.notifyPositionChangeMessage( msgs[msg.timing] )
+      this.msgPositionChangeService.notifyPositionChangeMessage( msg)
       this.saveCurrentState()
     }
   }
@@ -227,21 +225,22 @@ export class KemlService {
       this.alertService.alert(errormsg)
       return;
     }
-    if(affectedMsgs > 0) { // new pos is further down -> just move all msgs starting from msg timing+1 up until affectedMsgs reached
-      this.moveMessagesUp(msg.timing+1, newPos + 1)
-    } else {
-      // if neutral: noop, can get handled in any way with 0 affected msgs
-      // if negative: msg is further down, hence move all msgs starting from timing-1 one element down
-      this.moveMessagesDown( newPos, msg.timing)
+    if(affectedMsgs != 0) {
+      msgs.move(msg.timing, newPos)
+      msg.timing = newPos
+      this.msgPositionChangeService.notifyPositionChangeMessage(msg)
+      if (affectedMsgs > 0) { // new pos is further down -> just move all msgs starting from msg timing+1 up until affectedMsgs reached
+        this.moveMsgTimingsUp(msg.timing + 1, newPos + 1)
+      } else {
+        // if neutral: noop, can get handled in any way with 0 affected msgs
+        // if negative: msg is further down, hence move all msgs starting from timing-1 one element down
+        this.moveMsgTimingsDown(newPos, msg.timing)
+      }
+      this.saveCurrentState()
     }
-    msgs.splice(msg.timing, 1)
-    msg.timing = newPos
-    msgs.splice(newPos, 0, msg)
-    this.msgPositionChangeService.notifyPositionChangeMessage(msg)
-    this.saveCurrentState()
   }
 
-  private moveMessagesDown(start: number, afterEnd: number) {
+  private moveMsgTimingsDown(start: number, afterEnd: number) {
     const msgs = this.conversation.author.messages
     for(let i = start; i < afterEnd; i++) {
       msgs[i].timing++;
@@ -249,7 +248,7 @@ export class KemlService {
     }
   }
 
-  private moveMessagesUp(start: number, afterEnd: number) {
+  private moveMsgTimingsUp(start: number, afterEnd: number) {
     const msgs = this.conversation.author.messages
     for(let i = start; i < afterEnd; i++) {
       msgs[i].timing--;
@@ -265,9 +264,8 @@ export class KemlService {
   private deleteMessageInternally(msg: Message) {
     const msgs = this.conversation.author.messages
     msg.destruct()
-    ListUpdater.removeFromList(msg, msgs)
     // adapt later messages:
-    this.moveMessagesUp(msg.timing, msgs.length)
+    this.moveMsgTimingsUp(msg.timing, msgs.length)
     this.msgCount.update(n => n-1);
   }
 
@@ -294,7 +292,7 @@ export class KemlService {
     const msgs = this.conversation.author.messages
     msgs.splice(msg.timing, 0, msg);
     // adapt later messages:
-    this.moveMessagesDown(msg.timing +1, msgs.length)
+    this.moveMsgTimingsDown(msg.timing +1, msgs.length)
     this.msgCount.update(n => n+1);
   }
 
