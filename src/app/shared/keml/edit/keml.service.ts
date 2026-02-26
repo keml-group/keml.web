@@ -257,16 +257,24 @@ export class KemlService {
   }
 
   deleteMessage(msg: Message) {
-    this.deleteMessageInternally(msg)
-    this.saveCurrentState()
+    if (this.deleteMessageInternally(msg))
+      this.saveCurrentState()
   }
 
-  private deleteMessageInternally(msg: Message) {
+  private deleteMessageInternally(msg: Message): boolean {
     const msgs = this.conversation.author.messages
+    const length = msgs.length // decision base for real removal
+    // todo we could also test for cp changes and also adapt then
     msg.destruct()
-    // adapt later messages:
-    this.moveMsgTimingsUp(msg.timing, msgs.length)
-    this.msgCount.update(n => n-1);
+    if (msgs.length < length) { //real removal;
+      // adapt later messages:
+      this.moveMsgTimingsUp(msg.timing, msgs.length)
+      this.msgCount.update(n => n-1);
+      return true
+    } else {
+      return false
+    }
+
   }
 
   duplicateMessage(msg: Message): Message | undefined {
