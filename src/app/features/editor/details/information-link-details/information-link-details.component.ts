@@ -5,7 +5,7 @@ import {MatDialogRef} from "@angular/material/dialog";
 import { FormsModule } from '@angular/forms';
 import {KemlService} from "@app/shared/keml/edit/keml.service";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
-import {Information, InformationLink, Preknowledge} from "@app/shared/keml/core/msg-info";
+import {Information, InformationLink, PreKnowledge} from "@app/shared/keml/core/msg-info";
 import { InfoChoiceComponent } from '@app/shared/keml/graphical/helper/information/info-choice/info-choice.component';
 
 @Component({
@@ -17,7 +17,7 @@ import { InfoChoiceComponent } from '@app/shared/keml/graphical/helper/informati
 export class InformationLinkDetailsComponent {
 
   @Input() infoLink?: InformationLink;
-  @Input() preknowledges!: Preknowledge[];
+  @Input() preknowledges!: PreKnowledge[];
   @Input() newInfos!: Information[];
 
   // only for creation

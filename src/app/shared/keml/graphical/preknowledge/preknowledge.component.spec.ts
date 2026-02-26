@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PreknowledgeComponent } from './preknowledge.component';
 import {NO_ERRORS_SCHEMA} from "@angular/core";
-import {Preknowledge} from "@app/shared/keml/core/msg-info";
+import {PreKnowledge} from "@app/shared/keml/core/msg-info";
 
 describe('PreknowledgeComponent', () => {
   let component: PreknowledgeComponent;
@@ -17,7 +17,7 @@ describe('PreknowledgeComponent', () => {
 
     fixture = TestBed.createComponent(PreknowledgeComponent);
     component = fixture.componentInstance;
-    component.info = Preknowledge.create()
+    component.info = PreKnowledge.create()
     fixture.detectChanges();
   });
 

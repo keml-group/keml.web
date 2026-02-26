@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InfoTrustDetailsComponent } from './info-trust-details.component';
 import {MatDialogRef} from "@angular/material/dialog";
-import {Preknowledge} from "@app/shared/keml/core/msg-info";
+import {PreKnowledge} from "@app/shared/keml/core/msg-info";
 
 describe('InfoTrustDetailsComponent', () => {
   let component: InfoTrustDetailsComponent;
@@ -19,7 +19,7 @@ describe('InfoTrustDetailsComponent', () => {
 
     fixture = TestBed.createComponent(InfoTrustDetailsComponent);
     component = fixture.componentInstance;
-    component.info = Preknowledge.create()
+    component.info = PreKnowledge.create()
     fixture.detectChanges();
   });
 

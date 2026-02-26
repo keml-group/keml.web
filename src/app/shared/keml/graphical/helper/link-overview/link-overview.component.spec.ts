@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LinkOverview } from './link-overview.component';
-import {InformationLink, Preknowledge} from "@app/shared/keml/core/msg-info";
+import {InformationLink, PreKnowledge} from "@app/shared/keml/core/msg-info";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 
 describe('InfoLinkShortComponent', () => {
@@ -16,8 +16,8 @@ describe('InfoLinkShortComponent', () => {
 
     fixture = TestBed.createComponent(LinkOverview);
     component = fixture.componentInstance;
-    let info1 = Preknowledge.create()
-    let info2 = Preknowledge.create()
+    let info1 = PreKnowledge.create()
+    let info2 = PreKnowledge.create()
     component.link = InformationLink.create(info1, info2, InformationLinkType.STRONG_SUPPORT)
 
     fixture.detectChanges();

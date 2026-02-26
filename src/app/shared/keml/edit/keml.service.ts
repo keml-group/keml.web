@@ -4,7 +4,7 @@ import {
   InformationLink,
   Message,
   NewInformation,
-  Preknowledge,
+  PreKnowledge,
   ReceiveMessage, SendMessage,
 } from "@app/shared/keml/core/msg-info";
 import {Conversation} from "@app/shared/keml/core/conversation";
@@ -397,8 +397,8 @@ export class KemlService {
     this.saveCurrentState()
   }
 
-  addNewPreknowledge(msg?:string): Preknowledge {
-    const preknowledge: Preknowledge = Preknowledge.create(msg ? msg : "New Preknowledge", false, LayoutingService.bbForPreknowledge(LayoutingService.positionForNewPreknowledge));
+  addNewPreknowledge(msg?:string): PreKnowledge {
+    const preknowledge: PreKnowledge = PreKnowledge.create(msg ? msg : "New PreKnowledge", false, LayoutingService.bbForPreknowledge(LayoutingService.positionForNewPreknowledge));
     this.conversation.author.addPreknowledge(preknowledge);
     this.saveCurrentState()
     return preknowledge;

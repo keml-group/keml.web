@@ -4,7 +4,7 @@ import {
   Information, InformationLink,
   Message,
   NewInformation,
-  Preknowledge,
+  PreKnowledge,
   ReceiveMessage,
   SendMessage
 } from "@app/shared/keml/core/msg-info";
@@ -95,14 +95,14 @@ export class IncrementalSimulationService {
     await this.linkStep(newInfos)
   }
 
-  private findNewPreknowledges(send: SendMessage): Preknowledge[] {
-    let pres: Preknowledge[] = send.uses.filter(use =>  ! (use as NewInformation).source)
-      .map(u => (u as Preknowledge))
+  private findNewPreknowledges(send: SendMessage): PreKnowledge[] {
+    let pres: PreKnowledge[] = send.uses.filter(use =>  ! (use as NewInformation).source)
+      .map(u => (u as PreKnowledge))
     return pres.filter(pre =>  pre.getTiming() == send.timing)
   }
 
-  private copyPreknowledge(pre: Preknowledge): Preknowledge {
-    let preNew = Preknowledge.create(pre.message, pre.isInstruction, pre.position, pre.initialTrust, undefined, pre.feltTrustImmediately, pre.feltTrustAfterwards)
+  private copyPreknowledge(pre: PreKnowledge): PreKnowledge {
+    let preNew = PreKnowledge.create(pre.message, pre.isInstruction, pre.position, pre.initialTrust, undefined, pre.feltTrustImmediately, pre.feltTrustAfterwards)
     this.infoConnections.set(pre.$gId, preNew)
     return preNew
   }

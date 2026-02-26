@@ -2,7 +2,7 @@ import {Conversation} from './conversation';
 import {
   InformationLink,
   NewInformation,
-  Preknowledge,
+  PreKnowledge,
   ReceiveMessage,
   SendMessage
 } from "@app/shared/keml/core/msg-info";
@@ -36,7 +36,7 @@ describe('Conversation', () => {
 
 
     //infos:
-    let p0 = Preknowledge.create()
+    let p0 = PreKnowledge.create()
     conv.author.addPreknowledge(p0)
     let n0 = NewInformation.create(m1, 'rec')
 

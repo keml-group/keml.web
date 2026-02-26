@@ -11,7 +11,7 @@ export enum InformationLinkType {
 export const KemlMeta: ModelDefinition = {
   name: "KEML",
   prefix: "keml",
-  uri: "",
+  uri: "http://www.unikoblenz.de/keml#//",
   classes: {
     Conversation: {
       references: {

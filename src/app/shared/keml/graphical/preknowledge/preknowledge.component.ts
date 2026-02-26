@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import { NgFor } from '@angular/common';
-import {Preknowledge} from "@app/shared/keml/core/msg-info";
+import {PreKnowledge} from "@app/shared/keml/core/msg-info";
 import {InfoComponent} from "@app/shared/keml/graphical/helper/information/info/info.component";
 import { InfoInnerComponent } from '@app/shared/keml/graphical/helper/information/info-inner/info-inner.component';
 import { InformationLinkComponent } from '../information-link/information-link.component';
@@ -12,5 +12,5 @@ import { InformationLinkComponent } from '../information-link/information-link.c
     imports: [InfoInnerComponent, NgFor, InformationLinkComponent]
 })
 export class PreknowledgeComponent extends InfoComponent {
-  @Input() override info!: Preknowledge;
+  @Input() override info!: PreKnowledge;
 }

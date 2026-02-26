@@ -289,11 +289,11 @@ export class NewInformation extends Information<ReceiveMessage> {
 
 
 // -----------------------------------------------------
-// Preknowledge
+// PreKnowledge
 // -----------------------------------------------------
 
 @eClass(KemlMeta)
-export class Preknowledge extends Information<Author> {
+export class PreKnowledge extends Information<Author> {
 
   constructor() {
     super();
@@ -309,8 +309,8 @@ export class Preknowledge extends Information<Author> {
     return timing;
   }
 
-  override duplicate(): Preknowledge {
-    return Preknowledge.create(
+  override duplicate(): PreKnowledge {
+    return PreKnowledge.create(
       "Copy of " + this.message,
       this.isInstruction,
       this.position,
@@ -322,15 +322,15 @@ export class Preknowledge extends Information<Author> {
   }
 
   static create(
-    message: string = "Preknowledge",
+    message: string = "PreKnowledge",
     isInstruction: boolean = false,
     position?: BoundingBox,
     initialTrust?: number,
     currentTrust?: number,
     feltTrustImmediately?: number,
     feltTrustAfterwards?: number
-  ): Preknowledge {
-    const pre = new Preknowledge();
+  ): PreKnowledge {
+    const pre = new PreKnowledge();
     pre.message = message;
     pre.isInstruction = isInstruction;
     pre.position = Information.createBB(position);

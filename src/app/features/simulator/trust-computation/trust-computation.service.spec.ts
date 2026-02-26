@@ -1,6 +1,6 @@
 import {TrustComputationService} from './trust-computation.service';
 import {Conversation} from "@app/shared/keml/core/conversation";
-import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "@app/shared/keml/core/msg-info";
+import {Information, InformationLink, NewInformation, PreKnowledge, ReceiveMessage} from "@app/shared/keml/core/msg-info";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
@@ -19,15 +19,15 @@ describe('TrustComputationService', () => {
     expect(service).toBeTruthy();
   });
 
-  let p0: Preknowledge;
-  let p1: Preknowledge;
-  let p2: Preknowledge;
+  let p0: PreKnowledge;
+  let p1: PreKnowledge;
+  let p2: PreKnowledge;
   let recLength = 2;
 
   beforeEach(function () {
-    p0 = Preknowledge.create('p0')
-    p1 = Preknowledge.create('p1')
-    p2 = Preknowledge.create('p2')
+    p0 = PreKnowledge.create('p0')
+    p1 = PreKnowledge.create('p1')
+    p2 = PreKnowledge.create('p2')
   })
 
   it('should compute the score of a single Link correctly', () => {
@@ -60,7 +60,7 @@ describe('TrustComputationService', () => {
     let cp = new ConversationPartner('cp')
     let r1 = ReceiveMessage.create(cp, 1)
     let r2 = ReceiveMessage.create(cp, 3)
-    let info = Preknowledge.create('info')
+    let info = PreKnowledge.create('info')
     expect(service.computeRepetitionScore(info, 0)).toEqual(0)
     expect(service.computeRepetitionScore(info, 1)).toEqual(0)
     info.repeatedBy.push(r1, r2)
@@ -185,9 +185,9 @@ describe('TrustComputationService', () => {
   })
 
   it('should adapt the current trusts', () => {
-    let pre0 = Preknowledge.create('pre0', false, undefined, 0.5, 0)
-    let pre1 = Preknowledge.create('pre1', false, undefined, 0.5, 0)
-    let pre2 = Preknowledge.create('pre2', false, undefined, 0.5, 0)
+    let pre0 = PreKnowledge.create('pre0', false, undefined, 0.5, 0)
+    let pre1 = PreKnowledge.create('pre1', false, undefined, 0.5, 0)
+    let pre2 = PreKnowledge.create('pre2', false, undefined, 0.5, 0)
 
     let cp0 = new ConversationPartner('cp0')
     let cp1 = new ConversationPartner('cp1')

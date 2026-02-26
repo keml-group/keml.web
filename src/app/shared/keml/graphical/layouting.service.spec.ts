@@ -1,5 +1,5 @@
 import { LayoutingService } from './layouting.service';
-import {Preknowledge, SendMessage} from "@app/shared/keml/core/msg-info";
+import {PreKnowledge, SendMessage} from "@app/shared/keml/core/msg-info";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {BoundingBox} from "ngx-svg-graphics";
 import {TestBed} from "@angular/core/testing";
@@ -25,23 +25,23 @@ describe('LayoutingService', () => {
     let s7BB = LayoutingService.bbForPreknowledge(LayoutingService.computeMessageY(7))
     let defaultBB = LayoutingService.bbForPreknowledge(LayoutingService.computeMessageY(0))
 
-    let p0 = Preknowledge.create('p0')
+    let p0 = PreKnowledge.create('p0')
     p0.addIsUsedOn(s7, s2)
     let p0BB: BoundingBox = {x: -20, y: -50, h: 50, w:200}
-    let p0wbb = Preknowledge.create('p0', false, p0BB)
+    let p0wbb = PreKnowledge.create('p0', false, p0BB)
     p0wbb.addIsUsedOn(s7, s2)
-    let p1 = Preknowledge.create('p1')
-    let p2 = Preknowledge.create('p2', true)
+    let p1 = PreKnowledge.create('p1')
+    let p2 = PreKnowledge.create('p2', true)
     p2.addIsUsedOn(s7)
-    let p3 = Preknowledge.create('p3', false)
+    let p3 = PreKnowledge.create('p3', false)
     p3.addIsUsedOn(s1)
     let p3BB: BoundingBox = {x: -200, y: 500, h: 50, w:200}
-    let p3wbb = Preknowledge.create('p3', false, p3BB)
+    let p3wbb = PreKnowledge.create('p3', false, p3BB)
     p3wbb.addIsUsedOn(s1)
-    let p4 = Preknowledge.create('p4')
+    let p4 = PreKnowledge.create('p4')
     p4.addIsUsedOn(s1, s7, s2)
 
-    let allOrdered: Preknowledge[] = [
+    let allOrdered: PreKnowledge[] = [
       p0wbb, //-50
       p1, //0
       p3, p4, //1
@@ -49,7 +49,7 @@ describe('LayoutingService', () => {
       p3wbb, //500
       p2, //7
     ]
-    let allOrdered43: Preknowledge[] = [
+    let allOrdered43: PreKnowledge[] = [
       p0wbb, //-50
       p1, //0
       p4, p3, //1 -> only change
@@ -69,7 +69,7 @@ describe('LayoutingService', () => {
       expect(p4.position).toEqual(s1BB)
     }
 
-    let t0: Preknowledge[] = []
+    let t0: PreKnowledge[] = []
     LayoutingService.positionPreknowledge(t0)
     expect(t0).toEqual([])
 

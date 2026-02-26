@@ -6,7 +6,7 @@ import {MatIcon} from "@angular/material/icon";
 import {NO_ERRORS_SCHEMA} from "@angular/core";
 import {KemlService} from "@app/shared/keml/edit/keml.service";
 import {DetailsService} from "@app/features/editor/details/details.service";
-import {Preknowledge, ReceiveMessage} from "@app/shared/keml/core/msg-info";
+import {PreKnowledge, ReceiveMessage} from "@app/shared/keml/core/msg-info";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {newNewInfo} from "@app/shared/keml/test/TestHelper"
 import {Conversation} from "@app/shared/keml/core/conversation";
@@ -94,7 +94,7 @@ describe('EditorComponent', () => {
   });
 
   it('should open details when preknowledge is created', () => {
-    const fakePre = Preknowledge.create();
+    const fakePre = PreKnowledge.create();
     kemlService.addNewPreknowledge.and.returnValue(fakePre);
     component.addPreknowledge();
     expect(kemlService.addNewPreknowledge).toHaveBeenCalled();

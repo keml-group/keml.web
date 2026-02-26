@@ -1,8 +1,8 @@
 import {JsonOf} from "emfular";
-import {InformationLink, NewInformation, Preknowledge} from "@app/shared/keml/core/msg-info";
+import {InformationLink, NewInformation, PreKnowledge} from "@app/shared/keml/core/msg-info";
 
 export type NewInformationJson = JsonOf<NewInformation>
-export type PreknowledgeJson = JsonOf<Preknowledge>
+export type PreknowledgeJson = JsonOf<PreKnowledge>
 export type InformationLinkJson = JsonOf<InformationLink>
 
 

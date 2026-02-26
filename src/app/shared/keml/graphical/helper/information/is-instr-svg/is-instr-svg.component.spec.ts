@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IsInstrSvgComponent } from './is-instr-svg.component';
 import {NO_ERRORS_SCHEMA} from "@angular/core";
-import {Preknowledge} from "@app/shared/keml/core/msg-info";
+import {PreKnowledge} from "@app/shared/keml/core/msg-info";
 
 describe('IsInstrSvgComponent', () => {
   let component: IsInstrSvgComponent;
@@ -17,7 +17,7 @@ describe('IsInstrSvgComponent', () => {
 
     fixture = TestBed.createComponent(IsInstrSvgComponent);
     component = fixture.componentInstance;
-    component.info = Preknowledge.create()
+    component.info = PreKnowledge.create()
 
     fixture.detectChanges();
   });

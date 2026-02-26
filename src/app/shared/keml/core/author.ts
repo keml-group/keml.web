@@ -1,6 +1,6 @@
 import {LifeLine} from "./life-line";
 import {Message} from "./msg-info";
-import {Preknowledge} from "./msg-info";
+import {PreKnowledge} from "./msg-info";
 import {eClass, reference, ModelList} from "emfular";
 import {KemlMeta, AuthorRefs} from "@app/shared/keml/keml-meta";
 
@@ -9,7 +9,7 @@ import {KemlMeta, AuthorRefs} from "@app/shared/keml/keml-meta";
 export class Author extends LifeLine {
 
   @reference(AuthorRefs.preknowledge)
-  declare preknowledge: ModelList<Preknowledge>;
+  declare preknowledge: ModelList<PreKnowledge>;
 
   @reference(AuthorRefs.messages)
   declare messages: ModelList<Message>;
@@ -18,7 +18,7 @@ export class Author extends LifeLine {
     super();
   }
 
-  addPreknowledge(...items: Preknowledge[]) {
+  addPreknowledge(...items: PreKnowledge[]) {
     items.map(i => this.preknowledge.push(i));
   }
 

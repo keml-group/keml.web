@@ -1,5 +1,5 @@
 import {Conversation} from "@app/shared/keml/core/conversation";
-import {Information, InformationLink, NewInformation, Preknowledge, ReceiveMessage} from "@app/shared/keml/core/msg-info";
+import {Information, InformationLink, NewInformation, PreKnowledge, ReceiveMessage} from "@app/shared/keml/core/msg-info";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {TrustFallbacks} from "@app/features/simulator/trust-computation/trust-fallbacks";
 import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
@@ -14,14 +14,14 @@ export class TrustComputationService {
   constructor(private alertService: AlertService) {}
 
   computeCurrentTrusts(conv: Conversation, simulationInputs: TrustFallbacks) {
-    let pres: Preknowledge[] = conv.author.preknowledge
+    let pres: PreKnowledge[] = conv.author.preknowledge
     let receives = conv.author.messages.filter(m => m.isReceive())
     let newInfos: NewInformation[] = receives.flatMap(m => m.generates)
     this.computeCTFromKnowledge(pres, newInfos, receives.length, simulationInputs)
   }
 
   computeCTFromKnowledge(
-    pres: Preknowledge[], newInfos: NewInformation[], recSize: number, simulationInputs: TrustFallbacks
+      pres: PreKnowledge[], newInfos: NewInformation[], recSize: number, simulationInputs: TrustFallbacks
   ): void {
     let toVisit: Information[] = newInfos
     toVisit.push(...pres)

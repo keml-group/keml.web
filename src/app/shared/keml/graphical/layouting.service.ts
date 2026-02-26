@@ -2,7 +2,7 @@
 * treats (0,0) as author position -> knowledge has a negative x, messages a positive x.
 */
 import {ConversationPartner} from '@app/shared/keml/core/conversation-partner';
-import {Message, ReceiveMessage, Preknowledge, Information} from "@app/shared/keml/core/msg-info";
+import {Message, ReceiveMessage, PreKnowledge, Information} from "@app/shared/keml/core/msg-info";
 import {BoundingBox} from "ngx-svg-graphics";
 import {Injectable} from "@angular/core";
 import {
@@ -108,13 +108,13 @@ export class LayoutingService {
     }
   }
 
-  static positionInfos(pre: Preknowledge[], msgs: Message[]): void {
+  static positionInfos(pre: PreKnowledge[], msgs: Message[]): void {
     //todo currently position new infos as 0:
     this.initializeInfoPos(msgs);
     this.positionPreknowledge(pre);
   }
 
-  static positionPreknowledge(pre: Preknowledge[]) {
+  static positionPreknowledge(pre: PreKnowledge[]) {
     pre.forEach(p => {
       if (p.position.w < 7 ) {
         let timing = p.getTiming()

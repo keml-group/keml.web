@@ -5,7 +5,7 @@ import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {
   InformationLink,
   Message,
-  NewInformation, Preknowledge,
+  NewInformation, PreKnowledge,
   ReceiveMessage, SendMessage,
 } from "@app/shared/keml/core/msg-info";
 import {LayoutingService} from "@app/shared/keml/graphical/layouting.service";
@@ -32,8 +32,8 @@ describe('KEML-Service', () => {
     let cp = new ConversationPartner('cp')
     let rec = ReceiveMessage.create(cp, 5)
     let newInfo = NewInformation.create(rec, 'info1')
-    let pre0 = Preknowledge.create('pre0')
-    let pre1 = Preknowledge.create('pre1')
+    let pre0 = PreKnowledge.create('pre0')
+    let pre1 = PreKnowledge.create('pre1')
     let send3 = new SendMessage(3)
     pre0.addIsUsedOn(send3)
     expect(KemlService.isRepetitionAllowed(rec, newInfo)).toBe(false)
@@ -120,8 +120,8 @@ describe('KEML-Service', () => {
       "        }\n" +
       "      } ]\n"+
       "    } ]\n"
-    let pre0 = Preknowledge.create('pre0', false, undefined, 0.5, 0.5, undefined, undefined)
-    let pre1 = Preknowledge.create('pre1', false, undefined, 0.5, 0.5, undefined, undefined)
+    let pre0 = PreKnowledge.create('pre0', false, undefined, 0.5, 0.5, undefined, undefined)
+    let pre1 = PreKnowledge.create('pre1', false, undefined, 0.5, 0.5, undefined, undefined)
 
     let preknowledge = [pre0, pre1]
     LayoutingService.positionPreknowledge(preknowledge)
@@ -660,7 +660,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.conversation.toJson())
   })
 
-  it('should add a Preknowledge.create (with history)', () => {
+  it('should add a PreKnowledge.create (with history)', () => {
     let p0 = kemlService.addNewPreknowledge()
     expect(kemlService.conversation.author.preknowledge.length).toEqual(1)
     expect(kemlService.conversation.author.preknowledge).toContain(p0)
@@ -721,7 +721,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(rec0.generates.length).toBe(0)
     expect(historyStub.save).toHaveBeenCalledTimes(4)
 
-    const p1 = Preknowledge.create("Not contained")
+    const p1 = PreKnowledge.create("Not contained")
     expect(historyStub.save).toHaveBeenCalledTimes(4)
     kemlService.deleteInfo(p1)
     expect(historyStub.save).toHaveBeenCalledTimes(4)
@@ -741,7 +741,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(kemlService.conversation.author.preknowledge.length).toBe(1)
     expect(historyStub.save).toHaveBeenCalledTimes(1)
     expect(historyStub.save).toHaveBeenCalledWith(kemlService.conversation.toJson())
-    const p1: Preknowledge = kemlService.duplicateInfo(p0) as Preknowledge
+    const p1: PreKnowledge = kemlService.duplicateInfo(p0) as PreKnowledge
     expect(kemlService.conversation.author.preknowledge.length).toBe(2)
     expect(kemlService.conversation.author.preknowledge).toContain(p1)
     expect(kemlService.conversation.author.preknowledge).toContain(p0)

@@ -1,4 +1,4 @@
-import {InformationLink, NewInformation, Preknowledge, ReceiveMessage, SendMessage} from "./msg-info";
+import {InformationLink, NewInformation, PreKnowledge, ReceiveMessage, SendMessage} from "./msg-info";
 import {InformationLinkJson, InformationLinkType, NewInformationJson, PreknowledgeJson} from "@app/shared/keml/json/knowledge-models";
 import {ConversationPartner} from "./conversation-partner";
 import {ConversationJson, ReceiveMessageJson, SendMessageJson} from "@app/shared/keml/json/sequence-diagram-models";
@@ -66,7 +66,7 @@ describe('Info (models)', () => {
   })
 
   it('should determine the correct timing of a preknowledge', () => {
-    let pre0 = Preknowledge.create('pre0')
+    let pre0 = PreKnowledge.create('pre0')
     expect(pre0.getTiming()).toEqual(0)
     let cp = ConversationPartner.create('cp')
     let send = SendMessage.create(cp, 4)
@@ -77,11 +77,11 @@ describe('Info (models)', () => {
   })
 
   it('should serialize preknowledge', () => {
-    let preknowledge = Preknowledge.create()
+    let preknowledge = PreKnowledge.create()
     let preknowledgeJson : PreknowledgeJson = {
       eClass: EClasses.Preknowledge,
       position: {x: 0, y: 0, w: 5, h: 5},
-      message: "Preknowledge",
+      message: "PreKnowledge",
     }
     expect(preknowledge.toJson()).toEqual(preknowledgeJson);
   });
@@ -104,7 +104,7 @@ describe('Info (models)', () => {
     let m0 = new ReceiveMessage(1, "receive1")
     let m1 = new SendMessage(1, "send1")
 
-    let i0 = Preknowledge.create('pre0')
+    let i0 = PreKnowledge.create('pre0')
     let i1 = NewInformation.create(m0, 'i1', false)
 
     i0.addIsUsedOn(m1);
@@ -123,7 +123,7 @@ describe('Info (models)', () => {
     let m0 = new ReceiveMessage(0, "receive0")
     let m1 = new ReceiveMessage(1, "receive1")
 
-    let i0 = Preknowledge.create('pre0')
+    let i0 = PreKnowledge.create('pre0')
     let i1 = NewInformation.create(m0, 'i1', false)
 
     i0.addRepeatedBy(m1);
@@ -147,8 +147,8 @@ describe('Info (models)', () => {
     let msg = new ReceiveMessage(1, "receiveContent")
     let newInfo1 = NewInformation.create(msg, 'New Info1')
     let newInfo2 = NewInformation.create(msg, 'New Info2')
-    let preknowledge1 = Preknowledge.create('Preknowledge1')
-    let preknowledge2 = Preknowledge.create('Preknowledge2')
+    let preknowledge1 = PreKnowledge.create('Preknowledge1')
+    let preknowledge2 = PreKnowledge.create('Preknowledge2')
 
     const ctx = new SerializationContext(newInfo1)
     const refNew1 = RefHandler.createRef(RefHandler.rootPath, EClasses.NewInformation)
@@ -204,8 +204,8 @@ describe('Info (models)', () => {
   });
 
   it('should delete an info link completely', () => {
-    let p0 = Preknowledge.create('p0')
-    let p1 = Preknowledge.create('p1')
+    let p0 = PreKnowledge.create('p0')
+    let p1 = PreKnowledge.create('p1')
     let link = InformationLink.create(p1, p0, InformationLinkType.SUPPORT)
 
     expect(p0.targetedBy.length).toEqual(1)
@@ -216,9 +216,9 @@ describe('Info (models)', () => {
   })
 
   it('source destruction: should delete an info that is a link source for two links completely (also deletes the links)', () => {
-    let p0 = Preknowledge.create('p0')
-    let p1 = Preknowledge.create('p1')
-    let p2 = Preknowledge.create('p2')
+    let p0 = PreKnowledge.create('p0')
+    let p1 = PreKnowledge.create('p1')
+    let p2 = PreKnowledge.create('p2')
 
     InformationLink.create(p0, p1, InformationLinkType.SUPPORT)
     InformationLink.create(p0, p2, InformationLinkType.SUPPLEMENT)
@@ -234,9 +234,9 @@ describe('Info (models)', () => {
   })
 
   it('target destruction: should delete an info that is a link target of two links completely (also deletes the links)', () => {
-    let p0 = Preknowledge.create('p0')
-    let p1 = Preknowledge.create('p1')
-    let p2 = Preknowledge.create('p2')
+    let p0 = PreKnowledge.create('p0')
+    let p1 = PreKnowledge.create('p1')
+    let p2 = PreKnowledge.create('p2')
     InformationLink.create(p1, p0, InformationLinkType.SUPPORT)
     InformationLink.create(p2, p0, InformationLinkType.SUPPLEMENT)
     expect(p0.targetedBy.length).toEqual(2)
@@ -257,10 +257,10 @@ describe('Info (models)', () => {
     let m2 = SendMessage.create(cp0, 5, 'm2')
     let m3 = SendMessage.create(cp0, 6, 'm3')
 
-    let pre0 = Preknowledge.create('p0', false)
-    let pre1 = Preknowledge.create('p1', false)
-    let pre2 = Preknowledge.create('p2', false)
-    let pre3 = Preknowledge.create('p3', false)
+    let pre0 = PreKnowledge.create('p0', false)
+    let pre1 = PreKnowledge.create('p1', false)
+    let pre2 = PreKnowledge.create('p2', false)
+    let pre3 = PreKnowledge.create('p3', false)
 
     m1.uses.push(pre1)
     pre1.isUsedOn.push(m1)

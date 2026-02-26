@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output, TemplateRef, ViewChild} from '@angular/core';
-import {Information, Preknowledge, ReceiveMessage} from "@app/shared/keml/core/msg-info";
+import {Information, PreKnowledge, ReceiveMessage} from "@app/shared/keml/core/msg-info";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {KemlService} from "@app/shared/keml/edit/keml.service";
 import { PreknowledgeComponent } from '../../../preknowledge/preknowledge.component';
@@ -20,7 +20,7 @@ export class InfoChoiceComponent {
   @Output() infoChange = new EventEmitter<Information>();
   //graphical component to pick an info, hence it needs all messages and all preknowledge as input:
   @Input() showInfo = true;
-  preknowledges: Preknowledge[];
+  preknowledges: PreKnowledge[];
   receives: ReceiveMessage[];
   dialogRef?: MatDialogRef<any>;
 
