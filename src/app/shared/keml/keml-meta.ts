@@ -11,7 +11,7 @@ export enum InformationLinkType {
 export const KemlMeta: ModelDefinition = {
   name: "KEML",
   prefix: "keml",
-  uri: "http://www.unikoblenz.de/keml#//",
+  uri: "",
   classes: {
     Conversation: {
       references: {
@@ -45,7 +45,7 @@ export const KemlMeta: ModelDefinition = {
           max: -1
         },
         preknowledge: {
-          target: "Preknowledge",
+          target: "PreKnowledge",
           containment: true,
           max: -1
         }
@@ -100,7 +100,7 @@ export const KemlMeta: ModelDefinition = {
       }
     },
 
-    Preknowledge: {
+    PreKnowledge: {
       references: {}
     },
 
@@ -185,7 +185,7 @@ export const NewInformationRefs = {
   source: KemlMeta.classes["NewInformation"].references["source"],
 };
 
-export const PreknowledgeRefs = {
+export const PreKnowledgeRefs = {
   // no references
 };
 

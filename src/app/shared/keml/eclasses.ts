@@ -5,6 +5,6 @@ export enum EClasses {
   SendMessage = 'http://www.unikoblenz.de/keml#//SendMessage',
   ReceiveMessage = 'http://www.unikoblenz.de/keml#//ReceiveMessage',
   NewInformation = 'http://www.unikoblenz.de/keml#//NewInformation',
-  Preknowledge = 'http://www.unikoblenz.de/keml#//Preknowledge', //todo
+  Preknowledge = 'http://www.unikoblenz.de/keml#//PreKnowledge',
   InformationLink = 'http://www.unikoblenz.de/keml#//InformationLink',
 }
