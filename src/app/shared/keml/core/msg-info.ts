@@ -16,7 +16,7 @@ import { KemlMeta,
 // -----------------------------------------------------
 // Message (abstract)
 // -----------------------------------------------------
-
+@eClass(KemlMeta)
 export abstract class Message extends Referencable<Author> {
 
   @reference(MessageRefs.counterPart)
@@ -160,7 +160,7 @@ export class ReceiveMessage extends Message {
 // -----------------------------------------------------
 // Information (abstract)
 // -----------------------------------------------------
-
+@eClass(KemlMeta)
 export abstract class Information<P extends Referencable<any> = Referencable<any>>
   extends Referencable<P>
   implements Positionable {
