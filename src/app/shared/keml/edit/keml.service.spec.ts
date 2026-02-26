@@ -480,7 +480,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(m0.timing).toBe(0)
     expect(m2.timing).toBe(1)
     expect(m3.timing).toBe(2)
-    //todo even destruct on an element that is not in the model from the start triggers no change - what about one that is connected to a cp in the model?
+    //todo - what about a msg that is connected to a cp in the model?
   })
 
   it('should call history once when duplicating a msg and not if duplication not possible', () => {
