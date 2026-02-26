@@ -12,7 +12,7 @@ import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {LayoutingService} from "../graphical/layouting.service";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {Author} from "@app/shared/keml/core/author";
-import {ListUpdater} from "emfular";
+import {ListUpdater, ModelList} from "emfular";
 import {MsgPositionChangeService} from "@app/shared/keml/graphical/msg-position-change.service";
 import {AlertService} from "ngx-emfular-helper";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
@@ -129,10 +129,9 @@ export class KemlService {
 
   moveConversationPartnerRight(cp: ConversationPartner) {
     if (!this.isMoveConversationPartnerRightDisabled(cp)) {
-      const cps = this.conversation.conversationPartners;
+      const cps: ModelList<ConversationPartner> = this.conversation.conversationPartners;
       const pos = cps.indexOf(cp);
-      cps[pos] = cps[pos+1];
-      cps[pos + 1] = cp;
+      cps.swap(pos, pos+1)
       this.layoutingService.positionConversationPartners(cps);
       this.saveCurrentState()
     }
@@ -147,8 +146,7 @@ export class KemlService {
     if (!this.isMoveConversationPartnerLeftDisabled(cp)) {
       const cps = this.conversation.conversationPartners;
       const pos = cps.indexOf(cp);
-      cps[pos] = cps[pos-1];
-      cps[pos-1] = cp;
+      cps.swap(pos, pos-1)
       this.layoutingService.positionConversationPartners(cps);
       this.saveCurrentState()
     }
