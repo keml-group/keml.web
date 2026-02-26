@@ -12,7 +12,7 @@ import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {LayoutingService} from "../graphical/layouting.service";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {Author} from "@app/shared/keml/core/author";
-import {ListUpdater, ModelList} from "emfular";
+import {ModelList} from "emfular";
 import {MsgPositionChangeService} from "@app/shared/keml/graphical/msg-position-change.service";
 import {AlertService} from "ngx-emfular-helper";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
@@ -423,12 +423,12 @@ export class KemlService {
     }
   }
 
+  //todo only destructs if info is on model maybe better mode for msgs as well?
   deleteInfo(info: Information) {
     const infos = this.getRightInfoList(info)
     let index = infos.findIndex(c => c == info)
     if (index >= 0) {
       info.destruct()
-      ListUpdater.removeFromList(info, infos)
       this.saveCurrentState()
     }
   }
