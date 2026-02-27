@@ -23,7 +23,7 @@ import {KemlHistoryService} from "@app/shared/keml/edit/keml-history.service";
 })
 export class KemlService {
 
-  public _conversation!: Conversation;
+  private _conversation!: Conversation;
   get conversation(): Conversation {
     return this._conversation;
   }
