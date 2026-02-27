@@ -1,5 +1,5 @@
 <div class="editor" id="editor">
-    <input id="openKEML" type="file" class="file-upload" style="display: none" (change)="kemlIOService.loadKEMLfromFile($event)" (click)="InputHandler.clearElem($event)">
+    <input id="openKEML" type="file" class="file-upload" style="display: none" (change)="kemlIOService.loadFromFile($event)" (click)="InputHandler.clearElem($event)">
     <input id="openChatGptConvList" type="file" class="file-upload" style="display: none" (change)="conversationPickService.startWithAllConvs($event)" (click)="InputHandler.clearElem($event)">
     <mat-toolbar class="file-level-bar">
       <button (click)="kemlService.newConversation()">
@@ -23,7 +23,7 @@
             <mat-icon aria-hidden="false" fontIcon="redo" ></mat-icon>
             Redo</button>
       <hr />
-      <button (click)="kemlIOService.saveKEML()">
+      <button (click)="kemlIOService.save()">
         <mat-icon aria-hidden="false" fontIcon="file_download" ></mat-icon>
         Save KEML
       </button>

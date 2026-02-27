@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {KemlService} from "@app/shared/keml/edit/keml.service";
-import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
 import {IoService} from "ngx-emfular-helper";
 
 @Injectable({
@@ -15,15 +14,14 @@ export class KEMLIOService {
     private ioService: IoService,
   ) {}
 
-  loadKEMLfromFile(event: Event) {
+  loadFromFile(event: Event) {
     this.ioService.loadStringFromFile(event).then(txt => {
       //todo insert detection code for wrong files (no json, not appropriately structured
-      let convJson =  <ConversationJson>JSON.parse(txt);
-      this.kemlService.loadConversation(convJson);
+      this.kemlService.loadConversation(JSON.parse(txt));
     });
   }
 
-  saveKEML() {
+  save() {
     const jsonString = JSON.stringify(this.kemlService.serializeConversation());
     this.ioService.saveJson(jsonString, this.kemlService.getTitle())
   }
