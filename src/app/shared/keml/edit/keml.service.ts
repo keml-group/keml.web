@@ -14,7 +14,7 @@ import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {Author} from "@app/shared/keml/core/author";
 import {ModelList} from "emfular";
 import {MsgPositionChangeService} from "@app/shared/keml/graphical/msg-position-change.service";
-import {AlertService} from "ngx-emfular-helper";
+import {AlertService, IoService} from "ngx-emfular-helper";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
 import {KemlHistoryService} from "@app/shared/keml/edit/keml-history.service";
 
@@ -40,6 +40,7 @@ export class KemlService {
     private alertService: AlertService,
     private layoutingService: LayoutingService,
     private historyService: KemlHistoryService,
+    private ioService: IoService,
   ) {
     this.conversation = Conversation.create('New Conversation');
     this.layoutingService.positionConversationPartners(this.conversation.conversationPartners)
@@ -71,7 +72,7 @@ export class KemlService {
     this.saveCurrentState()
   }
 
-  loadConversation(convJson: ConversationJson): Conversation {
+  load(convJson: ConversationJson): Conversation {
     let conv = this.deserializeConversation(convJson);
     this.saveCurrentState()
     return conv;
@@ -100,6 +101,22 @@ export class KemlService {
   }
 
   getTitle(): string {
+    return this.conversation.title;
+  }
+
+  loadFromFile(event: Event) {
+    this.ioService.loadStringFromFile(event).then(txt => {
+      //todo insert detection code for wrong files (no json, not appropriately structured
+      this.load(JSON.parse(txt));
+    });
+  }
+
+  save() {
+    const jsonString = JSON.stringify(this.serialize());
+    this.ioService.saveJson(jsonString, this.fileTitle())
+  }
+
+  fileTitle(): string {
     return this.conversation.title;
   }
 

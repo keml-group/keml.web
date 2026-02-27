@@ -201,7 +201,7 @@ describe('KEML-Service', () => {
     let conv = Conversation.create("Test1", author)
     conv.conversationPartners.push(...cps)
 
-    let callResult = service.loadConversation(JSON.parse(str))
+    let callResult = service.load(JSON.parse(str))
     expect(callResult.title).toEqual(conv.title)
 
 
@@ -303,7 +303,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     const exampleConv = new Conversation("testLoad").toJson()
     expect(historyStub.save).toHaveBeenCalledTimes(0)
     expect(kemlService.conversation.title == exampleConv.title).toBeFalse()
-    kemlService.loadConversation(exampleConv)
+    kemlService.load(exampleConv)
     const loadedConv = kemlService.conversation.toJson()
     expect(loadedConv.title == exampleConv.title).toBeTrue()
     expect(historyStub.save).toHaveBeenCalledTimes(1)
