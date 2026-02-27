@@ -23,7 +23,13 @@ import {KemlHistoryService} from "@app/shared/keml/edit/keml-history.service";
 })
 export class KemlService {
 
-  public conversation!: Conversation;
+  public _conversation!: Conversation;
+  get conversation(): Conversation {
+    return this._conversation;
+  }
+  private set conversation(conversation: Conversation) {
+    this._conversation = conversation;
+  }
 
   msgCount: WritableSignal<number>;
   cpCount: WritableSignal<number>;

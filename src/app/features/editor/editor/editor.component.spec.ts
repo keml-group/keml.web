@@ -11,30 +11,32 @@ import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {newNewInfo} from "@app/shared/keml/test/TestHelper"
 import {Conversation} from "@app/shared/keml/core/conversation";
 
+class KemlServiceStub {
+  conversation = Conversation.create();
+
+  addNewConversationPartner = jasmine.createSpy();
+  addNewMessage = jasmine.createSpy();
+  addNewNewInfo = jasmine.createSpy();
+  addNewPreknowledge = jasmine.createSpy();
+  addInformationLink = jasmine.createSpy();
+  isAddNewMessageDisabled = jasmine.createSpy();
+  isAddNewNewInfoDisabled = jasmine.createSpy();
+  isLinkCreationDisabled = jasmine.createSpy();
+  isMoveConversationPartnerLeftDisabled = jasmine.createSpy();
+  isMoveConversationPartnerRightDisabled = jasmine.createSpy();
+  msgCount = jasmine.createSpy();
+  cpCount = jasmine.createSpy();
+}
+
 describe('EditorComponent', () => {
-  let kemlService: jasmine.SpyObj<KemlService>;
+  let kemlService: KemlServiceStub;
   let detailsService: jasmine.SpyObj<DetailsService>;
   let component: EditorComponent;
   let fixture: ComponentFixture<EditorComponent>;
 
-  beforeEach(waitForAsync (() => {
-    kemlService = jasmine.createSpyObj<KemlService>('kemlService', [
-      'addNewConversationPartner',
-      'addNewMessage',
-      'addNewNewInfo',
-      'addNewPreknowledge',
-      'addInformationLink',
-      'isAddNewMessageDisabled',
-      'isAddNewNewInfoDisabled',
-      'isLinkCreationDisabled',
-      'isMoveConversationPartnerLeftDisabled',
-      'isMoveConversationPartnerRightDisabled',
-      'msgCount',
-      'cpCount',
-      'conversation'
-    ]);
-    kemlService.conversation = Conversation.create()
-    detailsService = jasmine.createSpyObj<DetailsService>('detailsService', [
+  beforeEach(waitForAsync(() => {
+    kemlService = new KemlServiceStub();
+    detailsService = jasmine.createSpyObj<DetailsService>('DetailsService', [
       'openConversationPartnerDetails',
       'openMessageDetails',
       'openInfoDetails',
