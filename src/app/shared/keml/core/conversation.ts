@@ -17,13 +17,6 @@ export class Conversation extends Referencable<any> {
   @reference(ConversationRefs.conversationPartners)
   declare conversationPartners:  ModelList<ConversationPartner>
 
-
-  addCP(...cps: ConversationPartner[]) {
-    cps.map(cp => {
-      this.conversationPartners.push(cp)
-    })
-  }
-
   constructor(
     title: string = 'New Conversation'
   ) {

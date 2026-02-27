@@ -200,7 +200,7 @@ describe('TrustComputationService', () => {
 
     //todo add infos and Links
     let conv = Conversation.create('trusts')
-    conv.addCP(...cps)
+    conv.conversationPartners.push(...cps)
     conv.author.addPreknowledge(pre0, pre1, pre2)
     conv.author.addMessage(rec0, rec1, rec2, rec3)
 

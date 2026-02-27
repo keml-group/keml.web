@@ -37,7 +37,7 @@ export class IncrementalSimulationService {
     this.completeConv = conv;
     this.incrementalConv = Conversation.create(conv.title)
     this.incrementalConv.author = Author.create(conv.author.name, conv.author.xPosition);
-    this.incrementalConv.addCP(...conv.conversationPartners) //todo duplicate cps?
+    this.incrementalConv.conversationPartners.push(...conv.conversationPartners) //todo duplicate cps?
     this.msgConnections = new Map<string, Message>();
     this.infoConnections = new Map<string, Information>();
   }

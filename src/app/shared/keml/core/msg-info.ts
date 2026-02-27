@@ -199,7 +199,7 @@ export abstract class Information<P extends Referencable<any> = Referencable<any
   declare repeatedBy: ModelList<ReceiveMessage>;
 
   addIsUsedOn(...send: SendMessage[]) {
-    send.map(s => this.isUsedOn.push(s));
+    this.isUsedOn.push(...send);
   }
 
   removeIsUsedOn(send: SendMessage) {

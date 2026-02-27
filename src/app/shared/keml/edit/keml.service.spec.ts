@@ -199,7 +199,7 @@ describe('KEML-Service', () => {
       "}\n"
 
     let conv = Conversation.create("Test1", author)
-    conv.addCP(...cps)
+    conv.conversationPartners.push(...cps)
 
     let callResult = service.loadConversation(JSON.parse(str))
     expect(callResult.title).toEqual(conv.title)

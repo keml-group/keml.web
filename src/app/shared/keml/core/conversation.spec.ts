@@ -29,7 +29,7 @@ describe('Conversation', () => {
     let conv = new Conversation();
     conv.title = "Change conv"
     let cp0 = new ConversationPartner('NewPartner', 0);
-    conv.addCP(cp0)
+    conv.conversationPartners.push(cp0)
     let m0 = SendMessage.create(cp0, 0)
     let m1 = ReceiveMessage.create(cp0, 1)
     conv.author.addMessage(m0, m1)
