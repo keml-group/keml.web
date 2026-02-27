@@ -62,8 +62,8 @@ export class KemlService {
   }
 
   newConversationNoHistory(title?: string) {
-    this.conversation = Conversation.create(title);
-    this.adjustToNewModel()
+    let conv = Conversation.create(title);
+    this.applyModel(conv)
   }
 
   newConversation(title?: string) {
@@ -77,23 +77,27 @@ export class KemlService {
     return conv;
   }
 
-  protected deserialize(modelJson: JsonOf<Conversation>): Conversation {
-    let conv = Conversation.fromJSON(modelJson);
+  protected adjustModel(conv: Conversation): Conversation {
     this.layoutingService.positionConversationPartners(conv.conversationPartners)
     KemlService.timeMessages(conv.author.messages)
     LayoutingService.positionInfos(conv.author.preknowledge, conv.author.messages);
     return conv;
   }
 
-  private applyModel(model: Conversation): Conversation {
+  private applyModel(model: Conversation) {
     this.conversation = model;
     this.adjustToNewModel()
-    return model;
   }
 
   private applyJson(convJson: ConversationJson): Conversation {
     let conv = this.deserialize(convJson);
-    return this.applyModel(conv);
+    this.applyModel(conv);
+    return this.conversation
+  }
+
+  protected deserialize(modelJson: JsonOf<Conversation>): Conversation {
+    let conv = Conversation.fromJSON(modelJson);
+    return this.adjustModel(conv)
   }
 
   private adjustToNewModel() {
@@ -126,6 +130,8 @@ export class KemlService {
   fileTitle(): string {
     return this.conversation.title;
   }
+
+  //************* Author **************************
 
   getAuthor(): Author {
     return this.conversation.author;
