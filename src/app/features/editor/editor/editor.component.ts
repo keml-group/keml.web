@@ -7,7 +7,7 @@ import { DetailsService } from "@app/features/editor/details/details.service";
 import { DatabaseSvgComponent } from '@app/shared/keml/graphical/helper/base-svg/database-svg/database-svg.component';
 import { PersonSvgComponent } from '@app/shared/keml/graphical/helper/base-svg/person-svg/person-svg.component';
 import {SimulationDialogueService} from "@app/features/simulator/simulation-dialogue.service";
-import {KEMLIOService} from "@app/features/editor/keml-io.service";
+import {KEMLIOService} from "@app/shared/keml/edit/keml-io.service";
 import {ConversationPickService} from "@app/features/fromLLM/chatGPT2llm/conversationpicking/conversation-pick.service";
 import {IoService, InputHandler} from "ngx-emfular-helper";
 import {ConversationComponent} from "@app/shared/keml/graphical/conversation/conversation.component";
