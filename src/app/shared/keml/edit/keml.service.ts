@@ -12,7 +12,7 @@ import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {LayoutingService} from "../graphical/layouting.service";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {Author} from "@app/shared/keml/core/author";
-import {ModelList} from "emfular";
+import {JsonOf, ModelList} from "emfular";
 import {MsgPositionChangeService} from "@app/shared/keml/graphical/msg-position-change.service";
 import {AlertService, IoService} from "ngx-emfular-helper";
 import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
@@ -48,7 +48,7 @@ export class KemlService {
     this.cpCount = signal<number>(this.conversation.conversationPartners.length);
     this.historyService.state$.subscribe(state => {
       if (state) {
-        this.deserializeConversation(state);
+        this.applyJson(state);
       }
     });
   }
@@ -63,8 +63,7 @@ export class KemlService {
 
   newConversationNoHistory(title?: string) {
     this.conversation = Conversation.create(title);
-    this.msgCount.set(this.conversation.author.messages.length)
-    this.cpCount.set(this.conversation.conversationPartners.length)
+    this.adjustToNewModel()
   }
 
   newConversation(title?: string) {
@@ -73,24 +72,32 @@ export class KemlService {
   }
 
   load(convJson: ConversationJson): Conversation {
-    let conv = this.deserializeConversation(convJson);
+    let conv = this.applyJson(convJson);
     this.saveCurrentState()
     return conv;
   }
 
-  private deserializeConversation(convJson: ConversationJson): Conversation {
-
-    let conv = Conversation.fromJSON(convJson);
+  protected deserialize(modelJson: JsonOf<Conversation>): Conversation {
+    let conv = Conversation.fromJSON(modelJson);
     this.layoutingService.positionConversationPartners(conv.conversationPartners)
     KemlService.timeMessages(conv.author.messages)
     LayoutingService.positionInfos(conv.author.preknowledge, conv.author.messages);
-    this.conversation = conv;
-    this.msgCount.set(this.conversation.author.messages.length)
-    this.setCPCount()
     return conv;
   }
 
-  private setCPCount() {
+  private applyModel(model: Conversation): Conversation {
+    this.conversation = model;
+    this.adjustToNewModel()
+    return model;
+  }
+
+  private applyJson(convJson: ConversationJson): Conversation {
+    let conv = this.deserialize(convJson);
+    return this.applyModel(conv);
+  }
+
+  private adjustToNewModel() {
+    this.msgCount.set(this.conversation.author.messages.length)
     this.cpCount.set(this.conversation.conversationPartners.length)
   }
 
