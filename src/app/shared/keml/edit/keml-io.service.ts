@@ -22,7 +22,7 @@ export class KEMLIOService {
   }
 
   save() {
-    const jsonString = JSON.stringify(this.kemlService.serializeConversation());
+    const jsonString = JSON.stringify(this.kemlService.serialize());
     this.ioService.saveJson(jsonString, this.kemlService.getTitle())
   }
 

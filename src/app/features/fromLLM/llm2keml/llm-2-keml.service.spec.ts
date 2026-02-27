@@ -47,7 +47,7 @@ describe('Llm2KemlService integration with history', () => {
     llmService.convFromLlmMessages([]);
 
     expect(historyStub.save).toHaveBeenCalledTimes(1);
-    expect(historyStub.save).toHaveBeenCalledWith(kemlService.serializeConversation());
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.serialize());
   });
 
   it('should trigger a single save when processing real input', () => {
@@ -67,7 +67,7 @@ describe('Llm2KemlService integration with history', () => {
     ]);
 
     expect(historyStub.save).toHaveBeenCalledTimes(1);
-    expect(historyStub.save).toHaveBeenCalledWith(kemlService.serializeConversation());
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.serialize());
 
     //verify that the right object was created:
     expect(kemlService.conversation.conversationPartners[0].name).toBe('LLM')

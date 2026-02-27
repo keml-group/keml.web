@@ -282,7 +282,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
   it('should not call save on normal serialization call; it should just deliver the current conv as json', () => {
     const kemlConv = kemlService.conversation.toJson()
     expect(historyStub.save).toHaveBeenCalledTimes(0)
-    let res = kemlService.serializeConversation()
+    let res = kemlService.serialize()
     expect(historyStub.save).toHaveBeenCalledTimes(0)
     expect(res).toEqual(kemlConv)
   })
@@ -332,7 +332,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     expect(historyStub.save).toHaveBeenCalledTimes(0)
     kemlService.addNewConversationPartner("cp1")
     expect(historyStub.save).toHaveBeenCalledTimes(1)
-    let res = kemlService.serializeConversation()
+    let res = kemlService.serialize()
     expect(historyStub.save).toHaveBeenCalledOnceWith(res)
     expect(res.conversationPartners?.map(cp=> (cp as JsonOf<ConversationPartner>).name)).toEqual(["cp0", "cp1"])
   })
@@ -367,12 +367,12 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
     kemlService.moveConversationPartnerRight(cp1)
     expect(historyStub.save).toHaveBeenCalledTimes(1)
     expect(kemlService.conversation.conversationPartners.map(cp=> cp.name)).toEqual(["cp0", "cp2", "cp1"])
-    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.serializeConversation())
+    expect(historyStub.save).toHaveBeenCalledOnceWith(kemlService.serialize())
     //left
     kemlService.moveConversationPartnerLeft(cp2)
     expect(historyStub.save).toHaveBeenCalledTimes(2)
     expect(kemlService.conversation.conversationPartners.map(cp=> cp.name)).toEqual(["cp2", "cp0", "cp1"])
-    expect(historyStub.save).toHaveBeenCalledWith(kemlService.serializeConversation())
+    expect(historyStub.save).toHaveBeenCalledWith(kemlService.serialize())
   })
 
   function prepareCpWith4Messages(): ConversationPartner {

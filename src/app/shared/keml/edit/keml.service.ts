@@ -53,10 +53,10 @@ export class KemlService {
   }
 
   saveCurrentState() {
-    this.historyService.save(this.serializeConversation())
+    this.historyService.save(this.serialize())
   }
 
-  serializeConversation(): ConversationJson {
+  serialize(): ConversationJson {
     return this.conversation.toJson()
   }
 
