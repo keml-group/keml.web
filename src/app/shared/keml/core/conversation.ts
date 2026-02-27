@@ -5,7 +5,7 @@ import {Deserializer, Referencable, attribute, eClass, reference, ModelList} fro
 import {EClasses} from "@app/shared/keml/eclasses";
 import {ConversationRefs, KemlMeta} from "@app/shared/keml/keml-meta";
 
-@eClass(KemlMeta)
+@eClass(KemlMeta, "Conversation")
 export class Conversation extends Referencable<any> {
 
   @attribute()

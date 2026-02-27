@@ -2,7 +2,7 @@ import {LifeLine} from "./life-line";
 import {eClass} from "emfular";
 import {KemlMeta} from "@app/shared/keml/keml-meta";
 
-@eClass(KemlMeta)
+@eClass(KemlMeta, "ConversationPartner")
 export class ConversationPartner extends LifeLine {
 
   constructor(name: string = 'NewPartner', xPosition?: number) {

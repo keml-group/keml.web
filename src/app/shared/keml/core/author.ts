@@ -5,7 +5,7 @@ import {eClass, reference, ModelList} from "emfular";
 import {KemlMeta, AuthorRefs} from "@app/shared/keml/keml-meta";
 
 
-@eClass(KemlMeta)
+@eClass(KemlMeta, "Author")
 export class Author extends LifeLine {
 
   @reference(AuthorRefs.preknowledge)

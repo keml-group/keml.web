@@ -16,7 +16,7 @@ import { KemlMeta,
 // -----------------------------------------------------
 // Message (abstract)
 // -----------------------------------------------------
-@eClass(KemlMeta)
+@eClass(KemlMeta, "Message")
 export abstract class Message extends Referencable<Author> {
 
   @reference(MessageRefs.counterPart)
@@ -74,7 +74,7 @@ export abstract class Message extends Referencable<Author> {
 // SendMessage
 // -----------------------------------------------------
 
-@eClass(KemlMeta)
+@eClass(KemlMeta, "SendMessage")
 export class SendMessage extends Message {
 
   @reference(SendMessageRefs.uses)
@@ -113,7 +113,7 @@ export class SendMessage extends Message {
 // ReceiveMessage
 // -----------------------------------------------------
 
-@eClass(KemlMeta)
+@eClass(KemlMeta, "ReceiveMessage")
 export class ReceiveMessage extends Message {
 
   @reference(ReceiveMessageRefs.generates)
@@ -160,7 +160,7 @@ export class ReceiveMessage extends Message {
 // -----------------------------------------------------
 // Information (abstract)
 // -----------------------------------------------------
-@eClass(KemlMeta)
+@eClass(KemlMeta, "Information")
 export abstract class Information<P extends Referencable<any> = Referencable<any>>
   extends Referencable<P>
   implements Positionable {
@@ -237,7 +237,7 @@ export abstract class Information<P extends Referencable<any> = Referencable<any
 // NewInformation
 // -----------------------------------------------------
 
-@eClass(KemlMeta)
+@eClass(KemlMeta, "NewInformation")
 export class NewInformation extends Information<ReceiveMessage> {
 
   @reference(NewInformationRefs.source)
@@ -292,7 +292,7 @@ export class NewInformation extends Information<ReceiveMessage> {
 // PreKnowledge
 // -----------------------------------------------------
 
-@eClass(KemlMeta)
+@eClass(KemlMeta, "PreKnowledge")
 export class PreKnowledge extends Information<Author> {
 
   constructor() {
@@ -347,7 +347,7 @@ export class PreKnowledge extends Information<Author> {
 // InformationLink
 // -----------------------------------------------------
 
-@eClass(KemlMeta)
+@eClass(KemlMeta, "InformationLink")
 export class InformationLink extends Referencable<Information> {
 
   @reference(InformationLinkRefs.source)
