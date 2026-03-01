@@ -201,7 +201,8 @@ describe('KEML-Service', () => {
     let conv = Conversation.create("Test1", author)
     conv.conversationPartners.push(...cps)
 
-    let callResult = service.load(JSON.parse(str))
+    service.loadFromJson(JSON.parse(str))
+    let callResult = service.conversation
     expect(callResult.title).toEqual(conv.title)
 
 
@@ -299,11 +300,11 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
   })
 
   //(cannot test deserialize to not call history) it is private
-  it('should call history once on load', () => {
+  it('should call history once on loadFromJson', () => {
     const exampleConv = new Conversation("testLoad").toJson()
     expect(historyStub.save).toHaveBeenCalledTimes(0)
     expect(kemlService.conversation.title == exampleConv.title).toBeFalse()
-    kemlService.load(exampleConv)
+    kemlService.loadFromJson(exampleConv)
     const loadedConv = kemlService.conversation.toJson()
     expect(loadedConv.title == exampleConv.title).toBeTrue()
     expect(historyStub.save).toHaveBeenCalledTimes(1)
@@ -312,7 +313,7 @@ describe('KemlService: verify method results - also KemlHistory interplay: when 
 
   it('should not call save on getters', () => {
     expect(historyStub.save).toHaveBeenCalledTimes(0)
-    kemlService.getTitle()
+    kemlService.fileTitle()
     expect(historyStub.save).toHaveBeenCalledTimes(0)
     kemlService.getAuthor()
     expect(historyStub.save).toHaveBeenCalledTimes(0)

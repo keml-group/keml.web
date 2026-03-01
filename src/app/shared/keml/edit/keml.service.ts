@@ -12,58 +12,38 @@ import {ConversationPartner} from "@app/shared/keml/core/conversation-partner";
 import {LayoutingService} from "../graphical/layouting.service";
 import {InformationLinkType} from "@app/shared/keml/json/knowledge-models";
 import {Author} from "@app/shared/keml/core/author";
-import {JsonOf, ModelList} from "emfular";
+import {ModelList} from "emfular";
 import {MsgPositionChangeService} from "@app/shared/keml/graphical/msg-position-change.service";
 import {AlertService, IoService} from "ngx-emfular-helper";
-import {ConversationJson} from "@app/shared/keml/json/sequence-diagram-models";
 import {KemlHistoryService} from "@app/shared/keml/edit/keml-history.service";
+import {ModelService} from "ngx-emfular-integration";
 
 @Injectable({
   providedIn: 'root'
 })
-export class KemlService {
+export class KemlService extends ModelService<Conversation> {
 
-  private _conversation!: Conversation;
   get conversation(): Conversation {
-    return this._conversation;
-  }
-  private set conversation(conversation: Conversation) {
-    this._conversation = conversation;
+    return this.model;
   }
 
-  msgCount: WritableSignal<number>;
-  cpCount: WritableSignal<number>;
+  msgCount: WritableSignal<number> = signal<number>(0);
+  cpCount: WritableSignal<number> = signal<number>(0);
 
 
   constructor(
     private msgPositionChangeService: MsgPositionChangeService,
     private alertService: AlertService,
     private layoutingService: LayoutingService,
-    private historyService: KemlHistoryService,
-    private ioService: IoService,
+    historyService: KemlHistoryService,
+    ioService: IoService
   ) {
-    this.conversation = Conversation.create('New Conversation');
-    this.layoutingService.positionConversationPartners(this.conversation.conversationPartners)
-    this.msgCount = signal<number>(this.conversation.author.messages.length);
-    this.cpCount = signal<number>(this.conversation.conversationPartners.length);
-    this.historyService.state$.subscribe(state => {
-      if (state) {
-        this.applyJson(state);
-      }
-    });
-  }
-
-  saveCurrentState() {
-    this.historyService.save(this.serialize())
-  }
-
-  serialize(): ConversationJson {
-    return this.conversation.toJson()
+    super(historyService, ioService, Conversation);
+    this.model = Conversation.create('New Conversation');
   }
 
   newConversationNoHistory(title?: string) {
-    let conv = Conversation.create(title);
-    this.applyModel(conv)
+    this.model = Conversation.create(title);
   }
 
   newConversation(title?: string) {
@@ -71,36 +51,14 @@ export class KemlService {
     this.saveCurrentState()
   }
 
-  load(convJson: ConversationJson): Conversation {
-    let conv = this.applyJson(convJson);
-    this.saveCurrentState()
-    return conv;
-  }
-
-  protected adjustModel(conv: Conversation): Conversation {
+  public override adjustModel(conv: Conversation): Conversation {
     this.layoutingService.positionConversationPartners(conv.conversationPartners)
     KemlService.timeMessages(conv.author.messages)
     LayoutingService.positionInfos(conv.author.preknowledge, conv.author.messages);
     return conv;
   }
 
-  private applyModel(model: Conversation) {
-    this.conversation = model;
-    this.adjustToNewModel()
-  }
-
-  private applyJson(convJson: ConversationJson): Conversation {
-    let conv = this.deserialize(convJson);
-    this.applyModel(conv);
-    return this.conversation
-  }
-
-  protected deserialize(modelJson: JsonOf<Conversation>): Conversation {
-    let conv = Conversation.fromJSON(modelJson);
-    return this.adjustModel(conv)
-  }
-
-  private adjustToNewModel() {
+  public override adaptToModel() {
     this.msgCount.set(this.conversation.author.messages.length)
     this.cpCount.set(this.conversation.conversationPartners.length)
   }
@@ -111,23 +69,7 @@ export class KemlService {
     })
   }
 
-  getTitle(): string {
-    return this.conversation.title;
-  }
-
-  loadFromFile(event: Event) {
-    this.ioService.loadStringFromFile(event).then(txt => {
-      //todo insert detection code for wrong files (no json, not appropriately structured
-      this.load(JSON.parse(txt));
-    });
-  }
-
-  save() {
-    const jsonString = JSON.stringify(this.serialize());
-    this.ioService.saveJson(jsonString, this.fileTitle())
-  }
-
-  fileTitle(): string {
+  override fileTitle(): string {
     return this.conversation.title;
   }
 
