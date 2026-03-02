@@ -15,9 +15,8 @@ import {
 } from "@app/shared/keml/json/knowledge-models";
 import {ReceiveMessageJson} from "@app/shared/keml/json/sequence-diagram-models";
 import { EClasses } from '../eclasses';
-import {JsonOf} from "../../../../../../../../EMFular/projects/emfular/src/lib/serialization/json-deserializable";
+import {JsonOf, Ref} from "emfular";
 import {Author} from "@app/shared/keml/core/author";
-import {Ref} from "../../../../../../../../EMFular/projects/emfular/src/lib/referencing/ref/ref";
 
 describe('Conversation', () => {
   it('should create an instance', () => {

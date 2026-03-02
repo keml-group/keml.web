@@ -14,7 +14,7 @@ import {Author} from "@app/shared/keml/core/author";
 import {Conversation} from "@app/shared/keml/core/conversation";
 import {of} from "rxjs";
 import {KemlHistoryService} from "@app/shared/keml/edit/keml-history.service";
-import {JsonOf} from "../../../../../../../../EMFular/projects/emfular/src/lib/serialization/json-deserializable";
+import {JsonOf} from "emfular";
 
 describe('KEML-Service', () => {
   let service: KemlService;
